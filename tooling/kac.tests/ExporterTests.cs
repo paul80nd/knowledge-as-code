@@ -260,6 +260,62 @@ public class ExporterTests
         => Assert.Equal("Quote a backtick as ``` ` ``` in a sentence.",
             ExportedScope("Quote a backtick as\n``` ` ``` in a sentence."));
 
+    [Fact]
+    public void A_full_reference_link_travels_as_an_inline_link_to_its_definition_s_target()
+        => Assert.Equal("Read [the guide](../guide.md) first.",
+            ExportedScope("Read [the guide][guide] first.\n\n[guide]: ../guide.md"));
+
+    [Theory]
+    [InlineData("Read [guide][] first.")]
+    [InlineData("Read [guide] first.")]
+    public void A_collapsed_or_shortcut_reference_link_travels_as_an_inline_link(string prose)
+        => Assert.Equal("Read [guide](../guide.md) first.", ExportedScope($"{prose}\n\n[guide]: ../guide.md"));
+
+    [Fact]
+    public void A_reference_matches_its_definition_in_any_case_and_keeps_the_case_it_was_written_in()
+        => Assert.Equal("Read [the Guide](../guide.md) and [GUIDE](../guide.md).",
+            ExportedScope("Read [the Guide][Guide] and [GUIDE].\n\n[guide]: ../guide.md"));
+
+    [Fact]
+    public void A_definition_s_title_travels_with_its_target()
+        => Assert.Equal("Read [guide](../guide.md \"The guide\").",
+            ExportedScope("Read [guide].\n\n[guide]: ../guide.md \"The guide\""));
+
+    [Fact]
+    public void A_target_written_in_angle_brackets_keeps_them()
+        => Assert.Equal("Read [guide](<../the guide.md>).",
+            ExportedScope("Read [guide].\n\n[guide]: <../the guide.md>"));
+
+    [Fact]
+    public void A_reference_with_no_definition_travels_as_written()
+        => Assert.Equal("Read [the guide][missing] and [missing].",
+            ExportedScope("Read [the guide][missing] and [missing]."));
+
+    [Fact]
+    public void A_reference_inside_a_code_span_travels_as_written()
+        => Assert.Equal("Write `[the guide][guide]` for a link.",
+            ExportedScope("Write `[the guide][guide]` for a link.\n\n[guide]: ../guide.md"));
+
+    [Fact]
+    public void An_image_reference_travels_as_an_inline_image()
+        => Assert.Equal("See ![the flow](flow.png) and ![flow](flow.png).",
+            ExportedScope("See ![the flow][flow] and ![flow].\n\n[flow]: flow.png"));
+
+    [Fact]
+    public void An_inline_link_beside_a_reference_link_travels_as_written()
+        => Assert.Equal("Read [the guide](../guide.md) and [the notes](notes.md#top).",
+            ExportedScope("Read [the guide][guide] and [the notes](notes.md#top).\n\n[guide]: ../guide.md"));
+
+    [Fact]
+    public void A_reference_whose_text_carries_emphasis_and_code_keeps_that_text()
+        => Assert.Equal("Run [`kac` *now*](../kac.md).",
+            ExportedScope("Run [`kac` *now*][kac].\n\n[kac]: ../kac.md"));
+
+    [Fact]
+    public void A_reference_link_wrapped_across_lines_arrives_on_one_line()
+        => Assert.Equal("Read [the long guide](../guide.md) first.",
+            ExportedScope("Read [the long\nguide][guide] first.\n\n[guide]: ../guide.md"));
+
     /// <summary>The <c>Scope</c> section as the export writes it, from <c>scope</c> as a record states it.</summary>
     private static string? ExportedScope(string scope) =>
         Sections(GlossaryType(), scope).GetProperty("Scope").GetString();
@@ -1261,7 +1317,7 @@ public class ExporterTests
         var record = Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/pol-DATA.json").Content;
         var sections = JsonDocument.Parse(record).RootElement.GetProperty("sections");
 
-        Assert.Equal("A finding may be accepted where [pol-DEVI] records who accepted it.",
+        Assert.Equal("A finding may be accepted where [pol-DEVI](devi-deviations.md) records who accepted it.",
             sections.GetProperty("Exceptions").GetString());
     }
 

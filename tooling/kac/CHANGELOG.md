@@ -45,6 +45,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac update` names the CI system each withheld file belongs to.** A corpus holding none of the template's CI files
   was told it withheld three continuous integration starters. One of the three is `.github/dependabot.yml`, which runs
   no build. The line now counts the files and names their systems, such as `github` and `azure-devops`.
+- **`kac export` writes a section's reference links inline.** A section using `[resilience][pol-RECV]` travelled
+  without the definition at the foot of its record, so the link lost its target. Each full, collapsed or shortcut
+  reference, and each image reference, now arrives as an inline link to the target its definition names. A reference
+  with no definition arrives as written.
 
 ## 0.38.0 - 2026-10-23
 

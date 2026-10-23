@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
@@ -634,23 +636,46 @@ public static class Exporter
             : null;
 
     /// <summary>
-    /// Without its link reference definitions, which sit at the foot and so inside the last section.
-    /// <c>Doc.DefinitionSpans</c> locates them, because a look-alike inside a fenced block is not one.
+    /// Without its link reference definitions, which sit at the foot and so inside the last section. Each reference
+    /// link is written inline, so none loses its target. Both come from the AST, so code is left as written.
     /// </summary>
     private static string Body(Doc doc, Section section)
     {
         var kept = new StringBuilder();
         var at = section.BodyStart;
 
-        foreach (var (start, end) in doc.DefinitionSpans
-                     .Where(d => d.Start >= section.BodyStart && d.Start < section.BodyEnd)
-                     .OrderBy(d => d.Start))
+        foreach (var (start, end, replacement) in doc.DefinitionSpans
+                     .Select(d => (d.Start, d.End, Replacement: ""))
+                     .Concat(ReferenceTails(doc))
+                     .Where(e => e.Start >= section.BodyStart && e.Start < section.BodyEnd)
+                     .OrderBy(e => e.Start))
         {
-            if (start > at) kept.Append(doc.Text[at..start]);
-            at = Math.Max(at, Math.Min(end, section.BodyEnd));
+            if (start < at) continue;
+            kept.Append(doc.Text[at..start]).Append(replacement);
+            at = Math.Min(end, section.BodyEnd);
         }
 
         return kept.Append(doc.Text[at..section.BodyEnd]).ToString();
+    }
+
+    /// <summary>
+    /// The span after each reference link's text, <c>][label]</c>, <c>][]</c> or <c>]</c>, with the inline
+    /// <c>](target)</c> to write over it. The target and title are copied from the definition's source.
+    /// </summary>
+    private static IEnumerable<(int Start, int End, string Replacement)> ReferenceTails(Doc doc)
+    {
+        foreach (var link in doc.Ast.Descendants<LinkInline>())
+        {
+            if (link.Reference is not { } definition) continue;
+
+            var close = link.LastChild is { } last ? last.Span.End + 1 : link.Span.Start + (link.IsImage ? 2 : 1);
+            var target = Source(doc.Text, definition.UrlSpan);
+            var title = string.IsNullOrEmpty(definition.Title) ? "" : " " + Source(doc.Text, definition.TitleSpan);
+
+            yield return (close, link.Span.End + 1, $"]({target}{title})");
+        }
+
+        static string Source(string text, SourceSpan span) => text.Substring(span.Start, span.Length);
     }
 
     /// <summary>
