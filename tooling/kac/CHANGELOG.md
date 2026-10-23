@@ -30,6 +30,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac report --out` refuses a corpus whose `.corpus.yaml` states no `corpus:`.** The report's `sources` cited the
   corpus by its absolute path, so a committed report named one machine's folder. It writes nothing now, and says to
   write the key. A report printed without `--out` cites that corpus as `this corpus`.
+- **`kac new` removes a reference definition naming a declined type's page.** A seed linking a type page by reference,
+  such as `[deviation][deviations]` with `[deviations]: ../deviations.md`, kept that definition in a corpus that
+  declined the type. The corpus failed `link-resolves` on its first `validate`. The definition now goes, and each link
+  citing it keeps its words, as an inline link already did.
 
 ## 0.38.0 - 2026-10-23
 

@@ -13,7 +13,17 @@ public sealed class CreationSteps(Workspace ws)
     /// </summary>
     private string _root = "";
     private string _folder = "";
+    private string _template = "";
     private int _before;
+
+    /// <summary>The folders <c>manifest.yaml</c> sends a corpus from. A folder it gains belongs here too.</summary>
+    private static readonly string[] TemplateFolders =
+    [
+        ".schema", "template", ".claude/skills/technical-writing", ".claude/skills/writing-a-record",
+        ".claude/skills/writing-a-report", ".claude/skills/harvest-findings"
+    ];
+
+    private const string DeviationLink = "[deviation](../deviations.md)";
 
     [AfterScenario]
     public void Clean()
@@ -69,6 +79,30 @@ public sealed class CreationSteps(Workspace ws)
         Commit();
         _before = Count();
     }
+
+    /// <summary>
+    /// A copy of this repository's template, beside the folder and outside its repository, so the edit leaves the tree
+    /// clean.
+    /// </summary>
+    [Given("a template whose standards template links the deviations page by reference")]
+    public void GivenATemplateWhoseStandardsTemplateLinksTheDeviationsPageByReference()
+    {
+        _template = Path.Combine(_root, "template-copy");
+        foreach (var folder in TemplateFolders)
+            Harness.CopyTree(Path.Combine(Harness.RepoRoot, folder), Path.Combine(_template, folder));
+        File.Copy(Path.Combine(Harness.RepoRoot, Manifest.FileName), Path.Combine(_template, Manifest.FileName));
+
+        var page = Path.Combine(_template, "template", "standards", "_template.md");
+        var inline = File.ReadAllText(page);
+        Assert.Contains(DeviationLink, inline);
+        File.WriteAllText(page,
+            inline.Replace(DeviationLink, "[deviation][deviations]", StringComparison.Ordinal)
+            + "\n[deviations]: ../deviations.md\n");
+    }
+
+    [When(@"I create a corpus there from that template adopting ""(.*)""")]
+    public void WhenICreateACorpusThereFromThatTemplateAdopting(string types)
+        => ws.Exit = Creation.Create(_folder, from: _template, types: types);
 
     [When("I create a corpus there")]
     public void WhenICreateACorpusThere() => ws.Exit = Creation.Create(_folder);

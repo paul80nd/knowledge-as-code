@@ -74,7 +74,7 @@ public static class Harness
         throw new InvalidOperationException($"kac.features: repo root not found from {AppContext.BaseDirectory}");
     }
 
-    private static void CopyTree(string src, string dst)
+    public static void CopyTree(string src, string dst)
     {
         Directory.CreateDirectory(dst);
         foreach (var dir in Directory.EnumerateDirectories(src, "*", SearchOption.AllDirectories))
