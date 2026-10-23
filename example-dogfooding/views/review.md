@@ -88,7 +88,7 @@ Cite as `std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it`.
 
 Status: active.
 
-Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export changed has moved its content-version (`ci`, active); `ctl-0015` Every workflow passes zizmor (`ci`, active).
+Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export changed has moved its content-version (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 ### A checkout leaves no credential behind
 
@@ -174,7 +174,7 @@ Cite as `std-CI.the-gate-runs-on-every-pull-request-into-main`.
 
 Status: active.
 
-Controls: `ctl-0004` Every YAML file passes yamllint (`ci`, active); `ctl-0005` Every corpus holds the file the template sends it (`ci`, active).
+Controls: `ctl-0004` Every YAML file passes yamllint (`ci`, active); `ctl-0005` Every corpus holds the file the template sends it (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 ### A file says what it is for, and why each value is what it is
 
@@ -192,6 +192,8 @@ Cite as `std-CONFIG.a-pin-names-an-exact-version`.
 - A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is what [OpenSSF Scorecard]'s `Dependency-Update-Tool` check asks for.
 - Every ecosystem it tracks **MUST** have a `schedule:`.
+- Each ecosystem in `.github/dependabot.yml` and `template/.github/dependabot.yml` **MUST** wait seven days before it proposes a release.
+- A security update **MUST NOT** wait.
 - Packages that only move as a set **SHOULD** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
 

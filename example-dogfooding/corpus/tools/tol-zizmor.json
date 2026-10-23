@@ -29,11 +29,11 @@
     ]
   },
   "sections": {
-    "What we use it for": "It reports an action pinned to a tag, a checkout that keeps its credential, a workflow granting more than read at its top level, and an expression an attacker can write into a `run:` block. It runs with its default persona, which reports the findings its authors rate as actionable and leaves out the pedantic ones.\n\nThe job gives it `github.token`, so it also asks GitHub whether each pinned commit belongs to the action it names.\n\nThe `lint` job installs it from `.github/requirements.txt`, and Dependabot moves that pin. A finding the workflows keep on purpose is suppressed by an inline `# zizmor: ignore[...]` comment, with the reason in the comment above the step.",
+    "What we use it for": "It reports an action pinned to a tag, a checkout that keeps its credential, a workflow granting more than read at its top level, and an expression an attacker can write into a `run:` block. In a `dependabot.yml`, it reports an ecosystem with a cooldown shorter than seven days. It runs with its default persona, which reports the findings its authors rate as actionable and leaves out the pedantic ones.\n\nThe job gives it `github.token`, so it also asks GitHub whether each pinned commit belongs to the action it names.\n\nThe `lint` job installs it from `.github/requirements.txt`, and Dependabot moves that pin. A finding the workflows keep on purpose is suppressed by an inline `# zizmor: ignore[...]` comment, with the reason in the comment above the step.",
     "Licence and obligations": "MIT. The wheel's software bill of materials lists the Rust crates compiled into the binary, and each is under a permissive licence or offers one. The `lint` job runs it as a separate program, and nothing this repository publishes contains it.",
-    "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
+    "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c953afa6cb773289f0b57b276d679824a6c258b4/examples/dog-fooding/tools/lint/zizmor.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/dog-fooding/tools/lint/zizmor.md"
   }
 }

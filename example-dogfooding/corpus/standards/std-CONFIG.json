@@ -34,9 +34,9 @@
   },
   "sections": {
     "Summary": "The schema under `.schema/`, each corpus's descriptor, the overlay manifest, the site's navigation and the dependency pins all decide what this repository builds and publishes. Each of them is a tracked file. Each states an exact version where it states a version, and each has the comment a reviewer needs to judge the change. [yamllint](https://yamllint.readthedocs.io/en/stable/rules.html) decides how the YAML itself is shaped, and `.yamllint` lists the few places this repository departs from it.",
-    "Conformance checklist": "- [ ] `yamllint --strict .` passes.\n- [ ] Every file the change touches is tracked, and contains no credential.\n- [ ] Every dependency it adds names one exact version.\n- [ ] `.github/dependabot.yml` names the directory that manifest sits in.\n- [ ] Every new value has a comment giving its reason.\n- [ ] Any new `.yamllint` override gives the reason it departs from the baseline.\n- [ ] `kac update --check --from ../../` passes in each corpus the change reaches."
+    "Conformance checklist": "- [ ] `yamllint --strict .` passes.\n- [ ] Every file the change touches is tracked, and contains no credential.\n- [ ] Every dependency it adds names one exact version.\n- [ ] `.github/dependabot.yml` names the directory that manifest sits in.\n- [ ] Every ecosystem in both `dependabot.yml` files sets `cooldown: {default-days: 7}`.\n- [ ] Every new value has a comment giving its reason.\n- [ ] Any new `.yamllint` override gives the reason it departs from the baseline.\n- [ ] `kac update --check --from ../../` passes in each corpus the change reaches."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c953afa6cb773289f0b57b276d679824a6c258b4/examples/dog-fooding/standards/configuration.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/dog-fooding/standards/configuration.md"
   }
 }

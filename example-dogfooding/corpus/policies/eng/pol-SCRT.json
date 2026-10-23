@@ -15,6 +15,6 @@
     "Exceptions": "`EMBED`, `REUSE` and `LOGS` admit no exception, and no recorded deviation makes them acceptable. Expediency, a prototype and \"temporary\" work are not exceptions either. A secret committed to source control is treated as compromised and rotated, and deleting the file is not enough. [pol-ENVS](../security/envs-environment-separation.md#clauses) states the same prohibition on production credentials below production, in its own `CREDS` and `REUSE`, and the posture stated here covers those too.\n\n`STORE`, `ROTATE`, `KEYS` and `LEAKED` admit an exception where one is unavoidable. A vendor-issued certificate only the vendor can rotate is the ordinary case, and it is a recorded deviation under [pol-DEVI](../governance/devi-deviations.md) naming who accepts the risk, what compensates for it and when it is revisited."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c953afa6cb773289f0b57b276d679824a6c258b4/examples/engineering/policies/security/scrt-secrets-management.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/engineering/policies/security/scrt-secrets-management.md"
   }
 }
