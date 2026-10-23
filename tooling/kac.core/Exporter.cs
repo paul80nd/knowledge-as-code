@@ -84,7 +84,7 @@ public static class Exporter
 
                 foreach (var doc in own)
                     files.Add(new ExportFile(Filed(key, null, $"{Id(doc)}.json"),
-                        Serialize(Record(doc, local, corpus.Schema, publishing))));
+                        Serialize(Record(doc, local, corpus.Schema, corpus.Tree, publishing))));
 
                 if (export.Parts.Length > 0 && local.Parts is not null)
                     foreach (var line in PartLines(own, local, corpus.Tree, publishing, unread))
@@ -590,7 +590,7 @@ public static class Exporter
         }
     }
 
-    private static ExportRecord Record(Doc doc, TypeSchema t, Schema schema, Publishing? publishing)
+    private static ExportRecord Record(Doc doc, TypeSchema t, Schema schema, Tree tree, Publishing? publishing)
     {
         var export = t.DeclaredExport;
         var link = publishing?.Link(doc.Rel);
@@ -601,7 +601,7 @@ public static class Exporter
                 ? JsonValue.Create(Absent(doc.H1))
                 : Value(doc.FrontNode(name), schema.EffectiveField(t, name));
 
-        var edits = Edits(doc);
+        var edits = Edits(doc, tree, publishing);
         var sections = new Dictionary<string, string?>(StringComparer.Ordinal);
         foreach (var (name, fidelity) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
@@ -694,20 +694,25 @@ public static class Exporter
     /// Every edit exported prose takes, in source order: a section, a part's lead and asides, and its bullets. A link
     /// reference definition sits at the foot, so inside the last section, and is cut. The span after each reference
     /// link's text, <c>][label]</c>, <c>][]</c> or <c>]</c>, becomes <c>](target "title")</c>, copied from its
-    /// definition's source. Both are read from the AST, so a look-alike in a code span or a fenced block is left as
-    /// written.
+    /// definition's source. A target <c>Addressed</c> resolves is written as that address, in an inline link too. All
+    /// are read from the AST, so a look-alike in a code span or a fenced block is left as written.
     /// </summary>
-    private static List<Edit> Edits(Doc doc)
+    private static List<Edit> Edits(Doc doc, Tree tree, Publishing? publishing)
     {
         var edits = doc.DefinitionSpans.Select(d => new Edit(d.Start, d.End, "")).ToList();
 
         foreach (var link in doc.Ast.Descendants<LinkInline>())
         {
-            if (link.Reference is not { } definition) continue;
+            if (link.Reference is not { } definition)
+            {
+                if (!link.IsAutoLink && Addressed(doc, link.Url, tree, publishing) is { } address)
+                    edits.Add(new Edit(link.UrlSpan.Start, link.UrlSpan.End + 1, address));
+                continue;
+            }
 
             // Empty link text closes straight after the opening `[`, or `![` for an image.
             var close = link.LastChild is { } last ? last.Span.End + 1 : link.Span.Start + (link.IsImage ? 2 : 1);
-            var target = Source(doc.Text, definition.UrlSpan);
+            var target = Addressed(doc, definition.Url, tree, publishing) ?? Source(doc.Text, definition.UrlSpan);
             var title = string.IsNullOrEmpty(definition.Title) ? "" : " " + Source(doc.Text, definition.TitleSpan);
 
             edits.Add(new Edit(close, link.Span.End + 1, $"]({target}{title})"));
@@ -716,6 +721,25 @@ public static class Exporter
         return [.. edits.OrderBy(e => e.Start)];
 
         static string Source(string text, SourceSpan span) => text.Substring(span.Start, span.Length);
+    }
+
+    /// <summary>
+    /// The address <c>publishing</c> gives the Markdown file a relative <c>target</c> in <c>doc</c> resolves to, with
+    /// the target's anchor. Null where the corpus has no address, and for an absolute or anchor-only target or one
+    /// naming no Markdown file the corpus has. See <c>docs/reference/export.md</c>.
+    /// </summary>
+    private static string? Addressed(Doc doc, string? target, Tree tree, Publishing? publishing)
+    {
+        if (publishing is null || target is not { Length: > 0 } || LinkChecks.IsExternal(target)) return null;
+        if (LinkChecks.Resolve(tree, doc.Rel, target) is not { } rel
+            || !rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        var hash = target.IndexOf('#');
+        var address = publishing.Link(rel, hash >= 0 ? target[(hash + 1)..] : null);
+
+        // A space would end the destination early, and angle brackets keep it whole.
+        return address.Contains(' ', StringComparison.Ordinal) ? $"<{address}>" : address;
     }
 
     /// <summary>The source from <c>Start</c> up to <c>End</c>, exclusive, written as <c>Replacement</c>.</summary>
@@ -900,7 +924,7 @@ public static class Exporter
         foreach (var doc in records)
         {
             var id = Id(doc);
-            var edits = Edits(doc);
+            var edits = Edits(doc, tree, publishing);
             foreach (var row in Ordered(doc.Parts, spec))
             {
                 if (row.Id is not { Length: > 0 } partId) continue;

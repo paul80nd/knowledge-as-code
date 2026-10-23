@@ -370,11 +370,16 @@ names, and an entry key containing a list is an array inside it.
 **Prose arrives unwrapped.** The 120-column wrap is joined, and blank lines stay. A list, heading, quote, table or fence
 arrives exactly as written.
 
-**A link in a section or a part line arrives inline.** An inline link arrives with its target exactly as the author
-wrote it. A relative target is relative to the record's `path`. A full, collapsed or shortcut reference link arrives as
-an inline link to the target its definition states, with the definition's title. An image reference arrives as an
-inline image. A reference with no definition, and one inside a code span, arrives as written. The definitions
-themselves never travel.
+**A link in a section or a part line arrives inline.** A full, collapsed or shortcut reference link arrives as an inline
+link to the target its definition states, with the definition's title. An image reference arrives as an inline image. A
+reference with no definition, and one inside a code span, arrives as written. The definitions themselves never travel.
+
+**A relative link arrives as the address of the page it points at.** This applies where the corpus has an address, and
+the target resolves to a Markdown file the corpus contains: a record, a type page or a framework page. The export fills
+in the [template](#the-human-form-as-a-template) with that file's path and the target's anchor. Every other target
+arrives exactly as the author wrote it. That covers an absolute URL, an anchor alone, an image, and a target that
+resolves to nothing in the corpus. A relative target left as written is relative to the record's `path`. An inherited
+record keeps the addresses its producer wrote, so its links open the producer's pages.
 
 On a part line, this covers a value read from `part.lead`, `part.aside.<Label>` or `part.bullets`. A value read from
 `part.text` or `column.<Header>` is plain text, so a link there arrives as its words alone.
@@ -409,13 +414,15 @@ agent the `ref`.
 
 ### Resolved links
 
-A per-record file and a part line each have their links resolved, so both rewrite on every export from a new commit.
+A per-record file, a part line and each relative link in their prose resolve against the commit. All of them rewrite on
+every export from a new commit.
 
 ### Five kinds of corpus with no address
 
 A corpus that publishes nowhere, names a target nothing builds links for, states a target but no base, states a base
 that target cannot join to, or is one git cannot answer for. Each exports without links, and the manifest states the
-target it was given with nulls beside it. A part line still has `path` and `anchor`, and its `links` is `null`.
+target it was given with nulls beside it. A part line still has `path` and `anchor`, and its `links` is `null`. A
+relative link in a section or a part line keeps the target the author wrote, relative to the record's `path`.
 
 ## Views generated from the export
 
