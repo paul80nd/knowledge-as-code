@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.x }
+  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.402 }
 homepage: https://dotnet.microsoft.com/
 licence: >-
   MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib AND
@@ -27,7 +27,13 @@ The SDK that builds, tests and packs `kac`, and the runtime the register's NuGet
 Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI
 as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program that has no project around it.
 
-[tol-setup-dotnet] installs `10.0.x` in every job that builds, tests, packs or publishes with `dotnet`.
+`global.json` at the repository root pins the SDK at 10.0.402. Its `rollForward` is `disable`, so `dotnet` refuses
+to build with any other SDK, even a later patch installed beside it. [tol-setup-dotnet] reads the file and installs
+that version in every job that builds, tests, packs or publishes with `dotnet`. A contributor installs the same
+version to build locally.
+
+Dependabot raises each new 10.0 SDK as a pull request that moves the pin, and ignores a new major. The `versions` field
+states the pinned version, so that pull request moves it to match.
 
 ## Where it is used
 

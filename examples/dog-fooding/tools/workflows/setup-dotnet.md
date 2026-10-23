@@ -23,7 +23,7 @@ runs it.
 
 ## What we use it for
 
-Every step passes `dotnet-version: 10.0.x`, which installs the newest 10.0 SDK on the day. The `round-trip` and
+Every step passes `global-json-file: global.json`, so it installs the SDK that file pins. The `round-trip` and
 `import-round-trip` jobs in `kac.yml` run it on `windows-latest` as well as `ubuntu-latest`.
 
 The action takes no token. It runs in the `publish` jobs of `publish-corpus.yml`, `publish-plugin.yml` and
@@ -62,11 +62,9 @@ repository publishes.
 
 ## Related
 
-* [dev-no-reproducible-build] records that `10.0.x` installs whichever 10.0 SDK is newest.
 * [std-CI] requires every action to be pinned to a commit.
 * [tol-dotnet-sdk] is the SDK it installs.
 
-[dev-no-reproducible-build]: ../../deviations/no-reproducible-build.md
 [std-CI]: ../../standards/workflows.md
 [svc-corpus-feed]: ../../services/corpus-feed.md
 [svc-kac]: ../../services/kac.md
