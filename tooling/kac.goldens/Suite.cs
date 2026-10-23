@@ -61,11 +61,11 @@ internal static class Suite
     /// <summary>
     /// The scenario's outcome, running it on the first request and returning that run to every later one.
     /// </summary>
-    internal static Outcome Outcome(string scenario) =>
-        Outcomes.GetOrAdd(scenario, name => new Lazy<Outcome>(() => Runner.Run(name))).Value;
+    internal static Outcome OutcomeOf(string scenario) =>
+        Outcomes.GetOrAdd(scenario, name => new Lazy<Outcome>(() => Runner.RunScenario(name))).Value;
 
     /// <summary>Runs every scenario not yet run, in parallel, and returns once all of them have finished.</summary>
-    internal static void RunAll() => Parallel.ForEach(Scenarios, scenario => Outcome(scenario));
+    internal static void RunAll() => Parallel.ForEach(Scenarios, scenario => OutcomeOf(scenario));
 
     /// <summary>
     /// Found by the solution file, not a <c>.corpus.yaml</c>: the suite needs the engine, the fixtures and the corpus

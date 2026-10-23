@@ -20,7 +20,7 @@ public class GoldenTests
     [MemberData(nameof(Fixtures))]
     public void Scenario(string name)
     {
-        var outcome = Outcome(name);
+        var outcome = OutcomeOf(name);
         TestContext.Current.TestOutputHelper?.Write(outcome.Log);
 
         Assert.False(outcome.Failed, outcome.Log);

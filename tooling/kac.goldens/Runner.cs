@@ -13,7 +13,7 @@ namespace kac.goldens;
 internal static class Runner
 {
     /// <summary>Runs the named scenario and returns what it reported. An exception is reported, not thrown.</summary>
-    internal static Outcome Run(string name)
+    internal static Outcome RunScenario(string name)
     {
         var outcome = new Outcome();
         var scenario = Path.Combine(FixturesDir, name);
@@ -86,10 +86,10 @@ internal static class Runner
             var target = Path.Combine("reports", "clause-coverage.md");
             var full = Path.Combine(temp, target);
 
-            var (printed, _, printExit) = Suite.Run(temp, "dotnet", Kac, "report", "coverage");
-            var (wroteOut, _, writeExit) = Suite.Run(temp, "dotnet", Kac, "report", "coverage", "--out", target);
+            var (printed, _, printExit) = Run(temp, "dotnet", Kac, "report", "coverage");
+            var (wroteOut, _, writeExit) = Run(temp, "dotnet", Kac, "report", "coverage", "--out", target);
             var written = File.Exists(full) ? File.ReadAllText(full) : "";
-            var (_, refuseErr, refuseExit) = Suite.Run(temp, "dotnet", Kac, "report", "coverage", "--out", target);
+            var (_, refuseErr, refuseExit) = Run(temp, "dotnet", Kac, "report", "coverage", "--out", target);
             var after = File.Exists(full) ? File.ReadAllText(full) : "";
 
             var problems = new List<string>();
@@ -267,7 +267,7 @@ internal static class Runner
         Directory.CreateDirectory(temp);
         try
         {
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", Kac, "new", "--yes",
+            var (stdout, stderr, exit) = Run(temp, "dotnet", Kac, "new", "--yes",
                 "--from", RepoRoot, "--name", "acme-corpus", "--ci", "github");
 
             var descriptorPath = Path.Combine(temp, ".corpus.yaml");
@@ -326,7 +326,7 @@ internal static class Runner
             CopyTree(corpusDir, consumer);
             CopyTree(Path.Combine(scenario, "producer"), Path.Combine(temp, "producer"));
 
-            var (stdout, stderr, exit) = Suite.Run(consumer, "dotnet", Kac, "restore");
+            var (stdout, stderr, exit) = Run(consumer, "dotnet", Kac, "restore");
 
             var imports = Path.Combine(consumer, ".imports");
             var listing = Directory.Exists(imports) ? Listing(imports).Select(rel => ".imports/" + rel).ToList() : [];
@@ -417,7 +417,7 @@ internal static class Runner
         Directory.CreateDirectory(temp);
         try
         {
-            Suite.Run(temp, "dotnet", Kac, "new", "--yes", "--from", RepoRoot,
+            Run(temp, "dotnet", Kac, "new", "--yes", "--from", RepoRoot,
                 "--name", "acme-corpus", "--ci", "github");
             Commit(temp, "the corpus as created");
 
@@ -435,7 +435,7 @@ internal static class Runner
             Commit(temp, "drift");
 
             var (checkOut, checkErr, checkExit) =
-                Suite.Run(temp, "dotnet", Kac, "update", "--check", "--from", RepoRoot);
+                Run(temp, "dotnet", Kac, "update", "--check", "--from", RepoRoot);
             var reported = checkOut + checkErr;
 
             var expectedPath = Path.Combine(scenario, "expected-check.txt");
@@ -452,12 +452,12 @@ internal static class Runner
                     $"expected --check to fail on a corpus behind its framework (exit 1), got exit {checkExit}");
             problems.AddRange(Differences("what --check reported", expectedPath, Reportable(reported, RepoRoot)));
 
-            var (applyOut, applyErr, applyExit) = Suite.Run(temp, "dotnet", Kac, "update", "--from", RepoRoot);
+            var (applyOut, applyErr, applyExit) = Run(temp, "dotnet", Kac, "update", "--from", RepoRoot);
             if (applyExit != 0)
                 problems.Add($"expected the update to succeed (exit 0), got exit {applyExit}\n{applyErr}{applyOut}");
 
             // Nothing is committed, so the second check runs over the dirty tree as it stands.
-            var (_, _, againExit) = Suite.Run(temp, "dotnet", Kac, "update", "--check", "--from", RepoRoot);
+            var (_, _, againExit) = Run(temp, "dotnet", Kac, "update", "--check", "--from", RepoRoot);
             if (againExit != 0)
                 problems.Add($"expected the corpus to be in step after an update (exit 0), got exit {againExit}");
 
@@ -483,8 +483,8 @@ internal static class Runner
     /// </summary>
     private static void Commit(string dir, string message)
     {
-        Suite.Run(dir, "git", "add", "-A");
-        Suite.Run(dir, "git", "-c", "user.email=kac@example.invalid", "-c", "user.name=kac",
+        Run(dir, "git", "add", "-A");
+        Run(dir, "git", "-c", "user.email=kac@example.invalid", "-c", "user.name=kac",
             "commit", "-q", "-m", message);
     }
 
@@ -507,7 +507,7 @@ internal static class Runner
         try
         {
             string[] argv = type is null ? [Kac, "export"] : [Kac, "export", "--type", type];
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", argv);
+            var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
             var output = stderr + stdout;
             var dist = Path.Combine(temp, ".dist", "export");
 
@@ -536,7 +536,7 @@ internal static class Runner
             Directory.CreateDirectory(FolderOf(orphan));
             File.WriteAllText(orphan, "{}\n");
 
-            var (_, _, second) = Suite.Run(temp, "dotnet", argv);
+            var (_, _, second) = Run(temp, "dotnet", argv);
             if (second != 0) problems.Add($"expected a clean second export (exit 0), got exit {second}");
             if (File.Exists(orphan)) problems.Add("a file no record backs survived a second export");
 
@@ -570,12 +570,12 @@ internal static class Runner
         var temp = AssembleTemp(SchemaDir, corpusDir);
         try
         {
-            var (_, exportErr, exportExit) = Suite.Run(temp, "dotnet", Kac, "export");
+            var (_, exportErr, exportExit) = Run(temp, "dotnet", Kac, "export");
 
             var problems = new List<string>();
             if (exportExit != 0) problems.Add($"the export the pack needs failed (exit {exportExit}): {exportErr}");
 
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", Kac, "pack");
+            var (stdout, stderr, exit) = Run(temp, "dotnet", Kac, "pack");
             var output = stderr + stdout;
             var dir = Path.Combine(temp, ".dist", "package");
 
@@ -635,7 +635,7 @@ internal static class Runner
             var orphan = Path.Combine(dir, "orphan.0.0.1.nupkg");
             File.WriteAllBytes(orphan, [0]);
 
-            var (_, _, second) = Suite.Run(temp, "dotnet", Kac, "pack");
+            var (_, _, second) = Run(temp, "dotnet", Kac, "pack");
             if (second != 0) problems.Add($"expected a clean second pack (exit 0), got exit {second}");
             if (File.Exists(orphan)) problems.Add("a package no run backs survived a second pack");
 
@@ -736,12 +736,12 @@ internal static class Runner
             CopyTree(pluginDir, Path.Combine(temp, ".plugin"));
 
             string[] exportArgv = type is null ? [Kac, "export"] : [Kac, "export", "--type", type];
-            var (_, exportErr, exportExit) = Suite.Run(temp, "dotnet", exportArgv);
+            var (_, exportErr, exportExit) = Run(temp, "dotnet", exportArgv);
 
             var problems = new List<string>();
             if (exportExit != 0) problems.Add($"the export the bundle needs failed (exit {exportExit}): {exportErr}");
 
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", Kac, "bundle");
+            var (stdout, stderr, exit) = Run(temp, "dotnet", Kac, "bundle");
             var output = stderr + stdout;
 
             if (exit != 0) problems.Add($"expected a clean bundle (exit 0), got exit {exit}");
@@ -761,7 +761,7 @@ internal static class Runner
             Directory.CreateDirectory(FolderOf(orphan));
             File.WriteAllText(orphan, "orphan\n");
 
-            var (_, _, second) = Suite.Run(temp, "dotnet", Kac, "bundle");
+            var (_, _, second) = Run(temp, "dotnet", Kac, "bundle");
             if (second != 0) problems.Add($"expected a clean second bundle (exit 0), got exit {second}");
             if (File.Exists(orphan)) problems.Add("a file no component backs survived a second bundle");
 
@@ -983,7 +983,7 @@ internal static class Runner
         var temp = AssembleTemp(schemaDir, corpusDir);
         try
         {
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", kac, "validate", "--json");
+            var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "validate", "--json");
             var json = FromFirstBrace(stdout)
                 ?? throw new InvalidOperationException(
                     $"kac produced no JSON (exit {exit}).\n{Indent(stderr)}\n{Indent(stdout)}");
@@ -1003,7 +1003,7 @@ internal static class Runner
             string[] argv = check
                 ? [kac, "generate", "--check"]
                 : [kac, "generate"];
-            var (stdout, stderr, exit) = Suite.Run(temp, "dotnet", argv);
+            var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
             return (exit, stderr + stdout);
         }
         finally
@@ -1017,7 +1017,7 @@ internal static class Runner
         var temp = AssembleTemp(schemaDir, corpusDir);
         try
         {
-            var (_, stderr, exit) = Suite.Run(temp, "dotnet", kac, "generate");
+            var (_, stderr, exit) = Run(temp, "dotnet", kac, "generate");
             if (exit != 0) throw new InvalidOperationException($"kac generate failed (exit {exit}).\n{Indent(stderr)}");
 
             // Only what the fixture owns comes back. `.schema/` and `.corpus.yaml` were put there to assemble the run.
@@ -1036,7 +1036,7 @@ internal static class Runner
 
     internal static IReadOnlySet<string> CheckCatalogue(string kac, string corpusRoot)
     {
-        var (stdout, stderr, exit) = Suite.Run(corpusRoot, "dotnet", kac, "checks", "--json");
+        var (stdout, stderr, exit) = Run(corpusRoot, "dotnet", kac, "checks", "--json");
         var json = FromFirstBrace(stdout)
             ?? throw new InvalidOperationException($"kac checks produced no JSON (exit {exit}).\n{stderr}");
         using var doc = JsonDocument.Parse(json);
@@ -1052,7 +1052,7 @@ internal static class Runner
     /// </summary>
     internal static List<string> DeclaredVerbs(string kac, string corpusRoot)
     {
-        var (stdout, stderr, exit) = Suite.Run(corpusRoot, "dotnet", kac, "cli", "xmldoc");
+        var (stdout, stderr, exit) = Run(corpusRoot, "dotnet", kac, "cli", "xmldoc");
         if (exit != 0) throw new InvalidOperationException($"kac cli xmldoc exited {exit}.\n{stderr}");
 
         var root = XDocument.Parse(stdout).Root
