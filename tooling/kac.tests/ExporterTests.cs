@@ -368,6 +368,40 @@ public class ExporterTests
     private static string? ExportedScope(string scope) =>
         Sections(GlossaryType(), scope).GetProperty("Scope").GetString();
 
+    [Theory]
+    [InlineData("[the guide][guide]", "[the guide](../guide.md)")]
+    [InlineData("[guide][]", "[guide](../guide.md)")]
+    [InlineData("[guide]", "[guide](../guide.md)")]
+    public void A_reference_link_in_a_term_s_definition_travels_as_an_inline_link(string written, string travels)
+        => Assert.Equal($"Read {travels} first.", ExportedTerm($"Read {written} first.").Text("definition"));
+
+    [Theory]
+    [InlineData("[the guide][guide]", "[the guide](../guide.md)")]
+    [InlineData("[guide][]", "[guide](../guide.md)")]
+    [InlineData("[guide]", "[guide](../guide.md)")]
+    public void A_reference_link_in_a_term_s_aside_travels_as_an_inline_link(string written, string travels)
+        => Assert.Equal($"the other sense, see {travels}.",
+            ExportedTerm($"One sense.\n\n**Not:** the other sense, see {written}.").Text("not"));
+
+    [Fact]
+    public void A_reference_with_no_definition_in_a_term_travels_as_written()
+        => Assert.Equal("Read [the guide][missing] and [missing].",
+            ExportedTerm("Read [the guide][missing] and [missing].").Text("definition"));
+
+    [Fact]
+    public void A_reference_inside_a_code_span_in_a_term_travels_as_written()
+        => Assert.Equal("Write `[the guide][guide]` for a link.",
+            ExportedTerm("Write `[the guide][guide]` for a link.").Text("definition"));
+
+    [Fact]
+    public void A_term_holding_only_an_aside_takes_no_definition_from_the_link_definitions_below_it()
+        => Assert.Equal(JsonValueKind.Null,
+            ExportedTerm("**Not:** the other sense.").GetProperty("definition").ValueKind);
+
+    /// <summary>The one term line, from <c>body</c> under its heading and above a definition of <c>guide</c>.</summary>
+    private static JsonElement ExportedTerm(string body) =>
+        Assert.Single(TermLines(Corpus(Glossary("gls-one", null, $"### Alpha\n\n{body}\n\n[guide]: ../guide.md\n"))));
+
     [Fact]
     public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()
     {
@@ -1437,6 +1471,16 @@ public class ExporterTests
         => Assert.Equal(JsonValueKind.Null, ClauseLines()[1].GetProperty("alignment").ValueKind);
 
     [Fact]
+    public void A_reference_link_in_a_clause_travels_as_its_text_alone()
+    {
+        var policy = Policy().Replace("**MUST** be time-boxed.", "**MUST** be time-boxed, as [pol-DEVI] asks.");
+        var line = Single(Plan(Corpus(PolicyType(), ("pol-DATA", policy))), "policies/clauses.jsonl").Content
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries)[0];
+
+        Assert.Equal("MUST be time-boxed, as pol-DEVI asks.", JsonDocument.Parse(line).RootElement.Text("clause"));
+    }
+
+    [Fact]
     public void Clauses_travel_in_the_order_the_table_writes_them()
     {
         var lines = Single(Plan(Corpus(PolicyType(), ("pol-ORDR", Unsorted()))), "policies/clauses.jsonl")
@@ -1514,6 +1558,15 @@ public class ExporterTests
         ], bullets);
     }
 
+    [Fact]
+    public void A_reference_link_in_a_rule_s_bullet_travels_as_an_inline_link()
+    {
+        var bullet = Assert.Single(RuleLines()[1].GetProperty("obligations").EnumerateArray());
+
+        Assert.Equal("A test name **SHOULD** say what it proves, as [pol-AUTV](autv-automated-verification.md) asks.",
+            bullet.Text("text"));
+    }
+
     /// <summary>
     /// The policy type is declared and holds no record. A citation is read against the id prefixes the schema knows, so
     /// a rule citing <c>pol-AUTV</c> gathers nothing where nothing declares <c>pol</c>.
@@ -1582,7 +1635,7 @@ public class ExporterTests
 
         ### Tests say what they prove
 
-        - A test name **SHOULD** say what it proves.
+        - A test name **SHOULD** say what it proves, as [pol-AUTV] asks.
 
         [pol-AUTV]: autv-automated-verification.md
 

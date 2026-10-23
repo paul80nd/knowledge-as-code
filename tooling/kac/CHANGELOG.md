@@ -53,6 +53,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   without the definition at the foot of its record, so the link lost its target. Each full, collapsed or shortcut
   reference, and each image reference, now arrives as an inline link to the target its definition states. A reference
   with no definition arrives as written.
+- **`kac export` writes a part line's reference links inline.** A part's lead, asides and bullets, such as a term's
+  definition or a rule's obligations, kept a reference such as `[pol-TRUS]` without the definition at the foot of its
+  record, so the link had no target. Each now arrives as an inline link to that target, as one in a section does. A
+  record's last part, where it holds only asides, no longer exports those definitions as its lead.
 - **`kac export` keeps the indent of a block inside a list item.** A fence inside a numbered item lost the indent of
   its opening line, so a renderer closed the list there and showed the code outside it. A paragraph in the item lost
   its indent when unwrapped. Both now arrive indented as written.

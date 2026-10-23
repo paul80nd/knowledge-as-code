@@ -606,7 +606,7 @@ public static class Exporter
         foreach (var (name, fidelity) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
-                sections[name] = Carry(Body(doc, section, edits), fidelity);
+                sections[name] = Carry(Rewritten(doc.Text, section.BodyStart, section.BodyEnd, edits), fidelity);
 
         return new ExportRecord(t.Key, doc.Rel, Trust(doc, export), fields, sections, Links(link));
     }
@@ -671,35 +671,35 @@ public static class Exporter
             : null;
 
     /// <summary>
-    /// The section's source with <c>edits</c> applied, so its link reference definitions are gone and each reference
-    /// link is inline.
+    /// The source from <c>from</c> to <c>to</c> with <c>edits</c> applied, so its link reference definitions are gone
+    /// and each reference link is inline.
     /// </summary>
-    private static string Body(Doc doc, Section section, List<(int Start, int End, string Replacement)> edits)
+    private static string Rewritten(string text, int from, int to, List<Edit> edits)
     {
         var kept = new StringBuilder();
-        var at = section.BodyStart;
+        var at = from;
 
-        foreach (var (start, end, replacement) in edits.Where(e =>
-                     e.Start >= section.BodyStart && e.Start < section.BodyEnd))
+        foreach (var (start, end, replacement) in edits.Where(e => e.Start >= from && e.Start < to))
         {
             // An edit starting inside one already applied is dropped, so no source text is written twice.
             if (start < at) continue;
-            kept.Append(doc.Text[at..start]).Append(replacement);
-            at = Math.Min(end, section.BodyEnd);
+            kept.Append(text[at..start]).Append(replacement);
+            at = Math.Min(end, to);
         }
 
-        return kept.Append(doc.Text[at..section.BodyEnd]).ToString();
+        return kept.Append(text[at..to]).ToString();
     }
 
     /// <summary>
-    /// Every edit an exported section takes, in source order. A link reference definition sits at the foot, so inside
-    /// the last section, and is cut. The span after each reference link's text, <c>][label]</c>, <c>][]</c> or
-    /// <c>]</c>, becomes <c>](target "title")</c>, copied from its definition's source. Both are read from the AST, so
-    /// a look-alike in a code span or a fenced block is left as written.
+    /// Every edit exported prose takes, in source order: a section, a part's lead and asides, and its bullets. A link
+    /// reference definition sits at the foot, so inside the last section, and is cut. The span after each reference
+    /// link's text, <c>][label]</c>, <c>][]</c> or <c>]</c>, becomes <c>](target "title")</c>, copied from its
+    /// definition's source. Both are read from the AST, so a look-alike in a code span or a fenced block is left as
+    /// written.
     /// </summary>
-    private static List<(int Start, int End, string Replacement)> Edits(Doc doc)
+    private static List<Edit> Edits(Doc doc)
     {
-        var edits = doc.DefinitionSpans.Select(d => (d.Start, d.End, Replacement: "")).ToList();
+        var edits = doc.DefinitionSpans.Select(d => new Edit(d.Start, d.End, "")).ToList();
 
         foreach (var link in doc.Ast.Descendants<LinkInline>())
         {
@@ -710,13 +710,16 @@ public static class Exporter
             var target = Source(doc.Text, definition.UrlSpan);
             var title = string.IsNullOrEmpty(definition.Title) ? "" : " " + Source(doc.Text, definition.TitleSpan);
 
-            edits.Add((close, link.Span.End + 1, $"]({target}{title})"));
+            edits.Add(new Edit(close, link.Span.End + 1, $"]({target}{title})"));
         }
 
         return [.. edits.OrderBy(e => e.Start)];
 
         static string Source(string text, SourceSpan span) => text.Substring(span.Start, span.Length);
     }
+
+    /// <summary>The source from <c>Start</c> up to <c>End</c>, exclusive, written as <c>Replacement</c>.</summary>
+    private sealed record Edit(int Start, int End, string Replacement);
 
     /// <summary>
     /// <c>docs/reference/export.md</c> says what each fidelity promises. Unwrapped first, so a summary is the author's
@@ -897,12 +900,13 @@ public static class Exporter
         foreach (var doc in records)
         {
             var id = Id(doc);
+            var edits = Edits(doc);
             foreach (var row in Ordered(doc.Parts, spec))
             {
                 if (row.Id is not { Length: > 0 } partId) continue;
 
-                var (lead, asides) = Split(doc, row, spec.Asides, footnotes);
-                var part = new Part(doc, row, partId, id, lead, Bullets(doc, row, spec), asides,
+                var (lead, asides) = Split(doc, row, edits, spec.Asides, footnotes);
+                var part = new Part(doc, row, partId, id, lead, Bullets(doc, row, edits, spec), asides,
                     SeeAlso(doc, row, byPath, tree), Citations(doc, row, footnotes));
 
                 var line = new JsonObject();
@@ -1061,13 +1065,14 @@ public static class Exporter
     }
 
     /// <summary>
-    /// The lead, and each labelled aside the type's <c>parts.asides:</c> names, in the source's markdown. A label the
-    /// body lacks is absent, so its key writes null. A reconciling footnote is dropped first.
+    /// The lead, and each labelled aside the type's <c>parts.asides:</c> names, in the source's markdown with
+    /// <c>edits</c> applied. A label the body lacks is absent, so its key writes null. A reconciling footnote is
+    /// dropped first.
     /// </summary>
     private static (string? Lead, IReadOnlyDictionary<string, string> Asides) Split(
-        Doc doc, PartRow part, IReadOnlyList<string> labels, IReadOnlyList<string> footnotes)
+        Doc doc, PartRow part, List<Edit> edits, IReadOnlyList<string> labels, IReadOnlyList<string> footnotes)
     {
-        var blocks = part.Body(doc.Text).ToString()
+        var blocks = Rewritten(doc.Text, part.BodyStart, part.BodyStart + part.Body(doc.Text).Length, edits)
             .Split("\n\n", StringSplitOptions.RemoveEmptyEntries)
             .Select(Unwrap)
             .Where(b => b.Length > 0 && !footnotes.Any(f => b.StartsWith($"_**{f}:**", StringComparison.Ordinal)))
@@ -1092,9 +1097,9 @@ public static class Exporter
     /// <summary>
     /// The modal is a bold run naming a declared level whole, so <c>MUST NOT</c> is never read as <c>MUST</c>.
     /// </summary>
-    private static IReadOnlyList<Bullet> Bullets(Doc doc, PartRow part, PartSpec spec) =>
+    private static IReadOnlyList<Bullet> Bullets(Doc doc, PartRow part, List<Edit> edits, PartSpec spec) =>
     [
-        .. Md.BulletSources(doc.Ast, doc.Text, part.BodyStart, part.BodyEnd)
+        .. Md.BulletSources(doc.Ast, (from, to) => Rewritten(doc.Text, from, to, edits), part.BodyStart, part.BodyEnd)
             .Select(b => new Bullet(
                 b.Bold.FirstOrDefault(r => spec.Levels.Contains(r, StringComparer.Ordinal)), b.Markdown))
     ];

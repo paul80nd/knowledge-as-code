@@ -146,17 +146,17 @@ public static class Md
 
     /// <summary>
     /// The same bullets as written, marker dropped and wrapped lines joined. Both walk <c>Leads</c>, so the two pair
-    /// item for item.
+    /// item for item. <c>source</c> returns the text from one offset to the next, so a caller may rewrite it.
     /// </summary>
     public static IEnumerable<(string Markdown, IReadOnlyList<string> Bold)> BulletSources(
-        MarkdownDocument ast, string text, int start, int end)
+        MarkdownDocument ast, Func<int, int, string> source, int start, int end)
     {
         if (FirstList(ast, start, end) is not { } list) return [];
 
         return Leads(list).Zip(Bullets(list), (lead, bullet) =>
         {
-            var source = text.Substring(lead.Paragraph.Span.Start, lead.Paragraph.Span.Length);
-            var lines = source.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0);
+            var written = source(lead.Paragraph.Span.Start, lead.Paragraph.Span.End + 1);
+            var lines = written.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0);
             return (string.Join(' ', lines), bullet.Bold);
         });
     }
