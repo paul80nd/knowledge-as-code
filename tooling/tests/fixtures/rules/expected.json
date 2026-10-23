@@ -276,21 +276,21 @@
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "entry-shape",
       "message": "'aligns-with' entry must be a mapping, with the keys 'framework', 'clauses'."
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "entry-key",
       "message": "'aligns-with' entry carries 'frameworks', and the schema declares 'framework', 'clauses'."
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "entry-key",
       "message": "'aligns-with' entry here is missing 'framework'."
@@ -374,7 +374,7 @@
     },
     {
       "file": "postmortems/0003-a-duration-the-moments-refuse.md",
-      "line": 8,
+      "line": 9,
       "severity": "error",
       "check": "duration-matches-the-moments",
       "message": "'duration' is 'PT30M', and 'occurred-at' to 'restored-at' is 'PT40M'. Write 'PT40M', or correct whichever of the two moments is wrong."
@@ -395,7 +395,7 @@
     },
     {
       "file": "reports/answers-for-an-old-version.md",
-      "line": 8,
+      "line": 9,
       "severity": "warning",
       "check": "report-stale",
       "message": "this answers for 'fixture-corpus' at 0.1.0, and the corpus is at 0.2.0. Check the report still holds and raise the version, or run it again."
@@ -416,7 +416,7 @@
     },
     {
       "file": "reports/verified-by-its-own-producer.md",
-      "line": 11,
+      "line": 12,
       "severity": "error",
       "check": "self-verification",
       "message": "'kac/0.24.0' wrote this report and verifies it here. Nobody confirms their own writing. Delete the entry, or have somebody else read the verdicts and name them."
@@ -528,7 +528,7 @@
     },
     {
       "file": "services/catalogue.md",
-      "line": 10,
+      "line": 11,
       "severity": "warning",
       "check": "dependency-criticality",
       "message": "'depends-on' cites 'svc-notifications', graded 'important' where this record is 'critical'. Regrade one of the two, or write down what degrades when it is gone."

@@ -14,8 +14,8 @@ Scenario: A duplicated id is reported against the later document
   When I validate the corpus
   Then the findings for "adrs/0003-third.md" are exactly:
     | line | check               | message                                                               |
-    |    1 | id-matches-filename | id 'adr-0002' carries number '0002', and the filename carries '0003'. |
     |    1 | id-unique           | id 'adr-0002' is also used by adrs/0002-second.md.                    |
+    |    2 | id-matches-filename | id 'adr-0002' carries number '0002', and the filename carries '0003'. |
 
 Scenario: A reference to an id nothing carries is reported once, whether or not the field reciprocates
   When I validate the corpus
@@ -82,8 +82,8 @@ Scenario: The whole graph produces exactly these findings and nothing else
     | adrs/0001-first.md    | error    |   31 | undefined-label         | reference '[ADR-0099]' has no link definition.                                                                                                                                        |
     | adrs/0001-first.md    | error    |   33 | fragment-resolves       | '#renamed-away' names no heading in '0002-second.md'.                                                                                                                                 |
     | adrs/0001-first.md    | warning  |   34 | bracket-literal         | '[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link).                                                                                     |
-    | adrs/0003-third.md    | error    |    1 | id-matches-filename     | id 'adr-0002' carries number '0002', and the filename carries '0003'.                                                                                                                 |
     | adrs/0003-third.md    | error    |    1 | id-unique               | id 'adr-0002' is also used by adrs/0002-second.md.                                                                                                                                    |
+    | adrs/0003-third.md    | error    |    2 | id-matches-filename     | id 'adr-0002' carries number '0002', and the filename carries '0003'.                                                                                                                 |
     | adrs/0004-dangling.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'adr-0099', which does not exist.                                                                                                                           |
     | adrs/0005-mistyped.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR.                                                                                                               |
     | gizmos/adrift.md      | error    |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it.                                                                                            |

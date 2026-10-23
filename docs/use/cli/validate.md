@@ -69,7 +69,7 @@ validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 err
 ```text
 adrs/0001-knowledge-as-code.md
   error  [required-field]  missing required field 'owner'.  (adrs/0001-knowledge-as-code.md:1)
-  error  [id-format]       id 'adr-1' must be 'adr-' followed by 4 digits.  (adrs/0001-knowledge-as-code.md:1)
+  error  [id-format]       id 'adr-1' must be 'adr-' followed by 4 digits.  (adrs/0001-knowledge-as-code.md:2)
   error  [link-resolves]   link target '0099-nothing.md' does not resolve.  (adrs/0001-knowledge-as-code.md:8)
   error  [identity-id]     identity line id 'adr-0001' does not match the document's id 'adr-1'.  (adrs/0001-knowledge-as-code.md:12)
 

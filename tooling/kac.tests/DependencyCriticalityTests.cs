@@ -38,13 +38,13 @@ public class DependencyCriticalityTests
             ("svc-c", "important", []),
             ("svc-d", "supporting", []));
 
-        // The numbers sit one above the entry each names, as every frontmatter finding does. See Yaml.LineOf.
-        Assert.Equal([5, 6], found.Select(f => f.Line));
+        // Line 1 is the `---` and `depends-on` sits on 4, so `svc-c` and `svc-d` are on 6 and 7.
+        Assert.Equal([6, 7], found.Select(f => f.Line));
     }
 
     [Fact]
     public void A_dependency_cited_twice_is_reported_on_each_line()
-        => Assert.Equal([4, 5],
+        => Assert.Equal([5, 6],
             Check(("svc-a", "critical", ["svc-b", "svc-b"]), ("svc-b", "important", []))
                 .Select(f => f.Line));
 

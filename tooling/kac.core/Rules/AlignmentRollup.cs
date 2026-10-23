@@ -125,7 +125,8 @@ public sealed class AlignmentRollup : ICorpusRule
         foreach (var kv in doc.Front.Children)
         {
             if (((YamlScalarNode)kv.Key).Value != Field) continue;
-            fieldLine = Yaml.LineOf(kv.Value, doc.FrontStartLine);
+            // The key's line. A block sequence's value starts on its first entry.
+            fieldLine = Yaml.LineOf(kv.Key, doc.FrontStartLine);
             if (kv.Value is not YamlSequenceNode seq) continue;
 
             foreach (var item in seq.Children)

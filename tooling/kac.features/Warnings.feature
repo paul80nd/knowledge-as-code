@@ -15,7 +15,7 @@ Scenario: A list out of alphabetical order warns once, naming the entry that bel
   When I validate the corpus
   Then the findings for "adrs/0002-list-order.md" are exactly:
     | severity | line | check      | message                                                                              |
-    | warning  |    9 | list-order | 'tags' is not in alphabetical order: 'access-control' should come before 'identity'. |
+    | warning  |   10 | list-order | 'tags' is not in alphabetical order: 'access-control' should come before 'identity'. |
 
 Scenario: Numbers in a list entry compare as numbers, not as text
   When I validate the corpus
@@ -23,7 +23,7 @@ Scenario: Numbers in a list entry compare as numbers, not as text
     | severity | line | check | message |
   And the findings for "policies/ordn-ordinal-not-natural.md" are exactly:
     | severity | line | check      | message                                                                                  |
-    | warning  |    7 | list-order | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'. |
+    | warning  |    8 | list-order | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'. |
 
 Scenario: A Y-statement past the ceiling its type declares warns, naming the count and the limit
   When I validate the corpus
@@ -50,9 +50,9 @@ Scenario: The corpus as a whole warns eight times and errors not at all
     | file                                 | severity | line | check                | message                                                                                                                                                                                           |
     | adrs/0001-warnings.md                | warning  |      | unused-definition    | link definition '[unused-ref]' is never referenced.                                                                                                                                               |
     | adrs/0001-warnings.md                | warning  | 30   | alternatives-verdict | Alternatives Considered bullet has no verdict: "A message queue  — we might explore this in a future revi…".                                                                                      |
-    | adrs/0002-list-order.md              | warning  | 9    | list-order           | 'tags' is not in alphabetical order: 'access-control' should come before 'identity'.                                                                                                              |
+    | adrs/0002-list-order.md              | warning  | 10   | list-order           | 'tags' is not in alphabetical order: 'access-control' should come before 'identity'.                                                                                                              |
     | adrs/0003-long-y-statement.md        | warning  | 14   | y-statement          | Y-statement is 95 words; keep it under 60.                                                                                                                                                        |
     | adrs/0004-incomplete-y-statement.md  | warning  | 14   | y-statement          | Y-statement is missing "facing" and "rather than". The six moves are what make it a Y-statement rather than a summary of one.                                                                     |
-    | policies/ordn-ordinal-not-natural.md | warning  | 7    | list-order           | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'.                                                                                                          |
+    | policies/ordn-ordinal-not-natural.md | warning  | 8    | list-order           | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'.                                                                                                          |
     | gadgets/alone.md                     | warning  | 1    | min-records          | 'facets: singular' is carried by 1 gadget record: the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |
-    | gadgets/emptied.md                   | warning  | 6    | empty-optional-key   | 'facets' is optional and carries no value. Remove the key, or fill it in.                                                                                                                         |
+    | gadgets/emptied.md                   | warning  | 7    | empty-optional-key   | 'facets' is optional and carries no value. Remove the key, or fill it in.                                                                                                                         |

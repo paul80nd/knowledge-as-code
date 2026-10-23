@@ -23,7 +23,7 @@ public static partial class Placeholder
     public static IEnumerable<(string Token, int Line)> Occurrences(Doc d)
     {
         if (d.Front is not null)
-            foreach (var found in Scalars(d.Front).SelectMany(n => From(n.Value, NodeLine(n, d))))
+            foreach (var found in Scalars(d.Front).SelectMany(n => From(n.Value, Yaml.LineOf(n, d.FrontStartLine))))
                 yield return found;
 
         foreach (var found in (d.IdentitySpans ?? []).SelectMany(s => From(s, d.IdentityLine)))
@@ -52,9 +52,6 @@ public static partial class Placeholder
             YamlMappingNode map => map.Children.Values.SelectMany(Scalars),
             _ => []
         };
-
-    private static int NodeLine(YamlNode node, Doc d)
-        => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
 
     /// <summary>A whole placeholder, for quoting back. Tolerant of an unclosed mark.</summary>
     [GeneratedRegex(@"\{\{[^}\n]*\}?\}?")]

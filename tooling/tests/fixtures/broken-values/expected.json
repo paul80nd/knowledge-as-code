@@ -10,21 +10,21 @@
   "findings": [
     {
       "file": "adrs/0001-bad-enum-value.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "enum",
       "message": "'status' value 'Draft' is not one of: proposed, rejected, accepted, deprecated, superseded."
     },
     {
       "file": "adrs/0001-bad-enum-value.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "enum-lowercase",
       "message": "'status' enum value 'Draft' must be lowercase."
     },
     {
       "file": "adrs/0002-scalar-list.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "list",
       "message": "'tags' must be a YAML sequence."
@@ -38,56 +38,56 @@
     },
     {
       "file": "adrs/0004-bad-tag-pattern.md",
-      "line": 9,
+      "line": 10,
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$."
     },
     {
       "file": "adrs/0004-bad-tag-pattern.md",
-      "line": 10,
+      "line": 11,
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$."
     },
     {
       "file": "adrs/0005-impossible-date.md",
-      "line": 5,
+      "line": 6,
       "severity": "error",
       "check": "date-format",
       "message": "'decided-on' is not a date on the calendar, got '2026-13-40'."
     },
     {
       "file": "adrs/0006-owner-without-a-prefix.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "field-pattern",
       "message": "'owner' value 'alex.doe' does not match ^(human|role):[a-z0-9.-]+$."
     },
     {
       "file": "fixes/too-few-keywords.md",
-      "line": 5,
+      "line": 6,
       "severity": "error",
       "check": "min-items",
       "message": "'symptom-keywords' has 2 entries: the schema asks for at least 3."
     },
     {
       "file": "fixes/verified-at-is-not-a-moment.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "timestamp-format",
       "message": "'verified.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'."
     },
     {
       "file": "fixes/verified-at-is-not-a-moment.md",
-      "line": 8,
+      "line": 9,
       "severity": "error",
       "check": "timestamp-format",
       "message": "'verified.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'."
     },
     {
       "file": "tools/bad-licence-pattern.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "field-pattern",
       "message": "'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\\-+ ()]+$."

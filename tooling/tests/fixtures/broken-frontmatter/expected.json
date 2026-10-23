@@ -31,42 +31,42 @@
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 2,
+      "line": 3,
       "severity": "error",
       "check": "type-matches-folder",
       "message": "type 'policy' does not match the 'adrs' folder's type 'adr'."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "tier-matches-type",
       "message": "tier 'descriptive' does not match the 'adr' type tier 'decided'."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "date-quoted",
       "message": "'decided-on' date must be quoted, e.g. \"2026/06/12\"."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "date-format",
       "message": "'decided-on' must be a YYYY-MM-DD date, got '2026/06/12'."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "bare-key",
       "message": "'supersedes' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: supersedes: \"{{…}}\"."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 8,
+      "line": 9,
       "severity": "error",
       "check": "bare-key",
       "message": "'deciders' is absent but not a bare key. Use 'deciders:' with no value (not null, ~, \"\", or —)."

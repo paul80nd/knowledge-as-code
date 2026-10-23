@@ -25,7 +25,7 @@ public class NoSelfVerificationTests
 
     [Fact]
     public void The_finding_points_at_the_entry()
-        => Assert.Equal(11, Assert.Single(Run("kac/0.24.0", "agent:sweep", "kac/0.24.0")).Line);
+        => Assert.Equal(12, Assert.Single(Run("kac/0.24.0", "agent:sweep", "kac/0.24.0")).Line);
 
     [Fact]
     public void Every_offending_entry_is_reported()

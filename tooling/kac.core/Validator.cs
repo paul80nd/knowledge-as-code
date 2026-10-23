@@ -148,13 +148,14 @@ public static class Validator
                 }
             }
 
-        foreach (var (name, node) in present)
+        foreach (var (key, node) in d.Front.Children)
         {
+            var name = ((YamlScalarNode)key).Value ?? "";
             var spec = schema.EffectiveField(t, name);
             // Unknown key already reported.
             if (spec is null) continue;
 
-            ValueChecks.Check(name, node, spec, kind, d.FrontStartLine, report);
+            ValueChecks.Check(name, node, Yaml.LineOf(key, d.FrontStartLine), spec, kind, d.FrontStartLine, report);
         }
 
         // Against the singular name the type declares, which is what frontmatter carries. `id-prefix` below
