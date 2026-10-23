@@ -3,7 +3,8 @@ namespace kac.core;
 /// <summary>
 /// One type of a consumed corpus, as that corpus published it. Lines and records stay text, so a consumer stamps its
 /// producer's shortcode onto the id keys and carries the rest through untouched. <c>Json.cs</c> says why the four key
-/// names are read from the manifest.
+/// names are read from the manifest. <c>StatedRecords</c> and <c>StatedParts</c> are the counts the manifest states,
+/// zero where it states none.
 /// </summary>
 public sealed record InheritedType(
     string Type,
@@ -17,7 +18,9 @@ public sealed record InheritedType(
     IReadOnlyDictionary<string, string> Sections,
     IReadOnlyList<string> PartLines,
     IReadOnlyList<InheritedRecord> Records,
-    string? InForce = null);
+    string? InForce = null,
+    int StatedRecords = 0,
+    int StatedParts = 0);
 
 /// <summary>
 /// <c>Producer</c> is the corpus that wrote the record, which for an inherited one is further up the chain.
@@ -98,7 +101,9 @@ public static class Inherited
                 declared.Sections,
                 Lines(declared.PartsFile is null ? null : read($"{shortcode}/{declared.PartsFile}")),
                 RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, folders, read),
-                declared.InForce));
+                declared.InForce,
+                declared.Records,
+                declared.Parts));
 
         return new InheritedCorpus(
             shortcode,

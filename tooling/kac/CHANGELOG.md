@@ -62,6 +62,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `clause-modal` as though it opened with the keyword. A code span names a keyword, so that clause states no
   obligation. `clause-modal` now reports it as opening with no modal. It reports a bold `MUST` followed by `` `NOT` ``
   too, which `kac export` read as `MUST NOT`.
+- **`kac export` refuses a consumed type whose record files all went missing.** Where none arrived, the type and its
+  part lines left the export unreported. `export` now stops and names the type and its producer whenever part lines
+  arrived or the producer's manifest counts records or parts. A type with none of these is still left out.
 
 ## 0.38.0 - 2026-10-23
 

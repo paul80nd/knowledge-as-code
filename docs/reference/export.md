@@ -149,6 +149,11 @@ Each of these ends the run with a reason and nothing written:
 * one corpus arriving twice, at two versions
 * a part line naming a record whose file the export does not write, such as a line for `gp:gls-old` with no
   `glossary/gp/gls-old.json` beside it
+* a consumed type that arrives with no record files, where its producer sent part lines for it or its manifest entry
+  counts `records` or `parts` above zero
+
+A consumed type with no record files, no part lines and both counts at zero is empty. The export leaves it out and says
+nothing.
 
 ### `sources`
 

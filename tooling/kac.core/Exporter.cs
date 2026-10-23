@@ -61,6 +61,7 @@ public static class Exporter
         var withheld = new List<string>();
         var unread = new List<string>();
         var owed = new List<(string Type, string Record, string Path)>();
+        var lost = new List<string>();
 
         foreach (var key in Keys(corpus, consumed, type))
         {
@@ -99,6 +100,12 @@ public static class Exporter
             foreach (var from in consumed)
             {
                 if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
+
+                if (Lost(theirs, from.Shortcode) is { } loss)
+                {
+                    lost.Add(loss);
+                    continue;
+                }
 
                 foreach (var record in theirs.Records)
                 {
@@ -140,6 +147,7 @@ public static class Exporter
         }
 
         var orphans = Orphans(files, owed);
+        orphans.InsertRange(0, lost);
         if (orphans.Count > 0) return new ExportPlan([], [], [], [], orphans);
 
         files.Add(new ExportFile(ManifestFile,
@@ -350,6 +358,29 @@ public static class Exporter
                 $"'{o.Type}' has a part line for {o.Record}, and the export writes no {o.Path}. "
                 + "Re-export and re-pack the corpus that sent the line, then run kac restore.")
         ];
+    }
+
+    /// <summary>
+    /// The refusal for a consumed type that sent no record file while its part lines or manifest counts say it has
+    /// records. Null where a record file arrived, and for an empty type, which the export leaves out.
+    /// </summary>
+    private static string? Lost(InheritedType theirs, string shortcode)
+    {
+        var fault = theirs switch
+        {
+            { Records.Count: > 0 } => null,
+            { PartLines.Count: > 0 and var n } => $"with {Count(n, "part line")} and no record files",
+            { StatedRecords: > 0 and var n } => $"with no record files, and its manifest counts {Count(n, "record")}",
+            { StatedParts: > 0 and var n } => $"with no record files, and its manifest counts {Count(n, "part line")}",
+            _ => null
+        };
+
+        return fault is null
+            ? null
+            : $"'{theirs.Type}' arrives from {shortcode} {fault}. "
+              + $"Re-export and re-pack {shortcode}, then run kac restore.";
+
+        static string Count(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
     }
 
     /// <summary>

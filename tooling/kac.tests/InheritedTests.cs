@@ -40,6 +40,22 @@ public class InheritedTests
     public void A_manifest_stating_no_in_force_status_leaves_it_null()
         => Assert.Null(Assert.Single(Assert.Single(Read(Flat).Carried).Types).InForce);
 
+    [Fact]
+    public void A_type_reads_its_record_and_part_counts_from_its_producer_s_manifest()
+    {
+        var files = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["mid/manifest.json"] = Manifest("glossary/terms.jsonl").Replace(
+                "\"dir\": \"glossary\",", "\"dir\": \"glossary\", \"records\": 3, \"parts\": 7,",
+                StringComparison.Ordinal)
+        };
+
+        var type = Assert.Single(Assert.Single(Read(files).Carried).Types);
+
+        Assert.Empty(type.Records);
+        Assert.Equal((3, 7), (type.StatedRecords, type.StatedParts));
+    }
+
     /// <summary><c>inForce</c> is left out where it is null.</summary>
     private static string Manifest(string partsFile, string? inForce = null) =>
         $$"""
