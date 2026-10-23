@@ -61,10 +61,12 @@ one says moves neither. One nothing sends moves nothing.
 7. If you added, removed, renamed or moved a file the template sends a corpus, move `version:` in `manifest.yaml`.
    Then move `upstream.template-version` in every corpus's `.corpus.yaml` to the same number. That reaches a file
    under `template/.plugin/`, and a skill under `.claude/skills/` named by an overlay rule.
-8. Move `content-version` in each corpus whose bundle ships the change. A lookup skill ships only in the corpora that
-   declare the type it reads. A standalone skill ships in all four. [std-VERS] says which component moves.
+8. Move `content-version` in each corpus whose bundle ships the change. A lookup skill ships only in the corpora whose
+   export includes the type it reads, adopted or inherited. A standalone skill ships in all four. [std-VERS] says
+   which component moves.
 9. Move the `resolved:` lock of every consumer of a corpus you moved in step 8. Move its `version:` range as well where
-   the producer is below 1.0.0 and its minor moved.
+   the producer is below 1.0.0 and its minor moved. Then move that consumer's own `content-version` by the part its
+   producer moved, or by the larger part where step 8 already moved it.
 10. Prove each lock the way CI will. Delete `.imports/` in `examples/payments` and `examples/dog-fooding`, repack each
     producer, then run `kac restore` in each consumer and read what it reports. `.imports/` is untracked, so a restore
     over a folder you kept proves nothing.

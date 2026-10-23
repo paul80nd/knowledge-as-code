@@ -168,8 +168,8 @@ Confirmed when both consumers restore and validate with no errors. If a step doe
 ## Afterwards
 
 * Raise no postmortem. The gate catches a stale lock before a reader does.
-* Where the producer's `content-version` moved on this branch, check that both consumers moved with it before the pull
-  request opens.
+* Where the producer's `content-version` moved on this branch, check that both consumers moved their `resolved:` lock
+  and their own `content-version` with it before the pull request opens.
 
 ## Related
 

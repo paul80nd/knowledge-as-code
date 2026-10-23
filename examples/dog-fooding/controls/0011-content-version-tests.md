@@ -28,18 +28,25 @@ replaces a version it has taken.
 
 ## How it works
 
-`ContentVersionTests` in `tooling/kac.tests` compares what each corpus exports on the branch with what it exported at
-the commit the branch grew from, in four steps:
+`ContentVersionTests` in `tooling/kac.tests` compares each corpus under `examples/` on the branch with the same corpus
+at the commit the branch grew from. It asks `git diff` and `git ls-files` for every file the branch added, changed,
+renamed or deleted, committed or not. Each of its three facts then reads `content-version` from `.corpus.yaml` at both
+revisions, and fails a corpus where something moved and the stamp did not rise.
 
-* It asks `git diff` and `git ls-files` for every file the branch added, changed, renamed or deleted, committed or not.
-* It skips a corpus under `examples/` where nothing in its folder or in `.schema/` changed.
-* It builds that corpus's export twice in memory, with the branch's exporter both times. The first build reads the
-  records, `.corpus.yaml` and `.schema/` as git stored them at the merge base. The second reads the working tree.
-* Where the two exports differ by a byte outside `mechanismVersion`, it reads `content-version` from `.corpus.yaml` at
-  both revisions, and fails where the stamp did not rise.
+| Fact                          | What counts as a move                                                                                     |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------|
+| The export changed            | The corpus's export, built twice in memory from its records, `.corpus.yaml` and `.schema/`, differs by a byte outside `mechanismVersion`. The first build reads git at the merge base, and the second reads the working tree. |
+| The lock moved                | A `consumes:` entry in `.corpus.yaml` states a different `resolved:` at the merge base and in the working tree. |
+| A bundled component changed   | A file under `template/.plugin/`, or under the corpus's own `.plugin/`, changed, and `kac bundle` would copy it into this corpus's plugin. |
 
-Both builds run one exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests`
-checks the comparison in each direction against corpora built in memory.
+The first fact skips a corpus where nothing in its folder or in `.schema/` changed. Both of its builds run one exporter,
+so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison in each
+direction against corpora built in memory.
+
+The third fact decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
+and export. That export includes what each corpus consumes, built from the producer's folder here. So an edit to
+`controls-lookup` asks for a move in every corpus whose export includes a control, its own or inherited, and in no
+other.
 
 The `tool` job runs it under `dotnet test --project tooling/kac.tests`. That job checks out with `fetch-depth: 0` and
 names the target branch in `KAC_BASE_REF`, because a shallow checkout keeps no base to compare against. A job that
@@ -59,13 +66,15 @@ A template take is left out. It moves `upstream.template-version`, which `manife
 `mechanismVersion`. Both builds drop `mechanismVersion` before they compare, because it is a stamp of its own and no
 record moved with it.
 
-The export compared is the corpus's own records. `.imports/` is untracked, so git keeps no copy of what a consumer had
-restored at the merge base, and neither build reads it. A consumer whose inherited records changed is asked for no
-move here. [#1084](https://github.com/paul80nd/knowledge-as-code/issues/1084) tracks that gap.
+The export the first fact compares is the corpus's own records. `.imports/` is untracked, so git keeps no copy of what
+a consumer had restored at the merge base. The second fact reads the `resolved:` lock instead, which [std-VERS] makes
+the trigger for a consumer's move. It needs no restore and no package. A producer that moves for a bundled skill alone
+still obliges its consumers through their lock, with nothing new in their export.
 
-A reviewer checks the bundled skills. The same clause says "`content-version` **MUST** move where a skill in the bundle
-changes what it tells a reader to do". A test can see that a skill file changed, and not whether what it tells a reader
-changed.
+The third fact checks that a corpus moved where a changed skill, hook or manifest reaches its bundle. A reviewer judges
+whether the change was to wording, which moves the patch, or to what the component tells a reader to do, which moves
+the minor. A file the branch deleted is not in the working plugin tree, so deleting a file from a component asks for no
+move here.
 
 Only the corpora under `examples/` are read. `template/` states no `content-version`, and a fixture corpus under
 `tooling/` states one as part of the fixture.
