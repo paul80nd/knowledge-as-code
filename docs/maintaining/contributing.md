@@ -30,9 +30,10 @@ Branch off `main`. A push to `main` is rejected. Before you open the pull reques
 1. Fix every page your change made wrong. A change to a command usually changes its page under `docs/use/cli/`.
 2. Where `kac` changed, add an entry under `## Unreleased` in `tooling/kac/CHANGELOG.md`.
 3. Leave `<Version>` alone. Moving it publishes a release, and that is the owner's decision.
-4. Where a corpus's own records or schema change what it exports, move `content-version` in that corpus's
-   `.corpus.yaml`. Where that corpus has consumers, move their `resolved:` lock in the same pull request. A change to
-   `kac` moves no `content-version`, even where the exported bytes change.
+4. Where a corpus's own records or schema change what it exports, or its plugin bundle includes a skill, a hook or a
+   manifest you changed, move `content-version` in that corpus's `.corpus.yaml`. Where that corpus has consumers, move
+   their `resolved:` lock and their own `content-version` in the same pull request. A change to `kac` moves no
+   `content-version`, even where the exported bytes change.
    [std-VERS](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/versioning.md#which-stamps-move-together-and-which-move-alone)
    states the rule.
 5. Run the [test layers](build-test-release.md#the-three-test-layers) your change touches.

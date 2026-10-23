@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.DOCS, eng:pol-KNOW.SYNC, eng:pol-PIPE.REVERT, eng:pol-TRUS.MUTATE ]
-verified-by: [ ctl-0007 ]
+verified-by: [ ctl-0007, ctl-0011 ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -50,7 +50,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 - A change confined to a section a record's type leaves out of `export:` **MUST NOT** move `content-version`.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
   and its patch a change of wording.
-- `content-version` **MUST** move where a skill in the bundle changes what it tells a reader to do. `kac bundle`
+- `content-version` **MUST** move where a change reaches a skill, a hook or the manifest its bundle includes. Its patch
+  **MUST** mark a change of wording, and its minor a change to what the component tells a reader to do. `kac bundle`
   stamps the plugin with it, so a reader takes a changed skill only where it moves.
 - A change to a field's accepted value format, its name, or its removal **MUST** move `content-version`'s major where
   the change reaches a record whose type names that field under `export:`, and its patch where it reaches none.
@@ -87,6 +88,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 
 - A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in the pull request moving the
   producer's `content-version`.
+- That consumer **MUST** move its own `content-version` wherever its `resolved:` lock moves, by the part the producer
+  moved, because its export now publishes what the producer changed.
 - That consumer **MUST** move its `version:` range as well wherever the producer is below 1.0.0 and its minor moved.
 - A corpus here **MUST NOT** publish a `content-version` that a committed range in this repository refuses.
 - You **SHOULD** delete `.imports/` in every consumer before you open the pull request, unless you leave the proof to
@@ -100,7 +103,8 @@ _**Covers:** `eng:pol-KNOW.SYNC`_
 
 ### Which stamps move together, and which move alone
 
-- `content-version` and the `resolved:` lock of every consumer of that corpus **MUST** move in one pull request.
+- `content-version`, the `resolved:` lock of every consumer of that corpus, and each of those consumers' own
+  `content-version` **MUST** move in one pull request.
 - `version:` in `manifest.yaml` and the `upstream.template-version` of every corpus here **MUST** move in one pull
   request.
 - `version:` under `export:` in a `.schema/<type>.yaml` and the `shapeVersion` an export publishes for that type
@@ -149,13 +153,14 @@ restore keeps a folder that already contains 0.10.0.
 
 ## Conformance checklist
 
-- [ ] Every corpus whose export changed, or whose bundled skills changed what they tell a reader to do, has moved
-      its `content-version`, at the major, minor or patch that change earns.
+- [ ] Every corpus whose export changed, or whose bundle includes a skill, a hook or a manifest that changed, has
+      moved its `content-version`, at the major, minor or patch that change earns.
 - [ ] Where a field's value format or name changed, or a field was added or removed, the `export:` block of every type
       it reached decided which component that corpus moved.
 - [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record
       changed.
 - [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.
+- [ ] Every consumer whose `resolved:` lock moved has moved its own `content-version`, by the part its producer moved.
 - [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.
 - [ ] No `kac restore` over an `.imports/` nobody deleted is offered as proof.
 - [ ] `version:` in `manifest.yaml` has moved where a corpus has to respond, and every `upstream.template-version`
@@ -183,6 +188,13 @@ and a caret over one. Above 1.0.0 a caret runs to the next major, because a majo
 below it changed meaning. Below one there is no such promise, so the caret stops at the minor instead. A producer that
 moves its minor and leaves its consumers alone publishes something they have already said they will not take.
 
+A consumer's export includes what it inherits, so a lock that moves changes what the consumer publishes. The lock is
+the trigger, and a change to the inherited records is not, so the rule and its test read the same line of
+`.corpus.yaml`. Where the consumer's own records changed in the same pull request, one move covers both, at the larger
+part. A consumer below 1.0.0 moves its minor where that part is a major, as it would for any other move. A producer
+that moves for a bundled skill alone still obliges its consumers to move, with nothing new in their export. A
+`content-version` a reader does not know never stops that reader.
+
 `mechanismVersion` is the descriptor's `upstream.template-version` published under the name that key used to have. It
 adds nothing a corpus does not already state, and renaming it in the export is what `formatVersion` exists to announce.
 
@@ -194,9 +206,10 @@ it states nothing the rules above have not already bound.
 **A reviewer reads most of the rules above.** [ctl-0007] runs `kac validate`, which fails a declared import that was
 never restored and warns where a newer version sits inside the declared range. It reports the caret trap as
 information, not as a warning, because a corpus that capped itself on purpose is reporting a decision. [ctl-0011]
-fails a corpus whose export changed and whose `content-version` did not rise, and leaves a bundled skill to review.
-Nothing compares a `shapeVersion` against the files it stamps, and nothing reads `<Version>` against what a user of
-`kac` can observe.
+fails a corpus whose `content-version` did not rise where its export changed, its `resolved:` lock moved, or its
+bundle includes a skill, a hook or a manifest that changed. A reviewer judges whether that last change was to wording or
+to what the component tells a reader to do. Nothing compares a `shapeVersion` against the files it stamps, and
+nothing reads `<Version>` against what a user of `kac` can observe.
 
 ## Sources and further reading
 
@@ -207,6 +220,10 @@ Nothing compares a `shapeVersion` against the files it stamps, and nothing reads
 
 ## Changelog
 
+- 2026-10-23: a consumer moves its own `content-version` wherever its `resolved:` lock moves, by the part its producer
+  moved.
+- 2026-10-23: `content-version` moves where a change reaches a skill, a hook or the manifest a bundle includes, at the
+  patch for wording and the minor for what the component tells a reader to do.
 - 2026-10-18: deleting `.imports/`, repacking the producer and restoring again become `SHOULD`, because the pull
   request's CI restores from a clean checkout. A restore over an `.imports/` you did not delete is still no proof.
 - 2026-09-15: a change confined to a section the export leaves out moves no `content-version`.

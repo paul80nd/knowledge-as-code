@@ -89,10 +89,10 @@ Most of `kac.tests` asks whether `kac` behaves. A small tail asks whether **this
 whether a page states the usage the parser accepts, whether a comment cites a file that exists, stays within three lines
 and sits where Microsoft's C# conventions put it, whether `CHANGELOG.md` carries a section for the version `kac.csproj`
 names, whether a fixture's dates still sit clear of today, whether a skill tells a reader to leave out a field every
-type requires, whether a `fix` or a `report` whose prose changed was verified again, and whether a corpus whose records
-changed moved its `content-version`. Those fail when content here drifts, when the calendar moves under it, or when a
-change goes in unread, and never when the tool's logic is wrong. No corpus consuming `kac` carries one, because none of
-it ships. The last two read git history, so the job running them checks out with `fetch-depth: 0`.
+type requires, whether a `fix` or a `report` whose prose changed was verified again, and whether a corpus whose export,
+lock or bundle changed moved its `content-version`. Those fail when content here drifts, when the calendar moves under
+it, or when a change goes in unread, and never when the tool's logic is wrong. No corpus consuming `kac` carries one,
+because none of it ships. The last two read git history, so the job running them checks out with `fetch-depth: 0`.
 
 A `Kind` trait separates them, so a tight loop can leave the second out.
 [Run the unit layer in part][site-filters] has the filters.
