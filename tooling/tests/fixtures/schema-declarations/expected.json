@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 35,
+    "errors": 38,
     "warnings": 0,
     "infos": 0
   },
@@ -252,6 +252,27 @@
       "severity": "error",
       "check": "schema-shape",
       "message": "type 'widgets' declares a 'versus:' against itself: a disambiguation has two sides."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": 134,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "rule 'widgets-are-brief' on type 'widgets' declares 'max-words:', and an 'expr:' rule reads no config. Drop the key."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": 141,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "rule 'y-statement-present' on type 'widgets' declares 'postures:', and its rule class reads only 'max-words'. Drop the key."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": 141,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "rule 'y-statement-present' on type 'widgets': 'max-words' is 'five', and a word limit is a whole number above zero. Write one, such as 60. The rule checks no record until this is fixed."
     }
   ]
 }

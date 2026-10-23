@@ -374,13 +374,13 @@ public sealed record RuleSpec
     public bool IsExpression => Compiled is not null;
 
     /// <summary>
-    /// The framework standings <c>alignment-rollup</c> holds a policy's roll-up to, as the corpus's own register writes
-    /// them.
+    /// The config keys the entry declares, from those some rule class <c>Reads</c>, each with its value as written. A
+    /// rule class reads its own keys from here. <c>SchemaChecks</c> reports a key the rule's own class does not read.
     /// </summary>
-    public IReadOnlyList<string> Postures { get; init; } = [];
+    public IReadOnlyDictionary<string, YamlNode> Config { get; init; } = new Dictionary<string, YamlNode>();
 
-    /// <summary>The ceiling <c>y-statement-present</c> holds a Y-statement to.</summary>
-    public int? MaxWords { get; init; }
+    /// <summary>The line the entry starts on in its <c>.schema/</c> file, and null for a rule built in code.</summary>
+    public int? Line { get; init; }
 
     /// <summary>
     /// Why this rule could not be read, and null where it could. <c>SchemaChecks</c> reports it against the file.
@@ -1096,6 +1096,11 @@ public sealed partial class Schema
                 }
         }
 
+        var config = new Dictionary<string, YamlNode>(StringComparer.Ordinal);
+        foreach (var key in CheckCatalogue.ReadByRules())
+            if (rule.Get(key) is { } value)
+                config[key] = value;
+
         return new RuleSpec
         {
             Id = new RuleId(id),
@@ -1105,10 +1110,8 @@ public sealed partial class Schema
             Compiled = compiled,
             Message = message,
             Problem = problem,
-            Postures = Yaml.StrList(rule.Get("postures")),
-            MaxWords = rule.Get("max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
-                ? words
-                : null
+            Config = config,
+            Line = Yaml.LineOf(node, 0)
         };
     }
 

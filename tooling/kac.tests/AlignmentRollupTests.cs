@@ -1,4 +1,5 @@
 using kac.core;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.tests;
 
@@ -246,13 +247,29 @@ public class AlignmentRollupTests
     public void A_policy_citing_nothing_leaves_the_register_unread()
         => Assert.Empty(Uncited("aligns-with:", "| `ZEROSEC` | COULD reach zero secrets. | |"));
 
+    private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
+        params string[] rows)
+    {
+        var (doc, tree) = Policy(WithClauses(), frontmatter, undefined, rows);
+
+        var found = new List<Finding>();
+        new AlignmentRollup().Check(new CorpusRuleContext(
+            [doc], new Dictionary<string, Doc> { ["pol-SCRT"] = doc }, tree, doc.TypeOf(),
+            Rollup("Obliged", "Self-obligated"),
+            new Dictionary<string, string>(StringComparer.Ordinal), null,
+            (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Error, c, m)),
+            (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Warning, c, m))));
+
+        return found;
+    }
+
     /// <summary>
     /// Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make a
     /// cell's labels links, and a label names the register page and heading. <c>undefined</c> names the labels left
     /// without one, which is how a case states a citation markdown never made into a link.
     /// </summary>
-    private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
-        params string[] rows)
+    private static (Doc Doc, Tree Tree) Policy(Schema schema, string frontmatter,
+        IReadOnlyCollection<string> undefined, string[] rows)
     {
         var table = "| Id | Clause | Alignment |\n|----|--------|-----------|\n"
                     + string.Join("\n", rows) + "\n";
@@ -264,21 +281,100 @@ public class AlignmentRollupTests
         var text = $"---\nid: pol-SCRT\n{frontmatter}\n---\n\n# Secrets are managed\n\n"
                    + $"`Policy: pol-SCRT` `DRAFT`\n\n## Clauses\n\n{table}\n{definitions}\n";
 
-        var doc = Doc.Parse("policies/scrt-secrets.md", text, WithClauses());
+        var doc = Doc.Parse("policies/scrt-secrets.md", text, schema);
         Assert.NotNull(doc);
 
         var files = new HashSet<string>(["frameworks.md", "policies/scrt-secrets.md"], StringComparer.Ordinal);
-        var tree = new Tree(files, rel => rel == "frameworks.md" ? Frameworks : text);
+        return (doc, new Tree(files, rel => rel == "frameworks.md" ? Frameworks : text));
+    }
 
-        var found = new List<Finding>();
-        new AlignmentRollup().Check(new CorpusRuleContext(
+    private static RuleSpec Rollup(params string[] postures) => new()
+    {
+        Id = new RuleId("alignment-rollup"), Severity = Sev.Error, Line = 9,
+        Config = new Dictionary<string, YamlNode>
+        {
+            ["postures"] = new YamlSequenceNode(postures.Select(p => new YamlScalarNode(p)))
+        }
+    };
+
+    /// <summary>
+    /// The whole of <c>validate</c>, kept to the checks this rule reports under and to <c>schema-dispatch</c> against
+    /// the policy type. The record misses a reference its clause cites, so a rule that runs reports it.
+    /// </summary>
+    private static List<Finding> Validated(params string[] postures)
+    {
+        var schema = WithClauses(Rollup(postures));
+        var (doc, tree) = Policy(schema, "aligns-with:", [],
+            ["| `STORE` | **MUST** hold secrets. | [ISO 27001:2022].A.5.17 |"]);
+
+        var corpus = new LoadedCorpus
+        {
+            Schema = schema,
+            Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "1.0.0" },
+            Tree = tree,
+            Adopted = [.. schema.ByFolder.Values],
+            Docs = [doc],
+            Templates = [],
+            SkippedNoFrontmatter = 0
+        };
+
+        var emits = new AlignmentRollup().Emits;
+        return
+        [
+            .. Validator.CheckAll(corpus, new DateOnly(2026, 1, 1)).Where(f =>
+                emits.Contains(f.Check) || (f.Check == Dispatch && f.File == ".schema/policies.yaml"))
+        ];
+    }
+
+    private static readonly CheckId Dispatch = new("schema-dispatch");
+
+    [Fact]
+    public void A_posture_the_register_spells_lets_the_rule_judge_the_records()
+    {
+        var found = Validated("Obliged", "Self-obligated");
+
+        Assert.DoesNotContain(found, f => f.Check == Dispatch);
+        Assert.Equal("policies/scrt-secrets.md", Assert.Single(found, f => f.Check.Value == "alignment-rollup").File);
+    }
+
+    [Fact]
+    public void A_misspelt_posture_is_reported_once_against_the_schema_and_nothing_against_the_records()
+    {
+        var found = Assert.Single(Validated("Oblidged", "Self-obligated"));
+
+        Assert.Equal(Dispatch, found.Check);
+        Assert.Equal(".schema/policies.yaml", found.File);
+        Assert.Equal(9, found.Line);
+        Assert.Contains("'Oblidged'", found.Message);
+    }
+
+    [Fact]
+    public void A_posture_one_register_heads_and_another_omits_is_left_alone()
+    {
+        const string text = "---\nid: pol-SCRT\naligns-with:\n---\n\n# Secrets are managed\n\n"
+                            + "`Policy: pol-SCRT` `DRAFT`\n\n## Clauses\n\n"
+                            + "| Id | Clause | Alignment |\n|----|--------|-----------|\n"
+                            + "| `KEYS`  | **MUST** protect keys. | [UK GDPR].Art.32 |\n"
+                            + "| `STORE` | **MUST** hold secrets. | [ISO 27001:2022].A.5.17 |\n\n"
+                            + "[ISO 27001:2022]: ../frameworks.md#iso-27001\n"
+                            + "[UK GDPR]: ../regulators.md#uk-gdpr\n";
+
+        var doc = Doc.Parse("policies/scrt-secrets.md", text, WithClauses());
+        Assert.NotNull(doc);
+
+        const string regulators = "# Regulators\n\n## Obliged\n\n### UK GDPR\n\nThe law applies to us.\n";
+        var files = new HashSet<string>(["frameworks.md", "regulators.md", doc.Rel], StringComparer.Ordinal);
+        var tree = new Tree(files, rel => rel switch
+        {
+            "frameworks.md" => Frameworks,
+            "regulators.md" => regulators,
+            _ => text
+        });
+
+        Assert.Empty(new AlignmentRollup().Misconfigured(new CorpusRuleContext(
             [doc], new Dictionary<string, Doc> { ["pol-SCRT"] = doc }, tree, doc.TypeOf(),
-            new RuleSpec { Id = new RuleId("alignment-rollup"), Postures = ["Obliged", "Self-obligated"] },
-            new Dictionary<string, string>(StringComparer.Ordinal), null,
-            (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Error, c, m)),
-            (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Warning, c, m))));
-
-        return found;
+            Rollup("Obliged", "Self-obligated"), new Dictionary<string, string>(StringComparer.Ordinal), null,
+            (_, _, _, _) => { }, (_, _, _, _) => { })));
     }
 
     /// <summary>
@@ -314,13 +410,17 @@ public class AlignmentRollupTests
                 .Select(m => m.Groups[1].Value))
             .Distinct(StringComparer.Ordinal);
 
-    private static Schema WithClauses() => new()
+    private static Schema WithClauses(params RuleSpec[] rules) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
             ["policies"] = new()
             {
+                Key = "policies",
+                Folder = "policies",
+                Rules = rules,
                 IdPrefix = "pol",
+                IdStyle = "mnemonic",
                 Parts = new PartSpec(PartSpec.Table, "", ["MUST"], ["SHOULD", "COULD"])
                 {
                     Section = "Clauses",

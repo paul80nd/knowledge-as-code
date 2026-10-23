@@ -1,3 +1,6 @@
+using System.Globalization;
+using YamlDotNet.RepresentationModel;
+
 namespace kac.core;
 
 public sealed class YStatementPresent : IDocumentRule
@@ -7,6 +10,27 @@ public sealed class YStatementPresent : IDocumentRule
     private static readonly CheckId Reports = new("y-statement");
 
     public IReadOnlyList<CheckId> Emits => [Reports];
+
+    private const string Limit = "max-words";
+
+    public IReadOnlyList<string> Reads => [Limit];
+
+    private const int DefaultLimit = 60;
+
+    public IEnumerable<string> Misconfigured(RuleSpec spec, Schema schema)
+    {
+        if (!spec.Config.TryGetValue(Limit, out var declared) || MaxWords(spec) is not null) yield break;
+
+        var written = declared is YamlScalarNode { Value: { } value } ? $"is '{value}'" : "is not a single value";
+        yield return $"'{Limit}' {written}, and a word limit is a whole number above zero. Write one, such as "
+                     + $"{DefaultLimit}.";
+    }
+
+    private static int? MaxWords(RuleSpec spec) =>
+        int.TryParse(Yaml.Str(spec.Config.GetValueOrDefault(Limit)), NumberStyles.None, CultureInfo.InvariantCulture,
+            out var words) && words > 0
+            ? words
+            : null;
 
     public void Check(RuleContext ctx)
     {
@@ -27,7 +51,7 @@ public sealed class YStatementPresent : IDocumentRule
                 $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
                 + "Y-statement rather than a summary of one.", line);
 
-        var max = ctx.Spec.MaxWords ?? 60;
+        var max = MaxWords(ctx.Spec) ?? DefaultLimit;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)
             report.Warn(Reports, $"Y-statement is {words} words; keep it under {max}.", line);

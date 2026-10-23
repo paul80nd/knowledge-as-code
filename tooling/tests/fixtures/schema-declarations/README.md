@@ -20,6 +20,10 @@ so the golden is the schema pass and nothing else.
   whose value resolves against nothing. An entry key's own `type:` answers to the same vocabulary and reaches the same
   finding, so `SchemaCheckTests` pins that third way in rather than a fourth field here. It pins the id on an entry key
   too, which is reported whatever the key declares, because the reference pass never walks an `entry:` block.
+* **Config** — `max-words: 5` on `widgets-are-brief`, an `expr:` rule, which reads no config. `y-statement-present`
+  declares `postures:`, which its class does not read, and `max-words: five`, which is not a word limit. These are the
+  only findings here that give a line, because each is reported against the rule's own entry. A misspelt posture is
+  judged against the register the records cite, so it needs records, and `AlignmentRollupTests` pins it.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
   is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
   pointing at `widgets`, which keeps no parts, a `status:` stating a range and naming no `in-force:` value, an

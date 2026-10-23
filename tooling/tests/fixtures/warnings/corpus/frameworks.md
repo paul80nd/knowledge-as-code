@@ -10,3 +10,7 @@ this page is what stops those references failing `link-resolves`, and what says 
 Filed under a standing that binds, so the references the clause tables cite roll up into `aligns-with`.
 The policies here are about list ordering rather than about compliance, and they need a framework that
 binds to have anything to order.
+
+## Self-obligated
+
+No framework is filed here. The heading is what `alignment-rollup` reads its second posture from.

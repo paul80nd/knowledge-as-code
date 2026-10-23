@@ -224,7 +224,7 @@ public static class Validator
         // A template is exempt from every type rule, including one a type declares tomorrow: its guidance
         // prose would answer several of them wrongly.
         if (kind == DocKind.Record)
-            CheckRules(d, t, report, today);
+            CheckRules(d, t, schema, report, today);
     }
 
     /// <summary>
@@ -783,17 +783,28 @@ public static class Validator
 
     /// <summary>
     /// Driven from the schema, so a rule runs whether or not the corpus has stood its type up. A rule with no
-    /// implementation is skipped in silence.
+    /// implementation is skipped in silence. A rule whose config is wrong is reported against the schema, once, and
+    /// does not run.
     /// </summary>
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
         Tree tree, IReadOnlyDictionary<string, string> versions, string? reposBase, List<Finding> f)
     {
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
-            if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule, versions, reposBase,
-                    (at, c, m, l) => Report(Sev.Error, at, c, m, l),
-                    (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
+        {
+            if (!CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation)) continue;
+
+            var ctx = new CorpusRuleContext(docs, byId, tree, t, rule, versions, reposBase,
+                (at, c, m, l) => Report(Sev.Error, at, c, m, l),
+                (at, c, m, l) => Report(Sev.Warning, at, c, m, l));
+
+            var problems = implementation.Misconfigured(ctx).ToList();
+            foreach (var problem in problems)
+                SchemaChecks.Misconfigured(t, rule, problem, f);
+
+            if (problems.Count == 0) implementation.Check(ctx);
+        }
+
         return;
 
         void Report(Sev severity, Doc at, CheckId check, string message, int? line)
@@ -1081,7 +1092,7 @@ public static class Validator
     /// An <c>expr:</c> rule is evaluated, and any other is looked up in <c>DocumentRules</c> by id.
     /// <c>docs/maintaining/checks.md</c> draws the line between them.
     /// </summary>
-    private static void CheckRules(Doc d, TypeSchema t, Report report, DateOnly today)
+    private static void CheckRules(Doc d, TypeSchema t, Schema schema, Report report, DateOnly today)
     {
         // Built only where a rule asks something of the document.
         Facts? facts = null;
@@ -1099,8 +1110,10 @@ public static class Validator
                 continue;
             }
 
-            // A rule with neither an `expr:` nor an implementation is a statement of intent, skipped in silence.
-            if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
+            // A rule with neither an `expr:` nor an implementation is a statement of intent, skipped in silence. One
+            // whose config is wrong is skipped too: SchemaChecks has reported it once, against the schema.
+            if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation)
+                && !implementation.Misconfigured(rule, schema).Any())
                 implementation.Check(new RuleContext(d, t, rule, report));
         }
     }

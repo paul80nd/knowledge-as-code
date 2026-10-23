@@ -59,4 +59,14 @@ public static class CheckCatalogue
         .. DocumentRules.All.SelectMany(r => r.Emits),
         .. CorpusRules.All.SelectMany(r => r.Emits)
     ];
+
+    /// <summary>
+    /// Every config key a rule class reads. The loader asks a rule's entry for these alone, so any other key is unread.
+    /// </summary>
+    public static IReadOnlyList<string> ReadByRules() =>
+    [
+        .. DocumentRules.All.SelectMany(r => r.Reads)
+            .Concat(CorpusRules.All.SelectMany(r => r.Reads))
+            .Distinct(StringComparer.Ordinal)
+    ];
 }

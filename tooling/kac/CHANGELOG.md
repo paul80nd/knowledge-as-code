@@ -50,6 +50,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   naming `gp:gls-old` without `glossary/gp/gls-old.json`, and `export`, `validate` and `bundle` all passed. A lookup
   skill following that line opened a file nobody received. `export` now writes nothing, and names the type, the line's
   record and the file it expected. Re-export and re-pack the corpus that sent the line, then run `kac restore`.
+- **`kac validate` reports a rule's config against the schema.** `max-words:` or `postures:` on a rule that never reads
+  it passed in silence, and so did `max-words: five`, which read as absent. A misspelt posture in `postures:` reported
+  every correct policy as wrong: 108 errors across 40 records in the engineering example. `schema-dispatch` now reports
+  each against the rule's line in its `.schema/` file, and a rule whose value it cannot use checks no record until the
+  value is fixed. Spell a posture as the register's `##` heading spells it.
 
 ## 0.37.0 - 2026-10-21
 

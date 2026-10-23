@@ -16,6 +16,10 @@ and says nothing about what citing it commits anyone to, which is what `framewor
 
 Filed under a standing that binds. A clause citing it would roll up into `aligns-with`.
 
+## Self-obligated
+
+No framework is filed here. The heading is what `alignment-rollup` reads its second posture from.
+
 ## Inspiration
 
 ### Azure Well-Architected Framework
