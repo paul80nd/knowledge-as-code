@@ -136,6 +136,8 @@ substitution.
 
 * **An XML comment cannot contain a double hyphen.** A `.csproj` comment therefore cannot spell a flag such as
   `--version`, and MSBuild fails to load the project rather than warning about it.
+* **A member inserted above another member's comment takes that comment over.** Nothing reports the move, so insert
+  after the end of the previous member and read the comment above what you added.
 * **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the
   push is what stops a run inside that window failing. The version check ahead of it cannot see in.
 * **Three walk-ups look for `kac.slnx`, and each of them means the repository**: [`kac-tests.cs`](kac-tests.cs),
