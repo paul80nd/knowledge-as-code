@@ -51,7 +51,8 @@
         "Scope": "full",
         "Exceptions": "full"
       },
-      "frameworksFile": "policies/frameworks.jsonl"
+      "frameworksFile": "policies/frameworks.jsonl",
+      "inForce": "active"
     }
   ]
 }

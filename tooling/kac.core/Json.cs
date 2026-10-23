@@ -86,7 +86,9 @@ public record ExportPublishing(
 /// <summary>
 /// <c>PartsFile</c>, <c>RecordKey</c>, <c>PartKey</c> and <c>IdKey</c> are null where the type keeps no parts, and
 /// <c>Parts</c> is then zero. <c>SeeAlsoKey</c> is also null where the type declares no such key. <c>FrameworksFile</c>
-/// is null for every type that declares none. <c>docs/reference/export.md</c> sets out what moves <c>ShapeVersion</c>.
+/// is null for every type that declares none. <c>InForce</c> is null for a type with no <c>status</c> range, and for a
+/// type a producer exported before the key existed. <c>docs/reference/export.md</c> sets out what moves
+/// <c>ShapeVersion</c>.
 /// </summary>
 public record ExportedType(
     string Type,
@@ -100,7 +102,8 @@ public record ExportedType(
     string? IdKey,
     string? SeeAlsoKey,
     IReadOnlyDictionary<string, string> Sections,
-    string? FrameworksFile = null);
+    string? FrameworksFile = null,
+    string? InForce = null);
 
 /// <summary>
 /// <c>Trust</c> is null where the type's export declares no <c>verified</c> field. A section carried at

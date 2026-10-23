@@ -131,7 +131,7 @@ public static class Exporter
             if (frameworksFile is not null)
                 files.Add(new ExportFile(frameworksFile, string.Concat(frameworks.Select(l => l + "\n"))));
 
-            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile) with
+            types.Add(Entry(key, local, corpus.Schema, consumed, records, lines.Count, partsFile) with
             {
                 FrameworksFile = frameworksFile
             });
@@ -384,8 +384,11 @@ public static class Exporter
         return consumed.SelectMany(c => c.Types).FirstOrDefault(t => t.Type == key)?.PartsFile;
     }
 
-    /// <summary>Counts what this corpus wrote and what it inherited together.</summary>
-    private static ExportedType Entry(string key, TypeSchema? local, List<InheritedCorpus> consumed,
+    /// <summary>
+    /// Counts what this corpus wrote and what it inherited together. A type this corpus did not adopt states the
+    /// in-force status its producer published.
+    /// </summary>
+    private static ExportedType Entry(string key, TypeSchema? local, Schema schema, List<InheritedCorpus> consumed,
         int records, int parts, string? partsFile)
     {
         if (local?.Export is { } export)
@@ -395,13 +398,15 @@ public static class Exporter
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartKey),
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartId),
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartSeeAlso),
-                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal));
+                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal),
+                InForce: schema.EffectiveField(local, "status")?.InForce);
 
         var theirs = consumed.SelectMany(c => c.Types).First(t => t.Type == key);
 
         return new ExportedType(
             key, theirs.ShapeVersion, records, parts, theirs.Dir, partsFile,
-            theirs.RecordKey, theirs.PartKey, theirs.IdKey, theirs.SeeAlsoKey, theirs.Sections);
+            theirs.RecordKey, theirs.PartKey, theirs.IdKey, theirs.SeeAlsoKey, theirs.Sections,
+            InForce: theirs.InForce);
     }
 
     /// <summary>

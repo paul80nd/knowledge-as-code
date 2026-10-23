@@ -150,8 +150,8 @@ A view is a file `View` renders into the plugin from the export, after the trim.
 * **It states a standard's status and controls once, in or under the standard's heading.** A rule line repeats its
   standard's status, so a view reads it from the first rule. The build index puts the status in the heading, to keep
   the file short. A control is listed under each standard its `verifies` names, or whose rule it names.
-* **The review view names `active` as the status in force.** The export does not state a type's `in-force` value, so
-  `View` fixes the one `.schema/standards.yaml` declares.
+* **The review view names the status in force from the manifest.** It reads `inForce` on the standards entry. Where
+  the entry states none, as an export from an older `kac` does, the view says the export does not state it.
 * **The review view opens on facts.** It says what each keyword means, and that a control checks only the obligations
   its record's What it checks section names, and only where it is `active` and runs as `ci` or `runtime-alert`. The
   `standards-review` skill reads the view whole in a forked subagent, and gives the instructions itself.

@@ -708,6 +708,23 @@ public class BundlerTests
             export: Standards(controls: false)), "views/review.md"));
 
     [Fact]
+    public void A_review_view_states_the_in_force_status_the_export_publishes()
+        => Assert.Contains("- A standard is in force at status `ratified`.", Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: false, inForce: "ratified")), "views/review.md"));
+
+    [Fact]
+    public void A_review_view_says_where_the_export_states_no_in_force_status()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: false, inForce: null)), "views/review.md");
+
+        Assert.Contains("- The export does not state which status puts a standard in force.\n", review);
+        Assert.DoesNotContain("in force at status", review);
+    }
+
+    [Fact]
     public void A_review_view_says_a_control_checks_a_rule_only_where_it_runs_by_itself()
     {
         var review = Text(Plan(
@@ -802,13 +819,18 @@ public class BundlerTests
         {"id":"std-OBS.trace","title":"A call forwards the trace","obligations":[{"level":"MUST","text":"A service **MUST** forward the inbound traceparent."}],"record":"std-OBS","part":"trace","status":"active"}
         """;
 
-    /// <summary>An export of two standards at shape 2, and of one control at shape 1 where <c>controls</c> is set.</summary>
-    private static (string, string)[] Standards(bool controls, string? contentVersion = null)
+    /// <summary>
+    /// An export of two standards at shape 2, and of one control at shape 1 where <c>controls</c> is set. A null
+    /// <c>inForce</c> leaves the key out of the standards entry.
+    /// </summary>
+    private static (string, string)[] Standards(
+        bool controls, string? contentVersion = null, string? inForce = "active")
     {
         var version = contentVersion is null ? "" : $"\"contentVersion\": \"{contentVersion}\", ";
-        var types = """
+        var stated = inForce is null ? "" : $",\"inForce\":\"{inForce}\"";
+        var types = $$"""
                     {"type":"standards","shapeVersion":2,"records":2,"parts":2,"dir":"standards",
-                     "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"}
+                     "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"{{stated}}}
                     """;
         if (controls) types += """,{"type":"controls","shapeVersion":1,"records":1,"parts":0,"dir":"controls"}""";
 

@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac export` states each type's in-force status in the manifest.** Each entry under `types` has `inForce`, the
+  `status` value its schema declares as `in-force:`, or null for a type with no `status` range. An inherited type the
+  corpus never adopted states its producer's value. `kac bundle` reads it for the review view, which named `active`
+  whatever the schema said. An export without the key still bundles, and its review view says the status is not
+  stated. `formatVersion` stays at 4.
+
 ### Fixed
 
 - **`kac bundle` names the version a plugin keeps when the corpus states none.** Where `.corpus.yaml` had no

@@ -16,7 +16,8 @@ public sealed record InheritedType(
     string? SeeAlsoKey,
     IReadOnlyDictionary<string, string> Sections,
     IReadOnlyList<string> PartLines,
-    IReadOnlyList<InheritedRecord> Records);
+    IReadOnlyList<InheritedRecord> Records,
+    string? InForce = null);
 
 /// <summary>
 /// <c>Producer</c> is the corpus that wrote the record, which for an inherited one is further up the chain.
@@ -96,7 +97,8 @@ public static class Inherited
                 declared.SeeAlsoKey,
                 declared.Sections,
                 Lines(declared.PartsFile is null ? null : read($"{shortcode}/{declared.PartsFile}")),
-                RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, folders, read)));
+                RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, folders, read),
+                declared.InForce));
 
         return new InheritedCorpus(
             shortcode,

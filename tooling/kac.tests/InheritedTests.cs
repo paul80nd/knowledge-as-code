@@ -25,7 +25,23 @@ public class InheritedTests
         Assert.Equal(["gls-middle.json"], records.Select(r => r.Name));
     }
 
-    private static string Manifest(string partsFile) =>
+    [Fact]
+    public void A_type_reads_its_in_force_status_from_its_producer_s_manifest()
+    {
+        var files = new Dictionary<string, string>(Flat, StringComparer.Ordinal)
+        {
+            ["mid/manifest.json"] = Manifest("glossary/terms.json", "\"accepted\"")
+        };
+
+        Assert.Equal("accepted", Assert.Single(Assert.Single(Read(files).Carried).Types).InForce);
+    }
+
+    [Fact]
+    public void A_manifest_stating_no_in_force_status_leaves_it_null()
+        => Assert.Null(Assert.Single(Assert.Single(Read(Flat).Carried).Types).InForce);
+
+    /// <summary><c>inForce</c> is written as given, and left out where it is null.</summary>
+    private static string Manifest(string partsFile, string? inForce = null) =>
         $$"""
           {
             "formatVersion": {{Exporter.FormatVersion}},
@@ -33,7 +49,7 @@ public class InheritedTests
             "shortcode": "mid",
             "types": [{
               "type": "glossary", "shapeVersion": 1, "dir": "glossary",
-              "partsFile": "{{partsFile}}"
+              "partsFile": "{{partsFile}}"{{(inForce is null ? "" : $", \"inForce\": {inForce}")}}
             }]
           }
           """;

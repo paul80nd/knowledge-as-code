@@ -213,6 +213,21 @@ It names the second flat file, where a type keeps one.
 
 It is null for every type declaring no `frameworks:` key, and null as well where no clause cites a framework.
 
+### `inForce`
+
+It states the `status` value at which a record of the type is in force. It is the `in-force:` the type's
+`.schema/<type>.yaml` declares on `status`.
+
+```json
+"inForce": "active"
+```
+
+Read it to tell whether a record binds, and never assume `active`. It is null for a type with no `status` range. An
+export written before the key existed omits it, so treat a missing key as null.
+
+A type this corpus inherited and never adopted states the value its producer published. A type this corpus adopted
+states its own schema's value, for its own records and its inherited ones alike.
+
 ### `about`
 
 It contains what the corpus says about itself, which `kac pack` and `kac bundle` read.
