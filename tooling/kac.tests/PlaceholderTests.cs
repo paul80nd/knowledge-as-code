@@ -66,6 +66,12 @@ public class PlaceholderTests
     }
 
     [Theory]
+    [InlineData("---\nid: svc-a\nowner: {{owner}}\n---\n\n# A title\n")]
+    [InlineData("---\nid: svc-a\ngenerated: {{generated}}\n---\n\n# A title\n")]
+    public void A_mark_opening_a_frontmatter_value_is_left_to_bare_key(string text)
+        => Assert.Empty(Placeholder.Occurrences(Required.Parsed("services/a.md", text, new Schema())));
+
+    [Theory]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\n```yaml\nrun: echo ${{ vars.id }}\n```\n")]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\nWrite `${{ vars.id }}` to read it.\n")]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\n    indented: ${{ vars.id }}\n")]

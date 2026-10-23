@@ -22,10 +22,10 @@ public static class ValueChecks
     public static void Check(string name, YamlNode node, int line, FieldSpec spec, DocKind kind, int frontStart,
         Report report)
     {
-        // The order of these returns is the design. A field declaring `object` holds a mapping on purpose, so it is
-        // read ahead of the placeholder mapping below, and a template's placeholder is read as absent before any
-        // field's own check sees it.
-        if (spec.Type == "object" && node is YamlMappingNode obj)
+        // The order of these returns is the design. A field declaring `object` holds a mapping on purpose, so a
+        // filled-in one is read ahead of the placeholder mapping below, and a template's placeholder is read as absent
+        // before any field's own check sees it.
+        if (spec.Type == "object" && node is YamlMappingNode obj && !IsUnquotedPlaceholder(obj))
         {
             Entry(name, obj, line, spec, kind, frontStart, report);
             return;
@@ -35,10 +35,7 @@ public static class ValueChecks
         // with nothing readable in it. Reported here with the fix, rather than as a malformed empty date.
         if (node is YamlMappingNode)
         {
-            var key = name[(name.LastIndexOf('.') + 1)..];
-            report.Err(new CheckId(kind == DocKind.Template ? "template-fields" : "bare-key"),
-                $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
-                + "one has to be quoted: " + key + ": \"{{…}}\".", line);
+            Unquoted(name, name[(name.LastIndexOf('.') + 1)..] + ": ", line, kind, report);
             return;
         }
 
@@ -76,17 +73,31 @@ public static class ValueChecks
     }
 
     /// <summary>
-    /// Pass the field's <c>spec</c> wherever there is one. Without it, every mapping reads as absent.
+    /// Pass the field's <c>spec</c> wherever there is one. Without it, a mapping is read by its shape alone, so a
+    /// filled-in object is present and an unquoted placeholder is absent.
     /// </summary>
     public static bool IsAbsent(YamlNode node, FieldSpec? spec = null) =>
         node switch
         {
             YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL" or "—",
             YamlSequenceNode seq => seq.Children.Count == 0,
-            // A mapping is a value only where the field declares `object`. Anywhere else it is an unquoted placeholder.
-            YamlMappingNode map => spec?.Type != "object" || map.Children.Count == 0,
+            // A mapping is a value only where the field declares `object`, or declares nothing the caller can see.
+            YamlMappingNode map => map.Children.Count == 0 || IsUnquotedPlaceholder(map)
+                                   || (spec is not null && spec.Type != "object"),
             _ => false
         };
+
+    /// <summary>
+    /// True of a mapping keyed by anything but a scalar, which is every mapping an unquoted <c>{{…}}</c> parses to.
+    /// </summary>
+    private static bool IsUnquotedPlaceholder(YamlMappingNode map) =>
+        map.Children.Keys.Any(k => k is not YamlScalarNode);
+
+    /// <summary><c>lead</c> is what the quoted fix opens with: a field's key, or a list entry's dash.</summary>
+    private static void Unquoted(string name, string lead, int line, DocKind kind, Report report) =>
+        report.Err(new CheckId(kind == DocKind.Template ? "template-fields" : "bare-key"),
+            $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
+            + "one has to be quoted: " + lead + "\"{{…}}\".", line);
 
     private static bool IsBareKey(YamlNode node)
         => node is YamlScalarNode { Style: ScalarStyle.Plain } sc && string.IsNullOrEmpty(sc.Value);
@@ -176,7 +187,10 @@ public static class ValueChecks
             var at = Yaml.LineOf(item, frontStart);
             if (spec.Of == "object")
             {
-                Entry(name, item, at, spec, kind, frontStart, report);
+                if (item is YamlMappingNode map && IsUnquotedPlaceholder(map))
+                    Unquoted(name, "- ", at, kind, report);
+                else
+                    Entry(name, item, at, spec, kind, frontStart, report);
                 continue;
             }
 

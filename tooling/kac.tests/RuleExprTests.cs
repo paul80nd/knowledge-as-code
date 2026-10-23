@@ -126,6 +126,27 @@ public class RuleExprTests
     public void Present_reads_a_list_of_objects()
         => Assert.True(Eval("present('aligns-with')", TwoAlignments));
 
+    [Theory]
+    [InlineData("generated: { at: 2026-06-12T09:00:00Z, by: kac/0.24.0 }")]
+    [InlineData("generated:\n  at: 2026-06-12T09:00:00Z\n  by: kac/0.24.0")]
+    [InlineData("generated: { at: 2026-06-12T09:00:00Z }")]
+    public void Present_reads_a_filled_in_object(string field)
+    {
+        Assert.True(Eval("present('generated')", $"id: rpt-coverage\n{field}"));
+        Assert.True(Eval("entries('generated') == 1", $"id: rpt-coverage\n{field}"));
+    }
+
+    [Theory]
+    [InlineData("{{generated}}")]
+    [InlineData("{{ generated }}")]
+    [InlineData("{{generated.at}}")]
+    [InlineData("{}")]
+    public void Present_is_false_for_an_unquoted_placeholder_or_an_empty_mapping(string value)
+    {
+        Assert.False(Eval("present('generated')", $"id: rpt-coverage\ngenerated: {value}"));
+        Assert.True(Eval("entries('generated') == 0", $"id: rpt-coverage\ngenerated: {value}"));
+    }
+
     /// <summary><c>required-field</c> reads each of these as absent, and <c>present()</c> agrees with it.</summary>
     [Theory]
     [InlineData("~")]

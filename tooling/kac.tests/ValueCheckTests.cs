@@ -33,8 +33,28 @@ public class ValueCheckTests
         => Assert.Equal(["entry-shape"], Ids(Run("field: today\n", Event())));
 
     [Fact]
-    public void A_bare_object_field_is_absent()
+    public void A_filled_in_object_field_is_present()
         => Assert.False(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"), Event()));
+
+    [Fact]
+    public void An_unquoted_placeholder_is_absent_to_an_object_field()
+        => Assert.True(ValueChecks.IsAbsent(Value("field: {{generated}}\n"), Event()));
+
+    [Theory]
+    [InlineData("string")]
+    [InlineData("object")]
+    public void An_unquoted_placeholder_is_reported_as_a_bare_key(string type)
+        => Assert.Equal(["bare-key"],
+            Ids(Run("field: {{generated}}\n", type == "object" ? Event() : Field(type))));
+
+    [Fact]
+    public void An_unquoted_placeholder_in_a_list_of_objects_is_reported_as_a_bare_key()
+        => Assert.Equal(["bare-key"], Ids(Run("field:\n  - {{verified}}\n",
+            new FieldSpec { Name = "field", Type = "list", Of = "object", Entry = Event().Entry })));
+
+    [Fact]
+    public void An_unquoted_placeholder_under_an_object_field_in_a_template_is_reported()
+        => Assert.Equal(["template-fields"], Ids(Run("field: {{generated}}\n", Event(), DocKind.Template)));
 
     [Fact]
     public void A_mapping_is_absent_to_every_field_that_is_not_an_object()
