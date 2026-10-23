@@ -34,7 +34,6 @@ public sealed class ChecksSteps(Workspace ws)
         ws.Write(ChecksFile, text.Replace(heading, heading + "    on-type-page: false\n"));
     }
 
-    /// <summary>Removes the entry's key and every line indented beneath it.</summary>
     [Given(@"the corpus's schema declares no check ""(.*)""")]
     public void GivenTheCorpusSchemaDeclaresNoCheck(string id)
     {

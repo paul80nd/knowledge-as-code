@@ -30,7 +30,6 @@ public sealed class DiscoverySteps(Workspace ws)
         if (p.ExitCode != 0) throw new InvalidOperationException("git init failed");
     }
 
-    /// <summary>Moves everything but <c>.schema/</c> down into <paramref name="folder"/>.</summary>
     [Given(@"the corpus sits in ""(.*)"" below its schema")]
     public void GivenTheCorpusSitsInBelowItsSchema(string folder)
     {

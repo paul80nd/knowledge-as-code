@@ -85,9 +85,8 @@ internal static class Suite
     }
 
     /// <summary>
-    /// Builds the tool project and returns the assembly to invoke. The path is read back from the same build with
-    /// <c>--getProperty</c> rather than constructed, so it cannot disagree with the project's configuration or
-    /// framework.
+    /// The assembly's path is read back from the same build with <c>--getProperty</c> rather than constructed, so it
+    /// cannot disagree with the project's configuration or framework.
     /// </summary>
     /// <exception cref="InvalidOperationException">The build failed, or reported no assembly that exists.</exception>
     private static string BuildKac(string kacProject)
