@@ -51,6 +51,9 @@ dotnet run --project ../../tooling/kac -- update --check --from ../../
 A corpus declaring `consumes:` needs `restore` ahead of `validate`, and `restore` needs a package to take. That corpus's
 own `CLAUDE.md` names the producer to `export` and `pack` first.
 
+Where a change reaches what `bundle` writes, run
+[Check the plugin](docs/maintaining/build-test-release.md#check-the-plugin) in each corpus whose plugin it reaches.
+
 Where `kac` or a test changed, run the unit, feature and golden
 [test layers](docs/maintaining/build-test-release.md#the-three-test-layers). Each asserts something the others do not,
 so goldens regenerated alone can pass locally and fail in CI. Where a YAML file or a workflow changed, run the

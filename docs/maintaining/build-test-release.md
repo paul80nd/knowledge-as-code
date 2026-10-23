@@ -112,6 +112,34 @@ sh ../../tooling/tests/round-trip.sh    # needs jq, curl and the Claude Code CLI
 [`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md#the-round-trip) says
 which corpus proves which skill.
 
+## Check the plugin
+
+Build the plugin and check it the way the `corpora` job does, in the same order. Run this from inside the corpus whose
+plugin your change reaches. It needs `jq` and the Claude Code CLI.
+
+!!! note
+    `examples/payments` and `examples/dog-fooding` consume `examples/engineering`. Run `export` and `pack` there, and
+    `restore` in the consumer, before `export`.
+
+```sh
+cd examples/dog-fooding
+dotnet run --project ../../tooling/kac -- export
+dotnet run --project ../../tooling/kac -- bundle   # the plugin, under .dist/plugin/
+dotnet run --project ../../tooling/kac -- pack
+claude plugin validate ./.dist/plugin --strict     # the plugin
+claude plugin validate ./.dist --strict            # the marketplace beside it
+sh ../../tooling/tests/bundled-components.sh .dist/plugin
+```
+
+`bundled-components.sh` fails in three cases:
+
+* A component `bundle.json` kept is missing from the plugin. A component is a skill directory, a hook directory or a
+  view's file.
+* A component it trimmed is present.
+* `.claude-plugin/` contains anything except `plugin.json`. Claude Code loads nothing else from there.
+
+`round-trip.sh` runs the same script over the installed copy.
+
 ## Check the site and the configuration
 
 ```sh
