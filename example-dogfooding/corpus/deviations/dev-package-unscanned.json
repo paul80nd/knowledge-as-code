@@ -34,6 +34,6 @@
     "Scope": "The `kac` package on nuget.org, the plugin served from the marketplace branch, and the four corpus packages [svc-corpus-feed] publishes to GitHub Packages."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a7e9500fbbde50083550d5e4f202058339d974c4/examples/dog-fooding/deviations/package-unscanned.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24f8295814176bed5c35da8c8c6815d65ffb704d/examples/dog-fooding/deviations/package-unscanned.md"
   }
 }
