@@ -13,6 +13,10 @@ public static class ValueChecks
     public static readonly IReadOnlyList<string> FieldTypes =
         ["date", "enum", "id", "list", "object", "string", "timestamp"];
 
+    /// <summary>
+    /// <c>SchemaChecks</c> reads it to reject an <c>of:</c> nothing dispatches, so a name added here needs its branch
+    /// in <c>Sequence</c>.
+    /// </summary>
     public static readonly IReadOnlyList<string> EntryTypes = ["id", "object", "string"];
 
     /// <summary>
@@ -132,9 +136,8 @@ public static class ValueChecks
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
 
     /// <summary>
-    /// Style is not read. A date is held to being quoted because an unquoted one is reread as a datetime and shifted
-    /// into the reader's zone; a <c>Z</c> instant names the same moment either way. <c>_checks.yaml</c> carries that
-    /// argument in full.
+    /// Style is not read: a <c>Z</c> instant names the same moment quoted or not. See <c>timestamp-format</c> in
+    /// <c>.schema/_checks.yaml</c>.
     /// </summary>
     private static void Timestamp(string name, YamlNode node, int line, Report report)
     {
