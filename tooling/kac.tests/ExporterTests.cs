@@ -273,6 +273,31 @@ public class ExporterTests
         => Assert.Equal("Quote a backtick as ``` ` ``` in a sentence.",
             ExportedScope("Quote a backtick as\n``` ` ``` in a sentence."));
 
+    [Theory]
+    [InlineData("Run this:\n\n```sh\nkac validate\n\nkac generate\nkac pack\n\nkac bundle\n```")]
+    [InlineData("```sh\nkac validate\n\n\nkac generate\nkac pack\n\n\nkac bundle\n```")]
+    [InlineData("1. Install.\n\n   ```sh\n   brew update\n\n   brew install\n   yamllint .\n\n   ls\n   ```\n\n2. Go.")]
+    [InlineData("~~~yaml\nowner: someone\n\ntier: normative\nstatus: active\n\ntags: []\n~~~")]
+    [InlineData("```sh\nkac validate\n\nkac generate\nkac pack\n\nkac bundle\n`````")]
+    [InlineData("````md\n```sh\nkac validate\n```\n\nkac generate\nkac pack\n\nkac bundle\n````")]
+    [InlineData("```md\n~~~\n\nkac generate\nkac pack\n\n~~~\n```")]
+    public void A_fence_holding_a_blank_line_is_left_exactly_as_written(string fenced)
+        => Assert.Equal(fenced, ExportedScope(fenced));
+
+    [Fact]
+    public void An_unclosed_fence_is_left_as_written_to_the_end_of_the_document()
+    {
+        const string unclosed = "```sh\nkac validate\n\nkac generate\nkac pack\n\nkac bundle";
+
+        // Markdig runs an unclosed fence to the end of the document, so the headings below it fall inside the section.
+        Assert.Equal(unclosed + "\n\n## Terms\n\n### Alpha\n\nA.", ExportedScope(unclosed));
+    }
+
+    [Fact]
+    public void A_paragraph_after_a_fence_holding_a_blank_line_joins()
+        => Assert.Equal("```sh\nkac validate\n\nkac generate\n```\n\nThen commit the change.",
+            ExportedScope("```sh\nkac validate\n\nkac generate\n```\n\nThen commit\nthe change."));
+
     [Fact]
     public void A_full_reference_link_travels_as_an_inline_link_to_its_definition_s_target()
         => Assert.Equal("Read [the guide](../guide.md) first.",

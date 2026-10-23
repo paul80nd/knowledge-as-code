@@ -52,6 +52,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` keeps the indent of a block inside a list item.** A fence inside a numbered item lost the indent of
   its opening line, so a renderer closed the list there and showed the code outside it. A paragraph in the item lost
   its indent when unwrapped. Both now arrive indented as written.
+- **`kac export` keeps a fence that holds a blank line.** `export` split a section at each blank line before it looked
+  for a fence. The lines after a blank line inside a code block were then joined onto one line. A fence now arrives as
+  written up to its closing line, or to the end of its section where it has none.
 
 ## 0.38.0 - 2026-10-23
 

@@ -755,9 +755,9 @@ public static class Exporter
     /// </summary>
     private static string Unwrap(string text)
     {
-        var paragraphs = FromFirstText(text.Replace("\r\n", "\n")).Split("\n\n");
+        var blocks = Blocks(FromFirstText(text.Replace("\r\n", "\n")));
 
-        return string.Join("\n\n", paragraphs.Select(p =>
+        return string.Join("\n\n", blocks.Select(p =>
         {
             var block = FromFirstText(p);
             var lines = block.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
@@ -766,6 +766,35 @@ public static class Exporter
             var indent = block[..(block.Length - block.TrimStart().Length)];
             return indent + string.Join(" ", lines);
         }));
+
+        // A blank line inside a fence splits nothing, so the fence is one block to its closing line or the text's end.
+        static List<string> Blocks(string text)
+        {
+            var blocks = new List<string>();
+            (char Mark, int Length)? open = null;
+            foreach (var piece in text.Split("\n\n"))
+            {
+                if (open is null) blocks.Add(piece);
+                else blocks[^1] += "\n\n" + piece;
+                open = OpenAfter(piece, open);
+            }
+
+            return blocks;
+        }
+
+        // CommonMark 0.31.2, 4.5: only the opening mark, repeated at least as often, closes a fence.
+        static (char Mark, int Length)? OpenAfter(string block, (char Mark, int Length)? open)
+        {
+            foreach (var line in block.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0))
+                if (open is not { } fence)
+                {
+                    if (Fence(line)) open = (line[0], line.Length - line.TrimStart(line[0]).Length);
+                }
+                else if (line.Length >= fence.Length && line.All(c => c == fence.Mark))
+                    open = null;
+
+            return open;
+        }
 
         // Keeps the first line's indent, which places a block inside a list item.
         static string FromFirstText(string block)
