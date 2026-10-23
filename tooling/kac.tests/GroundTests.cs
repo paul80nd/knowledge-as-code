@@ -53,7 +53,7 @@ public class GroundTests : IDisposable
     {
         var dir = Dir("clean");
         File.WriteAllText(Path.Combine(dir, "notes.md"), "hello\n");
-        if (!GitCli.Repository(dir)) return;
+        Assert.SkipUnless(GitCli.Repository(dir), GitCli.Unavailable);
 
         var ground = New.Survey(dir);
 
@@ -66,7 +66,7 @@ public class GroundTests : IDisposable
     {
         var dir = Dir("dirty");
         File.WriteAllText(Path.Combine(dir, "notes.md"), "hello\n");
-        if (!GitCli.Repository(dir)) return;
+        Assert.SkipUnless(GitCli.Repository(dir), GitCli.Unavailable);
         File.WriteAllText(Path.Combine(dir, "notes.md"), "changed\n");
 
         Assert.Equal(WorkingTree.Dirty, New.Survey(dir).Status);
@@ -91,7 +91,7 @@ public class GroundTests : IDisposable
     public void A_repository_holding_nothing_else_still_holds_nothing()
     {
         var dir = Dir("fresh");
-        if (!GitCli.Run(dir, "init", "-q", ".")) return;
+        Assert.SkipUnless(GitCli.Run(dir, "init", "-q", "."), GitCli.Unavailable);
 
         Assert.Empty(New.Survey(dir).Holds);
     }
