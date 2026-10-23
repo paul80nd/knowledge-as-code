@@ -23,7 +23,8 @@ No check fails a .NET build that runs its tests and collects no coverage.
 * [std-NETTST.coverage-is-collected-by-the-build] says a build "**MUST** collect coverage from its test run and publish
   the report".
 * It says a build "**SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under
-  VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform".
+  VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with
+  `Microsoft.Testing.Extensions.CodeCoverage` referenced".
 
 ## How it works
 

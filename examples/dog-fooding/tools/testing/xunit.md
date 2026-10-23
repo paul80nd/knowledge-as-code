@@ -31,6 +31,10 @@ sets `test.runner` to `Microsoft.Testing.Platform`, so `dotnet test` runs each p
 an argument to the app: `--filter-trait "Kind=Repository"` selects the repository tests, and `--filter-not-trait`
 skips them.
 
+`xunit.v3` brings in `Microsoft.Testing.Extensions.Telemetry`, which sends usage data to Microsoft unless told not to.
+Both workflows set `TESTINGPLATFORM_TELEMETRY_OPTOUT` and `DOTNET_CLI_TELEMETRY_OPTOUT`, so CI sends none. A
+contributor's machine sends it unless one of the two is set there.
+
 The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output
 against committed goldens, and reports its own results.
 

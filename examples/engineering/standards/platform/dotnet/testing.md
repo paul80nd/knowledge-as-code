@@ -62,7 +62,8 @@ _**Covers:** [pol-AUTV].LEVELS_
 
 - A build **MUST** collect coverage from its test run and publish the report.
 - A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with
-  `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform.
+  `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with
+  `Microsoft.Testing.Extensions.CodeCoverage` referenced.
 - A test project **MUST** be excluded from its own coverage figure.
 
 _**Covers:** [pol-AUTV].COVER_
