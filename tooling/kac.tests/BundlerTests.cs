@@ -711,14 +711,14 @@ public class BundlerTests
     public void A_review_view_states_the_in_force_status_the_export_publishes()
         => Assert.Contains("- A standard is in force at status `ratified`.", Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
-            export: Standards(controls: false, inForce: "ratified")), "views/review.md"));
+            export: Standards(controls: false, standardsInForce: "ratified")), "views/review.md"));
 
     [Fact]
     public void A_review_view_says_where_the_export_states_no_in_force_status()
     {
         var review = Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
-            export: Standards(controls: false, inForce: null)), "views/review.md");
+            export: Standards(controls: false, standardsInForce: null)), "views/review.md");
 
         Assert.Contains("- The export does not state which status puts a standard in force.\n", review);
         Assert.DoesNotContain("in force at status", review);
@@ -733,6 +733,25 @@ public class BundlerTests
 
         Assert.Contains("its status is `active` and its mechanism is `ci` or `runtime-alert`", review);
         Assert.Contains("`corpus/controls/` inside this plugin has each control's record.", review);
+    }
+
+    [Fact]
+    public void A_review_view_states_the_in_force_status_the_export_publishes_for_controls()
+        => Assert.Contains("its status is `operating` and its mechanism is `ci` or `runtime-alert`", Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true, controlsInForce: "operating")), "views/review.md"));
+
+    [Fact]
+    public void A_review_view_says_where_the_export_states_no_in_force_status_for_controls()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true, controlsInForce: null)), "views/review.md");
+
+        Assert.Contains("The export does not state which status puts a control in force", review);
+        Assert.DoesNotContain("A control checks a rule only where", review);
+        Assert.Contains("`corpus/controls/` inside this plugin has each control's record. A person checks every "
+                        + "obligation in the review.\n", review);
     }
 
     [Fact]
@@ -821,18 +840,25 @@ public class BundlerTests
 
     /// <summary>
     /// An export of two standards at shape 2, and of one control at shape 1 where <c>controls</c> is set. A null
-    /// <c>inForce</c> leaves the key out of the standards entry.
+    /// <c>standardsInForce</c> or <c>controlsInForce</c> leaves the key out of that type's entry.
     /// </summary>
     private static (string, string)[] Standards(
-        bool controls, string? contentVersion = null, string? inForce = "active")
+        bool controls, string? contentVersion = null, string? standardsInForce = "active",
+        string? controlsInForce = "active")
     {
         var version = contentVersion is null ? "" : $"\"contentVersion\": \"{contentVersion}\", ";
-        var stated = inForce is null ? "" : $",\"inForce\":\"{inForce}\"";
+        var stated = standardsInForce is null ? "" : $",\"inForce\":\"{standardsInForce}\"";
+        var controlsStated = controlsInForce is null ? "" : $",\"inForce\":\"{controlsInForce}\"";
         var types = $$"""
                     {"type":"standards","shapeVersion":2,"records":2,"parts":2,"dir":"standards",
                      "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"{{stated}}}
                     """;
-        if (controls) types += """,{"type":"controls","shapeVersion":1,"records":1,"parts":0,"dir":"controls"}""";
+        if (controls)
+        {
+            types += $$"""
+                       ,{"type":"controls","shapeVersion":1,"records":1,"parts":0,"dir":"controls"{{controlsStated}}}
+                       """;
+        }
 
         (string, string)[] files =
         [

@@ -114,13 +114,18 @@ public static class View
         text.Append(Type(source, Standards)?.InForce is { } inForce
             ? $"- A standard is in force at status `{inForce}`. A finding under any other status is not in force.\n"
             : "- The export does not state which status puts a standard in force.\n");
+        var controlsType = Type(source, Controls);
         text.Append(controls is null
             ? "- This corpus exports no controls, so no rule here has a check recorded against it.\n"
-            : "- A standard's controls are listed with each one's mechanism and status. A control checks a rule only "
-              + "where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the "
-              + "obligations named in its record's What it checks section. "
-              + $"`{source.CorpusRoot}/{Type(source, Controls)?.Dir}/` inside this plugin has each control's record. "
-              + "A person checks every other obligation in the review.\n");
+            : "- A standard's controls are listed with each one's mechanism and status. "
+              + (controlsType?.InForce is { } controlInForce
+                  ? $"A control checks a rule only where its status is `{controlInForce}` and its mechanism is `ci` "
+                    + "or `runtime-alert`, and then only the obligations named in its record's What it checks section. "
+                    + $"{WhereControlRecordsAre(source, controlsType)} "
+                    + "A person checks every other obligation in the review.\n"
+                  : "The export does not state which status puts a control in force, so no control is known to check "
+                    + $"a rule. {WhereControlRecordsAre(source, controlsType)} "
+                    + "A person checks every obligation in the review.\n"));
 
         foreach (var standard in StandardsOf(source))
         {
@@ -150,6 +155,9 @@ public static class View
 
         return text.ToString();
     }
+
+    private static string WhereControlRecordsAre(Source source, ExportedType? type) =>
+        $"`{source.CorpusRoot}/{type?.Dir}/` inside this plugin has each control's record.";
 
     /// <summary>
     /// One standard with the rules it states. <c>Heading</c> is its id, then its title where the export has one.
