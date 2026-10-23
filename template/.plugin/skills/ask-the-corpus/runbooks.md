@@ -50,9 +50,17 @@ written by the corpus with that `shortcode` in `sources` in `manifest.json`. Nam
 
 ## Say whether it is current
 
-* **`active`**: in force. Answer from it.
+Read the `status` that puts a runbook in force from `inForce`, a string, `null`, or absent, on the `runbooks` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time.
+
+* **The `inForce` value**: in force. Answer from it.
 * **`draft`**: nobody has settled it. Say so before you give any of it.
 * **`retired`**: stood down. Say so, and search again for the runbook that replaced it.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no runbook in force on the strength of its status.
+`draft` and `retired` still mean what the bullets above say.
 
 **Say when `last-rehearsed` is `never`, or more than 92 days before today.** The steps may no longer work, because
 nobody has walked them against the system in that time. Quote `generatedAt` from `manifest.json` beside any of these,
