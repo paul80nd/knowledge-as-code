@@ -290,6 +290,21 @@ public class SchemaLoadTests
     }
 
     [Fact]
+    public void A_config_value_is_kept_as_written_with_the_rules_line()
+    {
+        var rule = OnlyRule("""
+                            rules:
+                              - id: y-statement-present
+                                severity: warning
+                                max-words: five
+                            """);
+
+        Assert.Equal("five", rule.MaxWords);
+        Assert.Equal(["max-words"], rule.Config);
+        Assert.Equal(2, rule.Line);
+    }
+
+    [Fact]
     public void A_key_the_loader_never_asks_for_is_named_with_its_file_and_its_level()
     {
         var files = Blocks();

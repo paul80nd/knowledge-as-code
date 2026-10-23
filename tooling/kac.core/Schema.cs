@@ -379,8 +379,20 @@ public sealed record RuleSpec
     /// </summary>
     public IReadOnlyList<string> Postures { get; init; } = [];
 
-    /// <summary>The ceiling <c>y-statement-present</c> holds a Y-statement to.</summary>
-    public int? MaxWords { get; init; }
+    /// <summary>
+    /// The ceiling <c>y-statement-present</c> holds a Y-statement to, as written. The rule reads the number from it,
+    /// and reports a value that is not one.
+    /// </summary>
+    public string? MaxWords { get; init; }
+
+    /// <summary>
+    /// The config keys the entry declares, from those some rule class <c>Reads</c>. <c>SchemaChecks</c> reports one
+    /// the rule's own class does not read.
+    /// </summary>
+    public IReadOnlyList<string> Config { get; init; } = [];
+
+    /// <summary>The line the entry starts on in its <c>.schema/</c> file, and null for a rule built in code.</summary>
+    public int? Line { get; init; }
 
     /// <summary>
     /// Why this rule could not be read, and null where it could. <c>SchemaChecks</c> reports it against the file.
@@ -1106,9 +1118,9 @@ public sealed partial class Schema
             Message = message,
             Problem = problem,
             Postures = Yaml.StrList(rule.Get("postures")),
-            MaxWords = rule.Get("max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
-                ? words
-                : null
+            MaxWords = Yaml.Str(rule.Get("max-words")),
+            Config = [.. CheckCatalogue.ReadByRules().Where(key => rule.Get(key) is not null)],
+            Line = Yaml.LineOf(node, 0)
         };
     }
 

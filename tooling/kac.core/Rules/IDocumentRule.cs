@@ -14,6 +14,18 @@ public interface IDocumentRule
     /// </summary>
     IReadOnlyList<CheckId> Emits { get; }
 
+    /// <summary>
+    /// The config keys the rule reads from its entry in <c>rules:</c>. <c>SchemaChecks</c> reports any other the entry
+    /// declares.
+    /// </summary>
+    IReadOnlyList<string> Reads => [];
+
+    /// <summary>
+    /// What is wrong with the config the schema declares for this rule, one sentence each. The rule checks no
+    /// document while any is returned, so it is asked before every one.
+    /// </summary>
+    IEnumerable<string> Misconfigured(RuleSpec spec, Schema schema) => [];
+
     void Check(RuleContext ctx);
 }
 

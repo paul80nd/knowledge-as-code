@@ -58,6 +58,20 @@ that difference deliberate.
 A rule id that no class implements and no `expr:` states is an intention. It declares no `severity:`, and the type
 page renders it as declared but not yet enforced.
 
+## A rule's config
+
+A rule class declares the config keys it reads, such as `max-words`, in `Reads`. The loader reads a rule's entry for
+those keys alone. `schema-dispatch` reports a config key on a rule whose class does not read it. An `expr:` rule reads
+none, so any config key on one is reported.
+
+A rule class also checks its own config in `Misconfigured`, and returns one sentence for each fault.
+`y-statement-present` checks that `max-words` is a whole number above zero. `alignment-rollup` checks each of its
+`postures` against the level-two headings on the register pages the records cite. A corpus rule's `Misconfigured`
+therefore takes the corpus, and a document rule's takes the `Schema`.
+
+Each fault is reported once under `schema-dispatch`, against the rule's line in its `.schema/` file. The rule then
+checks no record. Write `Misconfigured` for a value that would make every finding the rule reports wrong.
+
 ## The three places that must agree
 
 Each one fails a meta-test, not the test you were looking at.
@@ -85,7 +99,8 @@ A self-contained group with logic worth testing becomes a static class under `to
   the tool cannot act on.
 
 `SchemaChecks` reads each vocabulary it tests from the code that dispatches it: `IdChecks.IdStyles`,
-`Generator.IndexOrders` and the two `ByRuleId` maps. A copy would list what is spelled correctly, and not what runs.
+`Generator.IndexOrders`, the two `ByRuleId` maps and each rule class's `Reads`. A copy would list what is spelled
+correctly, and not what runs.
 
 ## Adding a fact
 

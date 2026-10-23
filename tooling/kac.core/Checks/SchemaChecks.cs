@@ -76,7 +76,7 @@ public static class SchemaChecks
                 CheckField(at, name, t.Fields[name], t, schema, f);
 
             foreach (var rule in t.Rules)
-                CheckRule(at, key, rule, f);
+                CheckRule(at, key, rule, schema, f);
         }
 
         CheckVersus(schema, f);
@@ -462,7 +462,7 @@ public static class SchemaChecks
                 + "never meet. Declare a 'ref:', or drop the key."));
     }
 
-    private static void CheckRule(string at, string key, RuleSpec rule, List<Finding> f)
+    private static void CheckRule(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)
     {
         if (rule.Problem is { } problem)
         {
@@ -478,6 +478,8 @@ public static class SchemaChecks
                 + $"limit is {ChecksTable.DescriptionMax}. A description says what is checked. The reasoning "
                 + "belongs in its 'message:', where the author who trips it reads it."));
 
+        CheckConfig(at, key, rule, schema, f);
+
         if (rule.Compiled is not null
             || DocumentRules.ByRuleId.ContainsKey(rule.Id)
             || CorpusRules.ByRuleId.ContainsKey(rule.Id)) return;
@@ -488,6 +490,40 @@ public static class SchemaChecks
                          + "'expr:', implement it as a rule class, or drop the severity and leave it "
                          + "declared as an intention.", f);
     }
+
+    /// <summary>
+    /// A rule's config keys are what its class <c>Reads</c>, and an <c>expr:</c> rule reads none. A rule nothing
+    /// dispatches is an intention, and its keys are left alone. A corpus rule's values are judged by
+    /// <c>Validator</c>, which holds the corpus they may name.
+    /// </summary>
+    private static void CheckConfig(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)
+    {
+        IDocumentRule? document = null;
+        IReadOnlyList<string>? reads = rule.Compiled is not null ? []
+            : DocumentRules.ByRuleId.TryGetValue(rule.Id, out document) ? document.Reads
+            : CorpusRules.ByRuleId.TryGetValue(rule.Id, out var corpus) ? corpus.Reads
+            : null;
+        if (reads is null) return;
+
+        var reader = rule.Compiled is not null ? "an 'expr:' rule reads no config"
+            : reads.Count == 0 ? "its rule class reads no config"
+            : $"its rule class reads only {List(reads)}";
+
+        foreach (var config in rule.Config.Where(c => !reads.Contains(c, StringComparer.Ordinal)))
+            Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares '{config}:', and {reader}. Drop the key.", f,
+                rule.Line);
+
+        foreach (var problem in document?.Misconfigured(rule, schema) ?? [])
+            Misconfigured(at, key, rule, problem, f);
+    }
+
+    /// <summary>Reported against the rule's entry in the type's <c>.schema/</c> file.</summary>
+    public static void Misconfigured(TypeSchema t, RuleSpec rule, string problem, List<Finding> f)
+        => Misconfigured($".schema/{t.Key}.yaml", t.Key, rule, problem, f);
+
+    private static void Misconfigured(string at, string key, RuleSpec rule, string problem, List<Finding> f)
+        => Dispatch(at, $"rule '{rule.Id}' on type '{key}': {problem} The rule checks no record until this is "
+                        + "fixed.", f, rule.Line);
 
     /// <summary>
     /// One direction only. An entry nothing reports is the coverage gate's to fail, because a core check reports
@@ -545,8 +581,8 @@ public static class SchemaChecks
             CheckDeclaredTypes(at, $"{what} entry key '{key.Name}'", key, f, true);
     }
 
-    private static void Dispatch(string at, string message, List<Finding> f)
-        => f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-dispatch"), message));
+    private static void Dispatch(string at, string message, List<Finding> f, int? line = null)
+        => f.Add(new Finding(at, line, Sev.Error, new CheckId("schema-dispatch"), message));
 
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));

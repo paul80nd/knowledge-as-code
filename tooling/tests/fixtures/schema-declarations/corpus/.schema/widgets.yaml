@@ -130,3 +130,16 @@ rules:
     description: A widget carries a name someone would search for.
     severity: warning
     expr: "present('title')"
+
+  - id: widgets-are-brief
+    description: A widget is short.
+    severity: warning
+    expr: "words() < 200"
+    message: This widget runs long.
+    max-words: 5
+
+  - id: y-statement-present
+    description: A widget opens with a Y-statement.
+    severity: warning
+    max-words: five
+    postures: [Obliged]

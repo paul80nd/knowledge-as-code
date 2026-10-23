@@ -52,7 +52,7 @@ public class DocumentRuleTests
         var body = "> " + string.Join(" ", Enumerable.Repeat("word", 40)) + " **in the context of** x,"
                    + " **facing** y, **we decided** z, **rather than** w, **to achieve** v, **accepting** u.";
         var found = Run(new YStatementPresent(), Adr(body),
-            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 20 });
+            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = "20" });
 
         Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.Contains("keep it under 20.", Single(found).Message);
@@ -67,7 +67,7 @@ public class DocumentRuleTests
 
         Assert.Empty(Run(new YStatementPresent(), Adr(body)));
         Assert.NotEmpty(Run(new YStatementPresent(), Adr(body),
-            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 5 }));
+            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = "5" }));
     }
 
     [Theory]

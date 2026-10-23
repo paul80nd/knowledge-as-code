@@ -14,6 +14,15 @@ public interface ICorpusRule
     /// </summary>
     IReadOnlyList<CheckId> Emits { get; }
 
+    /// <summary>As <c>IDocumentRule.Reads</c>.</summary>
+    IReadOnlyList<string> Reads => [];
+
+    /// <summary>
+    /// What is wrong with the config the schema declares for this rule, one sentence each. Given the corpus, because a
+    /// value may name something only the corpus defines. <c>Check</c> is not called while any is returned.
+    /// </summary>
+    IEnumerable<string> Misconfigured(CorpusRuleContext ctx) => [];
+
     void Check(CorpusRuleContext ctx);
 }
 

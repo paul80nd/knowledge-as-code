@@ -15,13 +15,40 @@ public sealed class AlignmentRollup : ICorpusRule
 
     private const string Field = "aligns-with";
 
+    private const string Standings = "postures";
+
+    public IReadOnlyList<string> Reads => [Standings];
+
+    /// <summary>
+    /// A posture no register page heads a standing with. Judged only against the pages the records link to, so a
+    /// corpus citing no framework is told nothing.
+    /// </summary>
+    public IEnumerable<string> Misconfigured(CorpusRuleContext ctx)
+    {
+        if (Column(ctx.Type) is not { } column) yield break;
+
+        var register = new Register(ctx.Tree, ctx.Spec.Postures);
+        var headed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var doc in ctx.Records)
+        foreach (var row in doc.Parts)
+        foreach (var label in row.CellLinks?.GetValueOrDefault(column) ?? [])
+            if (register.Reaches(doc, label) is var (page, _))
+                headed.UnionWith(register.Standings(page));
+
+        if (headed.Count == 0) yield break;
+
+        foreach (var posture in ctx.Spec.Postures.Where(p => !headed.Contains(p)))
+            yield return $"'{Standings}' lists '{posture}', and no register page the records cite has a "
+                         + $"'## {posture}' heading. Spell it as the register heads it, or add the heading.";
+    }
+
+    private static string? Column(TypeSchema type) =>
+        type.Parts?.Columns.FirstOrDefault(c => string.Equals(c, "Alignment", StringComparison.OrdinalIgnoreCase));
+
     public void Check(CorpusRuleContext ctx)
     {
-        if (ctx.Type.Parts is not { } parts) return;
-
-        var column = parts.Columns.FirstOrDefault(c =>
-            string.Equals(c, "Alignment", StringComparison.OrdinalIgnoreCase));
-        if (column is null) return;
+        if (Column(ctx.Type) is not { } column) return;
 
         var register = new Register(ctx.Tree, ctx.Spec.Postures);
         var reached = new Dictionary<string, (Doc First, HashSet<string> Cited)>(StringComparer.Ordinal);
@@ -185,6 +212,10 @@ internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
 
     public IEnumerable<KeyValuePair<string, RegisterEntry>> Entries(string page) =>
         Placed(page).OrderBy(kv => kv.Key, StringComparer.Ordinal);
+
+    /// <summary>Every level-two heading on the page, whether or not an entry is filed under it.</summary>
+    public IEnumerable<string> Standings(string page) =>
+        Md.Headings(tree.Read(page)).Where(h => h.Level == 2).Select(h => h.Text);
 
     public Posture Standing(Doc doc, string label) => Filed(doc, label) switch
     {
