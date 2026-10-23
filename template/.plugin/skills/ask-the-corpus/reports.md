@@ -62,7 +62,19 @@ Compare each entry in `sources` with `manifest.json`, which needs no network cal
 
 Where every version matches, the report is true of the corpus installed here. Where one differs, the corpus has moved
 past the report. Name each corpus, the version the report is true of and the version installed, and say the report may
-miss what changed between them. A `status` of `stale` says the same, and `draft` says nobody has checked it.
+miss what changed between them.
+
+Read the `status` that puts a report in force from `inForce`, a string, `null`, or absent, on the `reports` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time.
+
+* **The `inForce` value**: in force. Answer from it.
+* **`draft`**: nobody has checked it. Say so before you give any of it.
+* **`stale`**: the corpus has moved past it, as a version that differs says. Say so before you give any of it.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no report in force on the strength of its status.
+`draft` and `stale` still mean what the bullets above say.
 
 ## Fetch the body and answer from it
 

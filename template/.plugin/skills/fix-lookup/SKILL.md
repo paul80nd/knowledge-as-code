@@ -98,13 +98,21 @@ tier and not an answer.
 
 ## Say when a fix is unsettled
 
-Read `status` and `review-by` before you hand anybody a resolution, and tell them what you saw:
+Read the `status` that puts a fix in force from `inForce`, a string, `null`, or absent, on the `fixes` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
+`review-by` before you hand anybody a resolution, and tell them what you saw:
 
+* **The `inForce` value**: in force. Answer from it.
 * **`status: draft`**: nobody has verified the resolution. Give it as a suggestion to test.
 * **`status: superseded`**: something replaced this. Find that, and quote it.
 * **`status: fixed-upstream`**: the cause is gone, and the record stays for whoever searches the symptom. Meeting the
   symptom today means something else produces it.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`review-by` earlier than today**: nobody has re-checked the fix, and the thing it repairs may have changed.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no fix in force on the strength of its status.
+`draft`, `superseded` and `fixed-upstream` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
