@@ -22,8 +22,8 @@ No check fails a .NET build that runs its tests and collects no coverage.
 
 * [std-NETTST.coverage-is-collected-by-the-build] says a build "**MUST** collect coverage from its test run and publish
   the report".
-* It says a build "**SHOULD** collect it with `dotnet test --collect:"XPlat Code Coverage"`, which writes a Cobertura
-  report".
+* It says a build "**SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under
+  VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform".
 
 ## How it works
 
@@ -31,10 +31,12 @@ Nothing runs. The check this rule needs is a pipeline step after `dotnet test`. 
 Cobertura report:
 
 ```sh
-find . -path '*/TestResults/*/coverage.cobertura.xml' | grep -q .
+find . -path '*/TestResults/*' -name '*cobertura.xml' | grep -q .
 ```
 
-A build using another collector, as the `SHOULD` allows, changes the path the step searches for.
+The search matches both forms the `SHOULD` names. VSTest writes `TestResults/<guid>/coverage.cobertura.xml`, and
+Microsoft.Testing.Platform writes `TestResults/<guid>.cobertura.xml`. A build using another collector, as the `SHOULD`
+allows, changes the path the step searches for.
 
 The step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline
 leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and

@@ -41,9 +41,9 @@ the commit the branch grew from, in four steps:
 Both builds run one exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests`
 checks the comparison in each direction against corpora built in memory.
 
-The `tool` job runs it under `dotnet test tooling/kac.tests`. That job checks out with `fetch-depth: 0` and names the
-target branch in `KAC_BASE_REF`, because a shallow checkout keeps no base to compare against. A job that names a
-branch git cannot reach fails rather than passing on a comparison it never made.
+The `tool` job runs it under `dotnet test --project tooling/kac.tests`. That job checks out with `fetch-depth: 0` and
+names the target branch in `KAC_BASE_REF`, because a shallow checkout keeps no base to compare against. A job that
+names a branch git cannot reach fails rather than passing on a comparison it never made.
 
 ## Coverage and gaps
 

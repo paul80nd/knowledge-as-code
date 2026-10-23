@@ -61,7 +61,8 @@ _**Covers:** [pol-AUTV].LEVELS_
 ### Coverage is collected by the build
 
 - A build **MUST** collect coverage from its test run and publish the report.
-- A build **SHOULD** collect it with `dotnet test --collect:"XPlat Code Coverage"`, which writes a Cobertura report.
+- A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with
+  `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform.
 - A test project **MUST** be excluded from its own coverage figure.
 
 _**Covers:** [pol-AUTV].COVER_
@@ -120,6 +121,8 @@ community fork of FluentAssertions 7, published under Apache 2.0.
 
 ## Changelog
 
+- 2026-10-23: the coverage `SHOULD` names the Cobertura report, and how to write it under VSTest and under
+  Microsoft.Testing.Platform.
 - 2026-10-21: an assertion library's licence is checked against the allowed ids in std-DEPS's conformance checklist.
 - 2026-10-18: graded the rules. The outcome stays a `MUST`, and xUnit, Testcontainers, `WebApplicationFactory`, the
   injected clock and the coverage collector become `SHOULD`. AwesomeAssertions replaces FluentAssertions.

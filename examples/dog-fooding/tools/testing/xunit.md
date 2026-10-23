@@ -4,9 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:nuget/Microsoft.NET.Test.Sdk, versions: 18.x }
-  - { purl: pkg:nuget/xunit.runner.visualstudio, versions: 4.0.x }
-  - { purl: pkg:nuget/xunit.v3.mtp-off, versions: 4.0.x }
+  - { purl: pkg:nuget/xunit.v3, versions: 4.0.x }
 homepage: https://xunit.net/
 licence: Apache-2.0 AND MIT
 licence-declared: Apache-2.0 AND MIT
@@ -26,12 +24,12 @@ The test framework two of the three test layers run on: the unit tests in `kac.t
 ## What we use it for
 
 `kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature
-documents through the same runner, so one `dotnet test` command covers either project.
+documents through the same runner, so one `dotnet test --project <path>` command covers either project.
 
-Both projects reference xUnit as `xunit.v3.mtp-off`, beside `Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio`.
-The SDK and the runner are what make `dotnet test` find and run the tests, and neither was chosen on its own. The
-`mtp-off` package keeps `dotnet test` on VSTest. The plain `xunit.v3` package makes each project a
-Microsoft.Testing.Platform app, and the .NET 10 SDK refuses to run one of those under VSTest.
+Both projects reference xUnit as `xunit.v3`, which makes each project a Microsoft.Testing.Platform app. `global.json`
+sets `test.runner` to `Microsoft.Testing.Platform`, so `dotnet test` runs each project as that app. A trait filter is
+an argument to the app: `--filter-trait "Kind=Repository"` selects the repository tests, and `--filter-not-trait`
+skips them.
 
 The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output
 against committed goldens, and reports its own results.
@@ -46,9 +44,9 @@ None. `kac.features` needs a runner Reqnroll binds to, and xUnit already ran the
 
 ## Licence and obligations
 
-The two xUnit packages are Apache-2.0 and `Microsoft.NET.Test.Sdk` is MIT, which is why this entry names both.
-Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes them:
-the packages are test-only, and no published artefact includes them.
+`xunit.v3` is Apache-2.0. The Microsoft.Testing.Platform packages it brings in are MIT, which is why this entry names
+both. Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes
+them: the packages are test-only, and no published artefact includes them.
 
 ## Related
 

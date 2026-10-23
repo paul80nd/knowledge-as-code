@@ -29,7 +29,7 @@ A job the gate does not list still runs and reports. It blocks no merge.
 
 `WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It
 compares that set against `validate`'s `needs:` plus `validate` itself. The `tool` job runs it under
-`dotnet test tooling/kac.tests`.
+`dotnet test --project tooling/kac.tests`.
 
 Comparing sets catches two faults. A job added with no line in `needs:` fails. A `needs:` entry listing a job the file
 no longer declares fails as well.

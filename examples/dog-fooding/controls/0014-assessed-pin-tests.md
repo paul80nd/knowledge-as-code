@@ -38,8 +38,8 @@ and `packages`. For each package it does four things:
 * It fails where the pin falls outside the `versions` range, such as `0.57.x`.
 * It fails where the `Accessibility` section names no version with the pin's major and minor, such as `0.57.2`.
 
-The `tool` job runs it under `dotnet test tooling/kac.tests` on every pull request, Dependabot's included. It reads the
-files as they stand, so it needs no base branch.
+The `tool` job runs it under `dotnet test --project tooling/kac.tests` on every pull request, Dependabot's included.
+It reads the files as they stand, so it needs no base branch.
 
 ## Coverage and gaps
 

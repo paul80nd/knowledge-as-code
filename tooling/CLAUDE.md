@@ -104,8 +104,8 @@ holds as well as every finding it produces. Adding a file to a fixture changes t
 will not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
 **A schema edit breaks a scenario that `--update` cannot repair.** `--update` regenerates the goldens and leaves the
-feature files, so repair each broken expectation by hand and prove it with `dotnet test tooling/kac.features`. A schema
-edit breaks a scenario in two ways:
+feature files, so repair each broken expectation by hand and prove it with
+`dotnet test --project tooling/kac.features`. A schema edit breaks a scenario in two ways:
 
 * **A message the schema decides.** A scenario quotes it in full. An enum's values, a field's pattern, a threshold and a
   `message:` all appear in one, so adding a value to an enum rewrites the `enum` message.
@@ -146,9 +146,9 @@ substitution.
   of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
   unify any of them without keeping those distinctions.
 * **`VerificationTests` and `ContentVersionTests` read git history, so a shallow checkout leaves them reading
-  nothing.** The job running `dotnet test tooling/kac.tests` checks out with `fetch-depth: 0` and passes the base branch
-  in `KAC_BASE_REF`. A job that sets the variable and cannot reach the branch fails. A job that sets neither passes,
-  which is what a local run on `main` does.
+  nothing.** The job running `dotnet test --project tooling/kac.tests` checks out with `fetch-depth: 0` and passes the
+  base branch in `KAC_BASE_REF`. A job that sets the variable and cannot reach the branch fails. A job that sets
+  neither passes, which is what a local run on `main` does.
 * **A path written into a file a corpus keeps is a fact about somebody else's machine.** A corpus is read from wherever
   it was installed, so the generated banner and the stale-index message both name the tool instead.
   [`std-CONFIG`](../examples/dog-fooding/standards/configuration.md) is the rule.

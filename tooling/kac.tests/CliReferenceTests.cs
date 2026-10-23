@@ -51,7 +51,7 @@ public partial class CliReferenceTests
 
         Assert.True(stale.Count == 0 || Updating,
             $"the usage block is stale in {string.Join(", ", stale)}. "
-            + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
+            + "Run: KAC_UPDATE_DOCS=1 dotnet test --project tooling/kac.tests");
     }
 
     private static readonly string[] Sections = ["What it does", "Examples", "Known limits"];
@@ -132,6 +132,6 @@ public partial class CliReferenceTests
         if (Updating) File.WriteAllText(CliReference.Index, wanted);
         else
             Assert.Fail("the command table is stale in docs/use/cli/index.md. "
-                        + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
+                        + "Run: KAC_UPDATE_DOCS=1 dotnet test --project tooling/kac.tests");
     }
 }
