@@ -1231,8 +1231,7 @@ public static class Exporter
 
     /// <summary>
     /// The value typed as the deserialiser can leave it: a key the document lacks arrives as null whatever the record
-    /// declares, so the null checks in <c>Sound</c> stay real questions to a reader and to an analyser. ReSharper
-    /// disable once ReturnTypeCanBeNotNullable — the nullable return is what this exists for.
+    /// declares, so the null checks in <c>Sound</c> stay real questions to a reader and to an analyser.
     /// </summary>
     private static T? Read<T>(T value) => value;
 

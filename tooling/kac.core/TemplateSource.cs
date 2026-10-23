@@ -43,10 +43,6 @@ public sealed class TemplateSource : IDisposable
     /// <summary>What a fetch came to: the template, or why there is none. Exactly one of the two is set.</summary>
     public sealed record Fetch(TemplateSource? Source, string? Problem)
     {
-        /// <summary>
-        /// <c>Source</c> is null exactly where <c>Problem</c> is set, told to the compiler so a caller that branches on
-        /// it reads the other half without asserting anything.
-        /// </summary>
         [MemberNotNullWhen(true, nameof(Problem))]
         [MemberNotNullWhen(false, nameof(Source))]
         public bool Failed => Problem is not null;

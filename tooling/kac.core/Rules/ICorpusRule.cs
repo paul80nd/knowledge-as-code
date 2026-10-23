@@ -26,6 +26,7 @@ public interface ICorpusRule
     void Check(CorpusRuleContext ctx);
 }
 
+/// <summary>What a corpus rule reads, and the two ways it reports a finding.</summary>
 /// <param name="ById">Resolve an id through this, so it resolves exactly as <c>ref-resolves</c> does.</param>
 /// <param name="ReposBase">Null where the descriptor states no <c>repos-base</c>.</param>
 public sealed record CorpusRuleContext(

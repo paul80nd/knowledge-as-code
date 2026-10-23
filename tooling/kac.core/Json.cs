@@ -144,8 +144,6 @@ public record BundleIncluded(string Path, IReadOnlyList<string> Requires, string
 
 public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string Reason);
 
-// `Dist.Root` says why the marketplace is the root and not a sibling.
-
 public record MarketplaceManifest(
     [property: JsonPropertyName("$schema")]
     string Schema,

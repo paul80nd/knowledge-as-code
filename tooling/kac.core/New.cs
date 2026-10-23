@@ -41,8 +41,9 @@ public sealed record NewAnswers
     /// </summary>
     public required IReadOnlyList<string> Types { get; init; }
 
-    /// <summary>The base is null where the corpus publishes nowhere.</summary>
     public string PublishingTarget { get; init; } = Publishing.None;
+
+    /// <summary>Null where the corpus publishes nowhere.</summary>
     public string? Base { get; init; }
 
     public string Ci { get; init; } = CiSystem.None;

@@ -74,9 +74,9 @@ public static class Generator
     private static string GroupHeading(string key) =>
         char.ToUpperInvariant(key[0]) + key[1..].Replace('-', ' ');
 
-    /// <summary>The two directions an index is written in. SchemaChecks reads this set.</summary>
     public const string Descending = "descending";
 
+    /// <summary>The two directions an index is written in. SchemaChecks reads this set.</summary>
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 

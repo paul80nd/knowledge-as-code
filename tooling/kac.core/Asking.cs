@@ -14,7 +14,9 @@ public interface IAsker
 
     IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options);
 
-    /// <summary>Asks a yes or no question.</summary>
+    /// <summary>
+    /// Asks a yes or no question at the terminal. An unattended run passes no asker, so is never asked.
+    /// </summary>
     /// <param name="fallback">The answer a bare Enter gives. Yes for a question standing between somebody and the
     /// thing they asked for, and no for one standing in front of a deletion.</param>
     bool Confirm(string question, bool fallback = true);

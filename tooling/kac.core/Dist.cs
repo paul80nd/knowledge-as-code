@@ -6,6 +6,10 @@ namespace kac.core;
 /// </summary>
 public static class Dist
 {
+    /// <summary>
+    /// The marketplace's root as well, so its plugin source is <c>./plugin</c>. A marketplace refuses a source path
+    /// containing <c>..</c>.
+    /// </summary>
     public const string Root = ".dist";
 
     public const string ExportDir = "export";

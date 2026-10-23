@@ -78,14 +78,14 @@ public static partial class SeedLinks
         return new DeclinedNames(pages, folders);
     }
 
-    /// Whether this file is one the unlinking reads: a seed, and Markdown.
+    /// <summary>Whether this file is one the unlinking reads: a seed, and Markdown.</summary>
     public static bool Reaches(PlannedFile file) =>
         file.Layer == Manifest.Seed && file.To.EndsWith(".md", StringComparison.OrdinalIgnoreCase);
 
-    /// One seed page as a corpus that declined those types receives it.
-    ///
-    /// The text of each unlinked reference is kept exactly as it was written, so the noun the sentence was
-    /// built around is the noun that remains.
+    /// <summary>
+    /// One seed page as a corpus that declined those types receives it. The text of each unlinked reference is kept
+    /// exactly as it was written, so the noun the sentence was built around is the noun that remains.
+    /// </summary>
     public static string Unlinked(string markdown, DeclinedNames declined) => Unlink(markdown, declined).Text;
 
     /// <summary>
@@ -185,9 +185,11 @@ public static partial class SeedLinks
         return kept.ToString();
     }
 
+    /// <summary>
     /// Copy one planned file into a corpus, taking out the links its owner cannot follow. Only a page the unlinking
     /// changed is written a second time, so every other file keeps the line endings it was checked out with. Returns
     /// null where no line kept the words of a link it lost.
+    /// </summary>
     public static UnlinkedPage? Receive(PlannedFile file, string templateRoot, string corpusRoot,
         DeclinedNames declined)
     {

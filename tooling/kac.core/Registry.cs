@@ -42,10 +42,6 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     /// <summary>What one lookup came to. <c>Value</c> is null exactly where <c>Problem</c> is set.</summary>
     public sealed record Answer<T>(T? Value, string? Problem) where T : class
     {
-        /// <summary>
-        /// The invariant above, told to the compiler, so a caller that branches on it reads the other half without
-        /// asserting anything. Every construction below holds it.
-        /// </summary>
         [MemberNotNullWhen(true, nameof(Problem))]
         [MemberNotNullWhen(false, nameof(Value))]
         public bool Failed => Problem is not null;

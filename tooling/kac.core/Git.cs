@@ -55,7 +55,7 @@ public static class Git
     public static string? Run(string root, params string[] args) =>
         Attempt(root, args) is { Ok: true } run ? run.Output : null;
 
-    /// <summary>The full commit id the tree stands on.</summary>
+    /// <summary>The full commit id the tree stands on, or null where git could not answer.</summary>
     public static string? Head(string root) => Run(root, "rev-parse", "HEAD")?.Trim() is { Length: > 0 } sha
         ? sha
         : null;
