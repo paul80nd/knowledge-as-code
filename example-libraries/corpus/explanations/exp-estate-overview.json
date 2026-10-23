@@ -30,6 +30,6 @@
     "Where the detail lives": "* [ofr-discovery](../offerings/discovery.md), [ofr-borrowing](../offerings/borrowing.md) and [ofr-reservations](../offerings/reservations.md) say what a borrower can do, and which services do it.\n* [svc-catalogue-web](../services/catalogue-web.md) and [svc-catalogue-api](../services/catalogue-api.md) describe the public site and its gateway.\n* [svc-reservations](../services/reservations.md) describes the reserve-and-pay site, and [svc-covers-cdn](../services/covers-cdn.md) the jacket imagery.\n* [svc-lending](../services/lending.md) describes the strangler wrapper and the legacy database behind it. [dat-loans](../data/loans.md) and [dat-borrowers](../data/borrowers.md)\n  describe the data it reads and writes.\n* [svc-search](../services/search.md), [svc-notices](../services/notices.md) and [svc-shelf-audit](../services/shelf-audit.md) describe the work that runs on a schedule or on an event.\n* [Services](../services.md) states the conventions this catalogue follows, and why some coupling has no edge.\n* [exp-covers-path](covers-path.md) walks the path a jacket image takes, through [svc-thumbnailer](../services/thumbnailer.md)."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/library/explanations/estate-overview.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/library/explanations/estate-overview.md"
   }
 }

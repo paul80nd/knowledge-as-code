@@ -68,9 +68,9 @@ Cite as `std-A11Y.kac-carries-no-meaning-in-colour-alone`.
 
 Cite as `std-A11Y.the-theme-owns-contrast-focus-and-keyboard-reach`.
 
-- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that its colours meet [WCAG 2.2 AA].
+- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that its colours meet [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 - `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
-- `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that what it sets meets [WCAG 2.2 AA].
+- `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that what it sets meets [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 - The site **MUST NOT** include a template override or a script that changes the theme's keyboard behaviour.
 - `features:` **MUST NOT** turn on an entry that hides content behind a pointer gesture.
 
@@ -94,14 +94,14 @@ Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-000
 
 Cite as `std-CI.a-checkout-leaves-no-credential-behind`.
 
-- A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which is what [zizmor]'s `artipacked` audit asks for.
+- A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which is what [zizmor](https://docs.zizmor.sh/audits/#artipacked)'s `artipacked` audit asks for.
 - A step needing git write access **MUST** supply the token itself.
 
 ### A job declares the permission it needs
 
 Cite as `std-CI.a-job-declares-the-permission-it-needs`.
 
-- A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard]'s `Token-Permissions` check asks for.
+- A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Token-Permissions` check asks for.
 - A job needing wider access **MUST** declare that permission on itself.
 - A job **MUST NOT** declare a permission no step in it uses.
 - A workflow **MUST NOT** commit to a branch a person edits.
@@ -138,7 +138,7 @@ Cite as `std-CI.a-workflow-holds-no-credential-of-its-own`.
 
 Cite as `std-CI.every-action-is-pinned-to-a-commit`.
 
-- A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s `Pinned-Dependencies` check asks for.
+- A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Pinned-Dependencies` check asks for.
 - A pinned step **SHOULD** state the released version in a trailing comment, as `# v7.0.1`, because a reviewer reads the version there.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
 - A job with a write permission **MUST NOT** install a tool at a moving version.
@@ -190,7 +190,7 @@ Cite as `std-CONFIG.a-file-says-what-it-is-for-and-why-each-value-is-what-it-is`
 Cite as `std-CONFIG.a-pin-names-an-exact-version`.
 
 - A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
-- `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is what [OpenSSF Scorecard]'s `Dependency-Update-Tool` check asks for.
+- `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Dependency-Update-Tool` check asks for.
 - Every ecosystem it tracks **MUST** have a `schedule:`.
 - Each ecosystem in `.github/dependabot.yml` and `template/.github/dependabot.yml` **MUST** wait seven days before it proposes a release.
 - A security update **MUST NOT** wait.
@@ -564,7 +564,7 @@ Cite as `std-VERS.a-reader-meeting-a-stamp-it-does-not-know-stops`.
 
 Cite as `std-VERS.a-stamp-is-a-semantic-version-a-count-or-a-range`.
 
-- `content-version` in a corpus's `.corpus.yaml` and `<Version>` in `tooling/kac/kac.csproj` **MUST** be written and read under [Semantic Versioning 2.0.0].
+- `content-version` in a corpus's `.corpus.yaml` and `<Version>` in `tooling/kac/kac.csproj` **MUST** be written and read under [Semantic Versioning 2.0.0](https://semver.org).
 - `descriptor-version`, `upstream.template-version`, `version:` in `manifest.yaml`, `version:` under `export:` in a `.schema/<type>.yaml`, `formatVersion`, `mechanismVersion` and a type's `shapeVersion` **MUST** each be a whole number that only increases.
 - A count **MUST NOT** be read as a major, a minor or a patch.
 - A key spelled `version:` **MUST** version the file or the block holding it.
@@ -746,7 +746,7 @@ Cite as `eng:std-DEPLOY.production-changes-through-the-pipeline-alone`.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE].FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](../../policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -950,7 +950,7 @@ Cite as `eng:std-OBS.somebody-acts-on-every-alert`.
 Cite as `eng:std-OBS.telemetry-carries-no-personal-data`.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret] states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 

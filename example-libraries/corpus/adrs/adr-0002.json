@@ -22,6 +22,6 @@
     "Consequences": "* **A borrower who leaves part-way starts again.** Nothing is kept for a later session, on any device.\n* **The service runs no database, no storage account and no connection string.** There is nothing of its own to back\n  up, migrate or hold to a retention period.\n* **The lending API is the one owner of every hold.** A change to what a hold records is a change in `lending`, never a\n  second copy in `platform`.\n* **A payment taken after the borrower closes the browser leaves its hold provisional.** The flow keeps nothing that\n  could finish the hold once the borrower has gone, and nothing reconciles the payment with the hold."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/library/adrs/0002-reservations-keep-no-state.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/library/adrs/0002-reservations-keep-no-state.md"
   }
 }

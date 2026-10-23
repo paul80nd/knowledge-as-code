@@ -33,6 +33,6 @@
     "Coverage and gaps": "zizmor covers part of each rule it checks:\n\n* It does not know which permission a job uses, so a job declaring one it never uses passes.\n* In a workflow of one job, it reports a top-level write permission only under its `pedantic` persona.\n* It reads a workflow file, so it never sees the branch rule or the `nuget.org` environment.\n\nIt reports nothing about these rules of [std-CI](../standards/workflows.md):\n\n* a secret interpolated into a script body, which only its `auditor` persona reports\n* a secret printed to the log\n* a write permission declared on more than one job\n\nIt does not check that \"A security update **MUST NOT** wait\", in [std-CONFIG.a-pin-names-an-exact-version](../standards/configuration.md#a-pin-names-an-exact-version). Dependabot applies a cooldown to version updates alone, and no `dependabot.yml` key can make a security update wait.\n\nzizmor also reports a template expansion an attacker can write, and a trigger such as `pull_request_target`. No rule of [std-CI](../standards/workflows.md) states either one, and the workflows here have neither."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/dog-fooding/controls/0015-zizmor.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/dog-fooding/controls/0015-zizmor.md"
   }
 }

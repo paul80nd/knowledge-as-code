@@ -33,6 +33,6 @@
     "Scope": "Every build of `kac`: the publish workflow, CI, and a contributor's own machine."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/dog-fooding/deviations/no-reproducible-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/dog-fooding/deviations/no-reproducible-build.md"
   }
 }

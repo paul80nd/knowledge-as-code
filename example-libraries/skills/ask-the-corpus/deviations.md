@@ -56,14 +56,22 @@ the cross-reference.
 
 ## Say whether it is current
 
-A deviation is current where its `status` is `active` and its `review-by` has not passed. Read both, and say what you
-saw:
+A deviation is current where its `status` is the `inForce` value and its `review-by` has not passed. `inForce` is a
+string, `null`, or absent, on the `deviations` entry of `types` in `manifest.json`. The schema can change it, so take
+it from the export every time. Read `inForce`, `status` and `review-by`, and say what you saw:
 
-* **`active`**: accepted and in force. Give `owner`, `accepted-on` and `review-by`.
+* **The `inForce` value**: accepted and in force. Give `owner`, `accepted-on` and `review-by`.
 * **`draft`**: asked for and accepted by nobody. It permits nothing, so a departure resting on it is not yet allowed.
 * **`closed`**: it ended on `closed-on`. The rule applies again, unless another deviation covers the same clause.
-* **`review-by` before today**: the acceptance is due again and nobody has renewed it. The status stays `active`,
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written, and say it permits
+  nothing.
+* **`review-by` before today**: the acceptance is due again and nobody has renewed it. The status stays as it was,
   because nothing moves it. Say the review date has passed, and name the date under the key `review-by`.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, give `status`, `owner`, `accepted-on` and `review-by` as written, and say you cannot
+tell from the export whether the deviation permits the departure. `draft` and `closed` still mean what the bullets above
+say.
 
 **Quote `generatedAt` from `manifest.json` beside any of these.** The export reads the same however old it is, so a
 deviation closed or renewed since that day still reads here as it was. Say that the record may have moved since, and

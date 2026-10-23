@@ -15,6 +15,6 @@
     "Exceptions": "A service that cannot be fully assessed before adoption, or that we cannot yet leave, is kept only under a recorded deviation ([pol-DEVI](../governance/devi-deviations.md)). The deviation names the risk owner, the compensating controls and the plan to close the gap."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/engineering/policies/security/supl-supplier-services.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/engineering/policies/security/supl-supplier-services.md"
   }
 }

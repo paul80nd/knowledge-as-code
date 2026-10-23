@@ -46,19 +46,37 @@ The view lists each standard under its id and title, with its status and the con
 standard it lists the rules, each with the id to cite and its obligations. Each obligation is one bullet, and its
 keyword is in bold.
 
+## Learn which status is in force
+
+Each type states the `status` that puts its records in force, and the schema can change it. Read it from the export
+every time. `types` in `manifest.json` is a list with one entry per type, and you need two keys of each:
+
+| Key       | Type                    | What it holds                                           |
+|-----------|-------------------------|---------------------------------------------------------|
+| `type`    | string                  | the type, as `standards` or `controls`                  |
+| `inForce` | string, null, or absent | the `status` at which a record of that type is in force |
+
+`inForce` is `null` where the type has no `status` range. It is absent from an export written before the key existed.
+Read it on the `standards` entry, and on the `controls` entry where the export includes controls. The view's opening
+states the same value for standards.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** Say so in the report, and
+name the type. Give each status as written. For standards, call no finding in force on the strength of its status.
+For controls, check every obligation yourself, because you cannot tell which controls run.
+
 ## Decide which rules are yours to check
 
 **Check every obligation yourself, except one an automated control already checks.** A standard's `Controls:` line
 lists each control as its id, its title, then its mechanism and its status in brackets.
 
-A control checks an obligation for you only where its status is `active` and its mechanism is `ci` or `runtime-alert`.
-For each such control, read its record and its two sections:
+A control checks an obligation for you only where its status is the `inForce` value for `controls` and its mechanism
+is `ci` or `runtime-alert`. For each such control, read its record and its two sections:
 
 * **`sections.What it checks`**, a string of markdown, names the obligations the control checks. Leave those out.
 * **`sections.Coverage and gaps`**, a string of markdown, says where the control stops. Check what it leaves.
 
 Every other control leaves the rule with you. `review-checklist` and `manual` mean a person checks the rule while
-reviewing, and that person is you. `not-enforced` means nothing checks it. A `planned` or `retired` control checks
+reviewing, and that person is you. `not-enforced` means nothing checks it. A control at any other status checks
 nothing today.
 
 **A prefix on a control's id names the corpus that wrote it.** `eng:ctl-0004` is at
@@ -113,13 +131,14 @@ An inherited rule binds the change as fully as one written here.
 
 ## Say when a standard is unsettled
 
-A standard is in force at status `active`. The view gives each standard's status under its heading, and a rule's line
-gives the same `status` beside its `reviewBy`. Report a finding under an unsettled standard all the same, under the
-heading its keyword gives, and say which of these you saw:
+A standard is in force at the `inForce` value for `standards`. The view gives each standard's status under its
+heading, and a rule's line gives the same `status` beside its `reviewBy`. Report a finding under an unsettled standard
+all the same, under the heading its keyword gives, and say which of these you saw:
 
 * **`status: draft`**: the standard was a proposal when the export was taken, so the finding is not in force.
 * **`status: deprecated`**: the standard is on its way out, so the finding is not in force.
 * **`status: superseded`**: another standard replaced it. Say so, and say the finding is not in force.
+* **Any other status, where `inForce` gives one**: give it as written, and say the finding is not in force.
 * **`reviewBy` earlier than today**: the standard passed the date it was meant to be read again.
 
 **Quote `generatedAt` from `manifest.json` beside any status or review date you report.** The export is a copy taken
@@ -134,8 +153,8 @@ Report under two headings, each finding on its own line or short paragraph:
 * **Judgement calls**: each departure from a `SHOULD` or `SHOULD NOT`, with the rule's id, the obligation quoted, and
   the reason the change gives or the fact that it gives none.
 
-A finding under a standard whose status is not `active` stays under the heading its keyword gives, marked not in
-force, with that status and `generatedAt`.
+A finding under a standard whose status is not the `inForce` value stays under the heading its keyword gives, marked
+not in force, with that status and `generatedAt`.
 
 Close with one line naming the corpus and every entry in `sources` whose rules you checked, and the rules you left to
 an automated control. Keep the report under 500 words, so whoever decides whether to merge can read it at once.

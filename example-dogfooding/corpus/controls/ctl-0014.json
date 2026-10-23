@@ -30,6 +30,6 @@
     "Coverage and gaps": "This check proves that the range and the version the assessment names match the pin. It does not prove that anybody repeated the assessment. A reviewer who edits the version number alone passes it, so the conformance checklist in [std-A11Y](../standards/accessibility.md) still asks the reviewer.\n\nIt reads NuGet and pip pins only. A component rendering either surface through another ecosystem goes unchecked until this test learns its manifest.\n\nA patch release inside the range passes, because std-A11Y asks for a new assessment only at a major or a minor."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/71f760f6a2668a3c9052ada90e9272bc1d289cb2/examples/dog-fooding/controls/0014-assessed-pin-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/070927e2d72dce89cb05b3f2f0d1ad1996a73bcf/examples/dog-fooding/controls/0014-assessed-pin-tests.md"
   }
 }
