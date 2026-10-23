@@ -30,6 +30,6 @@
     "Impact": "Nobody can install `kac` at the new version. An installation already on an older version keeps working."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d3b4aa67e16a2855e48e217fd8a81734318bc376/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a7e9500fbbde50083550d5e4f202058339d974c4/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
   }
 }

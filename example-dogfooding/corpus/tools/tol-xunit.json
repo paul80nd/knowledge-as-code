@@ -35,11 +35,11 @@
     ]
   },
   "sections": {
-    "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature\ndocuments through the same runner, so one `dotnet test` command covers either project.\n\nBoth projects reference xUnit as `xunit.v3.mtp-off`, beside `Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio`.\nThe SDK and the runner are what make `dotnet test` find and run the tests, and neither was chosen on its own. The\n`mtp-off` package keeps `dotnet test` on VSTest. The plain `xunit.v3` package makes each project a\nMicrosoft.Testing.Platform app, and the .NET 10 SDK refuses to run one of those under VSTest.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output against committed goldens, and reports its own results.",
+    "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature documents through the same runner, so one `dotnet test` command covers either project.\n\nBoth projects reference xUnit as `xunit.v3.mtp-off`, beside `Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio`. The SDK and the runner are what make `dotnet test` find and run the tests, and neither was chosen on its own. The `mtp-off` package keeps `dotnet test` on VSTest. The plain `xunit.v3` package makes each project a Microsoft.Testing.Platform app, and the .NET 10 SDK refuses to run one of those under VSTest.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output against committed goldens, and reports its own results.",
     "Licence and obligations": "The two xUnit packages are Apache-2.0 and `Microsoft.NET.Test.Sdk` is MIT, which is why this entry names both. Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes them: the packages are test-only, and no published artefact includes them.",
     "Where it is used": "* [svc-kac] is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d3b4aa67e16a2855e48e217fd8a81734318bc376/examples/dog-fooding/tools/testing/xunit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a7e9500fbbde50083550d5e4f202058339d974c4/examples/dog-fooding/tools/testing/xunit.md"
   }
 }

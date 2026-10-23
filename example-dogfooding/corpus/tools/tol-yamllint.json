@@ -27,11 +27,11 @@
     ]
   },
   "sections": {
-    "What we use it for": "`.yamllint` extends yamllint's own `default` ruleset. It lists the four places this repository departs from that\nruleset, each with the reason in the comment above it. This tool decides the shape of a YAML file, so a reviewer does\nnot have to.\n\nThe `lint` job installs it from `.github/requirements.txt`. The pin means a linter release changes what the gate rejects only when the pin moves.",
+    "What we use it for": "`.yamllint` extends yamllint's own `default` ruleset. It lists the four places this repository departs from that ruleset, each with the reason in the comment above it. This tool decides the shape of a YAML file, so a reviewer does not have to.\n\nThe `lint` job installs it from `.github/requirements.txt`. The pin means a linter release changes what the gate rejects only when the pin moves.",
     "Licence and obligations": "GPL-3.0-or-later. The `lint` job runs it as a separate program, and nothing published here links to it, so the copyleft terms apply to no artefact this repository ships.",
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against every YAML file in the repository, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d3b4aa67e16a2855e48e217fd8a81734318bc376/examples/dog-fooding/tools/lint/yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a7e9500fbbde50083550d5e4f202058339d974c4/examples/dog-fooding/tools/lint/yamllint.md"
   }
 }
