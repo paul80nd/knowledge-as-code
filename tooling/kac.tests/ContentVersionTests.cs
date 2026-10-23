@@ -80,14 +80,14 @@ public class ContentVersionTests
 
             var now = Files.ReadLf(Path.Combine(Repo.Root, folder, Descriptor));
             var was = Locks(then);
-            var held = Locks(now);
+            var locked = Locks(now);
 
             // An entry added or removed moves its lock from or to nothing.
-            var moved = was.Keys.Union(held.Keys)
+            var moved = was.Keys.Union(locked.Keys)
                 .Order(StringComparer.Ordinal)
-                .Where(key => was.GetValueOrDefault(key) != held.GetValueOrDefault(key))
+                .Where(key => was.GetValueOrDefault(key) != locked.GetValueOrDefault(key))
                 .Select(key => $"{key} from {was.GetValueOrDefault(key) ?? "nothing"} to "
-                               + $"{held.GetValueOrDefault(key) ?? "nothing"}")
+                               + $"{locked.GetValueOrDefault(key) ?? "nothing"}")
                 .ToList();
 
             if (moved.Count == 0 || VersionRange.Newer(Version(now) ?? "", Version(then) ?? "")) continue;
@@ -120,13 +120,13 @@ public class ContentVersionTests
 
             var ownDir = $"{folder}/{Bundler.SourceDir}";
             var own = Bundler.Read(Path.Combine(root, Bundler.SourceDir)) ?? [];
-            var sharedDir = from is null ? null : Rel(Path.Combine(root, from));
+            var sharedDir = from is null ? null : RepoRelative(Path.Combine(root, from));
             var shared = sharedDir is null ? [] : Bundler.Read(Path.Combine(Repo.Root, sharedDir)) ?? [];
             var tree = sharedDir is null ? own : Bundler.Merge(shared, own);
 
             // The merged tree keeps the very file it read, so a shared file the corpus overrides drops out here.
-            var changed = Changed(touched, ownDir, own)
-                .Concat(sharedDir is null ? [] : Changed(touched, sharedDir, shared))
+            var changed = Edited(touched, ownDir, own)
+                .Concat(sharedDir is null ? [] : Edited(touched, sharedDir, shared))
                 .Where(file => tree.Any(kept => ReferenceEquals(kept, file)))
                 .ToList();
             if (changed.Count == 0) continue;
@@ -174,12 +174,12 @@ public class ContentVersionTests
             .ToList();
 
     /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched.</summary>
-    private static IEnumerable<BundleFile> Changed(
+    private static IEnumerable<BundleFile> Edited(
         IReadOnlySet<string> touched, string dir, IReadOnlyList<BundleFile> tree) =>
         tree.Where(file => touched.Contains($"{dir}/{file.Path}"));
 
-    /// <summary>Forward-slashed and relative to the repository.</summary>
-    private static string Rel(string path) =>
+    /// <summary>Forward-slashed.</summary>
+    private static string RepoRelative(string path) =>
         Path.GetRelativePath(Repo.Root, Path.GetFullPath(path)).Replace('\\', '/');
 
     /// <summary>
@@ -215,6 +215,7 @@ public class ContentVersionTests
         return PublishedExport.Built(Working(folder), today, inherited);
     }
 
+    /// <summary>Every path under <c>dir</c>, at any depth, relative to it.</summary>
     private static IEnumerable<string> Inside(Dictionary<string, string> files, string dir) =>
         files.Keys
             .Where(path => path.StartsWith(dir + "/", StringComparison.Ordinal))
@@ -227,6 +228,7 @@ public class ContentVersionTests
             .FirstOrDefault(folder =>
                 CorpusDescriptor.Parse(Files.ReadLf(Path.Combine(Repo.Root, folder, Descriptor))).Name == name);
 
+    /// <summary>An export file as <c>Bundler</c> reads one off the disk, encoded as UTF-8.</summary>
     private static BundleFile Bytes(ExportFile file) => new(file.Path, Encoding.UTF8.GetBytes(file.Content));
 
     /// <summary>Each <c>consumes:</c> entry's <c>resolved:</c> lock, by the corpus it names.</summary>

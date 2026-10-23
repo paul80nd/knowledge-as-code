@@ -30,20 +30,20 @@ replaces a version it has taken.
 
 `ContentVersionTests` in `tooling/kac.tests` compares each corpus under `examples/` on the branch with the same corpus
 at the commit the branch grew from. It asks `git diff` and `git ls-files` for every file the branch added, changed,
-renamed or deleted, committed or not. Each of its three facts then reads `content-version` from `.corpus.yaml` at both
-revisions, and fails a corpus where something moved and the stamp did not rise.
+renamed or deleted, committed or not. It runs one test for each move below. Each test reads `content-version` from
+`.corpus.yaml` at both revisions, and fails a corpus where that move happened and the stamp did not rise.
 
-| Fact                          | What counts as a move                                                                                     |
+| Test                          | What counts as a move                                                                                     |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------|
 | The export changed            | The corpus's export, built twice in memory from its records, `.corpus.yaml` and `.schema/`, differs by a byte outside `mechanismVersion`. The first build reads git at the merge base, and the second reads the working tree. |
 | The lock moved                | A `consumes:` entry in `.corpus.yaml` states a different `resolved:` at the merge base and in the working tree. |
 | A bundled component changed   | A file under `template/.plugin/`, or under the corpus's own `.plugin/`, changed, and `kac bundle` would copy it into this corpus's plugin. |
 
-The first fact skips a corpus where nothing in its folder or in `.schema/` changed. Both of its builds run one exporter,
-so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison in each
+The export test skips a corpus where nothing in its folder or in `.schema/` changed. Both of its builds run one
+exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison in each
 direction against corpora built in memory.
 
-The third fact decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
+The bundle test decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
 and export. That export includes what each corpus consumes, built from the producer's folder here. So an edit to
 `controls-lookup` asks for a move in every corpus whose export includes a control, its own or inherited, and in no
 other.
@@ -66,12 +66,12 @@ A template take is left out. It moves `upstream.template-version`, which `manife
 `mechanismVersion`. Both builds drop `mechanismVersion` before they compare, because it is a stamp of its own and no
 record moved with it.
 
-The export the first fact compares is the corpus's own records. `.imports/` is untracked, so git keeps no copy of what
-a consumer had restored at the merge base. The second fact reads the `resolved:` lock instead, which [std-VERS] makes
+The export test compares the corpus's own records. `.imports/` is untracked, so git keeps no copy of what a consumer
+had restored at the merge base. The lock test reads the `resolved:` lock instead, which [std-VERS] makes
 the trigger for a consumer's move. It needs no restore and no package. A producer that moves for a bundled skill alone
 still obliges its consumers through their lock, with nothing new in their export.
 
-The third fact checks that a corpus moved where a changed skill, hook or manifest reaches its bundle. A reviewer judges
+The bundle test checks that a corpus moved where a changed skill, hook or manifest reaches its bundle. A reviewer judges
 whether the change was to wording, which moves the patch, or to what the component tells a reader to do, which moves
 the minor. A file the branch deleted is not in the working plugin tree, so deleting a file from a component asks for no
 move here.

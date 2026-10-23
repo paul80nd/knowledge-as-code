@@ -191,8 +191,9 @@ moves its minor and leaves its consumers alone publishes something they have alr
 A consumer's export includes what it inherits, so a lock that moves changes what the consumer publishes. The lock is
 the trigger, and a change to the inherited records is not, so the rule and its test read the same line of
 `.corpus.yaml`. Where the consumer's own records changed in the same pull request, one move covers both, at the larger
-part. A producer that moves for a bundled skill alone still obliges its consumers to move, with nothing new in their
-export. That costs a reader nothing, because a `content-version` a reader does not know never stops it.
+part. A consumer below 1.0.0 moves its minor where that part is a major, as it would for any other move. A producer
+that moves for a bundled skill alone still obliges its consumers to move, with nothing new in their export. A
+`content-version` a reader does not know never stops that reader.
 
 `mechanismVersion` is the descriptor's `upstream.template-version` published under the name that key used to have. It
 adds nothing a corpus does not already state, and renaming it in the export is what `formatVersion` exists to announce.
