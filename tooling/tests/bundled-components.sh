@@ -23,11 +23,11 @@ jqr() {
   jq -r "$@" | tr -d '\r'
 }
 
-# POSIX sh has no `pipefail`, so a jq failure and a renamed key both read as an empty list. Asking for the
-# type catches both, because `select` on a false condition writes nothing at all.
-COMPONENTS=$(jqr 'select((.included | type) == "array" and (.trimmed | type) == "array")
+# POSIX sh has no `pipefail`, so a jq failure and a renamed key both read as an empty list. The type test
+# below catches both.
+COMPONENT_COUNT=$(jqr 'select((.included | type) == "array" and (.trimmed | type) == "array")
   | (.included | length) + (.trimmed | length)' "$BUNDLE")
-[ -n "$COMPONENTS" ] && [ "$COMPONENTS" -gt 0 ] \
+[ -n "$COMPONENT_COUNT" ] && [ "$COMPONENT_COUNT" -gt 0 ] \
   || fail "bundle.json names no component under included and trimmed."
 
 INCLUDED=$(jqr '.included[].path' "$BUNDLE")

@@ -94,7 +94,7 @@ EXPORT_MANIFEST="$ROOT/$CORPUS_ROOT/manifest.json"
 
 # A component surviving when its type stayed behind is a skill pointing at files the export never wrote.
 # `bundle.json` travels inside the plugin, so the guard reads it from the installed copy.
-sh "$(dirname "$0")/bundled-components.sh" "$ROOT" || fail "the installed plugin does not match its bundle.json."
+sh "$(dirname "$0")/bundled-components.sh" "$ROOT" || exit 1
 BUNDLE="$ROOT/bundle.json"
 
 # Each skill names the parts file of the type in its `requires`, and no other type's. Skills only: a hook
