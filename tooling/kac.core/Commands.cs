@@ -817,9 +817,7 @@ public static class Commands
         if (plan.Declined > 0)
             Account($"update: withheld {plan.Declined} file(s) for types this corpus has not adopted.");
 
-        if (plan.DeclinedCi > 0)
-            Account($"update: withheld {plan.DeclinedCi} continuous integration starter(s) this corpus "
-                    + "does not hold. Which system builds it is not an update's to decide.");
+        if (kac.core.Update.CiWithheld(plan) is { } ci) Account(ci);
 
         if (plan.DeclinedPlugin > 0)
             Account($"update: withheld {plan.DeclinedPlugin} plugin file(s) this corpus reads from "

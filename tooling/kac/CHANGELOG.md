@@ -34,6 +34,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   such as `[deviation][deviations]` with `[deviations]: ../deviations.md`, kept that definition in a corpus that
   declined the type. The corpus failed `link-resolves` on its first `validate`. The definition now goes, and each link
   citing it keeps its words, as an inline link already did.
+- **`kac update` names the CI system each withheld file belongs to.** A corpus holding none of the template's CI files
+  was told it withheld three continuous integration starters. One of the three is `.github/dependabot.yml`, which runs
+  no build. The line now counts the files and names their systems, such as `github` and `azure-devops`.
 
 ## 0.38.0 - 2026-10-23
 
