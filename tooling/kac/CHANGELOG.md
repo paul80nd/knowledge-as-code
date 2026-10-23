@@ -49,6 +49,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   without the definition at the foot of its record, so the link lost its target. Each full, collapsed or shortcut
   reference, and each image reference, now arrives as an inline link to the target its definition states. A reference
   with no definition arrives as written.
+- **`kac export` keeps the indent of a block inside a list item.** A fence inside a numbered item lost the indent of
+  its opening line, so a renderer closed the list there and showed the code outside it. A paragraph in the item lost
+  its indent when unwrapped. Both now arrive indented as written.
 
 ## 0.38.0 - 2026-10-23
 

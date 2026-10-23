@@ -755,13 +755,25 @@ public static class Exporter
     /// </summary>
     private static string Unwrap(string text)
     {
-        var paragraphs = text.Replace("\r\n", "\n").Trim().Split("\n\n");
+        var paragraphs = FromFirstText(text.Replace("\r\n", "\n")).Split("\n\n");
 
         return string.Join("\n\n", paragraphs.Select(p =>
         {
-            var lines = p.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
-            return lines.Any(Structural) ? p.Trim() : string.Join(" ", lines);
+            var block = FromFirstText(p);
+            var lines = block.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
+            if (lines.Any(Structural)) return block;
+
+            var indent = block[..(block.Length - block.TrimStart().Length)];
+            return indent + string.Join(" ", lines);
         }));
+
+        // Keeps the first line's indent, which places a block inside a list item.
+        static string FromFirstText(string block)
+        {
+            var lines = block.Split('\n');
+            var first = Array.FindIndex(lines, l => !string.IsNullOrWhiteSpace(l));
+            return first < 0 ? "" : string.Join('\n', lines[first..]).TrimEnd();
+        }
 
         // A bullet and a heading need the marker and then a space, which tells `- item` from an em-dash clause.
         static bool Structural(string line) =>

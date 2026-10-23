@@ -252,8 +252,21 @@ public class ExporterTests
     [InlineData("Run this:\n```sh\nkac validate\n```")]
     [InlineData("Run this:\n````md\n```sh\nkac validate\n```\n````")]
     [InlineData("Run this:\n~~~sh\nkac validate\n~~~")]
+    [InlineData("Run this:\n\n```sh\nkac validate\n```\n\nThen commit.")]
     public void A_fence_is_left_exactly_as_written(string fenced)
         => Assert.Equal(fenced, ExportedScope(fenced));
+
+    [Theory]
+    [InlineData("1. Install the linters.\n\n   ```sh\n   brew install yamllint\n   ```\n\n2. Check each version.")]
+    [InlineData("- Install the linters.\n\n  ```sh\n  brew install yamllint\n  ```\n\n- Check each version.")]
+    [InlineData("1. Install the linters.\n\n   ~~~sh\n   brew install yamllint\n   ~~~")]
+    public void A_fence_keeps_the_indent_of_every_line_it_was_written_with(string fenced)
+        => Assert.Equal(fenced, ExportedScope(fenced));
+
+    [Fact]
+    public void A_wrapped_paragraph_inside_a_list_item_joins_and_keeps_its_indent()
+        => Assert.Equal("1. Install the linters.\n\n   Homebrew installs a Python.\n\n   ```sh\n   brew\n   ```",
+            ExportedScope("1. Install the linters.\n\n   Homebrew installs\n   a Python.\n\n   ```sh\n   brew\n   ```"));
 
     [Fact]
     public void A_wrapped_line_opening_with_a_triple_backtick_code_span_joins_the_paragraph()
