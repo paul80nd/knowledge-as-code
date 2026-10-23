@@ -16,7 +16,7 @@ public sealed record GitRun(int ExitCode, string Output, string Error)
 public static class Git
 {
     /// <summary>Everything a git command said, or null where git could not be started.</summary>
-    public static GitRun? Attempt(string root, string args,
+    public static GitRun? Attempt(string root, IReadOnlyList<string> args,
         IReadOnlyDictionary<string, string>? environment = null)
     {
         try
@@ -52,17 +52,17 @@ public static class Git
     }
 
     /// <summary>Standard output, or null where the command could not be run or exited non-zero.</summary>
-    public static string? Run(string root, string args) =>
+    public static string? Run(string root, params string[] args) =>
         Attempt(root, args) is { Ok: true } run ? run.Output : null;
 
     /// <summary>The full commit id the tree stands on.</summary>
-    public static string? Head(string root) => Run(root, "rev-parse HEAD")?.Trim() is { Length: > 0 } sha
+    public static string? Head(string root) => Run(root, "rev-parse", "HEAD")?.Trim() is { Length: > 0 } sha
         ? sha
         : null;
 
     /// <summary>Null where git could not answer, which is not the same as clean.</summary>
     public static bool? Dirty(string root) =>
-        Run(root, "status --porcelain") is { } status ? status.Trim().Length > 0 : null;
+        Run(root, "status", "--porcelain") is { } status ? status.Trim().Length > 0 : null;
 
     public static WorkingTree Status(string root) => Dirty(root) switch
     {

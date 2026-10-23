@@ -82,7 +82,7 @@ public static class New
 
     public static Ground Survey(string dir)
     {
-        var repository = Git.Run(dir, "rev-parse --is-inside-work-tree")?.Trim() == "true";
+        var repository = Git.Run(dir, "rev-parse", "--is-inside-work-tree")?.Trim() == "true";
 
         return new Ground
         {

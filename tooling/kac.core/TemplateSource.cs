@@ -65,11 +65,11 @@ public sealed class TemplateSource : IDisposable
         var clone = Path.Combine(into, "kac-template-" + Guid.NewGuid().ToString("n")[..12]);
         Directory.CreateDirectory(clone);
 
-        // Quoted, because a path may hold a space. `--` closes the option list, so a repository whose name opens on a
-        // hyphen is read as one.
-        var branch = gitRef is { Length: > 0 } r ? $"--branch \"{r}\" " : "";
+        string[] branch = gitRef is { Length: > 0 } r ? ["--branch", r] : [];
         var environment = prompt ? null : new Dictionary<string, string> { ["GIT_TERMINAL_PROMPT"] = "0" };
-        var run = Attempt($"clone --depth 1 {branch}-- \"{from}\" \"{clone}\"", environment);
+
+        // `--` closes the option list, so a repository whose name opens on a hyphen is read as one.
+        var run = Attempt(["clone", "--depth", "1", .. branch, "--", from, clone], environment);
 
         if (run is null)
         {
@@ -174,7 +174,7 @@ public sealed class TemplateSource : IDisposable
         path is { Length: > 0 } ? Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar)) : root;
 
     /// <summary>The command names both ends itself, so the working directory decides nothing.</summary>
-    private static GitRun? Attempt(string args, IReadOnlyDictionary<string, string>? environment) =>
+    private static GitRun? Attempt(IReadOnlyList<string> args, IReadOnlyDictionary<string, string>? environment) =>
         Git.Attempt(Path.GetTempPath(), args, environment);
 
     /// <summary>Git's own account of the failure, indented under the message carrying it.</summary>

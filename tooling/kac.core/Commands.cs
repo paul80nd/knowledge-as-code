@@ -121,7 +121,7 @@ public static class Commands
         if (take.Problem is { } unreadable) return Fail(unreadable);
 
         var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
-            Git.Run(dir, "remote get-url origin")?.Trim(), asker);
+            Git.Run(dir, "remote", "get-url", "origin")?.Trim(), asker);
         if (answered.Failed) return Fail(answered.Problem);
         var answers = answered.Answers;
 
@@ -178,7 +178,7 @@ public static class Commands
             Consent.Unattended => Fail("new: this folder is not a git repository, and there is no terminal to ask on. "
                                        + "Run `git init` first, or pass --yes to have it run."),
             Consent.Withheld => Cancelled("new"),
-            _ => Git.Run(dir, "init -q") is null
+            _ => Git.Run(dir, "init", "-q") is null
                 ? Fail("new: `git init` failed. The tool reads the git listing to find what a corpus holds, "
                        + "so a corpus git cannot see is not one worth writing.")
                 : null
@@ -230,7 +230,7 @@ public static class Commands
     /// </summary>
     private static void Stage(string dir)
     {
-        if (Git.Run(dir, "add -A") is null)
+        if (Git.Run(dir, "add", "-A") is null)
             Note("new: `git add -A` did not run, so nothing is staged. The files are written.");
         else
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");

@@ -22,7 +22,7 @@ internal static class Diff
         string[] candidates = string.IsNullOrEmpty(named) ? ["origin/main", "main"] : [named];
 
         var before = candidates
-            .Select(candidate => Git.Run(Repo.Root, $"merge-base {candidate} HEAD")?.Trim())
+            .Select(candidate => Git.Run(Repo.Root, "merge-base", candidate, "HEAD")?.Trim())
             .FirstOrDefault(sha => sha is { Length: >= 40 });
 
         // An unnamed base that resolves nothing is a tree nobody branched, which is ordinary.
@@ -39,7 +39,7 @@ internal static class Diff
     /// them, so a record written on this branch and not yet committed is invisible to <c>Changed</c>.
     /// </summary>
     internal static IEnumerable<string> Untracked() =>
-        (Git.Run(Repo.Root, "ls-files --others --exclude-standard -z") ?? "")
+        (Git.Run(Repo.Root, "ls-files", "--others", "--exclude-standard", "-z") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
     /// <summary>
@@ -50,7 +50,7 @@ internal static class Diff
     internal static IEnumerable<(string Was, string Now)> Changed(string before, string filter)
     {
         var fields =
-            (Git.Run(Repo.Root, $"diff --name-status -M -z --diff-filter={filter} {before} --") ?? "")
+            (Git.Run(Repo.Root, "diff", "--name-status", "-M", "-z", $"--diff-filter={filter}", before, "--") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
         for (var i = 0; i + 1 < fields.Length;)
