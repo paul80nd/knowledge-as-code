@@ -99,12 +99,20 @@ published glossary for the rest. Every section of a glossary except its Scope st
 
 ## Say when an entry is unsettled
 
-Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
+Read the `status` that puts an entry in force from `inForce`, a string, `null`, or absent, on the `glossary` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
+`reviewBy` on every line you quote, and tell the reader what you saw:
 
+* **The `inForce` value**: in force. Answer from it.
 * **`status: draft`**: the terms were still settling when the export was taken.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`reviewBy` earlier than today**: the entry passed the date it was meant to be read again.
 
-The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside either.
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no entry in force on the strength of its status.
+`draft` still means what the bullet above says.
+
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
 ## Say when the nearest entry is about something else
 
