@@ -5,7 +5,7 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-23T17:53:12Z
+  at: 2026-10-23T19:16:10Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.38.0
@@ -13,7 +13,7 @@ sources:
   - { resource: example-dogfooding, version: "0.78.0" }
   - { resource: example-engineering, version: "0.38.4" }
 verified:
-  - { at: 2026-10-23T18:10:00Z, by: human:paul.law }
+  - { at: 2026-10-23T19:16:10Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -305,8 +305,8 @@ where the rule and the practice differ.
 
 | Clause    | Level    | Covered by   | Deviations                      | Controls               | Pair candidate | Verdict | Note                                                                                             |
 |-----------|----------|--------------|---------------------------------|------------------------|----------------|---------|--------------------------------------------------------------------------------------------------|
-| `DOCS`    | MUST     | `std-VERS`   |                                 | `ctl-0007`             |                | Covered | Every stamp is listed, and what a move of each one means is written down.                        |
-| `SYNC`    | MUST     | `std-VERS`   |                                 | `ctl-0007`             |                | Covered | A producer's move and its consumers' locks land in one pull request.                             |
+| `DOCS`    | MUST     | `std-VERS`   |                                 | `ctl-0007`, `ctl-0011` |                | Covered | Every stamp is listed, and what a move of each one means is written down.                        |
+| `SYNC`    | MUST     | `std-VERS`   |                                 | `ctl-0007`, `ctl-0011` |                | Covered | A producer's move and its consumers' locks land in one pull request.                             |
 | `DECIDE`  | MUST     |              | `dev-decisions-live-in-commits` |                        |                | Gap     | The reasoning behind a decision lives in the commit that made it.                                |
 | `AGENTS`  | MUST     | `std-PROSE`  |                                 | `ctl-0013`             |                | Covered | The rules are where the agents doing the work read them.                                         |
 | `HEADS`   | MUST NOT |              | `dev-one-maintainer`            |                        |                | Gap     | One maintainer, and nothing tests what only they know.                                           |
@@ -377,7 +377,7 @@ where the rule and the practice differ.
 | `SAMEART` | MUST     | `eng:std-DEPLOY`               |            | `eng:ctl-0002`                                                                         |                       | Covered      | The artefact is built once. The publish job rebuilds from the merge commit.                          |
 | `CONFIG`  | MUST     | `std-CONFIG`, `eng:std-DEPLOY` |            | `ctl-0004`, `ctl-0005`, `ctl-0015`, `eng:ctl-0002`                                     |                       | Covered      | Configuration is outside the artefact.                                                               |
 | `TRACE`   | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` | `eng:pol-TRUS.TRACE`  | Covered      | A publish tags the commit it published from.                                                         |
-| `REVERT`  | MUST     | `std-VERS`, `eng:std-DEPLOY`   |            | `ctl-0007`, `eng:ctl-0002`                                                             |                       | Covered      | A correction ships as a new version, and no published one moves.                                     |
+| `REVERT`  | MUST     | `std-VERS`, `eng:std-DEPLOY`   |            | `ctl-0007`, `ctl-0011`, `eng:ctl-0002`                                                 |                       | Covered      | A correction ships as a new version, and no published one moves.                                     |
 | `ASCODE`  | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` | `eng:pol-MEXP.ASCODE` | Covered      | The workflows are reviewed like any other file.                                                      |
 | `GATES`   | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` |                       | Covered      | `validate` is the check a merge waits for.                                                           |
 | `SIGNOFF` | MUST     |                                |            |                                                                                        |                       | Gap          | A person approves the `nuget.org` environment before a publish, and no standard states the approval. |

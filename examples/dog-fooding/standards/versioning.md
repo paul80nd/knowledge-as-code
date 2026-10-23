@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.DOCS, eng:pol-KNOW.SYNC, eng:pol-PIPE.REVERT, eng:pol-TRUS.MUTATE ]
-verified-by: [ ctl-0007 ]
+verified-by: [ ctl-0007, ctl-0011 ]
 applies-to:
   - all
 review-by: "2027-09-07"

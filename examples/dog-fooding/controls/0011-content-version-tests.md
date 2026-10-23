@@ -3,7 +3,7 @@ id: ctl-0011
 type: control
 tier: normative
 status: active
-verifies: [ std-CI ]
+verifies: [ std-CI, std-VERS ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
@@ -14,7 +14,7 @@ owner: human:paul.law
 tags: [ corpus, versioning ]
 ---
 
-# Every corpus whose export changed has moved its content-version
+# Every corpus whose export, lock or bundle changed has moved its content-version
 
 `Control: ctl-0011` `ACTIVE`
 
@@ -25,6 +25,10 @@ replaces a version it has taken.
 
 * [std-CI.a-version-moves-by-hand-and-publishes-once] says "`content-version` in a corpus's `.corpus.yaml` **MUST**
   move in the pull request changing what that corpus knows".
+* [std-VERS.what-a-move-of-each-stamp-means] says "`content-version` **MUST** move where a change reaches a skill, a
+  hook or the manifest its bundle includes".
+* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] says "That consumer **MUST** move its own
+  `content-version` wherever its `resolved:` lock moves".
 
 ## How it works
 
@@ -40,8 +44,8 @@ renamed or deleted, committed or not. It runs one test for each move below. Each
 | A bundled component changed   | A file under `template/.plugin/`, or under the corpus's own `.plugin/`, changed, and `kac bundle` would copy it into this corpus's plugin. |
 
 The export test skips a corpus where nothing in its folder or in `.schema/` changed. Both of its builds run one
-exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison in each
-direction against corpora built in memory.
+exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison
+in each direction against corpora built in memory.
 
 The bundle test decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
 and export. That export includes what each corpus consumes, built from the producer's folder here. So an edit to
@@ -84,4 +88,5 @@ the pull request.
 
 [std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
 [std-VERS]: ../standards/versioning.md
+[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
 [std-VERS.what-a-move-of-each-stamp-means]: ../standards/versioning.md#what-a-move-of-each-stamp-means
