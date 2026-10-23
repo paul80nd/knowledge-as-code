@@ -40,6 +40,8 @@ public class PartRow
     public string IdText = "";
     /// <summary>The Clause cell flattened, or the heading as written.</summary>
     public string Text = "";
+    /// <summary>The Clause cell flattened by <c>Md.PlainTextWithoutCode</c>.</summary>
+    public string TextWithoutCode = "";
     /// <summary>The leading bold run's text, when the cell opens with one.</summary>
     public string? BoldLead;
     public int Line;
@@ -579,6 +581,7 @@ public partial class Doc
                     : null,
                 IdText = Md.PlainText(cells.Count > 0 ? cells[0] : null),
                 Text = Md.PlainText(clause),
+                TextWithoutCode = Md.PlainTextWithoutCode(clause),
                 BoldLead = clause?.FirstChild is EmphasisInline { DelimiterCount: 2 } bold
                     ? Md.PlainText(bold)
                     : null,
