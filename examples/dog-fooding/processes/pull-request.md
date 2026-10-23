@@ -43,7 +43,7 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
 2. Where `kac` changed, write the changelog entry on this branch. An entry written after the merge is too late.
 3. Where `kac` changed, put the release call to the branch owner and recommend an answer. Recommend releasing where the
    change is useful on its own. Recommend holding where it is one part of a group that is no use apart.
-4. Move `content-version` in each corpus whose records changed, and in each one whose bundled skills changed what they
+4. Move `content-version` in each corpus whose export changed, and in each one whose bundled skills changed what they
    tell a reader to do. [std-VERS] says which component moves.
 5. Move the `resolved:` lock of every consumer of a corpus you moved in step 4. Move its `version:` range as well where
    that producer is below 1.0.0 and its minor moved.

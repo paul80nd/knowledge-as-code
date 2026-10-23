@@ -20,17 +20,4 @@ internal static class RecordPath
                && !parts[^1].StartsWith('_')
                && parts[..^1].Any(folders.Contains);
     }
-
-    /// <summary>
-    /// The corpus whose export includes <c>rel</c>, or null where none does. <c>corpora</c> names each corpus folder
-    /// under <c>examples/</c>, and <c>exported</c> each type folder declaring an <c>export:</c> block.
-    /// </summary>
-    internal static string? CorpusOf(string rel, IReadOnlySet<string> corpora, IReadOnlySet<string> exported)
-    {
-        var parts = rel.Split('/');
-
-        if (parts.Length < 4 || parts[0] != Published || !corpora.Contains(parts[1])) return null;
-
-        return IsRecord(string.Join('/', parts[2..]), exported) ? parts[1] : null;
-    }
 }

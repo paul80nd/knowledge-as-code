@@ -302,10 +302,14 @@ public class CorpusDescriptor
     public static CorpusDescriptor Load(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
-        var descriptor = new CorpusDescriptor();
-        if (!File.Exists(path)) return descriptor;
+        return File.Exists(path) ? Parse(File.ReadAllText(path)) : new CorpusDescriptor();
+    }
 
-        var root = Yaml.LoadFile(path);
+    /// <summary>Read from text the caller already has. Empty text reads as a descriptor stating nothing.</summary>
+    public static CorpusDescriptor Parse(string text)
+    {
+        var descriptor = new CorpusDescriptor();
+        var root = Yaml.Load(text);
 
         var upstream = Yaml.Get(root, "upstream");
         var url = Yaml.Str(Yaml.Get(upstream, "url"));
