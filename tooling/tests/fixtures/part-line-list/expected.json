@@ -13,7 +13,7 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', and that field is a list. A line reads one value from a field, so the key would be null on every line. Name a field with one value, or drop the key."
+      "message": "type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', and that field is not a single value. A line reads one value from a field, so the key would be null on every line. Name a field with one value, or drop the key."
     }
   ]
 }

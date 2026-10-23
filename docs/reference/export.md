@@ -435,9 +435,9 @@ to how a link is built moves `formatVersion`.
 
 ## What a type cannot say
 
-**A part line has no list.** A `line:` key reading `front.<field>` takes one value. The schema pass refuses a source
-naming a list field, whether the type declares it or `_universal.yaml` does. The record file has that field as an
-array.
+**A part line has no list or object.** A `line:` key reading `front.<field>` takes one value. The schema pass refuses a
+source naming a list or an object field, whether the type declares it or `_universal.yaml` does. The record file has
+that field as an array or an object.
 
 **A clause states no framework alignment.** [`frameworks.jsonl`](#frameworksjsonl) states that edge from the
 framework's end, with its standing. A framework names its clauses, and a clause names no framework.

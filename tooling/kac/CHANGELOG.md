@@ -29,11 +29,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   or a tilde, only a fence keeps a paragraph as written: three or more backticks, or three or more tildes. A `~~~`
   fence was joined before, and now arrives as written. The export changes wherever a record has either, so move
   `content-version` by a patch, and each consumer's `resolved:` lock with it.
-- **`kac validate` refuses a part line reading a list field.** An `export.parts.line:` key whose source is
-  `front.<field>` takes one value. A field declared `type: list` was read as nothing, and `kac export` wrote `null`
-  under that key on every line of the flat file. `schema-shape` now reports the source against the type file, whether
-  the type declares the field or `_universal.yaml` does, such as `tags`. Name a field with one value, or drop the key.
-  The record file still has the list as an array.
+- **`kac validate` refuses a part line reading a list or an object field.** An `export.parts.line:` key whose source
+  is `front.<field>` takes one value. A field declared `type: list` or `type: object` was read as nothing, and
+  `kac export` wrote `null` under that key on every line of the flat file. `schema-shape` now reports the source
+  against the type file, whether the type declares the field or `_universal.yaml` does, such as `tags`. Name a field
+  with one value, or drop the key. The record file still has the field whole.
 
 ## 0.37.0 - 2026-10-21
 
