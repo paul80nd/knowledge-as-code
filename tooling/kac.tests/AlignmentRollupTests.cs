@@ -348,6 +348,35 @@ public class AlignmentRollupTests
         Assert.Contains("'Oblidged'", found.Message);
     }
 
+    [Fact]
+    public void A_posture_one_register_heads_and_another_omits_is_left_alone()
+    {
+        const string text = "---\nid: pol-SCRT\naligns-with:\n---\n\n# Secrets are managed\n\n"
+                            + "`Policy: pol-SCRT` `DRAFT`\n\n## Clauses\n\n"
+                            + "| Id | Clause | Alignment |\n|----|--------|-----------|\n"
+                            + "| `KEYS`  | **MUST** protect keys. | [UK GDPR].Art.32 |\n"
+                            + "| `STORE` | **MUST** hold secrets. | [ISO 27001:2022].A.5.17 |\n\n"
+                            + "[ISO 27001:2022]: ../frameworks.md#iso-27001\n"
+                            + "[UK GDPR]: ../regulators.md#uk-gdpr\n";
+
+        var doc = Doc.Parse("policies/scrt-secrets.md", text, WithClauses());
+        Assert.NotNull(doc);
+
+        const string regulators = "# Regulators\n\n## Obliged\n\n### UK GDPR\n\nThe law applies to us.\n";
+        var files = new HashSet<string>(["frameworks.md", "regulators.md", doc.Rel], StringComparer.Ordinal);
+        var tree = new Tree(files, rel => rel switch
+        {
+            "frameworks.md" => Frameworks,
+            "regulators.md" => regulators,
+            _ => text
+        });
+
+        Assert.Empty(new AlignmentRollup().Misconfigured(new CorpusRuleContext(
+            [doc], new Dictionary<string, Doc> { ["pol-SCRT"] = doc }, tree, doc.TypeOf(),
+            Rollup("Obliged", "Self-obligated"), new Dictionary<string, string>(StringComparer.Ordinal), null,
+            (_, _, _, _) => { }, (_, _, _, _) => { })));
+    }
+
     /// <summary>
     /// Drops <c>framework-uncited</c>, which fires in every case here and is asked its own questions further up.
     /// </summary>
