@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using kac.core;
 
 namespace kac.tests;
@@ -55,6 +56,22 @@ internal static class PublishedExport
                 $"{revision.Name} cannot be exported, so its export was not compared:\n  "
                 + string.Join("\n  ", plan.Refused));
 
-        return plan.Files.ToDictionary(file => file.Path, file => file.Content, StringComparer.Ordinal);
+        return plan.Files.ToDictionary(file => file.Path,
+            file => file.Path == Exporter.ManifestFile ? WithoutMechanismVersion(file.Content) : file.Content,
+            StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// The manifest less <c>mechanismVersion</c>, which a template take moves in every corpus. It is a stamp of its
+    /// own, so no record moved with it.
+    /// </summary>
+    private static string WithoutMechanismVersion(string manifest)
+    {
+        var node = JsonNode.Parse(manifest)?.AsObject()
+                   ?? throw new InvalidOperationException($"{Exporter.ManifestFile} is not a JSON object.");
+
+        node.Remove("mechanismVersion");
+
+        return node.ToJsonString();
     }
 }

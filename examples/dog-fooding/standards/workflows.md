@@ -165,7 +165,7 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
 - [ ] Every observable change to `kac` here has its line under `## Unreleased`.
 - [ ] A pull request moving `<Version>` has the branch owner's decision behind it, and has renamed `## Unreleased`.
-- [ ] Every corpus whose records changed has moved its `content-version`.
+- [ ] Every corpus whose export changed has moved its `content-version`.
 
 ## Rationale and provenance
 
