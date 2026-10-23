@@ -64,6 +64,7 @@ public static class Exporter
             var local = corpus.Adopted.FirstOrDefault(t => t.Key == key && t.Export is not null);
             var lines = new List<string>();
             var filed = new HashSet<string>(StringComparer.Ordinal);
+            var written = new HashSet<string>(StringComparer.Ordinal);
             var records = 0;
 
             if (local is { Export: { } export })
@@ -85,14 +86,13 @@ public static class Exporter
             }
 
             // Consumed corpora after this one's own, each in its producer's order. Sorting across corpora would
-            // interleave them.
+            // interleave them. A corpus consuming a producer and that producer's own producer meets the grandparent's
+            // record files and part lines twice, and writes each once.
             foreach (var from in consumed)
             {
                 if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
 
                 // Filed under the corpus that wrote the record. See the chain section of docs/reference/export.md.
-                // A corpus consuming a producer and that producer's own producer meets a record twice at one path, so
-                // the second copy is skipped.
                 foreach (var record in theirs.Records)
                 {
                     var path = $"{theirs.Dir}/{record.Producer}/{record.Name}";
@@ -102,7 +102,8 @@ public static class Exporter
                     records++;
                 }
 
-                lines.AddRange(theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)));
+                foreach (var line in theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)))
+                    if (written.Add(line)) lines.Add(line);
             }
 
             if (records == 0) continue;

@@ -27,13 +27,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` joins a wrapped line that opens with a code span.** A paragraph whose later line started with a
   backtick, such as `` `kac` ``, travelled with the source's line breaks in it. Of the lines opening with a backtick
   or a tilde, only a fence keeps a paragraph as written: three or more backticks, or three or more tildes. A `~~~`
-  fence was joined before, and now arrives as written. The export changes wherever a record has either, so move
-  `content-version` by a patch, and each consumer's `resolved:` lock with it.
+  fence was joined before, and now arrives as written. The export changes wherever a record has either.
 - **`kac validate` refuses a part line reading a list or an object field.** An `export.parts.line:` key whose source
   is `front.<field>` takes one value. A field declared `type: list` or `type: object` was read as nothing, and
   `kac export` wrote `null` under that key on every line of the flat file. `schema-shape` now reports the source
   against the type file, whether the type declares the field or `_universal.yaml` does, such as `tags`. Name a field
   with one value, or drop the key. The record file still has the field whole.
+- **`kac export` writes a part line arriving by two routes once.** A corpus consuming both a producer and that
+  producer's own producer met the grandparent's part lines twice, stamped alike. The parts file had both copies, and
+  the manifest's `parts` count included both, so the breadcrumb overstated what the corpus holds. Each line is now
+  written and counted once, as a record file already was.
 
 ## 0.37.0 - 2026-10-21
 

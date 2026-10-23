@@ -1024,6 +1024,21 @@ public class ExporterTests
         Assert.Equal(3, Assert.Single(plan.Types).Records);
     }
 
+    [Fact]
+    public void A_part_line_arriving_by_two_routes_is_written_and_counted_once()
+    {
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirInheritedLine),
+            Consumed("gp", OldLine));
+
+        Assert.Single(Lines(plan), l => l.Text("id") == "gp:gls-old.alpha");
+        Assert.Equal(2, Assert.Single(plan.Types).Parts);
+    }
+
+    /// <summary>Gp's line as gp published it, before eng stamped it into <c>TheirInheritedLine</c>.</summary>
+    private const string OldLine = """{"id":"gls-old.alpha","record":"gls-old","seeAlso":null,"part":"alpha"}""";
+
     /// <summary>Gp's record as eng published it: filed under gp, because gp wrote it.</summary>
     private static readonly InheritedRecord Old = new("gp", "gls-old.json", "{}\n");
 

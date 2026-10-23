@@ -134,8 +134,9 @@ the key into `sources`. A line with no `shortcode` was written by the corpus pub
 
 A grandparent's records arrive inside its child's export already naming the grandparent, and they keep that name. `kac`
 stamps only an unstamped line, so a value is prefixed once however many corpora it passes through. An ancestor's record
-files stay one folder deep however long the chain. A consumer publishes a `sources` entry for each corpus it consumes,
-and for each corpus they consumed in turn.
+files stay one folder deep however long the chain. A corpus can consume both a producer and that producer's own
+producer. The grandparent's record files and part lines then arrive twice, and `kac` writes and counts each one once. A
+consumer publishes a `sources` entry for each corpus it consumes, and for each corpus they consumed in turn.
 
 ### What stops the run
 
