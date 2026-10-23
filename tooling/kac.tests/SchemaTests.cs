@@ -104,4 +104,14 @@ public class SchemaTests
     [InlineData("status in personal, special-category")]
     public void A_required_when_the_schema_cannot_read_stops_the_load(string condition)
         => Assert.Throws<RuleExprException>(() => Schema.ParseRequiredWhen("f", condition));
+
+    [Fact]
+    public void DeclaredParts_on_a_type_without_parts_names_the_top_level_parts_block()
+    {
+        var t = new TypeSchema { TypeName = "glossary" };
+
+        var thrown = Assert.Throws<InvalidOperationException>(() => t.DeclaredParts);
+
+        Assert.Equal("type 'glossary' declares no parts: to read.", thrown.Message);
+    }
 }
