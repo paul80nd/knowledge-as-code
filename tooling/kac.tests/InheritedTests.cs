@@ -30,7 +30,7 @@ public class InheritedTests
     {
         var files = new Dictionary<string, string>(Flat, StringComparer.Ordinal)
         {
-            ["mid/manifest.json"] = Manifest("glossary/terms.json", "\"accepted\"")
+            ["mid/manifest.json"] = Manifest("glossary/terms.json", "accepted")
         };
 
         Assert.Equal("accepted", Assert.Single(Assert.Single(Read(files).Carried).Types).InForce);
@@ -40,7 +40,7 @@ public class InheritedTests
     public void A_manifest_stating_no_in_force_status_leaves_it_null()
         => Assert.Null(Assert.Single(Assert.Single(Read(Flat).Carried).Types).InForce);
 
-    /// <summary><c>inForce</c> is written as given, and left out where it is null.</summary>
+    /// <summary><c>inForce</c> is left out where it is null.</summary>
     private static string Manifest(string partsFile, string? inForce = null) =>
         $$"""
           {
@@ -49,7 +49,7 @@ public class InheritedTests
             "shortcode": "mid",
             "types": [{
               "type": "glossary", "shapeVersion": 1, "dir": "glossary",
-              "partsFile": "{{partsFile}}"{{(inForce is null ? "" : $", \"inForce\": {inForce}")}}
+              "partsFile": "{{partsFile}}"{{(inForce is null ? "" : $", \"inForce\": \"{inForce}\"")}}
             }]
           }
           """;

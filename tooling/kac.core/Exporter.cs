@@ -303,9 +303,37 @@ public static class Exporter
                               + $"{where}. A merged file cannot promise both. Bring both to one fidelity, or "
                               + "drop the type from this corpus.");
             }
+
+            found.AddRange(InForceDisagreement(corpus, consumed, key));
         }
 
         return found;
+    }
+
+    /// <summary>
+    /// The manifest entry states one in-force status for every record under the type. A corpus stating none, such as
+    /// a producer exported by an older <c>kac</c>, agrees with any.
+    /// </summary>
+    private static IEnumerable<string> InForceDisagreement(
+        LoadedCorpus corpus, List<InheritedCorpus> consumed, string key)
+    {
+        var stated = new List<(string Where, string InForce)>();
+
+        if (corpus.Adopted.FirstOrDefault(t => t.Key == key && t.Export is not null) is { } local
+            && corpus.Schema.EffectiveField(local, "status")?.InForce is { } own)
+            stated.Add((corpus.Descriptor.Shortcode ?? "this corpus", own));
+
+        foreach (var from in consumed)
+            if (from.Types.FirstOrDefault(t => t.Type == key)?.InForce is { } theirs)
+                stated.Add((from.Shortcode, theirs));
+
+        if (stated.Count == 0) yield break;
+
+        var first = stated[0];
+        foreach (var (where, inForce) in stated.Skip(1).Where(s => !string.Equals(s.InForce, first.InForce, StringComparison.Ordinal)))
+            yield return $"'{key}' is in force at '{first.InForce}' in {first.Where} and at '{inForce}' in "
+                         + $"{where}. A merged file cannot state both. Bring both to one in-force status, or drop "
+                         + "the type from this corpus.";
     }
 
     /// <summary>A part line naming a record whose file the plan does not write.</summary>

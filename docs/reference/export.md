@@ -145,6 +145,7 @@ Each of these ends the run with a reason and nothing written:
 * a declared import with nothing restored
 * a consumed corpus at an export format this build does not read
 * two corpora exporting one type at two shapes, or sending its sections at two fidelities
+* two corpora stating two [in-force statuses](#inforce) for one type
 * one corpus arriving twice, at two versions
 * a part line naming a record whose file the export does not write, such as a line for `gp:gls-old` with no
   `glossary/gp/gls-old.json` beside it
@@ -225,8 +226,8 @@ It states the `status` value at which a record of the type is in force. It is th
 Read it to tell whether a record binds, and never assume `active`. It is null for a type with no `status` range. An
 export written before the key existed omits it, so treat a missing key as null.
 
-A type this corpus inherited and never adopted states the value its producer published. A type this corpus adopted
-states its own schema's value, for its own records and its inherited ones alike.
+A type this corpus inherited and never adopted states the value its producer published. Where two corpora state
+different values for one type, the export [stops](#what-stops-the-run). A corpus stating none agrees with any value.
 
 ### `about`
 

@@ -1173,6 +1173,39 @@ public class ExporterTests
         Assert.Contains("fidelity", Assert.Single(plan.Refused));
     }
 
+    [Fact]
+    public void A_type_adopted_here_and_in_force_at_another_status_in_its_producer_refuses()
+    {
+        var plan = Merged(Corpus(InForceAt("active")), InForce(Consumed("eng", TheirLine), "ratified"));
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' is in force at 'active' in this corpus and at 'ratified' in eng. A merged file cannot "
+            + "state both. Bring both to one in-force status, or drop the type from this corpus.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void Two_producers_stating_different_in_force_statuses_refuse()
+    {
+        var plan = Merged(Corpus(PolicyType()),
+            InForce(Consumed("eng", TheirLine), "accepted"), InForce(Consumed("ops", TheirLine), "active"));
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("at 'accepted' in eng and at 'active' in ops", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_producer_stating_no_in_force_status_does_not_refuse()
+        => Assert.Empty(Merged(Corpus(InForceAt("active")), Consumed("eng", TheirLine)).Refused);
+
+    /// <summary>The glossary type with a <c>status</c> range in force at the value given.</summary>
+    private static TypeSchema InForceAt(string inForce) => FieldType("status",
+        new FieldSpec { Name = "status", Type = "enum", Values = ["draft", inForce], InForce = inForce });
+
+    private static InheritedCorpus InForce(InheritedCorpus corpus, string inForce) =>
+        corpus with { Types = [corpus.Types[0] with { InForce = inForce }] };
+
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
     private static readonly Publishing? Published = Publishing.For(
@@ -1594,7 +1627,7 @@ public class ExporterTests
     private static TypeSchema PolicyType(string frameworks = "", string? inForce = null) => new()
     {
         Fields = inForce is null
-            ? new Dictionary<string, FieldSpec>(StringComparer.Ordinal)
+            ? []
             : new Dictionary<string, FieldSpec>(StringComparer.Ordinal)
             {
                 ["status"] = new()
