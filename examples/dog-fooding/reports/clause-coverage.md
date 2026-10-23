@@ -5,7 +5,7 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-23T19:16:10Z
+  at: 2026-10-23T19:32:54Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.38.0
@@ -13,7 +13,7 @@ sources:
   - { resource: example-dogfooding, version: "0.79.0" }
   - { resource: example-engineering, version: "0.39.0" }
 verified:
-  - { at: 2026-10-23T19:16:10Z, by: human:paul.law }
+  - { at: 2026-10-23T19:32:54Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
