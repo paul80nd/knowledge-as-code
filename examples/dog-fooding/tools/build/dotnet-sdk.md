@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.x }
+  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.402 }
 homepage: https://dotnet.microsoft.com/
 licence: >-
   MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib AND
@@ -32,8 +32,8 @@ to build with any other SDK, even a later patch installed beside it. [tol-setup-
 that version in every job that builds, tests, packs or publishes with `dotnet`. A contributor installs the same
 version to build locally.
 
-Dependabot raises each new 10.0 SDK as a pull request that moves the pin. The `versions` field approves the 10.0 line, so a pin
-inside it needs no new decision, and Dependabot ignores a new major.
+Dependabot raises each new 10.0 SDK as a pull request that moves the pin, and ignores a new major. The `versions` field
+states the pinned version, so that pull request moves it to match.
 
 ## Where it is used
 
