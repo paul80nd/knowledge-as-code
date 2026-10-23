@@ -377,7 +377,7 @@ public class ExporterTests
     [InlineData("Read [beta](gls-two.md#beta).", $"Read [beta]({Blob}/glossary/gls-two.md#beta).")]
     [InlineData("Read [beta][].\n\n[beta]: gls-two.md#beta \"Beta\"",
         $"Read [beta]({Blob}/glossary/gls-two.md#beta \"Beta\").")]
-    public void A_relative_link_s_anchor_travels_on_the_address(string written, string travels)
+    public void A_relative_link_with_an_anchor_travels_as_the_address_with_that_anchor(string written, string travels)
         => Assert.Equal(travels, ScopeAt(Published, written));
 
     [Fact]
@@ -393,10 +393,15 @@ public class ExporterTests
     [Theory]
     [InlineData("See ![the flow](flow.png).")]
     [InlineData("See [the flow](flow.png).")]
+    [InlineData("See ![two](gls-two.md).")]
     [InlineData("See [one](../services/one.md).")]
     [InlineData("See [up](../../outside.md).")]
     public void A_relative_link_to_no_page_the_corpus_holds_travels_as_written(string written)
         => Assert.Equal(written, ScopeAt(Published, written));
+
+    [Fact]
+    public void An_image_reference_to_a_page_travels_inline_with_its_target_as_written()
+        => Assert.Equal("See ![two](gls-two.md).", ScopeAt(Published, "See ![two][].\n\n[two]: gls-two.md"));
 
     [Theory]
     [InlineData("See [the spec](https://example.com/spec.md).")]

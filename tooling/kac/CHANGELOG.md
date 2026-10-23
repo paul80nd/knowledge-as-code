@@ -60,7 +60,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` writes a relative link as the address of the page it points at.** A link such as
   `../policies/x.md` in a section or a part line was relative to the producer's record, so a consumer's reader could
   not follow it. Where the corpus has an address, a target resolving to a Markdown file it contains now arrives as that
-  file's link. Every other target arrives as written.
+  file's address. Any other target arrives as written.
 - **`kac export` keeps the indent of a block inside a list item.** A fence inside a numbered item lost the indent of
   its opening line, so a renderer closed the list there and showed the code outside it. A paragraph in the item lost
   its indent when unwrapped. Both now arrive indented as written.

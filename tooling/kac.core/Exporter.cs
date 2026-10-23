@@ -694,8 +694,9 @@ public static class Exporter
     /// Every edit exported prose takes, in source order: a section, a part's lead and asides, and its bullets. A link
     /// reference definition sits at the foot, so inside the last section, and is cut. The span after each reference
     /// link's text, <c>][label]</c>, <c>][]</c> or <c>]</c>, becomes <c>](target "title")</c>, copied from its
-    /// definition's source. A target <c>Addressed</c> resolves is written as that address, in an inline link too. All
-    /// are read from the AST, so a look-alike in a code span or a fenced block is left as written.
+    /// definition's source. A link's target that <c>Addressed</c> resolves is written as that address, in an inline
+    /// link too, and an image's never is. All are read from the AST, so a look-alike in a code span or a fenced block is
+    /// left as written.
     /// </summary>
     private static List<Edit> Edits(Doc doc, Tree tree, Publishing? publishing)
     {
@@ -705,14 +706,15 @@ public static class Exporter
         {
             if (link.Reference is not { } definition)
             {
-                if (!link.IsAutoLink && Addressed(doc, link.Url, tree, publishing) is { } address)
+                if (!link.IsAutoLink && !link.IsImage && Addressed(doc, link.Url, tree, publishing) is { } address)
                     edits.Add(new Edit(link.UrlSpan.Start, link.UrlSpan.End + 1, address));
                 continue;
             }
 
             // Empty link text closes straight after the opening `[`, or `![` for an image.
             var close = link.LastChild is { } last ? last.Span.End + 1 : link.Span.Start + (link.IsImage ? 2 : 1);
-            var target = Addressed(doc, definition.Url, tree, publishing) ?? Source(doc.Text, definition.UrlSpan);
+            var target = (link.IsImage ? null : Addressed(doc, definition.Url, tree, publishing))
+                         ?? Source(doc.Text, definition.UrlSpan);
             var title = string.IsNullOrEmpty(definition.Title) ? "" : " " + Source(doc.Text, definition.TitleSpan);
 
             edits.Add(new Edit(close, link.Span.End + 1, $"]({target}{title})"));
@@ -732,7 +734,7 @@ public static class Exporter
     {
         if (publishing is null || target is not { Length: > 0 } || LinkChecks.IsExternal(target)) return null;
         if (LinkChecks.Resolve(tree, doc.Rel, target) is not { } rel
-            || !rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+            || !rel.EndsWith(".md", StringComparison.Ordinal))
             return null;
 
         var hash = target.IndexOf('#');

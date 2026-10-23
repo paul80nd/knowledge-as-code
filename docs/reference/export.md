@@ -374,12 +374,12 @@ arrives exactly as written.
 link to the target its definition states, with the definition's title. An image reference arrives as an inline image. A
 reference with no definition, and one inside a code span, arrives as written. The definitions themselves never travel.
 
-**A relative link arrives as the address of the page it points at.** This applies where the corpus has an address, and
-the target resolves to a Markdown file the corpus contains: a record, a type page or a framework page. The export fills
-in the [template](#the-human-form-as-a-template) with that file's path and the target's anchor. Every other target
-arrives exactly as the author wrote it. That covers an absolute URL, an anchor alone, an image, and a target that
-resolves to nothing in the corpus. A relative target left as written is relative to the record's `path`. An inherited
-record keeps the addresses its producer wrote, so its links open the producer's pages.
+**A relative link arrives as the address of the page it points at.** This applies where the corpus has an address. The
+target must resolve to a Markdown file the corpus contains, such as a record, a type page or a framework page. The
+export fills in the [template](#the-human-form-as-a-template) with that file's path and the target's anchor. Any other
+link or image keeps the target its author or its definition wrote. That covers an absolute URL, an anchor alone, an
+image, and a target that resolves to nothing in the corpus. A relative target that stays is relative to the record's
+`path`. An inherited record arrives exactly as its producer exported it.
 
 On a part line, this covers a value read from `part.lead`, `part.aside.<Label>` or `part.bullets`. A value read from
 `part.text` or `column.<Header>` is plain text, so a link there arrives as its words alone.
@@ -420,9 +420,11 @@ every export from a new commit.
 ### Five kinds of corpus with no address
 
 A corpus that publishes nowhere, names a target nothing builds links for, states a target but no base, states a base
-that target cannot join to, or is one git cannot answer for. Each exports without links, and the manifest states the
-target it was given with nulls beside it. A part line still has `path` and `anchor`, and its `links` is `null`. A
-relative link in a section or a part line keeps the target the author wrote, relative to the record's `path`.
+that target cannot join to, or is one git cannot answer for. Each exports without links:
+
+* The manifest states the target it was given, with nulls beside it.
+* A part line still has `path` and `anchor`, and its `links` is `null`.
+* A relative link in a section or a part line keeps its target, relative to the record's `path`.
 
 ## Views generated from the export
 
