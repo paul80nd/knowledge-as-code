@@ -54,11 +54,8 @@ public sealed record Ground
     /// <summary>A descriptor at or above the working directory means this is <c>update</c>'s job.</summary>
     public string? Corpus { get; init; }
 
-    /// <summary>
-    /// <c>Dirty</c> is null where there is no repository or git could not answer, which is not the same as clean.
-    /// </summary>
     public bool Repository { get; init; }
-    public bool? Dirty { get; init; }
+    public WorkingTree Status { get; init; } = WorkingTree.Unknown;
 
     public IReadOnlyList<string> Holds { get; init; } = [];
 }
@@ -91,7 +88,7 @@ public static class New
         {
             Corpus = Corpus.FindRoot(dir),
             Repository = repository,
-            Dirty = repository ? Git.Dirty(dir) : null,
+            Status = repository ? Git.Status(dir) : WorkingTree.Unknown,
             Holds = Holdings(dir)
         };
     }

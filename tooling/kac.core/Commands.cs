@@ -99,8 +99,8 @@ public static class Commands
             return Fail($"new: {already} is already a corpus, so there is nothing here to create. "
                         + "Taking a newer framework into one is `kac update`.");
 
-        // A tree git could not answer for is not reported as clean, and is not stopped either.
-        if (ground.Dirty is true)
+        // An unknown tree goes on, as a clean one does.
+        if (ground.Status is WorkingTree.Dirty)
             return Fail("new: this repository holds uncommitted changes. Commit or stash them first, so "
                         + "that what `new` writes reads as a diff of its own.");
 
@@ -430,7 +430,8 @@ public static class Commands
     /// <summary>Shared with <c>update</c>, which ends by regenerating.</summary>
     private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
-        var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
+        var created = plan.Where(f => f.State is GeneratedFiles.FileState.Missing).Select(f => f.Path)
+            .ToHashSet(StringComparer.Ordinal);
 
         foreach (var path in written)
             Out.Markup(Wrote(path) + (created.Contains(path) ? "  [grey](new)[/]" : ""));
@@ -599,9 +600,9 @@ public static class Commands
         if (settled.Failed) return Fail(settled.Problem);
         var (from, policy) = settled.Settings;
 
-        // `--check` writes nothing, so it runs over a tree in any state. A tree git could not answer for is
-        // not reported as clean, and is not stopped either.
-        if (!request.Check && Git.Dirty(corpusRoot) is true)
+        // `--check` writes nothing, so it runs over a tree in any state. An unknown tree goes on, as a clean
+        // one does.
+        if (!request.Check && Git.Status(corpusRoot) is WorkingTree.Dirty)
             return Fail("update: this repository holds uncommitted changes. Commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
 
@@ -611,9 +612,10 @@ public static class Commands
         if (take.Problem is { } unreadable) return Fail(unreadable);
 
         var corpusFiles = kac.core.Update.Listing(corpusRoot);
-        var adoption = kac.core.Update.Adopt(corpusFiles, descriptor, take.Schema, take.Declared,
+        var asked = kac.core.Update.Adopt(corpusFiles, descriptor, take.Schema, take.Declared,
             request.AddType, request.DropType);
-        if (adoption.Problem is { } refused) return Fail(refused);
+        if (asked.Failed) return Fail(asked.Problem);
+        var adoption = asked.Adoption;
 
         var types = new UpdateTypes(take.Declared, adoption.Types,
             kac.core.New.DeclinesTypes(take.Schema, adoption.Types ?? take.Declared));

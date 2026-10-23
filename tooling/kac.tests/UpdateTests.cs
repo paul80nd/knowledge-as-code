@@ -482,7 +482,7 @@ public class UpdateTests
 
     private static Schema TypeSchema() => Schema.Load(Repo.Root);
 
-    private static Adoption Adopt(IReadOnlySet<string> corpusFiles, IReadOnlyList<string>? held,
+    private static AdoptionAsked Adopt(IReadOnlySet<string> corpusFiles, IReadOnlyList<string>? held,
         string? add = null, string? drop = null) =>
         Update.Adopt(corpusFiles, new CorpusDescriptor { Types = held?.ToList() }, TypeSchema(),
             [.. TypeSchema().ByFolder.Keys], add, drop);
@@ -490,11 +490,11 @@ public class UpdateTests
     [Fact]
     public void Adopting_a_type_adds_it_to_the_list_in_order()
     {
-        var adoption = Adopt(Files(), ["policies"], add: "adrs");
+        var asked = Adopt(Files(), ["policies"], add: "adrs");
 
-        Assert.Equal(["adrs", "policies"], adoption.Types);
-        Assert.Null(adoption.Problem);
-        Assert.Empty(adoption.Deleted);
+        Assert.False(asked.Failed);
+        Assert.Equal(["adrs", "policies"], asked.Adoption.Types);
+        Assert.Empty(asked.Adoption.Deleted);
     }
 
     [Theory]
@@ -503,18 +503,19 @@ public class UpdateTests
     [InlineData(null, "adrs", "not adopted")]
     public void An_adoption_the_corpus_cannot_make_is_refused(string? add, string? drop, string says)
     {
-        var adoption = Adopt(Files(), ["policies"], add, drop);
+        var asked = Adopt(Files(), ["policies"], add, drop);
 
-        Assert.Null(adoption.Types);
-        Assert.Contains(says, adoption.Problem);
+        Assert.True(asked.Failed);
+        Assert.Contains(says, asked.Problem);
     }
 
     [Fact]
     public void A_corpus_declaring_no_types_is_told_to_declare_before_changing_the_list()
     {
-        var adoption = Adopt(Files(), null, add: "adrs");
+        var asked = Adopt(Files(), null, add: "adrs");
 
-        Assert.Contains("no `types:`", adoption.Problem);
+        Assert.True(asked.Failed);
+        Assert.Contains("no `types:`", asked.Problem);
     }
 
     [Fact]
@@ -522,10 +523,10 @@ public class UpdateTests
     {
         var corpus = Files("adrs/0001-a-decision.md", "adrs/0002-another.md", "adrs/_template.md");
 
-        var adoption = Adopt(corpus, ["adrs"], drop: "adrs");
+        var asked = Adopt(corpus, ["adrs"], drop: "adrs");
 
-        Assert.Null(adoption.Types);
-        Assert.Contains("holds 2 record(s)", adoption.Problem);
+        Assert.True(asked.Failed);
+        Assert.Contains("holds 2 record(s)", asked.Problem);
     }
 
     [Fact]
@@ -534,20 +535,22 @@ public class UpdateTests
         var corpus = Files(".schema/adrs.yaml", "adrs.md", "adrs/_template.md", "adrs/_index.md",
             ".schema/policies.yaml", "policies.md");
 
-        var adoption = Adopt(corpus, ["adrs", "policies"], drop: "adrs");
+        var asked = Adopt(corpus, ["adrs", "policies"], drop: "adrs");
 
-        Assert.Equal(["policies"], adoption.Types);
+        Assert.False(asked.Failed);
+        Assert.Equal(["policies"], asked.Adoption.Types);
         Assert.Equal([".schema/adrs.yaml", "adrs.md", "adrs/_index.md", "adrs/_template.md"],
-            adoption.Deleted);
+            asked.Adoption.Deleted);
     }
 
     [Fact]
     public void A_run_changing_no_type_answers_with_the_list_as_it_stands()
     {
-        var adoption = Adopt(Files(), ["adrs"]);
+        var asked = Adopt(Files(), ["adrs"]);
 
-        Assert.Equal(["adrs"], adoption.Types);
-        Assert.Null(adoption.Account);
+        Assert.False(asked.Failed);
+        Assert.Equal(["adrs"], asked.Adoption.Types);
+        Assert.Null(asked.Adoption.Account);
     }
 
     [Fact]

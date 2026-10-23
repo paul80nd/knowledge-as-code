@@ -33,7 +33,20 @@ public static class GeneratedFiles
     /// </summary>
     public readonly record struct GeneratedFile(string Path, string? Current, string Wanted)
     {
-        public bool Stale => Current != Wanted;
+        public FileState State =>
+            Current is null ? FileState.Missing
+            : Current != Wanted ? FileState.Drifted
+            : FileState.UpToDate;
+
+        /// <summary>Drifted or missing, which is every file <c>generate</c> writes.</summary>
+        public bool Stale => State is not FileState.UpToDate;
+    }
+
+    public enum FileState
+    {
+        UpToDate,
+        Drifted,
+        Missing
     }
 
     /// <summary>
