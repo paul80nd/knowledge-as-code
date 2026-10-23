@@ -32,6 +32,6 @@
     "Scope": "The export `kac export` writes, the package `kac pack` zips, and the plugin `kac bundle` assembles."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24f8295814176bed5c35da8c8c6815d65ffb704d/examples/dog-fooding/deviations/export-has-no-notice.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2f5c77ebb6a74ac84b9e525832d7411cbe098bc9/examples/dog-fooding/deviations/export-has-no-notice.md"
   }
 }

@@ -15,6 +15,6 @@
     "Exceptions": "Systems where performance is genuinely not a concern, such as low-volume internal tooling with no user waiting on it, need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that has since acquired users."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24f8295814176bed5c35da8c8c6815d65ffb704d/examples/engineering/policies/delivery/perf-performance-targets.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2f5c77ebb6a74ac84b9e525832d7411cbe098bc9/examples/engineering/policies/delivery/perf-performance-targets.md"
   }
 }

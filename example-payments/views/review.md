@@ -562,7 +562,7 @@ Cite as `eng:std-NETTST.an-integration-test-starts-what-it-needs`.
 Cite as `eng:std-NETTST.coverage-is-collected-by-the-build`.
 
 - A build **MUST** collect coverage from its test run and publish the report.
-- A build **SHOULD** collect it with `dotnet test --collect:"XPlat Code Coverage"`, which writes a Cobertura report.
+- A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with `Microsoft.Testing.Extensions.CodeCoverage` referenced.
 - A test project **MUST** be excluded from its own coverage figure.
 
 ### The framework and the project layout

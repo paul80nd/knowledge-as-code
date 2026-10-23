@@ -30,6 +30,6 @@
     "Data": "Each package contains one corpus export and nothing else. Three of them describe an invented estate, and `example-dogfooding` describes this repository. Each package's description says which kind a reader has. `.corpus.yaml` states that description, and `kac pack` writes it into the package envelope.\n\nA consumer does not commit a restored package. `kac restore` writes what it takes into `.imports/`, which [std-CONFIG] keeps untracked."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24f8295814176bed5c35da8c8c6815d65ffb704d/examples/dog-fooding/services/corpus-feed.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2f5c77ebb6a74ac84b9e525832d7411cbe098bc9/examples/dog-fooding/services/corpus-feed.md"
   }
 }

@@ -23,10 +23,10 @@
     ]
   },
   "sections": {
-    "Symptoms": "* `dotnet run tooling/kac-tests.cs` exits 1 and prints a line opening `FAIL` and naming the scenario. What differs\n  follows on the same line or on the indented lines under it. For example:\n  * `committed generated files do not match the generator.`, on the `FAIL` line itself\n  * `the export no longer writes <path>: what a consumer reads has changed`\n  * `the export writes <path>, which the committed copy does not hold: a new file for a consumer`\n  * `<path> differs from the committed export: <the first difference>`\n  * `no expectation for <what> at <file>. run with --update, then read the diff`\n* It prints `MISSING <name>: no golden.`\n* One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.\n* The branch is green on your machine and red in CI.",
+    "Symptoms": "* `dotnet run tooling/kac-tests.cs` exits 1 and prints a line opening `FAIL` and naming the scenario. What differs\n  follows on the same line or on the indented lines under it. For example:\n  * `committed generated files do not match the generator.`, on the `FAIL` line itself\n  * `the export no longer writes <path>: what a consumer reads has changed`\n  * `the export writes <path>, which the committed copy does not hold: a new file for a consumer`\n  * `<path> differs from the committed export: <the first difference>`\n  * `no expectation for <what> at <file>. run with --update, then read the diff`\n* It prints `MISSING <name>: no golden.`\n* One of `dotnet run tooling/kac-tests.cs` and `dotnet test --project tooling/kac.tests` passes while the other fails.\n* The branch is green on your machine and red in CI.",
     "Impact": "Nothing in production. The branch stays red, so nothing on it merges until the diff is accounted for."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24f8295814176bed5c35da8c8c6815d65ffb704d/examples/dog-fooding/runbooks/goldens-disagree.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2f5c77ebb6a74ac84b9e525832d7411cbe098bc9/examples/dog-fooding/runbooks/goldens-disagree.md"
   }
 }
