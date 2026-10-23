@@ -6,7 +6,7 @@ status: active
 symptom-keywords: [ actionlint, brew, homebrew, linters, macos, "no matching distribution found", pip, python,
   requirements.txt, yamllint, zizmor ]
 verified:
-  - { at: 2026-09-18T11:40:00Z, by: human:paul.law }
+  - { at: 2026-10-23T15:22:00Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law
 tags: [ linting, macos, setup ]
