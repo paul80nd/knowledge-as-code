@@ -1,0 +1,5 @@
+.imports/lib/glossary/gls-estate.json
+.imports/lib/glossary/gls-framework.json
+.imports/lib/glossary/gls-search.json
+.imports/lib/glossary/terms.jsonl
+.imports/lib/manifest.json

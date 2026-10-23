@@ -12,7 +12,7 @@ dotnet run tooling/kac-tests.cs -- --update     # regenerate every golden from c
 ```
 
 Exit `0` when every scenario matches its golden; `1` on a mismatch, a missing golden, a golden that references a check
-id `kac` no longer emits, stale generated output, or a reachable check with no fixture.
+id `kac` no longer emits, stale generated output, a reachable check with no fixture, or a verb the suite never runs.
 
 ## How a scenario runs
 
@@ -94,6 +94,11 @@ The modes:
   the real template, commits, breaks the tree in two ways, and then drives the round trip: `--check` has to fail and
   name what it found, the update has to succeed, and a second `--check` has to find the corpus in step.
   `expected-check.txt` is what the first check printed, with the repository's path and the tallies taken out.
+- **`restore`.** `kac restore` runs once in a consumer whose `source:` is a folder beside it. The fixture's `producer/`
+  is laid down as that folder, and holds a package `kac pack` built. `expected-tree.txt` lists every file the restore
+  wrote under `.imports/`, and `expected-descriptor.yaml` is the `.corpus.yaml` it left, with the `resolved:` lock it
+  added. The exit code is the third assertion. The package is committed, so neither file depends on the machine or the
+  day of the run.
 
 Only `validate` runs the validator directly, so a new check cannot affect the rest. `new` reaches it at one remove,
 through the corpus it creates.
@@ -137,6 +142,12 @@ type stood up here: a page, a template and a record. That runs to an order of ma
 declaring the rule. That is not a cost of writing rules as data: the gate demands a fixture however a check is
 implemented. It is mostly one-off, too; once a type is present, the next rule on it is a record.
 
+**Every verb must be run by a scenario or a gate**, or the run fails and names the verb. `Run` records the verb of each
+`kac` process it starts, and a full run compares that set with the verbs `kac cli xmldoc` declares. A feature file
+does not count. `checks` counts, because the coverage gate runs it. The verb line prints beneath the checks line, so
+neither tally reads as coverage of the whole tool. Adding a command therefore means adding a mode and a fixture for it.
+`--update` skips this gate, because it skips the runs of a scenario with no golden to write.
+
 ## The scenarios
 
 Every reachable check has a fixture, and a full run fails on one that does not. The run prints the tally. What a
@@ -171,6 +182,7 @@ scenario holds is best read from the fixture; what it is *for* is here.
 | `new`                 | An empty folder, and this repository read as a template. Asserts every path `kac new --yes --ci github` wrote, the descriptor it composed, and exit 0, which is the corpus it created validating. The GitHub starter is there and `azure-pipelines.yml` is not, which is `--ci` narrowing what lands. The git preconditions are the behaviour layer's: see `kac.features/Creation.feature`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `update`              | A corpus created from the real template, with an overlay file edited and a seed deleted. Asserts that `--check` fails and names both, that the update then succeeds, and that a second `--check` finds the corpus in step. The two commands are proved as a round trip, because the promise worth pinning is that one leaves the other with nothing to say.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `report`              | A policy carrying two clauses, one discharged by a standard beside it and one left open, so a coverage report over it has a row of each kind. Asserts that what `report --out` writes is what the same report printed, that the file ends on one newline as every record here does, and that a second run naming the same path refuses it, exits 1 and leaves the file alone. |
+| `restore`             | A consumer declaring one import from a package folder beside it, and the package `kac pack` built from the `pack` fixture's corpus. Asserts every file a first restore wrote under `.imports/`, the `resolved:` lock it added to `.corpus.yaml`, and exit 0. `Restore.feature` covers the ranges, the lock and each refusal. See [`fixtures/restore/README.md`](fixtures/restore/README.md). |
 | `shortcode`           | A descriptor declaring `shortcode: STD`, which is refused twice over: it opens upper case, and it is the id prefix of `standards`, so a citation opening `std:` would read as that type. The finding lands where a corpus states its own name rather than where anything cites it. |
 | `corpus-enums`        | A corpus stating its own `platform` range, and a record carrying a value that range does not hold. Asserts the finding is an ordinary `enum` and that the message quotes the descriptor's two values rather than a range the schema declares. See [`fixtures/corpus-enums/README.md`](fixtures/corpus-enums/README.md). |
 | `corpus-enums-miscased` | A corpus whose stated range carries `Dotnet-Web`, which no record can satisfy from either side. Asserts `corpus-enum-undeclared` names the value and the descriptor, and that the record's own `enum` finding stands beside it rather than being suppressed. See [`fixtures/corpus-enums-miscased/README.md`](fixtures/corpus-enums-miscased/README.md). |

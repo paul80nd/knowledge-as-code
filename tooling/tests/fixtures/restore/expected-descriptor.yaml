@@ -1,0 +1,10 @@
+descriptor-version: 1
+corpus: test-restore
+
+# A first restore: `kac restore` picks the version and writes it as `resolved:`.
+consumes:
+  - corpus: example-libraries
+    shortcode: lib
+    version: ^2.3.0
+    source: ../producer/package
+    resolved: "2.3.4"

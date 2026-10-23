@@ -79,10 +79,10 @@ from the framework carrying them, and one that has gone is a block that stopped 
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
   beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the type
   up adds a finding to every scenario that reads it.
-* Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `update`, `export`, `bundle`
-  and `new` modes do not, so a new check cannot affect them directly. `update`, `export`, `bundle` and `new` are the
-  modes that write. Each asserts the tree the command left rather than only what the command printed, so its
-  expectations name files and their content instead of a findings golden.
+* Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `update`, `export`, `bundle`,
+  `new` and `restore` modes do not, so a new check cannot affect them directly. `update`, `export`, `bundle`, `new` and
+  `restore` are the modes that write. Each asserts the tree the command left rather than only what the command
+  printed, so its expectations name files and their content instead of a findings golden.
 * **The two export fixtures commit the export itself**, under `expected-dist/`, and a diff there is a change to what a
   consumer reads. `export` runs both declared shapes together and `export-policies` runs one alone, so a manifest entry
   or a directory written for a type the corpus never adopted fails in the second. Their READMEs say what a diff asks of
