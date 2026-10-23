@@ -61,12 +61,22 @@ public sealed record UpdateTypes(
             ];
 }
 
-/// <summary><c>Problem</c> is set where the run cannot go on, and is then the only field worth reading.</summary>
+/// <summary>
+/// The types the corpus adopts after this run. <c>Types</c> is null where the descriptor states no <c>types:</c>, and
+/// <c>Account</c> is null where no flag changed the list.
+/// </summary>
 public sealed record Adoption(
     IReadOnlyList<string>? Types,
     IReadOnlyList<string> Deleted,
-    string? Account,
-    string? Problem);
+    string? Account);
+
+/// <summary>Exactly one of the two is set.</summary>
+public sealed record Adopted(Adoption? Adoption, string? Problem)
+{
+    [MemberNotNullWhen(true, nameof(Problem))]
+    [MemberNotNullWhen(false, nameof(Adoption))]
+    public bool Failed => Problem is not null;
+}
 
 /// <summary>
 /// Null wherever the file carries no id, which is every file that is not a record. Delegates, so a plan can state two
@@ -334,11 +344,11 @@ public static class Update
     /// Giving up a type refuses where its folder holds records, because deleting a record is deleting knowledge. With
     /// neither flag, returns the types the corpus already holds.
     /// </summary>
-    public static Adoption Adopt(IReadOnlySet<string> corpusFiles, CorpusDescriptor descriptor, Schema schema,
+    public static Adopted Adopt(IReadOnlySet<string> corpusFiles, CorpusDescriptor descriptor, Schema schema,
         IReadOnlyList<string> declared, string? add, string? drop)
     {
         var held = descriptor.Types;
-        if (add is null && drop is null) return new Adoption(held, [], null, null);
+        if (add is null && drop is null) return Accept(new Adoption(held, [], null));
 
         if (held is null)
             return Refuse("update: this corpus states no `types:`, so there is no list to change. Declare "
@@ -353,13 +363,13 @@ public static class Update
             if (held.Contains(adding, StringComparer.Ordinal))
                 return Refuse($"update: '{adding}' is already adopted, so there is nothing to add.");
 
-            return new Adoption(
+            return Accept(new Adoption(
                 [.. held.Append(adding).OrderBy(t => t, StringComparer.Ordinal)], [],
-                $"update: adopted {adding}. Its schema, root page and template arrived with this run.", null);
+                $"update: adopted {adding}. Its schema, root page and template arrived with this run."));
         }
 
         // Unreachable with `drop` unset. Asked again so the compiler knows.
-        if (drop is not { } dropping) return new Adoption(held, [], null, null);
+        if (drop is not { } dropping) return Accept(new Adoption(held, [], null));
 
         if (!held.Contains(dropping, StringComparer.Ordinal))
             return Refuse($"update: '{dropping}' is not adopted, so there is nothing to give up.");
@@ -375,12 +385,13 @@ public static class Update
                           + $"deleting knowledge. Delete them yourself and run this again, or leave "
                           + $"'{dropping}' adopted.");
 
-        return new Adoption(
+        return Accept(new Adoption(
             [.. held.Where(t => !t.Equals(dropping, StringComparison.Ordinal))],
             FilesOf(corpusFiles, type, dropping),
-            $"update: gave up {dropping}. Its schema, its page and {folder}/ went with it.", null);
+            $"update: gave up {dropping}. Its schema, its page and {folder}/ went with it."));
 
-        static Adoption Refuse(string message) => new(null, [], null, message);
+        static Adopted Accept(Adoption adoption) => new(adoption, null);
+        static Adopted Refuse(string message) => new(null, message);
     }
 
     /// <summary>

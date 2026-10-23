@@ -611,9 +611,10 @@ public static class Commands
         if (take.Problem is { } unreadable) return Fail(unreadable);
 
         var corpusFiles = kac.core.Update.Listing(corpusRoot);
-        var adoption = kac.core.Update.Adopt(corpusFiles, descriptor, take.Schema, take.Declared,
+        var asked = kac.core.Update.Adopt(corpusFiles, descriptor, take.Schema, take.Declared,
             request.AddType, request.DropType);
-        if (adoption.Problem is { } refused) return Fail(refused);
+        if (asked.Failed) return Fail(asked.Problem);
+        var adoption = asked.Adoption;
 
         var types = new UpdateTypes(take.Declared, adoption.Types,
             kac.core.New.DeclinesTypes(take.Schema, adoption.Types ?? take.Declared));
