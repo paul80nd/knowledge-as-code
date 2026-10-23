@@ -68,15 +68,15 @@
       "file": "adrs/0003-third.md",
       "line": 1,
       "severity": "error",
-      "check": "id-matches-filename",
-      "message": "id 'adr-0002' carries number '0002', and the filename carries '0003'."
+      "check": "id-unique",
+      "message": "id 'adr-0002' is also used by adrs/0002-second.md."
     },
     {
       "file": "adrs/0003-third.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
-      "check": "id-unique",
-      "message": "id 'adr-0002' is also used by adrs/0002-second.md."
+      "check": "id-matches-filename",
+      "message": "id 'adr-0002' carries number '0002', and the filename carries '0003'."
     },
     {
       "file": "adrs/0004-dangling.md",

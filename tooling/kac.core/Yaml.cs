@@ -79,9 +79,9 @@ public static class Yaml
     public static string? Raw(YamlNode node) => (node as YamlScalarNode)?.Value;
 
     /// <summary>
-    /// The node's line in the document. The parser counts from 1 within the frontmatter block, and <c>frontStart</c> is
-    /// the line the block opens on. A node with no position falls back to <c>frontStart</c>.
+    /// The node's line in the document. The parser counts from 1 at the line below the opening <c>---</c>, and
+    /// <c>frontStart</c> is the line that <c>---</c> sits on. A node with no position falls back to <c>frontStart</c>.
     /// </summary>
-    public static int? LineOf(YamlNode node, int frontStart)
-        => node.Start.Line > 0 ? (int)node.Start.Line + frontStart - 1 : frontStart;
+    public static int LineOf(YamlNode node, int frontStart)
+        => node.Start.Line > 0 ? (int)node.Start.Line + frontStart : frontStart;
 }

@@ -24,7 +24,7 @@
     },
     {
       "file": "adrs/0004-missing-consequences.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-matches-filename",
       "message": "id 'adr-0009' carries number '0009', and the filename carries '0004'."
@@ -45,14 +45,14 @@
     },
     {
       "file": "adrs/0006-bad-id-prefix.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-prefix",
       "message": "id 'xyz-0006' must start with 'adr-'."
     },
     {
       "file": "adrs/0007-bad-id-width.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-format",
       "message": "id 'adr-7' must be 'adr-' followed by 4 digits."
@@ -213,7 +213,7 @@
     },
     {
       "file": "policies/pipe-id-disagrees.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-matches-filename",
       "message": "id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'."
@@ -227,7 +227,7 @@
     },
     {
       "file": "policies/scrt-lower-case-id.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-format",
       "message": "id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
@@ -241,21 +241,21 @@
     },
     {
       "file": "policies/vurm-bad-id-width.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-format",
       "message": "id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
     },
     {
       "file": "tools/id-disagrees.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-matches-filename",
       "message": "id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'."
     },
     {
       "file": "tools/site-server.md",
-      "line": 1,
+      "line": 2,
       "severity": "error",
       "check": "id-format",
       "message": "id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens."

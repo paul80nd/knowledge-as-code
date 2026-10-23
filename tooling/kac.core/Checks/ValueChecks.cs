@@ -15,7 +15,11 @@ public static class ValueChecks
 
     public static readonly IReadOnlyList<string> EntryTypes = ["id", "object", "string"];
 
-    public static void Check(string name, YamlNode node, FieldSpec spec, DocKind kind, int frontStart,
+    /// <summary>
+    /// <c>line</c> is the document line the field's key sits on, and names every finding about the field as a whole.
+    /// A finding about one entry names the entry's own line, read from <c>frontStart</c>.
+    /// </summary>
+    public static void Check(string name, YamlNode node, int line, FieldSpec spec, DocKind kind, int frontStart,
         Report report)
     {
         // The order of these returns is the design. A field declaring `object` holds a mapping on purpose, so it is
@@ -23,7 +27,7 @@ public static class ValueChecks
         // field's own check sees it.
         if (spec.Type == "object" && node is YamlMappingNode obj)
         {
-            Entry(name, obj, spec, kind, frontStart, report);
+            Entry(name, obj, line, spec, kind, frontStart, report);
             return;
         }
 
@@ -34,7 +38,7 @@ public static class ValueChecks
             var key = name[(name.LastIndexOf('.') + 1)..];
             report.Err(new CheckId(kind == DocKind.Template ? "template-fields" : "bare-key"),
                 $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
-                + "one has to be quoted: " + key + ": \"{{…}}\".", Yaml.LineOf(node, frontStart));
+                + "one has to be quoted: " + key + ": \"{{…}}\".", line);
             return;
         }
 
@@ -45,13 +49,12 @@ public static class ValueChecks
             if (!IsBareKey(node))
                 report.Err(new CheckId("bare-key"),
                     $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
-                    Yaml.LineOf(node, frontStart));
+                    line);
 
             // A field declaring `required-when:` is exempt, because whether it is optional depends on another field.
             else if (!spec.Required && spec.RequiredWhen is null)
                 report.Warn(new CheckId("empty-optional-key"),
-                    $"'{name}' is optional and carries no value. Remove the key, or fill it in.",
-                    Yaml.LineOf(node, frontStart));
+                    $"'{name}' is optional and carries no value. Remove the key, or fill it in.", line);
             return;
         }
 
@@ -60,16 +63,16 @@ public static class ValueChecks
 
         switch (spec.Type)
         {
-            case "date": Date(name, node, frontStart, report); break;
-            case "timestamp": Timestamp(name, node, frontStart, report); break;
-            case "enum": Enumerated(name, node, spec, frontStart, report); break;
-            case "list": Sequence(name, node, spec, kind, frontStart, report); break;
+            case "date": Date(name, node, line, report); break;
+            case "timestamp": Timestamp(name, node, line, report); break;
+            case "enum": Enumerated(name, node, spec, line, report); break;
+            case "list": Sequence(name, node, line, spec, kind, frontStart, report); break;
 
-            case "object": Entry(name, node, spec, kind, frontStart, report); break;
+            case "object": Entry(name, node, line, spec, kind, frontStart, report); break;
         }
 
         if (spec.Type != "list" && node is YamlScalarNode)
-            Pattern(name, "value", node, spec, frontStart, report);
+            Pattern(name, "value", node, spec, line, report);
     }
 
     /// <summary>
@@ -99,21 +102,18 @@ public static class ValueChecks
             _ => false
         };
 
-    private static void Date(string name, YamlNode node, int frontStart, Report report)
+    private static void Date(string name, YamlNode node, int line, Report report)
     {
         var sc = node as YamlScalarNode;
         var v = sc?.Value ?? "";
         var quoted = sc?.Style is ScalarStyle.DoubleQuoted or ScalarStyle.SingleQuoted;
         if (!quoted)
-            report.Err(new CheckId("date-quoted"), $"'{name}' date must be quoted, e.g. \"{v}\".",
-                Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("date-quoted"), $"'{name}' date must be quoted, e.g. \"{v}\".", line);
 
         if (!IsIsoShape(v))
-            report.Err(new CheckId("date-format"), $"'{name}' must be a YYYY-MM-DD date, got '{v}'.",
-                Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("date-format"), $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", line);
         else if (!DateOnly.TryParseExact(v, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            report.Err(new CheckId("date-format"),
-                $"'{name}' is not a date on the calendar, got '{v}'.", Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("date-format"), $"'{name}' is not a date on the calendar, got '{v}'.", line);
     }
 
     private static bool IsIsoShape(string v)
@@ -125,47 +125,43 @@ public static class ValueChecks
     /// into the reader's zone; a <c>Z</c> instant names the same moment either way. <c>_checks.yaml</c> carries that
     /// argument in full.
     /// </summary>
-    private static void Timestamp(string name, YamlNode node, int frontStart, Report report)
+    private static void Timestamp(string name, YamlNode node, int line, Report report)
     {
         var v = Yaml.Raw(node) ?? "";
         if (!IsInstantShape(v))
             report.Err(new CheckId("timestamp-format"),
-                $"'{name}' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '{v}'.",
-                Yaml.LineOf(node, frontStart));
+                $"'{name}' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '{v}'.", line);
         else if (!DateTimeOffset.TryParseExact(v, "yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture,
                      DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out _))
-            report.Err(new CheckId("timestamp-format"),
-                $"'{name}' is not a moment on the calendar, got '{v}'.", Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("timestamp-format"), $"'{name}' is not a moment on the calendar, got '{v}'.", line);
     }
 
     private static bool IsInstantShape(string v)
         => v.Length == 20 && IsIsoShape(v[..10]) && v[10] == 'T' && v[13] == ':' && v[16] == ':' && v[19] == 'Z'
            && v[11..13].All(char.IsDigit) && v[14..16].All(char.IsDigit) && v[17..19].All(char.IsDigit);
 
-    private static void Enumerated(string name, YamlNode node, FieldSpec spec, int frontStart, Report report)
+    private static void Enumerated(string name, YamlNode node, FieldSpec spec, int line, Report report)
     {
         var v = Yaml.Raw(node);
         if (v is null)
         {
-            report.Err(new CheckId("enum"), $"'{name}' must be a scalar.", Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("enum"), $"'{name}' must be a scalar.", line);
             return;
         }
 
         if (spec.Values is not null && !spec.Values.Contains(v))
             report.Err(new CheckId("enum"),
-                $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.",
-                Yaml.LineOf(node, frontStart));
+                $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", line);
         if (v != v.ToLowerInvariant())
-            report.Err(new CheckId("enum-lowercase"), $"'{name}' enum value '{v}' must be lowercase.",
-                Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("enum-lowercase"), $"'{name}' enum value '{v}' must be lowercase.", line);
     }
 
-    private static void Sequence(string name, YamlNode node, FieldSpec spec, DocKind kind, int frontStart,
+    private static void Sequence(string name, YamlNode node, int line, FieldSpec spec, DocKind kind, int frontStart,
         Report report)
     {
         if (node is not YamlSequenceNode seq)
         {
-            report.Err(new CheckId("list"), $"'{name}' must be a YAML sequence.", Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("list"), $"'{name}' must be a YAML sequence.", line);
             return;
         }
 
@@ -173,22 +169,22 @@ public static class ValueChecks
         if (spec.MinItems is { } min && seq.Children.Count < min)
             report.Err(new CheckId("min-items"),
                 $"'{name}' has {seq.Children.Count} {(seq.Children.Count == 1 ? "entry" : "entries")}: "
-                + $"the schema asks for at least {min}.", Yaml.LineOf(node, frontStart));
+                + $"the schema asks for at least {min}.", line);
 
         foreach (var item in seq.Children)
         {
+            var at = Yaml.LineOf(item, frontStart);
             if (spec.Of == "object")
             {
-                Entry(name, item, spec, kind, frontStart, report);
+                Entry(name, item, at, spec, kind, frontStart, report);
                 continue;
             }
 
             var v = Yaml.Raw(item);
             if (spec.IsLiteral(v)) continue;
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
-                report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.",
-                    Yaml.LineOf(item, frontStart));
-            Pattern(name, "entry", item, spec, frontStart, report);
+                report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.", at);
+            Pattern(name, "entry", item, spec, at, report);
         }
 
         for (var i = 1; i < seq.Children.Count; i++)
@@ -203,38 +199,38 @@ public static class ValueChecks
         }
     }
 
-    private static void Entry(string name, YamlNode item, FieldSpec spec, DocKind kind, int frontStart,
+    /// <summary><c>line</c> is the entry's line, or the field's key where the field itself is the object.</summary>
+    private static void Entry(string name, YamlNode item, int line, FieldSpec spec, DocKind kind, int frontStart,
         Report report)
     {
         if (item is not YamlMappingNode map)
         {
             report.Err(new CheckId("entry-shape"),
-                $"'{name}' entry must be a mapping, with the keys {Keys(spec)}.",
-                Yaml.LineOf(item, frontStart));
+                $"'{name}' entry must be a mapping, with the keys {Keys(spec)}.", line);
             return;
         }
 
         var present = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var (key, value) in Yaml.Map(map))
+        foreach (var (keyNode, value) in map.Children)
         {
+            var key = ((YamlScalarNode)keyNode).Value ?? "";
+            var at = Yaml.LineOf(keyNode, frontStart);
             present.Add(key);
             if (spec.EntryKey(key) is not { } inner)
             {
                 report.Err(new CheckId("entry-key"),
-                    $"'{name}' entry carries '{key}', and the schema declares {Keys(spec)}.",
-                    Yaml.LineOf(value, frontStart));
+                    $"'{name}' entry carries '{key}', and the schema declares {Keys(spec)}.", at);
                 continue;
             }
 
-            Check($"{name}.{key}", value, inner, kind, frontStart, report);
+            Check($"{name}.{key}", value, at, inner, kind, frontStart, report);
         }
 
         // `of: object` with no `entry:` block requires nothing here. `schema-shape` reports that schema, and a record
         // must not take the run down before it does.
         foreach (var missing in (spec.Entry ?? []).Where(k => k.Required && !present.Contains(k.Name)))
             report.Err(new CheckId("entry-key"),
-                $"'{name}' entry {Names(map, spec)} is missing '{missing.Name}'.",
-                Yaml.LineOf(map, frontStart));
+                $"'{name}' entry {Names(map, spec)} is missing '{missing.Name}'.", line);
     }
 
     private static string Keys(FieldSpec spec) =>
@@ -271,14 +267,12 @@ public static class ValueChecks
                && (rest == rest.ToLowerInvariant() || rest == rest.ToUpperInvariant());
     }
 
-    private static void Pattern(string name, string noun, YamlNode node, FieldSpec spec, int frontStart,
-        Report report)
+    private static void Pattern(string name, string noun, YamlNode node, FieldSpec spec, int line, Report report)
     {
         if (spec.PatternRegex is null) return;
         var v = Yaml.Raw(node);
         if (v is null) return;
         if (!spec.PatternRegex.IsMatch(v))
-            report.Err(new CheckId("field-pattern"),
-                $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Yaml.LineOf(node, frontStart));
+            report.Err(new CheckId("field-pattern"), $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", line);
     }
 }

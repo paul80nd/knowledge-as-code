@@ -29,7 +29,7 @@ public class DurationMatchesTheMomentsTests
 
     [Fact]
     public void The_finding_points_at_the_duration()
-        => Assert.Equal(8, Assert.Single(Run("2026-06-12T09:00:00Z", "2026-06-12T09:40:00Z", "PT30M")).Line);
+        => Assert.Equal(9, Assert.Single(Run("2026-06-12T09:00:00Z", "2026-06-12T09:40:00Z", "PT30M")).Line);
 
     [Fact]
     public void Moments_in_the_wrong_order_are_left_to_the_ordering_rule()

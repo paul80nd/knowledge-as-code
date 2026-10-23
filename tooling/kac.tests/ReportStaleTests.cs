@@ -25,7 +25,7 @@ public class ReportStaleTests
 
     [Fact]
     public void The_finding_points_at_the_source_entry()
-        => Assert.Equal(8, Assert.Single(Run("0.1.0", ("eng", "0.2.0"))).Line);
+        => Assert.Equal(9, Assert.Single(Run("0.1.0", ("eng", "0.2.0"))).Line);
 
     [Fact]
     public void A_version_the_tool_cannot_order_is_left_alone()

@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **`kac validate` reports a frontmatter finding on the line its key sits on.** A finding about one value, such as
+  `enum`, `date-format`, `field-pattern`, `id-format` or `empty-optional-key`, named the line above it, in the text
+  output and in `--json` alike. An editor or a CI annotation opened the previous field. A finding about one entry of a
+  list, such as `dependency-criticality` or `list-order`, now names that entry. A finding about the whole record, such
+  as `required-field`, `unknown-key` or `key-order`, stays on the opening `---`.
+
 ## 0.37.0 - 2026-10-21
 
 ### Changed

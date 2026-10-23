@@ -6,8 +6,8 @@ namespace kac.tests;
 
 public class ValueCheckTests
 {
-    /// <summary>The line a <c>---</c> block's first key sits on.</summary>
-    private const int FrontStart = 2;
+    /// <summary>The line a record's opening <c>---</c> sits on, as <c>Doc.FrontStartLine</c> sets it.</summary>
+    private const int FrontStart = 1;
 
     private static FieldSpec Field(string type, string name = "field") => new() { Name = name, Type = type };
 
@@ -59,17 +59,26 @@ public class ValueCheckTests
     /// <summary>
     /// Read from a real parse, so quoting style and node positions are the parser's rather than the test's.
     /// </summary>
-    private static YamlNode Value(string yaml)
+    private static YamlNode Value(string yaml) => Parsed(yaml).Value;
+
+    /// <summary>The value under <c>field</c>, and the line its key sits on in a record opening at line 1.</summary>
+    private static (int Line, YamlNode Value) Parsed(string yaml)
     {
         var stream = new YamlStream();
         stream.Load(new StringReader(yaml));
-        return ((YamlMappingNode)stream.Documents[0].RootNode).Children[new YamlScalarNode("field")];
+        var (key, value) = ((YamlMappingNode)stream.Documents[0].RootNode).Children
+            .Single(kv => ((YamlScalarNode)kv.Key).Value == "field");
+        return (Yaml.LineOf(key, FrontStart), value);
     }
 
     private static List<Finding> Run(string yaml, FieldSpec spec, DocKind kind = DocKind.Record)
+        => Run("field", yaml, spec, kind);
+
+    private static List<Finding> Run(string name, string yaml, FieldSpec spec, DocKind kind = DocKind.Record)
     {
         var findings = new List<Finding>();
-        ValueChecks.Check("field", Value(yaml), spec, kind, FrontStart, new Report("rec.md", findings));
+        var (line, value) = Parsed(yaml);
+        ValueChecks.Check(name, value, line, spec, kind, FrontStart, new Report("rec.md", findings));
         return findings;
     }
 
@@ -370,23 +379,39 @@ public class ValueCheckTests
     [Fact]
     public void The_fix_quotes_the_key_an_entry_carries()
     {
-        var findings = new List<Finding>();
-        ValueChecks.Check("verified.at", Value("field: {{date}}\n"), Field("date"), DocKind.Record,
-            FrontStart, new Report("rec.md", findings));
+        var found = Run("verified.at", "field: {{date}}\n", Field("date"));
 
-        Assert.Contains("has to be quoted: at: \"{{…}}\".", Assert.Single(findings).Message);
+        Assert.Contains("has to be quoted: at: \"{{…}}\".", Assert.Single(found).Message);
     }
 
     [Fact]
     public void A_finding_names_the_line_in_the_document_not_in_the_block()
     {
-        var findings = new List<Finding>();
-        var node = Value("other: x\nfield: \"2027/08/04\"\n");
-        ValueChecks.Check("field", node, Field("date"), DocKind.Record, FrontStart,
-            new Report("rec.md", findings));
+        var found = Run("other: x\nfield: \"2027/08/04\"\n", Field("date"));
 
-        Assert.Equal(FrontStart + 1, Assert.Single(findings).Line);
+        // Line 1 is the `---`, so `other` sits on 2 and `field` on 3.
+        Assert.Equal(3, Assert.Single(found).Line);
     }
+
+    [Fact]
+    public void A_finding_about_a_block_list_names_its_key()
+    {
+        var spec = new FieldSpec { Name = "field", Type = "list", MinItems = 2 };
+        Assert.Equal(2, Assert.Single(Run("field:\n  - a\n", spec)).Line);
+    }
+
+    [Fact]
+    public void A_finding_about_one_entry_of_a_block_list_names_the_entry()
+        => Assert.Equal(4, Assert.Single(Run("field:\n  - b\n  - a\n", Field("list"))).Line);
+
+    [Fact]
+    public void A_key_inside_a_block_object_field_is_reported_on_its_own_line()
+        => Assert.Equal(4, Assert.Single(Run("field:\n  at: 2026-06-12T09:00:00Z\n  why: y\n  by: x\n",
+            Event())).Line);
+
+    [Fact]
+    public void A_key_a_block_object_field_omits_is_reported_on_the_field()
+        => Assert.Equal(2, Assert.Single(Run("field:\n  at: 2026-06-12T09:00:00Z\n", Event())).Line);
 
     [Theory]
     [InlineData("field:\n", true)]

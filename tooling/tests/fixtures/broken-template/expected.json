@@ -24,7 +24,7 @@
     },
     {
       "file": "adrs/_template.md",
-      "line": 5,
+      "line": 6,
       "severity": "error",
       "check": "template-fields",
       "message": "'decided-on' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: decided-on: \"{{…}}\"."
