@@ -27,10 +27,10 @@
   "sections": {
     "What it does": "`kac` reads one corpus and judges it against the schema above it. `Program.cs` wires Spectre.Console.Cli to the verbs and runs the corpus pre-flight. Every verb's logic is in `kac.core`. Taken from the header comment in `tooling/kac/kac.csproj`.\n\nThe command surface is `new`, `validate`, `generate`, `restore`, `export`, `bundle`, `pack`, `checks`, `report` and `update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/use/cli/>.\n\nTwo walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the corpus, then walks up again for `.schema/` to find what to judge the corpus against. Taken from `docs/maintaining/architecture.md`.",
     "Where it lives": "* **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `tooling/kac`, with the\n  engine beside it at `tooling/kac.core`\n* **Platform**: .NET 10, packed as a dotnet tool\n* **Deployed as**: a NuGet package on nuget.org, installed by `dotnet tool install`",
-    "Dependencies": "None in this catalogue. `kac` reads a corpus from the filesystem. It calls nothing at run time.\n\nThe packages it is built from are in the tool register: [tol-spectre-console], [tol-yamldotnet] and [tol-markdig]. The actions that build, test and publish it are there too: [tol-checkout], [tol-setup-dotnet] and [tol-nuget-login].",
-    "Data": "None of its own. Every input is a file in the corpus it was pointed at. Every output is written back beside that corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in [std-CONFIG]."
+    "Dependencies": "None in this catalogue. `kac` reads a corpus from the filesystem. It calls nothing at run time.\n\nThe packages it is built from are in the tool register: [tol-spectre-console](../tools/build/spectre-console.md), [tol-yamldotnet](../tools/build/yamldotnet.md) and [tol-markdig](../tools/build/markdig.md). The actions that build, test and publish it are there too: [tol-checkout](../tools/workflows/checkout.md), [tol-setup-dotnet](../tools/workflows/setup-dotnet.md) and [tol-nuget-login](../tools/workflows/nuget-login.md).",
+    "Data": "None of its own. Every input is a file in the corpus it was pointed at. Every output is written back beside that corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in [std-CONFIG](../standards/configuration.md)."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/dog-fooding/services/kac.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/dog-fooding/services/kac.md"
   }
 }

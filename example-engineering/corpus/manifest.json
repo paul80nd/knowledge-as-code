@@ -4,9 +4,9 @@
   "shortcode": "eng",
   "contentVersion": "0.38.3",
   "mechanismVersion": 24,
-  "commit": "2d7c7641373bd6b71f91be09a65428c084868f93",
+  "commit": "e779e39777c862919b444df460ef023bb8aa7adb",
   "dirty": false,
-  "generatedAt": "2026-10-23T13:37:04Z",
+  "generatedAt": "2026-10-23T15:27:22Z",
   "about": {
     "displayName": "Example Engineering",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/engineering",
-    "ref": "2d7c7641373bd6b71f91be09a65428c084868f93"
+    "ref": "e779e39777c862919b444df460ef023bb8aa7adb"
   },
   "reposBase": null,
   "tracker": {
@@ -54,7 +54,8 @@
         "Decision": "full",
         "Consequences": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "accepted"
     },
     {
       "type": "controls",
@@ -72,7 +73,8 @@
         "How it works": "full",
         "Coverage and gaps": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "glossary",
@@ -88,7 +90,8 @@
       "sections": {
         "Scope": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "policies",
@@ -106,7 +109,8 @@
         "Scope": "full",
         "Exceptions": "full"
       },
-      "frameworksFile": "policies/frameworks.jsonl"
+      "frameworksFile": "policies/frameworks.jsonl",
+      "inForce": "active"
     },
     {
       "type": "reports",
@@ -120,7 +124,8 @@
       "idKey": null,
       "seeAlsoKey": null,
       "sections": {},
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "standards",
@@ -137,7 +142,8 @@
         "Summary": "full",
         "Conformance checklist": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     }
   ]
 }

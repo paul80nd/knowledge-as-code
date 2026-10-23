@@ -12,9 +12,9 @@
   "sections": {
     "Purpose": "We build and check every change automatically before it joins the default branch or moves towards production. A failed check stops it. Quality checks are gates.",
     "Scope": "Every change to any solution we build or operate: application code, infrastructure definitions, database schema, configuration, data pipelines and the documentation kept with them.",
-    "Exceptions": "An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI]. The gate is satisfied afterwards, not waived."
+    "Exceptions": "An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI](../governance/devi-deviations.md). The gate is satisfied afterwards, not waived."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/policies/delivery/autv-automated-verification.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/policies/delivery/autv-automated-verification.md"
   }
 }

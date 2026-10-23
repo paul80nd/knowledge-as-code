@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.75.10",
+  "contentVersion": "0.76.0",
   "mechanismVersion": 24,
-  "commit": "2d7c7641373bd6b71f91be09a65428c084868f93",
+  "commit": "e779e39777c862919b444df460ef023bb8aa7adb",
   "dirty": false,
-  "generatedAt": "2026-10-23T13:37:13Z",
+  "generatedAt": "2026-10-23T15:27:31Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "2d7c7641373bd6b71f91be09a65428c084868f93"
+    "ref": "e779e39777c862919b444df460ef023bb8aa7adb"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -43,10 +43,10 @@
       "contentVersion": "0.38.3",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "2d7c7641373bd6b71f91be09a65428c084868f93"
+        "ref": "e779e39777c862919b444df460ef023bb8aa7adb"
       },
       "reposBase": null,
       "tracker": {
@@ -61,7 +61,7 @@
     {
       "type": "controls",
       "shapeVersion": 1,
-      "records": 23,
+      "records": 24,
       "parts": 0,
       "dir": "controls",
       "partsFile": null,
@@ -74,7 +74,8 @@
         "How it works": "full",
         "Coverage and gaps": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "deviations",
@@ -95,7 +96,8 @@
         "How it closes": "full",
         "Scope": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "fixes",
@@ -115,7 +117,8 @@
         "Resolution": "full",
         "Why it happens": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "processes",
@@ -132,7 +135,8 @@
         "When to use this": "full",
         "Prerequisites": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "reports",
@@ -146,7 +150,8 @@
       "idKey": null,
       "seeAlsoKey": null,
       "sections": {},
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "runbooks",
@@ -163,7 +168,8 @@
         "Symptoms": "full",
         "Impact": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "services",
@@ -182,7 +188,8 @@
         "Dependencies": "full",
         "Data": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "live"
     },
     {
       "type": "standards",
@@ -199,12 +206,13 @@
         "Summary": "full",
         "Conformance checklist": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "tools",
       "shapeVersion": 3,
-      "records": 20,
+      "records": 21,
       "parts": 0,
       "dir": "tools",
       "partsFile": null,
@@ -219,7 +227,8 @@
         "Licence and obligations": "full",
         "Where it is used": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "approved"
     },
     {
       "type": "adrs",
@@ -237,7 +246,8 @@
         "Decision": "full",
         "Consequences": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "accepted"
     },
     {
       "type": "glossary",
@@ -253,7 +263,8 @@
       "sections": {
         "Scope": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     },
     {
       "type": "policies",
@@ -271,7 +282,8 @@
         "Scope": "full",
         "Exceptions": "full"
       },
-      "frameworksFile": null
+      "frameworksFile": null,
+      "inForce": "active"
     }
   ]
 }

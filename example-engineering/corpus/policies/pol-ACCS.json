@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "We grant access to a named person or a named workload, never to a shared login. Each identity gets no more access than the work needs.",
-    "Scope": "All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for machine identities alike. It applies to routine and to privileged access.\n\n_Boundary: [pol-AGNT] governs the authority of what an agent produces. A person who accepts agent work becomes its author and not its approver, so `DUTIES` still requires a second person to release it._",
-    "Exceptions": "Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is allowed where a person cannot otherwise act. The account is still attributable. Its use raises an alert and is recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI]."
+    "Scope": "All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for machine identities alike. It applies to routine and to privileged access.\n\n_Boundary: [pol-AGNT](../governance/agnt-agent-oversight.md#clauses) governs the authority of what an agent produces. A person who accepts agent work becomes its author and not its approver, so `DUTIES` still requires a second person to release it._",
+    "Exceptions": "Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is allowed where a person cannot otherwise act. The account is still attributable. Its use raises an alert and is recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI](../governance/devi-deviations.md)."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/policies/security/accs-access-by-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/policies/security/accs-access-by-identity.md"
   }
 }

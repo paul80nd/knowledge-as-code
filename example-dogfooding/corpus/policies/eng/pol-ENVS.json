@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "We separate production from every environment below it, by access, by network and by credential. A change is checked before customers see it, and nothing outside production has access to production's data or its identity.",
-    "Scope": "All environments hosting systems we build or operate, from a developer's machine through to production, including temporary and on-demand environments.\n\n_Boundary: this policy states which environments are separated and what is prohibited from crossing between them. [pol-MEXP] owns the network segmentation that enforces it, under `SEGMENT`._",
-    "Exceptions": "Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not development, and [pol-INCR] governs it. `CREDS` and `REUSE` state a secrets prohibition that [pol-SCRT] owns and that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI]."
+    "Scope": "All environments hosting systems we build or operate, from a developer's machine through to production, including temporary and on-demand environments.\n\n_Boundary: this policy states which environments are separated and what is prohibited from crossing between them. [pol-MEXP](../security/mexp-minimised-exposure.md) owns the network segmentation that enforces it, under `SEGMENT`._",
+    "Exceptions": "Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not development, and [pol-INCR](../operations/incr-incident-response.md) governs it. `CREDS` and `REUSE` state a secrets prohibition that [pol-SCRT](../security/scrt-secrets-management.md#clauses) owns and that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI](../governance/devi-deviations.md)."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/policies/security/envs-environment-separation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/policies/security/envs-environment-separation.md"
   }
 }

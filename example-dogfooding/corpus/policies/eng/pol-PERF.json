@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "Where performance matters, we say what \"fast enough\" means before we build. We check against that target before we release, so a customer is never the first to tell us.",
-    "Scope": "Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most customer-facing systems and many internal ones. Targets themselves are recorded as NFRs, and this policy commits us to having them.\n\n_Boundary: this policy checks a target before a release. [pol-OBSV] owns noticing that a live system has stopped meeting one, and `DEFECT` says what we do once it has._",
-    "Exceptions": "Systems where performance is genuinely not a concern, such as low-volume internal tooling with no user waiting on it, need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that has since acquired users."
+    "Scope": "Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most customer-facing systems and many internal ones. Targets themselves are recorded as NFRs, and this policy commits us to having them.\n\n_Boundary: this policy checks a target before a release. [pol-OBSV](../operations/obsv-observability.md) owns noticing that a live system has stopped meeting one, and `DEFECT` says what we do once it has._",
+    "Exceptions": "Systems where performance is genuinely not a concern, such as low-volume internal tooling with no user waiting on it, need no targets. That judgement is a recorded deviation under [pol-DEVI](../governance/devi-deviations.md), and its review date is what catches the system that has since acquired users."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/policies/delivery/perf-performance-targets.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/engineering/policies/delivery/perf-performance-targets.md"
   }
 }

@@ -27,10 +27,10 @@
     "Who it is for": "Anyone at the checkout. Paying needs no account, so the group is every visitor with an order to settle.",
     "Why it exists": "Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.",
     "Surfaces": "The checkout page, and the payment frame the payment service provider serves inside it.",
-    "Where the detail lives": "* **Implemented by**: [svc-payment-api], [svc-payment-ledger]\n* **Specified in**: [gh#2101], [gh#2140]\n* **Constrained by**: [nfr-0001]",
-    "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001] does not cover that wait."
+    "Where the detail lives": "* **Implemented by**: [svc-payment-api](../services/payment-api.md), [svc-payment-ledger](../services/payment-ledger.md)\n* **Specified in**: [gh#2101](https://git.example.com/example-payments/payment-api/issues/2101), [gh#2140](https://git.example.com/example-payments/payment-api/issues/2140)\n* **Constrained by**: [nfr-0001](../nfrs/0001-authorisation-latency.md)",
+    "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001](../nfrs/0001-authorisation-latency.md) does not cover that wait."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/payments/offerings/card-payment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/payments/offerings/card-payment.md"
   }
 }

@@ -1,0 +1,39 @@
+{
+  "type": "tools",
+  "path": "tools/lint/zizmor.md",
+  "trust": null,
+  "fields": {
+    "id": "tol-zizmor",
+    "title": "zizmor",
+    "status": "approved",
+    "category": "lint",
+    "packages": [
+      {
+        "purl": "pkg:pypi/zizmor",
+        "versions": "1.31.x"
+      }
+    ],
+    "homepage": "https://docs.zizmor.sh",
+    "licence": "MIT",
+    "licence-declared": "MIT",
+    "decided-on": "2026-10-23",
+    "review-by": "2027-10-23",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "github-actions",
+      "linting",
+      "security",
+      "workflows"
+    ]
+  },
+  "sections": {
+    "What we use it for": "It reports an action pinned to a tag, a checkout that keeps its credential, a workflow granting more than read at its top level, and an expression an attacker can write into a `run:` block. It runs with its default persona, which reports the findings its authors rate as actionable and leaves out the pedantic ones.\n\nThe job gives it `github.token`, so it also asks GitHub whether each pinned commit belongs to the action it names.\n\nThe `lint` job installs it from `.github/requirements.txt`, and Dependabot moves that pin. A finding the workflows keep on purpose is suppressed by an inline `# zizmor: ignore[...]` comment, with the reason in the comment above the step.",
+    "Licence and obligations": "MIT. The wheel's software bill of materials lists the Rust crates compiled into the binary, and each is under a permissive licence or offers one. The `lint` job runs it as a separate program, and nothing this repository publishes contains it.",
+    "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/dog-fooding/tools/lint/zizmor.md"
+  }
+}
