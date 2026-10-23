@@ -3,8 +3,8 @@ using System.Reflection;
 namespace kac.tests;
 
 /// <summary>
-/// <c>kac.features/Harness.cs</c> and <c>kac-tests.cs</c> hold their own copies, because neither references this
-/// assembly. <c>tooling/CLAUDE.md</c> says why none of the three may be unified with the tool's own walk-ups.
+/// <c>kac.features/Harness.cs</c> and <c>kac.goldens/Suite.cs</c> hold their own copies, because neither references
+/// this assembly. <c>tooling/CLAUDE.md</c> says why none of the three may be unified with the tool's own walk-ups.
 /// </summary>
 internal static class Repo
 {

@@ -7,7 +7,8 @@ cost a session here.
 **After any change, run `kac generate` and then the golden suite.** Every type page has generated `schema-<type>` and
 `checks-<type>` blocks derived from these files. A schema edit alone leaves the corpus stale and fails
 `generate --check` in CI. The fixtures validate against these files rather than against copies, so the same edit can
-move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/kac-tests.cs` as well as `kac validate`.
+move golden expectations in `tooling/tests/fixtures/`. Run `dotnet test --project tooling/kac.goldens` as well as
+`kac validate`.
 
 * **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The loader reports any key it never
   asked for as `schema-unknown-key`. A new key means an edit to `tooling/kac.core/Schema.cs` **and** to the code that

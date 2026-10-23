@@ -21,15 +21,17 @@ tags: [ goldens, testing ]
 
 ## Symptoms
 
-* `dotnet run tooling/kac-tests.cs` exits 1 and prints a line opening `FAIL` and naming the scenario. What differs
-  follows on the same line or on the indented lines under it. For example:
+* `dotnet test --project tooling/kac.goldens` reports `failed kac.goldens.GoldenTests.Scenario(name: "<name>")`.
+  Under it is a line opening `FAIL` and naming the scenario. What differs follows on the same line or on the indented
+  lines under it. For example:
   * `committed generated files do not match the generator.`, on the `FAIL` line itself
   * `the export no longer writes <path>: what a consumer reads has changed`
   * `the export writes <path>, which the committed copy does not hold: a new file for a consumer`
   * `<path> differs from the committed export: <the first difference>`
-  * `no expectation for <what> at <file>. run with --update, then read the diff`
+  * `no expectation for <what> at <file>. run with KAC_UPDATE_GOLDENS=1, then read the diff`
 * It prints `MISSING <name>: no golden.`
-* One of `dotnet run tooling/kac-tests.cs` and `dotnet test --project tooling/kac.tests` passes while the other fails.
+* One of `dotnet test --project tooling/kac.goldens` and `dotnet test --project tooling/kac.tests` passes while the
+  other fails.
 * The branch is green on your machine and red in CI.
 
 ## Impact
@@ -38,20 +40,19 @@ Nothing in production. The branch stays red, so nothing on it merges until the d
 
 ## Immediate actions
 
-**Do not run `--update` before you have read what changed.** Regenerating a golden accepts whatever the tool now emits.
-The export golden is a contract a consumer reads.
+**Do not set `KAC_UPDATE_GOLDENS` before you have read what changed.** Regenerating a golden accepts whatever the tool
+now emits. The export golden is a contract a consumer reads.
 
-1. Read the scenario name from the line opening `FAIL`. Where only `dotnet test` failed, there is no name, so run
-   step 2 without one.
+1. Read the scenario name from the line opening `FAIL`. Where only `kac.tests` failed, there is no name, so run step 2
+   without the filter.
 2. Run that scenario on its own, from the root of the repository, the way CI runs it:
 
    ```sh
-   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- <name>
+   GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens --filter-trait "Scenario=<name>"
    ```
 
    CI sets `GITHUB_ACTIONS`, and a tool the suite runs can read it, so a run without it can pass where CI fails. The
-   suite matches the name as a substring, so it runs every scenario whose name contains it. `export` runs
-   `export`, `export-inherited` and `export-policies`. Each scenario prints one line opening `ok`, `FAIL` or
+   filter matches the whole name, so it runs that one scenario. A failed scenario prints one line opening `FAIL` or
    `MISSING`.
 
 3. Note whether each `FAIL` reports a generated file, an export path, or a missing expectation.
@@ -64,7 +65,7 @@ The export golden is a contract a consumer reads.
   it, [escalate](#escalation).
 * **No** → continue.
 
-**Did only `dotnet test` fail, and does it fail on your machine as well?**
+**Did only `kac.tests` fail, and does it fail on your machine as well?**
 
 ```sh
 dotnet test --project tooling/kac.tests
@@ -114,15 +115,15 @@ Run steps 1 to 4 from the root of the repository.
 1. Regenerate the scenario that failed:
 
    ```sh
-   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- --update <name>
+   GITHUB_ACTIONS=true KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --output Detailed --filter-trait "Scenario=<name>"
    ```
 
-   It prints one line opening `UPDATE` for each scenario it regenerated. The name is a substring, so check that every
-   line names a scenario you meant to regenerate. The run exits 0 even where a line says `WARNING: export failed` or
-   `WARNING: still stale after regen`, so read every line for `WARNING`. If one has it, [escalate](#escalation).
+   It prints one line opening `UPDATE` under the scenario it regenerated. The run passes even where that line says
+   `WARNING: export failed` or `WARNING: still stale after regen`, so read the line for `WARNING`. If it has one,
+   [escalate](#escalation).
 
    To undo the regeneration, run `git checkout -- tooling/tests/fixtures/`. It also discards any other uncommitted
-   change there. `--update` can write files git does not track yet, and the checkout leaves them. List them with
+   change there. An update can write files git does not track yet, and the checkout leaves them. List them with
    `git clean -n tooling/tests/fixtures/`, and delete each one you did not write yourself.
 
 2. Read the diff line by line, and list the files the update added:
@@ -139,10 +140,10 @@ Run steps 1 to 4 from the root of the repository.
    ```sh
    dotnet test --project tooling/kac.tests
    dotnet test --project tooling/kac.features
-   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs
+   GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens
    ```
 
-   The first two each print `Test run summary: Passed!`. The golden suite ends `all <n> scenario(s) passed.`
+   Each prints `Test run summary: Passed!`.
 
 5. Run `kac generate` in each corpus you changed, and in `template/`. From a corpus under `examples/`:
 
@@ -165,7 +166,7 @@ it says, [escalate](#escalation).
 |---------------------------------------------------------------|-------------------------------|------------------------------|
 | The export dropped a path and you cannot restore it           | Paul Law, as the tool's owner | An issue on this repository  |
 | The three layers disagree and you cannot tell which is right  | Paul Law, as the tool's owner | An issue on this repository  |
-| `--update` printed a `WARNING`                                | Paul Law, as the tool's owner | An issue on this repository  |
+| An update printed a `WARNING`                                 | Paul Law, as the tool's owner | An issue on this repository  |
 | CI fails and the unit layer passes here against `origin/main` | Paul Law, as the tool's owner | An issue, with the job's log |
 
 ## Communication

@@ -201,7 +201,7 @@ jobs:
         run: dotnet test --project tooling/kac.features
 
       - name: Run the golden test suite
-        run: dotnet run tooling/kac-tests.cs
+        run: dotnet test --project tooling/kac.goldens
 
       # Pack fails on metadata no test reads, and installing catches a package that resolves to no command.
       # `shell: sh` below limits this to the POSIX subset, and TEMP_ROOT and SOURCES are set in `env:`.

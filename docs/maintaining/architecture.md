@@ -18,7 +18,7 @@ dotnet run --project tooling/kac -- --help   # build the entrypoint from source 
 | `.schema/`                                       | One YAML file per type (one kind of record), plus the shared fields, tiers, enums and checks        |
 | `manifest.yaml` and `template/`                  | The files `kac new` sends a new corpus and `kac update` sends an existing one                       |
 | `tooling/kac.tests/` and `tooling/kac.features/` | The unit tests and the Reqnroll behaviour specs                                                     |
-| `tooling/kac-tests.cs` and `tooling/tests/`      | The golden suite, its fixtures, and the two round-trip scripts                                      |
+| `tooling/kac.goldens/` and `tooling/tests/`      | The golden suite, its fixtures, and the two round-trip scripts                                      |
 
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md) lists every schema
 file and what it declares.

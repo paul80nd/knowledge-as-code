@@ -1,10 +1,8 @@
 # What Dependabot keeps current in this repository.
 #
 # Every project under `tooling/` carries ordinary `PackageReference`s and is tracked below.
-# Two pins sit outside what Dependabot reads. `kac-tests.cs` is a file-based app, and a
-# `#:package` directive is not a manifest — dependabot-core#15184 is the request that it should.
-# It pins nothing today, so there is nothing there to move by hand. actionlint is a Go binary
-# installed by version in workflows/kac.yml, and that line is moved by hand.
+# One pin sits outside what Dependabot reads. actionlint is a Go binary installed by version in
+# workflows/kac.yml, and that line is moved by hand.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -27,6 +25,7 @@ updates:
       - /tooling/kac
       - /tooling/kac.core
       - /tooling/kac.features
+      - /tooling/kac.goldens
       - /tooling/kac.tests
     schedule:
       interval: weekly

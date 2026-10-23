@@ -25,7 +25,7 @@ The SDK that builds, tests and packs `kac`, and the runtime the register's NuGet
 ## What we use it for
 
 Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI
-as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program that has no project around it.
+as a dotnet tool.
 
 `global.json` at the repository root pins the SDK at 10.0.402. Its `rollForward` is `disable`, so `dotnet` refuses
 to build with any other SDK, even a later patch installed beside it. [tol-setup-dotnet] reads the file and installs

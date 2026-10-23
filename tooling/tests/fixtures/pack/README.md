@@ -37,5 +37,5 @@ byte nobody can account for afterwards.
 `expected-pack.txt` holds lines the run must print. `expected-files.txt` names what must be there afterwards, and what
 must not.
 
-Regenerate with `dotnet run tooling/kac-tests.cs -- --update pack`, then read the diff. A filter is matched as a
-substring, so that command touches this fixture alone.
+Regenerate with `KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "Scenario=pack"`, then
+read the diff. The filter matches one name, so that command touches this fixture alone.

@@ -109,7 +109,7 @@ jobs:
         run: dotnet test --project tooling/kac.features
 
       - name: Run the golden test suite
-        run: dotnet run tooling/kac-tests.cs
+        run: dotnet test --project tooling/kac.goldens
 
       # Packed once, so what is pushed is what the next step proved runnable.
       - name: Pack the tool

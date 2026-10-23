@@ -7,7 +7,7 @@ of record declares.
 ```sh
 git clone https://github.com/paul80nd/knowledge-as-code.git
 cd knowledge-as-code
-dotnet build kac.slnx   # kac, kac.core, kac.tests and kac.features
+dotnet build kac.slnx   # kac, kac.core, kac.tests, kac.features and kac.goldens
 ```
 
 The first build restores the NuGet packages and takes longest. Every command on this page runs from the repository
@@ -49,10 +49,21 @@ Each layer proves something the others cannot. CI runs all three on every pull r
 |---------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
 | Unit    | `dotnet test --project tooling/kac.tests`    | Each piece of `kac.core` behaves, and the pages and comments in this repository agree with it                            |
 | Feature | `dotnet test --project tooling/kac.features` | Each check, and each command a `.feature` file covers, does what its scenarios say, run in-process over a fixture corpus |
-| Golden  | `dotnet run tooling/kac-tests.cs`            | Each command, run as a real process, prints the output and writes the files a fixture expects                            |
+| Golden  | `dotnet test --project tooling/kac.goldens`  | Each command, run as a real process, prints the output and writes the files a fixture expects                            |
 
-The golden suite also fails three things no other layer sees: a check that no fixture trips, a command the suite
-never runs, and a type page whose checks table is out of date.
+The golden suite also fails four things no other layer sees: a check that no fixture trips, a command the suite never
+runs, a type page whose checks table is out of date, and a `--version` or `--help` that needs a corpus. Each is a test
+case of its own beside the fixtures.
+
+### Run one golden scenario
+
+Each fixture under `tooling/tests/fixtures/` is one test case. Select it by the `Scenario` trait:
+
+```sh
+dotnet test --project tooling/kac.goldens --filter-trait "Scenario=new"   # the fixture named new
+```
+
+Set `GITHUB_ACTIONS=true` to run the suite the way CI does.
 
 ### Run the unit layer in part
 
@@ -72,8 +83,8 @@ A change to what a command prints changes a golden file. Regenerate every golden
 the diff. The update accepts a regression as readily as a fix.
 
 ```sh
-dotnet run tooling/kac-tests.cs -- --update          # every fixture
-dotnet run tooling/kac-tests.cs -- --update new      # the fixture named new
+KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens                                # every fixture
+KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "Scenario=new"   # the fixture named new
 ```
 
 ## The round-trip scripts

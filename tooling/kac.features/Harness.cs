@@ -25,7 +25,7 @@ public static class Harness
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
         CopyTree(Path.Combine(RepoRoot, ".schema"), Path.Combine(temp, ".schema"));
 
-        // The marker that makes the assembled tree a corpus. `kac-tests.cs` says why it is empty.
+        // The marker that makes the assembled tree a corpus. `kac.goldens/Runner.cs` says why it is empty.
         File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
             "# Written by the behaviour specs so that kac reads this tree as a corpus.\n");
 

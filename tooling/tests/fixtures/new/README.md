@@ -10,6 +10,7 @@ The runner calls `kac new --yes --name acme-corpus --ci github` and checks three
 * **The exit code is 0.** `new` runs `validate` before it returns, so this says the corpus it created validates.
 
 File bodies are not compared. They are the template's, and the template has tests of its own. A change to
-`manifest.yaml` or to a file the template sends moves this fixture, so run `--update new` and read the diff.
+`manifest.yaml` or to a file the template sends moves this fixture, so regenerate it with `KAC_UPDATE_GOLDENS=1` and
+read the diff.
 
 `Creation.feature` covers what `new` refuses, and the other behaviours its page promises.

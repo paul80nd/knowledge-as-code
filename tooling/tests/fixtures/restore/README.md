@@ -17,4 +17,5 @@ Remake it when the package format moves, and a restore refuses this one:
 1. Copy `.schema/` from the repository root and the contents of `../pack/corpus/` into one empty folder.
 2. From that folder, run `kac export` and then `kac pack`, with the `kac` built on your branch.
 3. Replace `producer/package/` with the `.dist/package/` folder the pack wrote.
-4. Run `dotnet run tooling/kac-tests.cs -- --update restore`, then read the diff.
+4. Run `KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "Scenario=restore"`, then read
+   the diff.
