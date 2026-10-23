@@ -42,6 +42,19 @@ public class ReportsTests
         => Assert.DoesNotContain("dev-SHUT", Inheriting());
 
     [Fact]
+    public void A_deviation_stating_no_status_is_left_out()
+        => Assert.DoesNotContain("dev-unstated", Coverage());
+
+    [Fact]
+    public void Two_in_force_values_are_stated_as_the_rule_and_not_as_one_value()
+    {
+        var body = Inheriting(inForce: "closed");
+
+        Assert.Contains("only while its `status` is the value its type declares in `in-force:`.", body);
+        Assert.DoesNotContain("only while its `status` is `active`.", body);
+    }
+
+    [Fact]
     public void A_control_reaches_a_clause_through_the_standard_covering_it()
         => Assert.Contains("| `STORE` | MUST | `std-SEC` |  |  |", Coverage());
 
@@ -161,9 +174,9 @@ public class ReportsTests
 
     private static string Coverage() => Plan("coverage").Body;
 
-    private static string Inheriting()
+    private static string Inheriting(string inForce = "active")
     {
-        var plan = Reports.Plan("coverage", Corpus(), [Grandparent], Stamp);
+        var plan = Reports.Plan("coverage", Corpus(), [Grandparent(inForce)], Stamp);
         Assert.NotNull(plan);
         return plan.Body;
     }
@@ -172,7 +185,7 @@ public class ReportsTests
     /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
     /// wrote, in the folder eng filed it under.
     /// </summary>
-    private static readonly InheritedCorpus Grandparent =
+    private static InheritedCorpus Grandparent(string inForce) =>
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
             null,
@@ -205,7 +218,7 @@ public class ReportsTests
                         new InheritedRecord("gp", "dev-SHUT.json",
                             """{"fields":{"id":"dev-SHUT","status":"closed","departs-from":["pol-OLD.HOLD"]}}""")
                     ],
-                    InForce: "active")
+                    InForce: inForce)
             ]);
 
     private static ReportPlan Plan(string name)
@@ -335,6 +348,20 @@ public class ReportsTests
 
         """;
 
+    private const string Unstated =
+        """
+        ---
+        id: dev-unstated
+        type: deviation
+        tier: normative
+        owner: human:alex.doe
+        departs-from: [ pol-SCRT.LEAKED ]
+        ---
+
+        # A deviation stating no status
+
+        """;
+
     private const string Register =
         """
         # Frameworks
@@ -362,7 +389,8 @@ public class ReportsTests
                  {
                      ("policies/scrt.md", Policy), ("policies/keys.md", Second),
                      ("standards/sec.md", Standard), ("deviations/no-scanner.md", Deviation),
-                     ("deviations/old-scanner.md", Closed), ("deviations/new-scanner.md", Draft)
+                     ("deviations/old-scanner.md", Closed), ("deviations/new-scanner.md", Draft),
+                     ("deviations/unstated.md", Unstated)
                  })
         {
             var doc = Doc.Parse(rel, text, schema);
