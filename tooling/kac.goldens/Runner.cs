@@ -12,7 +12,7 @@ namespace kac.goldens;
 /// </summary>
 internal static class Runner
 {
-    /// <summary>Runs the named scenario and returns what it reported. An exception is reported, not thrown.</summary>
+    /// <summary>An exception is reported in the outcome, not thrown.</summary>
     internal static Outcome RunScenario(string name)
     {
         var outcome = new Outcome();
