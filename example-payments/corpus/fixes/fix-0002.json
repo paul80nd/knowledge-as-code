@@ -35,6 +35,6 @@
     "Why it happens": "Every ledger entry written in that hour falls on the wrong side of the cut. Refunds are the entries that show, because a refund follows an accepted return at any hour, and a capture happens only when an order ships.\n\nThe run's window and the settlement file agree for the five months the UK spends on UTC, so the fault appears only once the clocks go forward."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/payments/fixes/refund-breaks-before-midnight.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/afa1824da253b131c746dc3d2e47274277b91a50/examples/payments/fixes/refund-breaks-before-midnight.md"
   }
 }

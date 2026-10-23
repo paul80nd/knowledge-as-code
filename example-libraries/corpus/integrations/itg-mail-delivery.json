@@ -25,6 +25,6 @@
     "Exit": "The API call is one HTTP request, and [svc-notices](../services/notices.md) would point it at another vendor in a configuration change.\n\n**The wording is the lock-in.** The vendor stores every template, so a move means re-authoring each one in the new vendor's console and checking what a borrower reads. Nothing in version control says what the current wording is, so that re-authoring starts by copying it out of the console by hand.\n\nThe contract gives 60 days' notice. This estate has made the move once already: [itg-sms-notices](sms-notices.md) closed in June 2026 and its traffic came here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/library/integrations/mail-delivery.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/afa1824da253b131c746dc3d2e47274277b91a50/examples/library/integrations/mail-delivery.md"
   }
 }

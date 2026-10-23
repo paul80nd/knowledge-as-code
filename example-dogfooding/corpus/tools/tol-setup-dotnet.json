@@ -33,6 +33,6 @@
     "Where it is used": "* [svc-corpus-feed](../../services/corpus-feed.md) is packed with the SDK it installs.\n* [svc-kac](../../services/kac.md) is built, tested and packed with it.\n* [svc-marketplace](../../services/marketplace.md) is bundled with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e779e39777c862919b444df460ef023bb8aa7adb/examples/dog-fooding/tools/workflows/setup-dotnet.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/afa1824da253b131c746dc3d2e47274277b91a50/examples/dog-fooding/tools/workflows/setup-dotnet.md"
   }
 }
