@@ -16,13 +16,6 @@ public sealed class CreationSteps(Workspace ws)
     private string _template = "";
     private int _before;
 
-    /// <summary>The folders <c>manifest.yaml</c> sends a corpus from. A folder it gains belongs here too.</summary>
-    private static readonly string[] TemplateFolders =
-    [
-        ".schema", "template", ".claude/skills/technical-writing", ".claude/skills/writing-a-record",
-        ".claude/skills/writing-a-report", ".claude/skills/harvest-findings"
-    ];
-
     private const string DeviationLink = "[deviation](../deviations.md)";
 
     [AfterScenario]
@@ -88,9 +81,18 @@ public sealed class CreationSteps(Workspace ws)
     public void GivenATemplateWhoseStandardsTemplateLinksTheDeviationsPageByReference()
     {
         _template = Path.Combine(_root, "template-copy");
-        foreach (var folder in TemplateFolders)
-            Harness.CopyTree(Path.Combine(Harness.RepoRoot, folder), Path.Combine(_template, folder));
-        File.Copy(Path.Combine(Harness.RepoRoot, Manifest.FileName), Path.Combine(_template, Manifest.FileName));
+        var manifest = Manifest.LoadFrom(Path.Combine(Harness.RepoRoot, Manifest.FileName));
+        var tracked = GitFiles.Tracked(Harness.RepoRoot)
+                      ?? throw new InvalidOperationException("kac.features: the repository has no git listing.");
+
+        // The manifest withholds itself, and `new` reads it from the template's root.
+        foreach (var path in tracked.Where(p => p == Manifest.FileName
+                                                || manifest.Resolve(p) is Manifest.Overlay or Manifest.Seed))
+        {
+            var to = Path.Combine(_template, path.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(to) ?? _template);
+            File.Copy(Path.Combine(Harness.RepoRoot, path), to);
+        }
 
         var page = Path.Combine(_template, "template", "standards", "_template.md");
         var inline = File.ReadAllText(page);
