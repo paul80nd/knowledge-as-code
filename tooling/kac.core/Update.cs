@@ -92,7 +92,7 @@ public sealed record RecordIds(Func<string, string?> Sent, Func<string, string?>
 /// <param name="Unshared">Sits where the rules call overlay, and the template sends no such file.</param>
 /// <param name="Offered">Types the template declares and this corpus has not adopted.</param>
 /// <param name="Declined">Withheld for a type this corpus has not adopted.</param>
-/// <param name="DeclinedCi">A starter for a system that does not build this corpus.</param>
+/// <param name="DeclinedCiSystems">The <c>ci:</c> system of each file withheld for being absent here.</param>
 /// <param name="DeclinedPlugin">The shared half of a plugin tree this corpus reads from elsewhere.</param>
 public sealed record UpdatePlan(
     IReadOnlyList<PlannedFile> Written,
@@ -104,7 +104,7 @@ public sealed record UpdatePlan(
     TemplateFaults Faults,
     int InStep,
     int Declined,
-    int DeclinedCi,
+    IReadOnlyList<string> DeclinedCiSystems,
     int DeclinedPlugin)
 {
     public IEnumerable<PlannedFile> Copies => Written.Concat(Seeded);
@@ -141,6 +141,19 @@ public static class Update
     }
 
     /// <summary>
+    /// Null where nothing was withheld. Names each system once, in the order <c>CiSystem.All</c> gives, and never the
+    /// kind of file.
+    /// </summary>
+    public static string? CiWithheld(UpdatePlan plan)
+    {
+        if (plan.DeclinedCiSystems.Count == 0) return null;
+
+        var systems = CiSystem.All.Where(s => plan.DeclinedCiSystems.Contains(s, StringComparer.Ordinal));
+        return $"update: withheld {plan.DeclinedCiSystems.Count} file(s) for {string.Join(" and ", systems)} that this "
+               + "corpus does not hold. Which system builds it is not an update's to decide.";
+    }
+
+    /// <summary>
     /// Decided from listings, not a filesystem. <c>same</c> answers whether two copies agree, and <c>ids</c> what
     /// record a file is, because only a record may move. <c>readInPlace</c> means the corpus sits inside its template's
     /// repository, so a file whose destination is its source is shared, not copied.
@@ -160,7 +173,7 @@ public static class Update
         var unknownCi = new List<string>();
         var inStep = 0;
         var declined = 0;
-        var declinedCi = 0;
+        var declinedCi = new List<string>();
         var declinedPlugin = 0;
 
         foreach (var from in templateFiles.OrderBy(f => f, StringComparer.Ordinal))
@@ -204,7 +217,7 @@ public static class Update
 
                 if (!corpusFiles.Contains(placement.Path))
                 {
-                    declinedCi++;
+                    declinedCi.Add(ci);
                     continue;
                 }
             }

@@ -55,9 +55,10 @@ kac update --check
 a tree in any state:
 
 ```text
-update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
-update: withheld 31 file(s) for types this corpus has not adopted.
-update: withheld 3 continuous integration starter(s) this corpus does not hold. Which system builds it is not an update's to decide.
+update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 8a048c1.
+update: withheld 61 file(s) for types this corpus has not adopted.
+update: withheld 3 file(s) for github and azure-devops that this corpus does not hold. Which system builds it is not an update's to decide.
+update: this template also declares controls, data, deviations, explanations, fixes, integrations, nfrs, offerings, policies, postmortems, processes, reports, runbooks, services, tools. Take one with kac update --add-type <name>.
 this corpus is behind its framework. These would change:
 WRITE, framework files this corpus holds differently:
   .schema/adrs.yaml
@@ -67,7 +68,7 @@ run:  kac update
 A corpus already in step says so and exits `0`:
 
 ```text
-update: in step, 38 file(s) compared.
+update: in step, 56 file(s) compared.
 ```
 
 Run this in CI to find out that a corpus has fallen behind. It never pushes.

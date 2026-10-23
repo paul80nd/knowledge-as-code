@@ -375,7 +375,7 @@ public class UpdateTests
         var plan = Plan(Files("template/ci.yml"), Files());
 
         Assert.Empty(plan.Seeded);
-        Assert.Equal(1, plan.DeclinedCi);
+        Assert.Equal([CiSystem.GitHub], plan.DeclinedCiSystems);
         Assert.Equal(0, plan.Declined);
     }
 
@@ -385,7 +385,41 @@ public class UpdateTests
         var plan = Plan(Files("template/ci.yml"), Files("ci.yml"), policy: CorpusDescriptor.Full);
 
         Assert.Equal(["ci.yml"], plan.Seeded.Select(f => f.To));
-        Assert.Equal(0, plan.DeclinedCi);
+        Assert.Empty(plan.DeclinedCiSystems);
+    }
+
+    [Fact]
+    public void Withheld_ci_files_are_named_by_the_system_they_belong_to_and_not_by_kind()
+    {
+        var manifest = new Manifest
+        {
+            Rules =
+            [
+                new ManifestRule(["template/azure-pipelines.yml"], Manifest.Seed, "", CiSystem.AzureDevOps),
+                new ManifestRule(["template/.github/workflows/kac.yml"], Manifest.Seed, ".github/workflows/",
+                    CiSystem.GitHub),
+                new ManifestRule(["template/.github/dependabot.yml"], Manifest.Seed, ".github/", CiSystem.GitHub)
+            ]
+        };
+
+        var plan = Update.Plan(
+            Files("template/azure-pipelines.yml", "template/.github/workflows/kac.yml",
+                "template/.github/dependabot.yml"),
+            Files(), manifest, new CorpusDescriptor(), Everything(), CorpusDescriptor.Cautious,
+            readInPlace: false, _ => false, Anonymous);
+
+        Assert.Equal(
+            "update: withheld 3 file(s) for github and azure-devops that this corpus does not hold. Which "
+            + "system builds it is not an update's to decide.",
+            Update.CiWithheld(plan));
+    }
+
+    [Fact]
+    public void Nothing_is_said_where_no_ci_file_was_withheld()
+    {
+        var plan = Plan(Files("template/ci.yml"), Files("ci.yml"));
+
+        Assert.Null(Update.CiWithheld(plan));
     }
 
     [Fact]
