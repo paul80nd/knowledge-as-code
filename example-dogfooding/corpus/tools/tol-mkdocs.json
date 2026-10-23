@@ -29,9 +29,9 @@
   "sections": {
     "What we use it for": "The site documents `kac`, and MkDocs is here because it is what tool documentation uses. The site is not a corpus, so `publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.\n\n`strict: true` in `mkdocs.yml` turns a dead link into a failed build. MkDocs reports a page the navigation does not list at INFO only, so `NavigationTests` in `kac.tests` covers that case instead.",
     "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output and not a redistribution of the generator, so nothing follows for what is published.",
-    "Where it is used": "* [svc-docs-site](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/dog-fooding/services/docs-site.md) is built with it."
+    "Where it is used": "* [svc-docs-site](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/dog-fooding/services/docs-site.md) is built with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/dog-fooding/tools/docs/mkdocs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/dog-fooding/tools/docs/mkdocs.md"
   }
 }

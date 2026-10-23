@@ -24,14 +24,14 @@
     ]
   },
   "sections": {
-    "What it does": "Search reaches the whole consortium. A borrower standing in one [branch](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/glossary/example-libraries.md#branch) sees stock in every other, and may place a hold on any of it.",
+    "What it does": "Search reaches the whole consortium. A borrower standing in one [branch](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/glossary/example-libraries.md#branch) sees stock in every other, and may place a hold on any of it.",
     "Who it is for": "Anyone. The catalogue answers a search without a card, so a person who has not joined yet still uses this.",
     "Why it exists": "A borrower who cannot find a title does not borrow it. Discovery is the only surface most borrowers ever use, and every other offering starts here.",
     "Surfaces": "The public catalogue at `catalogue.example.com`, and the same pages in the kiosk profile on the branch terminals.",
-    "Where the detail lives": "* **Implemented by**: [svc-catalogue-api](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/services/catalogue-api.md), [svc-catalogue-web](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/services/catalogue-web.md), [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/services/covers-cdn.md), [svc-search](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/services/search.md)\n* **Specified in**: [ADO#1204](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1204), [ADO#1338](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1338)",
+    "Where the detail lives": "* **Implemented by**: [svc-catalogue-api](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/services/catalogue-api.md), [svc-catalogue-web](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/services/catalogue-web.md), [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/services/covers-cdn.md), [svc-search](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/services/search.md)\n* **Specified in**: [ADO#1204](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1204), [ADO#1338](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1338)",
     "Known limitations": "A title the supplier has sent no jacket image for renders a placeholder."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/library/offerings/discovery.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/library/offerings/discovery.md"
   }
 }

@@ -88,7 +88,7 @@ Cite as `std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it`.
 
 Status: active.
 
-Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export changed has moved its content-version (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
+Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 ### A checkout leaves no credential behind
 
@@ -527,13 +527,14 @@ Cite as `std-PROSE.where-this-repository-differs-from-microsoft`.
 
 Status: active.
 
-Controls: `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active).
+Controls: `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active).
 
 ### A producer's move obliges every consumer in the same pull request
 
 Cite as `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request`.
 
 - A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in the pull request moving the producer's `content-version`.
+- That consumer **MUST** move its own `content-version` wherever its `resolved:` lock moves, by the part the producer moved, because its export now publishes what the producer changed.
 - That consumer **MUST** move its `version:` range as well wherever the producer is below 1.0.0 and its minor moved.
 - A corpus here **MUST NOT** publish a `content-version` that a committed range in this repository refuses.
 - You **SHOULD** delete `.imports/` in every consumer before you open the pull request, unless you leave the proof to the pull request's CI run.
@@ -580,7 +581,7 @@ Cite as `std-VERS.what-a-move-of-each-stamp-means`.
 - What a corpus publishes **MUST** be read as its export, and never as the repository its records are readable in.
 - A change confined to a section a record's type leaves out of `export:` **MUST NOT** move `content-version`.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added, and its patch a change of wording.
-- `content-version` **MUST** move where a skill in the bundle changes what it tells a reader to do. `kac bundle` stamps the plugin with it, so a reader takes a changed skill only where it moves.
+- `content-version` **MUST** move where a change reaches a skill, a hook or the manifest its bundle includes. Its patch **MUST** mark a change of wording, and its minor a change to what the component tells a reader to do. `kac bundle` stamps the plugin with it, so a reader takes a changed skill only where it moves.
 - A change to a field's accepted value format, its name, or its removal **MUST** move `content-version`'s major where the change reaches a record whose type names that field under `export:`, and its patch where it reaches none.
 - A corpus below 1.0.0 **MUST** move its minor where the rule above asks for its major, because reaching 1.0.0 is a statement about that corpus's stability rather than about the change in front of you.
 - A field added **MUST** move `content-version`'s minor where a record's type names it under `export:`, and its patch where none does.
@@ -597,7 +598,7 @@ Cite as `std-VERS.what-a-move-of-each-stamp-means`.
 
 Cite as `std-VERS.which-stamps-move-together-and-which-move-alone`.
 
-- `content-version` and the `resolved:` lock of every consumer of that corpus **MUST** move in one pull request.
+- `content-version`, the `resolved:` lock of every consumer of that corpus, and each of those consumers' own `content-version` **MUST** move in one pull request.
 - `version:` in `manifest.yaml` and the `upstream.template-version` of every corpus here **MUST** move in one pull request.
 - `version:` under `export:` in a `.schema/<type>.yaml` and the `shapeVersion` an export publishes for that type **MUST** be one number.
 - `descriptor-version`, `formatVersion` and a `shapeVersion` **MUST NOT** oblige any other stamp to move.
@@ -746,7 +747,7 @@ Cite as `eng:std-DEPLOY.production-changes-through-the-pipeline-alone`.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -908,7 +909,7 @@ Cite as `eng:std-NETTST.the-framework-and-the-project-layout`.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -950,7 +951,7 @@ Cite as `eng:std-OBS.somebody-acts-on-every-alert`.
 Cite as `eng:std-OBS.telemetry-carries-no-personal-data`.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/4e6d66e4b6d4c846edcb9be584ef9b1aab033114/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
