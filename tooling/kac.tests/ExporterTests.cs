@@ -1176,6 +1176,93 @@ public class ExporterTests
         Assert.Contains("lexicon/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
     }
 
+    [Fact]
+    public void A_consumed_type_whose_lines_arrive_with_no_record_files_refuses_and_writes_nothing()
+    {
+        var plan = Merged(Corpus(), Holding(Consumed("eng", TheirLine)));
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' arrives from eng with 1 part line and no record files. "
+            + "Re-export and re-pack eng, then run kac restore.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_type_its_manifest_counts_records_for_and_no_record_file_arrived_refuses()
+    {
+        var theirs = Holding(Consumed("eng"));
+        theirs = theirs with { Types = [theirs.Types[0] with { StatedRecords = 3 }] };
+
+        var plan = Merged(Corpus(), theirs);
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' arrives from eng with no record files, and its manifest counts 3 records. "
+            + "Re-export and re-pack eng, then run kac restore.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_type_that_lost_its_record_files_refuses_beside_this_corpus_s_own_records()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Holding(Consumed("eng", TheirLine)));
+
+        Assert.Empty(plan.Files);
+        Assert.StartsWith("'glossary' arrives from eng with 1 part line", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_producer_s_copy_with_no_record_files_refuses_where_the_grandparent_s_files_arrive_directly()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Holding(Consumed("eng", TheirInheritedLine)),
+            Holding(Consumed("gp", OldLine), Old));
+
+        Assert.Empty(plan.Files);
+        Assert.StartsWith("'glossary' arrives from eng with 1 part line and no record files.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_type_with_fewer_record_files_than_its_manifest_counts_refuses()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        theirs = theirs with { Types = [theirs.Types[0] with { StatedRecords = 3 }] };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), theirs);
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' arrives from eng with 1 of the 3 record files its manifest counts. "
+            + "Re-export and re-pack eng, then run kac restore.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_type_with_no_records_and_no_lines_is_skipped_without_a_word()
+    {
+        var plan = Merged(Corpus(), Holding(Consumed("eng")));
+
+        Assert.Empty(plan.Refused);
+        Assert.Empty(plan.Types);
+        Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
+    }
+
+    [Fact]
+    public void A_consumed_type_whose_record_files_all_arrived_is_exported_whole()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        theirs = theirs with { Types = [theirs.Types[0] with { StatedRecords = 1, StatedParts = 1 }] };
+
+        var plan = Merged(Corpus(), theirs);
+
+        Assert.Empty(plan.Refused);
+        Assert.Equal(1, Assert.Single(plan.Types).Records);
+        Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+    }
+
     /// <summary>Gp's line as gp published it, before eng stamped it into <c>TheirInheritedLine</c>.</summary>
     private const string OldLine = """{"id":"gls-old.alpha","record":"gls-old","seeAlso":null,"part":"alpha"}""";
 
