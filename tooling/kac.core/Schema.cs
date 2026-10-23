@@ -466,7 +466,7 @@ public sealed class TypeSchema
 
     public PartSpec DeclaredParts => Parts
                                      ?? throw new InvalidOperationException(
-                                         $"type '{TypeName}' declares no export.parts: to read.");
+                                         $"type '{TypeName}' declares no parts: to read.");
 
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
