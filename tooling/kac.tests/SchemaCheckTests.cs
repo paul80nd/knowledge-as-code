@@ -634,6 +634,55 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Line(("tier", "front.tier"))));
 
     [Fact]
+    public void A_line_source_naming_a_list_field_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("shelves", "front.shelves"),
+            fields: [("shelves", new FieldSpec { Name = "shelves", Type = "list", Of = "string" })])));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("at 'front.shelves', which is a list", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_a_list_of_objects_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("signoffs", "front.signoffs"), fields:
+        [
+            ("signoffs", new FieldSpec
+            {
+                Name = "signoffs", Type = "list", Of = "object",
+                Entry = [new FieldSpec { Name = "on", Type = "date" }]
+            })
+        ])));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("at 'front.signoffs', which is a list", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_a_universal_list_field_is_reported()
+    {
+        var schema = WithTiers(Line(("tags", "front.tags")));
+        var universal = new Dictionary<string, FieldSpec>(schema.Universal)
+        {
+            ["tags"] = new() { Name = "tags", Type = "list", Of = "string" }
+        };
+        var found = Assert.Single(Check(new Schema
+        {
+            Checks = schema.Checks, Tiers = schema.Tiers, UniversalOrder = ["tier", "tags"], Universal = universal,
+            ByFolder = schema.ByFolder
+        }));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("at 'front.tags', which is a list", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_a_scalar_field_passes()
+        => Assert.Empty(Check(Line(("shelf", "front.shelf"),
+            fields: [("shelf", new FieldSpec { Name = "shelf", Type = "string" })])));
+
+    [Fact]
     public void A_line_source_naming_the_title_as_a_field_is_reported()
         => Assert.Contains("'front.title'", Assert.Single(Check(Line(("title", "front.title")))).Message);
 
@@ -748,8 +797,10 @@ public class SchemaCheckTests
     /// A type whose parts and export are otherwise sound, carrying the one line entry under test. Every other key
     /// resolves, so the single finding a test asserts is the one it declared.
     /// </summary>
-    private static TypeSchema Line((string Key, string Source) entry, PartSpec? parts = null)
+    private static TypeSchema Line((string Key, string Source) entry, PartSpec? parts = null,
+        (string Name, FieldSpec Spec)[]? fields = null)
         => Widgets(
+            fields: fields,
             sections: ["Terms"],
             parts: parts ?? new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" },
             export: new ExportSpec

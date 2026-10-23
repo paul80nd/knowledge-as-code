@@ -45,6 +45,7 @@ such as a `rules:` entry nothing runs or an `id.style:` no code reads. Every fin
 | An `export.parts:` with no `line:` beneath it, or a `line:` key naming no source         | `schema-shape`       |
 | A `line:` source outside the vocabulary the exporter fills                               | `schema-dispatch`    |
 | A `front.<field>` naming a field neither the type nor `_universal.yaml` declares         | `schema-shape`       |
+| A `front.<field>` naming a list field, where a line reads one value                      | `schema-shape`       |
 | A `column.<Header>` at a header the type's `parts.columns:` does not declare             | `schema-shape`       |
 | A `part.lead`, `part.bullets` or `part.aside.<Label>` on a table-sourced type            | `schema-shape`       |
 | A `part.aside.<Label>` at a label the type's `parts.asides:` does not declare            | `schema-shape`       |

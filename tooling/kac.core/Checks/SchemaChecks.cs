@@ -230,11 +230,17 @@ public static class SchemaChecks
 
             if (PartLineSource.Argument(source, PartLineSource.FrontPrefix) is { } field)
             {
-                if (schema.EffectiveField(t, field) is null)
+                var spec = schema.EffectiveField(t, field);
+                if (spec is null)
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                         $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and neither the type "
                         + "nor '_universal.yaml' declares such a field. A record's heading is 'part.text' rather "
                         + "than a field."));
+                else if (spec.Type == "list")
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', which is a list. A "
+                        + "line reads one value from a field, so the key would be null on every line. Name a field "
+                        + "holding one value, or drop the key: the record file already contains the list."));
                 return;
             }
 

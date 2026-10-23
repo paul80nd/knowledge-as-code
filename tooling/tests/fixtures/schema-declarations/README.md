@@ -36,8 +36,8 @@ so the golden is the schema pass and nothing else.
 
   **The `line:` vocabulary is pinned by unit tests.** Reaching those checks needs a type that locates its parts, and
   giving `widgets` a `parts:` block trades the `export.parts:` fault above for two others: a fidelity read from
-  nowhere, and the missing `line:`. `SchemaCheckTests` covers each source, and a fixture type existing only to host
-  them would pin those same findings under a second name.
+  nowhere, and the missing `line:`. `SchemaCheckTests` covers each source. A list field on a line has a fixture of its
+  own, `part-line-list`, because the fault needs a record filling the field to show.
 * **Versus** — a disambiguation against `widgets` itself. The other way a pair goes wrong, both sides declaring it,
   needs two types and is pinned by a unit test instead.
 * **Unknown** — `stability:` at the top of the file and `unique:` on a field, at two levels, because the vocabulary is

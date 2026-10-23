@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "validated": 1,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 1,
+    "warnings": 0,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": ".schema/sprockets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', which is a list. A line reads one value from a field, so the key would be null on every line. Name a field holding one value, or drop the key: the record file already contains the list."
+    }
+  ]
+}

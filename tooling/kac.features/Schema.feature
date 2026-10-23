@@ -45,3 +45,11 @@ Scenario: A schema that promises what the tool cannot deliver is reported agains
     | .schema/widgets.yaml |      | schema-unreadable  | rule 'widgets-are-documented' has an expr but no severity. Say whether it fails a build or advises an author.                                                                                                                                                  |
     | .schema/widgets.yaml |      | schema-unreadable  | rule 'widgets-are-named' has an expr but no message: an author has to be told what to do about it.                                                                                                                                                             |
     | .schema/widgets.yaml |      | schema-shape       | type 'widgets' declares a 'versus:' against itself: a disambiguation has two sides.                                                                                                                                                                            |
+
+Scenario: A part line naming a list field is reported against the type, not the record filling it
+  Given the part-line-list fixture corpus
+  When I validate the corpus
+  Then validation reports 1 documents and 0 skipped
+  And the findings are exactly:
+    | file                   | line | check        | message                                                                                                                                                                                                                                                              |
+    | .schema/sprockets.yaml |      | schema-shape | type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', which is a list. A line reads one value from a field, so the key would be null on every line. Name a field holding one value, or drop the key: the record file already contains the list. |
