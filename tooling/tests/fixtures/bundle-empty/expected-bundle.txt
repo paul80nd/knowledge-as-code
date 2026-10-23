@@ -12,6 +12,6 @@ bundle: trimmed hooks: the export carries no glossary.
 bundle: every component was trimmed
 bundle.json names each one and the type it needed.
 
-# The corpus states no content version, so the plugin keeps the one its own manifest states rather than
-# being stamped with nothing.
-bundle: the export states no contentVersion
+# The corpus states no content version, so the plugin keeps the one its own manifest states, and the
+# warning names it.
+bundle: the export states no content version, so the plugin keeps version 0.0.1 from .claude-plugin/plugin.json.
