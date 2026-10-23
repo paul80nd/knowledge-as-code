@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 38,
+    "errors": 39,
     "warnings": 0,
     "infos": 0
   },
@@ -222,6 +222,13 @@
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
+      "check": "schema-shape",
+      "message": "field 'signoffs' declares 'of: object' and 'ref:', which is read from scalar entries only. Every entry of this field is an object, so the key would check nothing. Drop the key, or declare the field 'of: id'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
       "check": "schema-dispatch",
       "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it. Give it an 'expr:', implement it as a rule class, or drop the severity and leave it declared as an intention."
     },
@@ -255,21 +262,21 @@
     },
     {
       "file": ".schema/widgets.yaml",
-      "line": 134,
+      "line": 142,
       "severity": "error",
       "check": "schema-dispatch",
       "message": "rule 'widgets-are-brief' on type 'widgets' declares 'max-words:', and an 'expr:' rule reads no config. Drop the key."
     },
     {
       "file": ".schema/widgets.yaml",
-      "line": 141,
+      "line": 149,
       "severity": "error",
       "check": "schema-dispatch",
       "message": "rule 'y-statement-present' on type 'widgets' declares 'postures:', and its rule class reads only 'max-words'. Drop the key."
     },
     {
       "file": ".schema/widgets.yaml",
-      "line": 141,
+      "line": 149,
       "severity": "error",
       "check": "schema-dispatch",
       "message": "rule 'y-statement-present' on type 'widgets': 'max-words' is 'five', and a word limit is a whole number above zero. Write one, such as 60. The rule checks no record until this is fixed."

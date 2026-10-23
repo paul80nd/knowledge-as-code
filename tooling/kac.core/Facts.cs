@@ -25,9 +25,15 @@ public sealed class Facts(Doc doc, DateOnly today)
     public bool Present(string name) => Entries(name) > 0;
 
     /// <summary>
-    /// Zero for an absent field, so a rule that must stay quiet on one guards with <c>present()</c> first.
+    /// Every entry of a list, whatever its shape, and one for a scalar. Zero for an absent field, and for a value
+    /// <c>required-field</c> reads as absent, so a rule that must stay quiet on one guards with <c>present()</c> first.
     /// </summary>
-    public int Entries(string name) => doc.FrontList(name).Count;
+    public int Entries(string name) => doc.FrontNode(name) switch
+    {
+        null => 0,
+        YamlSequenceNode seq => seq.Children.Count,
+        var node => ValueChecks.IsAbsent(node) ? 0 : 1
+    };
 
     /// <summary>Case-insensitive, matching <c>required-section</c>.</summary>
     public bool Section(string title) =>
