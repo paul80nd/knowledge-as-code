@@ -13,7 +13,7 @@ sources:
   - { resource: example-dogfooding, version: "0.75.10" }
   - { resource: example-engineering, version: "0.38.3" }
 verified:
-  - { at: 2026-10-23T16:00:00Z, by: human:paul.law }
+  - { at: 2026-10-23T13:32:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
