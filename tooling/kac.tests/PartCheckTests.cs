@@ -84,6 +84,22 @@ public class PartCheckTests
     }
 
     [Fact]
+    public void A_modal_named_in_a_code_span_is_not_a_second_modal()
+        => Assert.Empty(Run(Header + "| `DEVI` | **MUST** record a departure from a `MUST` or `MUST NOT`. |\n"));
+
+    [Fact]
+    public void A_bold_second_modal_beside_a_code_span_is_still_two_obligations()
+    {
+        var found = Run(Header + "| `LOGS` | **MUST** name `SHOULD` and **MUST** be retained. |\n");
+        Assert.Equal("clause-compound", Assert.Single(found).Check.Value);
+        Assert.Contains("carries a second 'MUST'", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_clause_opening_with_a_code_span_is_read_without_cutting_its_first_word()
+        => Assert.Empty(Run(Header + "| `LOGS` | `SHOULD` go. |\n"));
+
+    [Fact]
     public void An_id_that_is_not_a_code_span_is_a_word_rather_than_a_handle()
     {
         var found = Run(Header + "| LOGS | **MUST** be retained. |\n");

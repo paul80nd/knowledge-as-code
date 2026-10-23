@@ -63,6 +63,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `mirrors-section:`, `mirrors-citations:` and `reciprocal:` each read a list entry as one plain value. On a field
   declared `of: object`, each passed in silence and checked no record. `schema-shape` now reports each against the
   type file, or against `_universal.yaml`. Drop the key, or declare the field `of: id`.
+- **`kac validate` reads a modal in a code span as a word the clause names.** `clause-compound` warned on a policy
+  clause such as "**MUST** record a deviation before departing from a `MUST` or `MUST NOT`", reading the backticked
+  keyword as a second modal. The template's `pol-DEVI` seed has that wording, so every corpus `kac new` created warned
+  from its first `validate`. A clause row now drops its code spans before looking for a second modal, as a rule's
+  bullets already did. A second modal written plain or bold still warns.
 
 ## 0.37.0 - 2026-10-21
 
