@@ -365,8 +365,8 @@ names, and an entry key containing a list is an array inside it.
 arrives exactly as written.
 
 **A link in a section arrives inline.** An inline link arrives with its target exactly as the author wrote it. A
-relative target is relative to the record's `path`. A reference link, full, collapsed or shortcut, arrives as an inline
-link to the target its definition names, with the definition's title. An image reference arrives as an inline image.
+relative target is relative to the record's `path`. A full, collapsed or shortcut reference link arrives as an inline
+link to the target its definition states, with the definition's title. An image reference arrives as an inline image.
 A reference with no definition, and one inside a code span, arrives as written. The definitions themselves never
 travel.
 

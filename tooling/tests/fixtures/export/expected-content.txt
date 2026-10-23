@@ -90,9 +90,10 @@
 .dist/export/manifest.json :: "Purpose": "summary"
 
 # The definitions sit in a block at the foot of the record, which is inside whichever section is written
-# last. They render as nothing, so the section a consumer reads as prose ends on the author's words.
-.dist/export/policies/pol-RTNT.json :: "Exceptions": "A store under a legal hold outlives its retention period. We record the hold against the store, and the period resumes on the day the hold lifts."
-.dist/export/policies/pol-RTNT.json :: !gls-estate
+# last. They render as nothing, so the section a consumer reads as prose ends on the author's words. A
+# reference link in that prose travels inline, to the target its definition states.
+.dist/export/policies/pol-RTNT.json :: "Exceptions": "A store under a legal hold outlives its retention period. We record the hold against the store, as [gls-estate](../glossary/estate.md) defines one, and the period resumes on the day the hold lifts."
+.dist/export/policies/pol-RTNT.json :: ![gls-estate]:
 
 # A clause's cross-reference has no body to be read from, so the id it names stays inside the words.
 .dist/export/policies/clauses.jsonl :: "clause":"MUST record a legal hold against whatever gls-estate calls a store"

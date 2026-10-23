@@ -312,7 +312,17 @@ public class ExporterTests
             ExportedScope("Run [`kac` *now*][kac].\n\n[kac]: ../kac.md"));
 
     [Fact]
-    public void A_reference_link_wrapped_across_lines_arrives_on_one_line()
+    public void A_reference_with_empty_text_travels_as_an_inline_link_with_empty_text()
+        => Assert.Equal("Read [](../guide.md) and ![](flow.png).",
+            ExportedScope("Read [][guide] and ![][flow].\n\n[guide]: ../guide.md\n[flow]: flow.png"));
+
+    [Fact]
+    public void An_image_reference_inside_a_reference_link_travels_with_both_inline()
+        => Assert.Equal("See [![the flow](flow.png)](../guide.md).",
+            ExportedScope("See [![the flow][flow]][guide].\n\n[guide]: ../guide.md\n[flow]: flow.png"));
+
+    [Fact]
+    public void A_reference_link_wrapped_across_lines_travels_on_one_line()
         => Assert.Equal("Read [the long guide](../guide.md) first.",
             ExportedScope("Read [the long\nguide][guide] first.\n\n[guide]: ../guide.md"));
 

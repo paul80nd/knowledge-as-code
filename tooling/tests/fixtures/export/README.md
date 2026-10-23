@@ -42,6 +42,8 @@ differently.
   link into a clause lands on the section holding the table.
 * Its line carries `level`, and a term line has no key for it. Alignment stays behind: a reference resolves through
   `frameworks.md`, and no consumer receives that page.
+* Its `Exceptions` cites `[gls-estate]` by reference, and the definition stays behind at the foot of the record. The
+  export writes the link inline, to the target that definition states.
 
 **A third type, keeping no parts at all.** `prc-add-a-title` is an ordinary process, and it is here because neither
 glossary nor policy can show what a type with nothing to flatten writes.

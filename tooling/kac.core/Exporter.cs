@@ -567,11 +567,12 @@ public static class Exporter
                 ? JsonValue.Create(Absent(doc.H1))
                 : Value(doc.FrontNode(name), schema.EffectiveField(t, name));
 
+        var edits = Edits(doc);
         var sections = new Dictionary<string, string?>(StringComparer.Ordinal);
         foreach (var (name, fidelity) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
-                sections[name] = Carry(Body(doc, section), fidelity);
+                sections[name] = Carry(Body(doc, section, edits), fidelity);
 
         return new ExportRecord(t.Key, doc.Rel, Trust(doc, export), fields, sections, Links(link));
     }
@@ -636,20 +637,18 @@ public static class Exporter
             : null;
 
     /// <summary>
-    /// Without its link reference definitions, which sit at the foot and so inside the last section. Each reference
-    /// link is written inline, so none loses its target. Both come from the AST, so code is left as written.
+    /// The section's source with <c>edits</c> applied, so its link reference definitions are gone and each reference
+    /// link is inline.
     /// </summary>
-    private static string Body(Doc doc, Section section)
+    private static string Body(Doc doc, Section section, List<(int Start, int End, string Replacement)> edits)
     {
         var kept = new StringBuilder();
         var at = section.BodyStart;
 
-        foreach (var (start, end, replacement) in doc.DefinitionSpans
-                     .Select(d => (d.Start, d.End, Replacement: ""))
-                     .Concat(ReferenceTails(doc))
-                     .Where(e => e.Start >= section.BodyStart && e.Start < section.BodyEnd)
-                     .OrderBy(e => e.Start))
+        foreach (var (start, end, replacement) in edits.Where(e =>
+                     e.Start >= section.BodyStart && e.Start < section.BodyEnd))
         {
+            // An edit starting inside one already applied is dropped, so no source text is written twice.
             if (start < at) continue;
             kept.Append(doc.Text[at..start]).Append(replacement);
             at = Math.Min(end, section.BodyEnd);
@@ -659,21 +658,28 @@ public static class Exporter
     }
 
     /// <summary>
-    /// The span after each reference link's text, <c>][label]</c>, <c>][]</c> or <c>]</c>, with the inline
-    /// <c>](target)</c> to write over it. The target and title are copied from the definition's source.
+    /// Every edit an exported section takes, in source order. A link reference definition sits at the foot, so inside
+    /// the last section, and is cut. The span after each reference link's text, <c>][label]</c>, <c>][]</c> or
+    /// <c>]</c>, becomes <c>](target "title")</c>, copied from its definition's source. Both are read from the AST, so
+    /// a look-alike in a code span or a fenced block is left as written.
     /// </summary>
-    private static IEnumerable<(int Start, int End, string Replacement)> ReferenceTails(Doc doc)
+    private static List<(int Start, int End, string Replacement)> Edits(Doc doc)
     {
+        var edits = doc.DefinitionSpans.Select(d => (d.Start, d.End, Replacement: "")).ToList();
+
         foreach (var link in doc.Ast.Descendants<LinkInline>())
         {
             if (link.Reference is not { } definition) continue;
 
+            // Empty link text closes straight after the opening `[`, or `![` for an image.
             var close = link.LastChild is { } last ? last.Span.End + 1 : link.Span.Start + (link.IsImage ? 2 : 1);
             var target = Source(doc.Text, definition.UrlSpan);
             var title = string.IsNullOrEmpty(definition.Title) ? "" : " " + Source(doc.Text, definition.TitleSpan);
 
-            yield return (close, link.Span.End + 1, $"]({target}{title})");
+            edits.Add((close, link.Span.End + 1, $"]({target}{title})"));
         }
+
+        return [.. edits.OrderBy(e => e.Start)];
 
         static string Source(string text, SourceSpan span) => text.Substring(span.Start, span.Length);
     }
