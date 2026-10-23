@@ -6,7 +6,7 @@ status: active
 verifies: [ std-CI ]
 mechanism: ci
 frequency: per-pr
-evidence: The `lint` job's log on the pull request, under the step "Check the workflows and Dependabot for insecure patterns".
+evidence: The `lint` job's log, under the step "Check the workflows and dependabot.yml for insecure patterns".
 applies-to:
   - all
 review-by: "2027-10-23"

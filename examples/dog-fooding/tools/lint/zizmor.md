@@ -35,7 +35,8 @@ on purpose is suppressed by an inline `# zizmor: ignore[...]` comment, with the 
 
 ## Where it is used
 
-Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and no service ships it.
+Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and
+no service ships it.
 
 ## Alternatives considered
 

@@ -90,9 +90,9 @@ jobs:
 ```
 
 Each action is pinned to a commit, because a tag can be moved to other code. A `.github/dependabot.yml` that tracks
-`github-actions` moves each pin and the version comment beside it. The one `kac new` writes waits seven days after a
-release before it proposes it, so a compromised release has time to be withdrawn. The checkout sets
-`persist-credentials: false`, so no later step can push with the job's token.
+`github-actions` moves each pin and the version comment beside it. The `.github/dependabot.yml` that `kac new` writes
+proposes a release only once it is seven days old, so a compromised release has time to be withdrawn. The checkout
+sets `persist-credentials: false`, so no later step can push with the job's token.
 
 ## Azure Pipelines
 

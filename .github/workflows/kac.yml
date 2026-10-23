@@ -233,8 +233,8 @@ jobs:
           "$(go env GOPATH)"/bin/actionlint
 
       # The token lets zizmor ask GitHub whether each pinned commit belongs to the action it names.
-      # The `.github` folders, so zizmor audits each dependabot.yml as well as the workflows.
-      - name: Check the workflows and Dependabot for insecure patterns
+      # Naming each `.github` folder makes zizmor audit the dependabot.yml beside the workflows.
+      - name: Check the workflows and dependabot.yml for insecure patterns
         env:
           GH_TOKEN: ${{ github.token }}
         run: zizmor .github template/.github
