@@ -131,7 +131,7 @@ public static class Exporter
             if (frameworksFile is not null)
                 files.Add(new ExportFile(frameworksFile, string.Concat(frameworks.Select(l => l + "\n"))));
 
-            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile) with
+            types.Add(Entry(key, local, corpus.Schema, consumed, records, lines.Count, partsFile) with
             {
                 FrameworksFile = frameworksFile
             });
@@ -303,9 +303,37 @@ public static class Exporter
                               + $"{where}. A merged file cannot promise both. Bring both to one fidelity, or "
                               + "drop the type from this corpus.");
             }
+
+            found.AddRange(InForceDisagreement(corpus, consumed, key));
         }
 
         return found;
+    }
+
+    /// <summary>
+    /// The manifest entry states one in-force status for every record under the type. A corpus stating none, such as
+    /// a producer exported by an older <c>kac</c>, agrees with any.
+    /// </summary>
+    private static IEnumerable<string> InForceDisagreement(
+        LoadedCorpus corpus, List<InheritedCorpus> consumed, string key)
+    {
+        var stated = new List<(string Where, string InForce)>();
+
+        if (corpus.Adopted.FirstOrDefault(t => t.Key == key && t.Export is not null) is { } local
+            && corpus.Schema.EffectiveField(local, "status")?.InForce is { } own)
+            stated.Add((corpus.Descriptor.Shortcode ?? "this corpus", own));
+
+        foreach (var from in consumed)
+            if (from.Types.FirstOrDefault(t => t.Type == key)?.InForce is { } theirs)
+                stated.Add((from.Shortcode, theirs));
+
+        if (stated.Count == 0) yield break;
+
+        var first = stated[0];
+        foreach (var (where, inForce) in stated.Skip(1).Where(s => !string.Equals(s.InForce, first.InForce, StringComparison.Ordinal)))
+            yield return $"'{key}' is in force at '{first.InForce}' in {first.Where} and at '{inForce}' in "
+                         + $"{where}. A merged file cannot state both. Bring both to one in-force status, or drop "
+                         + "the type from this corpus.";
     }
 
     /// <summary>A part line naming a record whose file the plan does not write.</summary>
@@ -384,8 +412,11 @@ public static class Exporter
         return consumed.SelectMany(c => c.Types).FirstOrDefault(t => t.Type == key)?.PartsFile;
     }
 
-    /// <summary>Counts what this corpus wrote and what it inherited together.</summary>
-    private static ExportedType Entry(string key, TypeSchema? local, List<InheritedCorpus> consumed,
+    /// <summary>
+    /// Counts what this corpus wrote and what it inherited together. A type this corpus did not adopt states the
+    /// in-force status its producer published.
+    /// </summary>
+    private static ExportedType Entry(string key, TypeSchema? local, Schema schema, List<InheritedCorpus> consumed,
         int records, int parts, string? partsFile)
     {
         if (local?.Export is { } export)
@@ -395,13 +426,15 @@ public static class Exporter
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartKey),
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartId),
                 partsFile is null ? null : KeyFrom(export, PartLineSource.PartSeeAlso),
-                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal));
+                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal),
+                InForce: schema.EffectiveField(local, "status")?.InForce);
 
         var theirs = consumed.SelectMany(c => c.Types).First(t => t.Type == key);
 
         return new ExportedType(
             key, theirs.ShapeVersion, records, parts, theirs.Dir, partsFile,
-            theirs.RecordKey, theirs.PartKey, theirs.IdKey, theirs.SeeAlsoKey, theirs.Sections);
+            theirs.RecordKey, theirs.PartKey, theirs.IdKey, theirs.SeeAlsoKey, theirs.Sections,
+            InForce: theirs.InForce);
     }
 
     /// <summary>

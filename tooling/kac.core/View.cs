@@ -39,12 +39,6 @@ public static class View
     private const string Controls = "controls";
 
     /// <summary>
-    /// The status <c>.schema/standards.yaml</c> declares as <c>in-force</c>. The export does not state it, so it is
-    /// fixed here for the <c>standards@2</c> every view component pins.
-    /// </summary>
-    private const string InForce = "active";
-
-    /// <summary>
     /// One rule as a standards part line states it at shape 2. A component declaring the view pins that shape, so
     /// these keys are the shape's own.
     /// </summary>
@@ -117,8 +111,9 @@ public static class View
         text.Append("- **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its "
                     + "reason conforms, and the departure is a judgement call.\n");
         text.Append("- **MAY** permits, and a change cannot break it.\n");
-        text.Append($"- A standard is in force at status `{InForce}`. A finding under any other status is not in "
-                    + "force.\n");
+        text.Append(Type(source, Standards)?.InForce is { } inForce
+            ? $"- A standard is in force at status `{inForce}`. A finding under any other status is not in force.\n"
+            : "- The export does not state which status puts a standard in force.\n");
         text.Append(controls is null
             ? "- This corpus exports no controls, so no rule here has a check recorded against it.\n"
             : "- A standard's controls are listed with each one's mechanism and status. A control checks a rule only "

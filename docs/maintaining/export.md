@@ -35,6 +35,7 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
 * a consumed corpus with nothing restored
 * a consumed corpus at an export format this build does not read
 * a type exported by two corpora at two shapes, or with a section at two fidelities
+* a type two corpora state at two in-force statuses
 * one corpus arriving twice, at two versions
 
 ## What it promises a consumer

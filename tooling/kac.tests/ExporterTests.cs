@@ -1128,6 +1128,17 @@ public class ExporterTests
     }
 
     [Fact]
+    public void A_type_this_corpus_did_not_adopt_states_the_in_force_status_its_producer_published()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        var accepted = theirs with { Types = [theirs.Types[0] with { InForce = "accepted" }] };
+
+        var plan = Exporter.Plan(Corpus(PolicyType()), null, null, Run, [accepted]);
+
+        Assert.Equal("accepted", Assert.Single(plan.Types).InForce);
+    }
+
+    [Fact]
     public void A_type_exported_at_two_shapes_refuses_and_writes_nothing()
     {
         var theirs = Consumed("eng", TheirLine);
@@ -1161,6 +1172,39 @@ public class ExporterTests
         Assert.Empty(plan.Files);
         Assert.Contains("fidelity", Assert.Single(plan.Refused));
     }
+
+    [Fact]
+    public void A_type_adopted_here_and_in_force_at_another_status_in_its_producer_refuses()
+    {
+        var plan = Merged(Corpus(InForceAt("active")), InForce(Consumed("eng", TheirLine), "ratified"));
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' is in force at 'active' in this corpus and at 'ratified' in eng. A merged file cannot "
+            + "state both. Bring both to one in-force status, or drop the type from this corpus.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void Two_producers_stating_different_in_force_statuses_refuse()
+    {
+        var plan = Merged(Corpus(PolicyType()),
+            InForce(Consumed("eng", TheirLine), "accepted"), InForce(Consumed("ops", TheirLine), "active"));
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("at 'accepted' in eng and at 'active' in ops", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_producer_stating_no_in_force_status_does_not_refuse()
+        => Assert.Empty(Merged(Corpus(InForceAt("active")), Consumed("eng", TheirLine)).Refused);
+
+    /// <summary>The glossary type with a <c>status</c> range in force at the value given.</summary>
+    private static TypeSchema InForceAt(string inForce) => FieldType("status",
+        new FieldSpec { Name = "status", Type = "enum", Values = ["draft", inForce], InForce = inForce });
+
+    private static InheritedCorpus InForce(InheritedCorpus corpus, string inForce) =>
+        corpus with { Types = [corpus.Types[0] with { InForce = inForce }] };
 
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
@@ -1429,6 +1473,28 @@ public class ExporterTests
         Assert.Null(Assert.Single(plan.Types).FrameworksFile);
     }
 
+    [Fact]
+    public void The_manifest_states_the_status_a_type_treats_as_in_force()
+    {
+        var plan = Plan(Corpus(PolicyType(inForce: "approved"), ("pol-DATA", Policy())));
+
+        var entry = Assert.Single(JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("types").EnumerateArray());
+
+        Assert.Equal("approved", entry.GetProperty("inForce").GetString());
+    }
+
+    [Fact]
+    public void A_type_declaring_no_status_states_a_null_in_force()
+    {
+        var plan = Plan(Corpus(PolicyType(), ("pol-DATA", Policy())));
+
+        var entry = Assert.Single(JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("types").EnumerateArray());
+
+        Assert.Equal(JsonValueKind.Null, entry.GetProperty("inForce").ValueKind);
+    }
+
     /// <summary>
     /// A policy citing a framework by link, beside the register that link reaches. The definition at the foot is what
     /// makes the cell a reference: without one the brackets are literal text and the exporter reads no framework at
@@ -1557,8 +1623,18 @@ public class ExporterTests
 
         """;
 
-    private static TypeSchema PolicyType(string frameworks = "") => new()
+    /// <summary>A policy type declaring no <c>status</c> where <c>inForce</c> is null.</summary>
+    private static TypeSchema PolicyType(string frameworks = "", string? inForce = null) => new()
     {
+        Fields = inForce is null
+            ? []
+            : new Dictionary<string, FieldSpec>(StringComparer.Ordinal)
+            {
+                ["status"] = new()
+                {
+                    Name = "status", Type = "enum", Values = ["draft", "approved", "retired"], InForce = inForce
+                }
+            },
         Key = "policies",
         TypeName = "policy",
         Folder = "policies",

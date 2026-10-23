@@ -65,7 +65,8 @@
         "Purpose": "summary",
         "Scope": "full",
         "Exceptions": "full"
-      }
+      },
+      "inForce": "active"
     }
   ]
 }

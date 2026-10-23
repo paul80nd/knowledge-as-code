@@ -27,7 +27,8 @@ name. Its `shortcode` stays `gp` rather than becoming `eng`. Its record file arr
 commit. Together these make a chain of any depth resolve.
 
 **A type this corpus never adopted travels whole.** `policies/` is eng's alone. It arrives because a record here may
-cite a clause of it, and an address resolves only where the thing it names travelled too.
+cite a clause of it, and an address resolves only where the thing it names travelled too. Its manifest entry states
+the `inForce` eng published, because this corpus has no schema of its own for the type.
 
 **`sources` is the one thing a merge cannot merge.** Each entry holds its producer's own publishing block. A record of
 `eng` is read at eng's commit in eng's repository, and this corpus's own template gets both wrong.
