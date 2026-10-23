@@ -40,12 +40,12 @@ public class GroundTests : IDisposable
     }
 
     [Fact]
-    public void A_folder_that_is_no_repository_says_so_and_reports_no_state()
+    public void A_folder_that_is_no_repository_says_so_and_reports_an_unknown_tree()
     {
         var ground = New.Survey(Dir("plain"));
 
         Assert.False(ground.Repository);
-        Assert.Null(ground.Dirty);
+        Assert.Equal(WorkingTree.Unknown, ground.Status);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class GroundTests : IDisposable
         var ground = New.Survey(dir);
 
         Assert.True(ground.Repository);
-        Assert.False(ground.Dirty);
+        Assert.Equal(WorkingTree.Clean, ground.Status);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class GroundTests : IDisposable
         if (!GitCli.Repository(dir)) return;
         File.WriteAllText(Path.Combine(dir, "notes.md"), "changed\n");
 
-        Assert.True(New.Survey(dir).Dirty);
+        Assert.Equal(WorkingTree.Dirty, New.Survey(dir).Status);
     }
 
     [Fact]

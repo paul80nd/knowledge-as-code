@@ -63,4 +63,19 @@ public static class Git
     /// <summary>Null where git could not answer, which is not the same as clean.</summary>
     public static bool? Dirty(string root) =>
         Run(root, "status --porcelain") is { } status ? status.Trim().Length > 0 : null;
+
+    public static WorkingTree Status(string root) => Dirty(root) switch
+    {
+        true => WorkingTree.Dirty,
+        false => WorkingTree.Clean,
+        null => WorkingTree.Unknown
+    };
+}
+
+/// <summary><c>Unknown</c> is a folder that is no repository, or a repository git could not answer for.</summary>
+public enum WorkingTree
+{
+    Clean,
+    Dirty,
+    Unknown
 }

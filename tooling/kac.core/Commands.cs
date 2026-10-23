@@ -99,8 +99,8 @@ public static class Commands
             return Fail($"new: {already} is already a corpus, so there is nothing here to create. "
                         + "Taking a newer framework into one is `kac update`.");
 
-        // A tree git could not answer for is not reported as clean, and is not stopped either.
-        if (ground.Dirty is true)
+        // An unknown tree goes on, as a clean one does.
+        if (ground.Status is WorkingTree.Dirty)
             return Fail("new: this repository holds uncommitted changes. Commit or stash them first, so "
                         + "that what `new` writes reads as a diff of its own.");
 
@@ -599,9 +599,9 @@ public static class Commands
         if (settled.Failed) return Fail(settled.Problem);
         var (from, policy) = settled.Settings;
 
-        // `--check` writes nothing, so it runs over a tree in any state. A tree git could not answer for is
-        // not reported as clean, and is not stopped either.
-        if (!request.Check && Git.Dirty(corpusRoot) is true)
+        // `--check` writes nothing, so it runs over a tree in any state. An unknown tree goes on, as a clean
+        // one does.
+        if (!request.Check && Git.Status(corpusRoot) is WorkingTree.Dirty)
             return Fail("update: this repository holds uncommitted changes. Commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
 
