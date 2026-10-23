@@ -83,7 +83,7 @@ jobs:
 
       # Unpinned for the reason kac.yml gives, which holds only where the CLI cannot reach a push.
       - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@latest
+        run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       - name: Validate the assembled plugin and its marketplace
         working-directory: examples/${{ matrix.corpus }}

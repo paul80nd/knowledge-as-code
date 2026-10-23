@@ -4,5 +4,5 @@
 
 | ID       | Title                                                                                                | Applies to | Status | Review by  |
 |----------|------------------------------------------------------------------------------------------------------|------------|--------|------------|
-| fix-0001 | [pip cannot find the yamllint version the lint job pins](pip-cannot-install-yamllint.md)             |            | active | 2027-03-09 |
+| fix-0001 | [pip cannot find the linter versions the lint job pins](pip-cannot-install-yamllint.md)              |            | active | 2027-03-09 |
 | fix-0002 | [An .editorconfig key edited from a shell changes nothing in the IDE](editorconfig-has-no-effect.md) |            | active | 2027-03-09 |

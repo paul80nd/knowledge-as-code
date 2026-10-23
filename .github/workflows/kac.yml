@@ -80,9 +80,9 @@ jobs:
         run: dotnet run --project ../../tooling/kac -- pack
 
       # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
-      # nothing in dependabot.yml would move an npm pin.
+      # nothing in dependabot.yml would move an npm pin. std-CI allows it in a job with `contents: read`.
       - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@latest
+        run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding
       # no component at all passes it. The two guards below close that: bundle.json's components must
@@ -143,8 +143,9 @@ jobs:
         working-directory: template
         run: dotnet run --project ../tooling/kac -- generate --check
 
+      # Unpinned for the reason the `corpora` job gives.
       - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@latest
+        run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       # `bundle-empty` pins what an emptied plugin holds; this asks whether it is still valid to install.
       - name: Bundle a corpus that adopted no type, and validate what it produced
@@ -256,6 +257,12 @@ jobs:
         run: |
           "$(go env GOPATH)"/bin/actionlint
 
+      # The token lets zizmor ask GitHub whether each pinned commit belongs to the action it names.
+      - name: Check the workflows for insecure patterns
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor .github/workflows template/.github/workflows
+
   # The one name the branch rule on `main` requires, and it does no work. A matrix job reports a name per
   # cell, as `corpora (library)` rather than as `corpora`, so a rule naming one waits for a check that
   # never arrives. Gathering every job behind one name keeps the rule to a single entry that survives a
@@ -349,8 +356,9 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
+      # Unpinned for the reason the `corpora` job gives.
       - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@latest
+        run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       - name: Install the plugin and ask each skill what it describes
         shell: bash

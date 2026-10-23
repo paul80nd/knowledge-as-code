@@ -68,8 +68,8 @@ updates:
       - dependency-name: mkdocs-redirects
         versions: [">= 1.2.3"]
 
-  # yamllint, pinned in .github/requirements.txt, so a linter release changes what the gate rejects
-  # when we take it. actionlint sits beside it in the same job and is a Go binary with no manifest,
+  # yamllint and zizmor, pinned in .github/requirements.txt, so a linter release changes what the gate
+  # rejects when the pin moves. actionlint runs in the same job and is a Go binary with no manifest,
   # so its pin is moved by hand and workflows/kac.yml says what it pins today.
   - package-ecosystem: pip
     directory: /.github

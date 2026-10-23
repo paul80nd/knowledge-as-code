@@ -18,14 +18,16 @@ root unless its block changes directory.
 | Tool                      | Needed for                                  |
 |---------------------------|---------------------------------------------|
 | .NET SDK                  | building `kac` and running every test layer |
-| Python 3.10 or newer      | building the site and running `yamllint`    |
+| Python 3.11 or newer      | building the site, `yamllint` and `zizmor`  |
 | `actionlint`              | checking the workflows                      |
 | `jq`, `curl`, Claude Code | the round-trip scripts                      |
 
 `global.json` at the repository root pins the SDK to one version, and `dotnet` refuses to run here with any other. Its
 error names the version to install. CI installs the same version.
 
-On macOS, `brew install yamllint actionlint` installs both linters at the versions CI pins.
+On macOS, `brew install yamllint actionlint zizmor` installs the three linters. CI pins yamllint and zizmor in
+`.github/requirements.txt`, and actionlint in the `go install` line of `.github/workflows/kac.yml`. Check each
+version against its pin.
 
 ## Run `kac` from source
 
@@ -117,7 +119,10 @@ pip install -r docs/requirements.txt
 mkdocs build              # fails on a dead link, because mkdocs.yml sets strict
 yamllint --strict .       # every YAML file
 actionlint                # every workflow
+zizmor .github/workflows template/.github/workflows   # every workflow, for insecure patterns
 ```
+
+zizmor also asks GitHub about each pinned commit when `GH_TOKEN` is set, as it is in CI.
 
 ## Try the package before a release
 
