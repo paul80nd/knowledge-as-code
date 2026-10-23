@@ -235,27 +235,34 @@ public class ExporterTests
 
     [Fact]
     public void A_paragraph_break_in_a_section_survives_the_unwrapping()
-    {
-        var record = JsonDocument.Parse(
-                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n",
-                    scope: "One paragraph that\nwraps.\n\nA second\nparagraph."))), "glossary/gls-one.json").Content)
-            .RootElement;
-
-        Assert.Equal("One paragraph that wraps.\n\nA second paragraph.",
-            record.GetProperty("sections").GetProperty("Scope").GetString());
-    }
+        => Assert.Equal("One paragraph that wraps.\n\nA second paragraph.",
+            ExportedScope("One paragraph that\nwraps.\n\nA second\nparagraph."));
 
     [Fact]
     public void A_list_is_left_exactly_as_written()
-    {
-        var record = JsonDocument.Parse(
-                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n",
-                    scope: "What this admits:\n\n- one thing\n- another thing"))), "glossary/gls-one.json").Content)
-            .RootElement;
+        => Assert.Equal("What this admits:\n\n- one thing\n- another thing",
+            ExportedScope("What this admits:\n\n- one thing\n- another thing"));
 
-        Assert.Equal("What this admits:\n\n- one thing\n- another thing",
-            record.GetProperty("sections").GetProperty("Scope").GetString());
-    }
+    [Fact]
+    public void A_wrapped_line_opening_with_a_code_span_joins_the_paragraph()
+        => Assert.Equal("Run the build, not `kac` on your path.",
+            ExportedScope("Run the build, not\n`kac` on your path."));
+
+    [Theory]
+    [InlineData("Run this:\n```sh\nkac validate\n```")]
+    [InlineData("Run this:\n````md\n```sh\nkac validate\n```\n````")]
+    [InlineData("Run this:\n~~~sh\nkac validate\n~~~")]
+    public void A_fence_is_left_exactly_as_written(string fenced)
+        => Assert.Equal(fenced, ExportedScope(fenced));
+
+    [Fact]
+    public void A_wrapped_line_opening_with_a_triple_backtick_code_span_joins_the_paragraph()
+        => Assert.Equal("Quote a backtick as ``` ` ``` in a sentence.",
+            ExportedScope("Quote a backtick as\n``` ` ``` in a sentence."));
+
+    /// <summary>The <c>Scope</c> section as the export writes it, from <c>scope</c> as a record states it.</summary>
+    private static string? ExportedScope(string scope) =>
+        Sections(GlossaryType(), scope).GetProperty("Scope").GetString();
 
     [Fact]
     public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()

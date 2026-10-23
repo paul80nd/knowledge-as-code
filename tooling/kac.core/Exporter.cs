@@ -645,7 +645,13 @@ public static class Exporter
 
         // A bullet and a heading need the marker and then a space, which tells `- item` from an em-dash clause.
         static bool Structural(string line) =>
-            Bullet(line) || Heading(line) || line[0] is '>' or '|' or '`' || Ordered(line);
+            Bullet(line) || Heading(line) || line[0] is '>' or '|' || Fence(line) || Ordered(line);
+
+        // CommonMark 0.31.2, 4.5: three or more backticks or tildes. A backtick in a backtick fence's info string
+        // makes the line a code span.
+        static bool Fence(string line) =>
+            line.StartsWith("~~~", StringComparison.Ordinal)
+            || (line.StartsWith("```", StringComparison.Ordinal) && !line.TrimStart('`').Contains('`'));
 
         static bool Bullet(string line) =>
             (line[0] is '-' or '*' or '+') && line.Length > 1 && line[1] == ' ';
