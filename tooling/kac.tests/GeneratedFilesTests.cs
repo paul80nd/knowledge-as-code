@@ -130,6 +130,7 @@ public class GeneratedFilePlanTests
             f => f.Path == "adrs/_index.md");
 
         Assert.Null(file.Current);
+        Assert.Equal(GeneratedFiles.FileState.Missing, file.State);
         Assert.True(file.Stale);
     }
 
@@ -151,8 +152,8 @@ public class GeneratedFilePlanTests
             Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", first.Wanted))),
             f => f.Path == "adrs.md");
 
-        Assert.True(first.Stale);
-        Assert.False(second.Stale);
+        Assert.Equal(GeneratedFiles.FileState.Drifted, first.State);
+        Assert.Equal(GeneratedFiles.FileState.UpToDate, second.State);
     }
 
     [Fact]
@@ -162,7 +163,7 @@ public class GeneratedFilePlanTests
             f => f.Path == "README.md");
 
         Assert.Equal(file.Current, file.Wanted);
-        Assert.False(file.Stale);
+        Assert.Equal(GeneratedFiles.FileState.UpToDate, file.State);
     }
 }
 

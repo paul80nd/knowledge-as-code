@@ -430,7 +430,8 @@ public static class Commands
     /// <summary>Shared with <c>update</c>, which ends by regenerating.</summary>
     private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
-        var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
+        var created = plan.Where(f => f.State is GeneratedFiles.FileState.Missing).Select(f => f.Path)
+            .ToHashSet(StringComparer.Ordinal);
 
         foreach (var path in written)
             Out.Markup(Wrote(path) + (created.Contains(path) ? "  [grey](new)[/]" : ""));
