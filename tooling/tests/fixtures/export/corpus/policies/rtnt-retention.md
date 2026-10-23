@@ -32,7 +32,7 @@ Every store we operate, whatever holds it.
 
 ## Exceptions
 
-A store under a legal hold outlives its retention period. We record the hold against the store, and the period resumes
-on the day the hold lifts.
+A store under a legal hold outlives its retention period. We record the hold against the store, as [gls-estate] defines
+one, and the period resumes on the day the hold lifts.
 
 [gls-estate]: ../glossary/estate.md

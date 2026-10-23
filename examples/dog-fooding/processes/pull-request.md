@@ -43,8 +43,9 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
 2. Where `kac` changed, write the changelog entry on this branch. An entry written after the merge is too late.
 3. Where `kac` changed, put the release call to the branch owner and recommend an answer. Recommend releasing where the
    change is useful on its own. Recommend holding where it is one part of a group that is no use apart.
-4. Move `content-version` in each corpus whose export changed, and in each one whose bundled skills changed what they
-   tell a reader to do. [std-VERS] says which component moves.
+4. Move `content-version` in each corpus whose own records or schema changed its export, and in each one whose bundled
+   skills changed what they tell a reader to do. A change to `kac` moves none, even where the exported bytes change, as
+   [std-VERS.which-stamps-move-together-and-which-move-alone] states. [std-VERS] says which component moves.
 5. Move the `resolved:` lock of every consumer of a corpus you moved in step 4. Move its `version:` range as well where
    that producer is below 1.0.0 and its minor moved.
 6. Prove each lock the way CI will. Delete `.imports/` in `examples/payments` and `examples/dog-fooding`, repack each
@@ -91,4 +92,5 @@ accepted cannot be replaced. Fix a release that shipped wrong in the next patch.
 [std-VERS]: ../standards/versioning.md
 [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
 [std-VERS.what-a-move-of-each-stamp-means]: ../standards/versioning.md#what-a-move-of-each-stamp-means
+[std-VERS.which-stamps-move-together-and-which-move-alone]: ../standards/versioning.md#which-stamps-move-together-and-which-move-alone
 [svc-kac]: ../services/kac.md
