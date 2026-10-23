@@ -27,6 +27,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`present()` and `entries()` read a filled-in object field.** On a report holding `generated:` with its keys,
+  `present('generated')` read false and `entries('generated')` read 0. An unquoted `{{…}}` placeholder still reads as
+  absent. `kac validate` reports one under an object field, or in a list of objects, as it does under any other field.
+  It failed there with an `InvalidCastException`.
 - **`kac bundle` names the version a plugin keeps when the corpus states none.** Where `.corpus.yaml` had no
   `content-version`, `bundle` warned that the plugin had no version and nothing would install it. The plugin kept the
   version its own `plugin.json` states, so the warning was wrong. It now names that version. Set `content-version` and

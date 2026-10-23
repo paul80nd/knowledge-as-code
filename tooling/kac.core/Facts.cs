@@ -25,8 +25,8 @@ public sealed class Facts(Doc doc, DateOnly today)
     public bool Present(string name) => Entries(name) > 0;
 
     /// <summary>
-    /// Every entry of a list, whatever its shape, and one for a scalar. Zero for an absent field and for a value
-    /// <c>required-field</c> reads as absent without the field's spec, a lone mapping included. A rule that must stay
+    /// Every entry of a list, whatever its shape, and one for a scalar or a filled-in object. Zero for an absent field,
+    /// and for a value <c>required-field</c> reads as absent, an unquoted placeholder included. A rule that must stay
     /// quiet on an absent field guards with <c>present()</c> first.
     /// </summary>
     public int Entries(string name) => doc.FrontNode(name) switch
