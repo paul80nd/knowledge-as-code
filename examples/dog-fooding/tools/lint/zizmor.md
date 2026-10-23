@@ -18,14 +18,15 @@ tags: [ github-actions, linting, security, workflows ]
 
 `Tool: tol-zizmor` `APPROVED`
 
-The static analyser that checks every workflow for insecure patterns. The `lint` job runs it after actionlint, over
-`.github/workflows/` and `template/.github/workflows/`.
+The static analyser that checks every workflow and each `dependabot.yml` for insecure patterns. The `lint` job runs it
+after actionlint, over `.github/` and `template/.github/`.
 
 ## What we use it for
 
 It reports an action pinned to a tag, a checkout that keeps its credential, a workflow granting more than read at its
-top level, and an expression an attacker can write into a `run:` block. It runs with its default persona, which reports the findings
-its authors rate as actionable and leaves out the pedantic ones.
+top level, and an expression an attacker can write into a `run:` block. In a `dependabot.yml`, it reports an ecosystem
+with a cooldown shorter than seven days. It runs with its default persona, which reports the findings its authors rate
+as actionable and leaves out the pedantic ones.
 
 The job gives it `github.token`, so it also asks GitHub whether each pinned commit belongs to the action it names.
 
@@ -34,7 +35,8 @@ on purpose is suppressed by an inline `# zizmor: ignore[...]` comment, with the 
 
 ## Where it is used
 
-Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it.
+Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and
+no service ships it.
 
 ## Alternatives considered
 

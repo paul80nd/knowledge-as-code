@@ -3,12 +3,16 @@
 # Every project under `tooling/` carries ordinary `PackageReference`s and is tracked below.
 # One pin sits outside what Dependabot reads. actionlint is a Go binary installed by version in
 # workflows/kac.yml, and that line is moved by hand.
+#
+# Every ecosystem waits seven days before it proposes a new release, so a compromised one has a week
+# to be found and withdrawn before it reaches a pull request. A security update is never delayed.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: ci
 
@@ -17,6 +21,7 @@ updates:
     directory: /template/.github/workflows
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: ci
 
@@ -29,6 +34,7 @@ updates:
       - /tooling/kac.tests
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: build
     groups:
@@ -49,6 +55,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: build
     # tol-dotnet-sdk approves the 10.0 line, so a new major is a decision for that record and not a patch.
@@ -61,6 +68,7 @@ updates:
     directory: /docs
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: docs
     # From 1.2.3, mkdocs-redirects requires properdocs. tol-mkdocs-redirects says why, and #1058 decides the toolchain.
@@ -75,5 +83,6 @@ updates:
     directory: /.github
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}
     commit-message:
       prefix: ci

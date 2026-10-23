@@ -2,9 +2,13 @@
 #
 # It moves the commit each action in `workflows/kac.yml` is pinned to, and the version comment beside
 # it, so a pinned action still takes its fixes.
+#
+# It waits seven days before it proposes a new release, so a compromised one has a week to be found
+# and withdrawn before it reaches a pull request. A security update is never delayed.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown: {default-days: 7}

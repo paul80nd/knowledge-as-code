@@ -233,10 +233,11 @@ jobs:
           "$(go env GOPATH)"/bin/actionlint
 
       # The token lets zizmor ask GitHub whether each pinned commit belongs to the action it names.
-      - name: Check the workflows for insecure patterns
+      # Naming each `.github` folder makes zizmor audit the dependabot.yml beside the workflows.
+      - name: Check the workflows and dependabot.yml for insecure patterns
         env:
           GH_TOKEN: ${{ github.token }}
-        run: zizmor .github/workflows template/.github/workflows
+        run: zizmor .github template/.github
 
   # The one name the branch rule on `main` requires, and it does no work. A matrix job reports a name per
   # cell, as `corpora (library)` rather than as `corpora`, so a rule naming one waits for a check that

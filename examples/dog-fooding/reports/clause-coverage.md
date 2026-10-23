@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-23T16:09:02Z
+  at: 2026-10-23T17:53:12Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.38.0
 sources:
-  - { resource: example-dogfooding, version: "0.76.2" }
+  - { resource: example-dogfooding, version: "0.77.0" }
   - { resource: example-engineering, version: "0.38.3" }
 verified:
-  - { at: 2026-10-23T16:20:00Z, by: human:paul.law }
+  - { at: 2026-10-23T17:55:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -250,12 +250,12 @@ where the rule and the practice differ.
 
 | Clause    | Level    | Covered by                            | Deviations | Controls                                                                               | Pair candidate        | Verdict | Note                                                                                                                      |
 |-----------|----------|---------------------------------------|------------|----------------------------------------------------------------------------------------|-----------------------|---------|---------------------------------------------------------------------------------------------------------------------------|
-| `ASSETS`  | MUST     | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`                                                                 |                       | Covered | Every value the build reads is committed.                                                                                 |
+| `ASSETS`  | MUST     | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`, `ctl-0015`                                                     |                       | Covered | Every value the build reads is committed.                                                                                 |
 | `HISTORY` | MUST     | `eng:std-VCS`                         |            |                                                                                        |                       | Covered | Every change is attributable and reviewed.                                                                                |
 | `INTENT`  | MUST     | `eng:std-PR`, `eng:std-VCS`           |            | `eng:ctl-0007`                                                                         |                       | Covered | A pull request states the reasoning for the change.                                                                       |
 | `BRANCH`  | MUST     | `std-CI`, `eng:std-PR`, `eng:std-VCS` |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0007` |                       | Covered | A push to `main` is rejected.                                                                                             |
-| `PARITY`  | MUST     | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`                                                                 |                       | Covered | A YAML file and a workflow answer to the same gate as the code.                                                           |
-| `ORPHAN`  | MUST NOT | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`                                                                 |                       | Covered | A value in more than one tree is copied and proved.                                                                       |
+| `PARITY`  | MUST     | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`, `ctl-0015`                                                     |                       | Covered | A YAML file and a workflow answer to the same gate as the code.                                                           |
+| `ORPHAN`  | MUST NOT | `std-CONFIG`, `eng:std-VCS`           |            | `ctl-0004`, `ctl-0005`, `ctl-0015`                                                     |                       | Covered | A value in more than one tree is copied and proved.                                                                       |
 | `SHARED`  | MUST NOT | `eng:std-VCS`                         |            |                                                                                        | `eng:pol-ACCS.SHARED` | Covered | No shared account exists here to lose attribution to.                                                                     |
 | `DRIFT`   | SHOULD   |                                       |            |                                                                                        |                       | Gap     | Branch protection and the marketplace branch are GitHub settings. Nothing compares them with what this repository states. |
 | `SIGNED`  | COULD    |                                       |            |                                                                                        |                       | Gap     | GitHub signs every merge into `main`, and nothing signs a commit on a branch.                                             |
@@ -375,7 +375,7 @@ where the rule and the practice differ.
 |-----------|----------|--------------------------------|------------|----------------------------------------------------------------------------------------|-----------------------|--------------|------------------------------------------------------------------------------------------------------|
 | `DEPLOY`  | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` |                       | Covered      | Every publish runs from a workflow, and nobody publishes by hand.                                    |
 | `SAMEART` | MUST     | `eng:std-DEPLOY`               |            | `eng:ctl-0002`                                                                         |                       | Covered      | The artefact is built once. The publish job rebuilds from the merge commit.                          |
-| `CONFIG`  | MUST     | `std-CONFIG`, `eng:std-DEPLOY` |            | `ctl-0004`, `ctl-0005`, `eng:ctl-0002`                                                 |                       | Covered      | Configuration is outside the artefact.                                                               |
+| `CONFIG`  | MUST     | `std-CONFIG`, `eng:std-DEPLOY` |            | `ctl-0004`, `ctl-0005`, `ctl-0015`, `eng:ctl-0002`                                     |                       | Covered      | Configuration is outside the artefact.                                                               |
 | `TRACE`   | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` | `eng:pol-TRUS.TRACE`  | Covered      | A publish tags the commit it published from.                                                         |
 | `REVERT`  | MUST     | `std-VERS`, `eng:std-DEPLOY`   |            | `ctl-0007`, `eng:ctl-0002`                                                             |                       | Covered      | A correction ships as a new version, and no published one moves.                                     |
 | `ASCODE`  | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `ctl-0015`, `eng:ctl-0002` | `eng:pol-MEXP.ASCODE` | Covered      | The workflows are reviewed like any other file.                                                      |
@@ -438,20 +438,20 @@ where the rule and the practice differ.
 
 ### eng:pol-SUPL
 
-| Clause    | Level | Covered by   | Deviations                 | Controls               | Pair candidate | Verdict      | Note                                                                                              |
-|-----------|-------|--------------|----------------------------|------------------------|----------------|--------------|---------------------------------------------------------------------------------------------------|
-| `CLOUD`   | MUST  |              | `dev-github-concentration` |                        |                | Gap          | GitHub has most of the responsibility here, and no standard divides it.                           |
-| `LOCATE`  | MUST  |              |                            |                        |                | Out of scope | Every file here is public, so where GitHub keeps it carries no obligation.                        |
-| `CHANNEL` | MUST  |              |                            |                        |                | Gap          | Nothing says how GitHub would tell this repository about an incident of its own.                  |
-| `EXIT`    | MUST  |              | `dev-github-concentration` |                        |                | Gap          | Nothing says how this would leave GitHub.                                                         |
-| `REVIEW`  | MUST  | `std-CONFIG` |                            | `ctl-0004`, `ctl-0005` |                | Covered      | Dependabot brings each pinned version back weekly.                                                |
-| `SUPCHG`  | MUST  |              |                            |                        |                | Gap          | Dependabot reports a version moving, and nothing watches the services this repository depends on. |
+| Clause    | Level | Covered by   | Deviations                 | Controls                           | Pair candidate | Verdict      | Note                                                                                              |
+|-----------|-------|--------------|----------------------------|------------------------------------|----------------|--------------|---------------------------------------------------------------------------------------------------|
+| `CLOUD`   | MUST  |              | `dev-github-concentration` |                                    |                | Gap          | GitHub has most of the responsibility here, and no standard divides it.                           |
+| `LOCATE`  | MUST  |              |                            |                                    |                | Out of scope | Every file here is public, so where GitHub keeps it carries no obligation.                        |
+| `CHANNEL` | MUST  |              |                            |                                    |                | Gap          | Nothing says how GitHub would tell this repository about an incident of its own.                  |
+| `EXIT`    | MUST  |              | `dev-github-concentration` |                                    |                | Gap          | Nothing says how this would leave GitHub.                                                         |
+| `REVIEW`  | MUST  | `std-CONFIG` |                            | `ctl-0004`, `ctl-0005`, `ctl-0015` |                | Covered      | Dependabot brings each pinned version back weekly.                                                |
+| `SUPCHG`  | MUST  |              |                            |                                    |                | Gap          | Dependabot reports a version moving, and nothing watches the services this repository depends on. |
 
 ### eng:pol-TRUS
 
 | Clause    | Level    | Covered by                                             | Deviations              | Controls                                                                                                       | Pair candidate        | Verdict             | Note                                                                                                                       |
 |-----------|----------|--------------------------------------------------------|-------------------------|----------------------------------------------------------------------------------------------------------------|-----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------|
-| `INVENT`  | MUST     | `std-CONFIG`, `eng:std-DEPS`                           |                         | `ctl-0004`, `ctl-0005`                                                                                         | `eng:pol-DATA.INVENT` | Covered             | A pin states an exact version, and `tools/` lists what is chosen.                                                          |
+| `INVENT`  | MUST     | `std-CONFIG`, `eng:std-DEPS`                           |                         | `ctl-0004`, `ctl-0005`, `ctl-0015`                                                                             | `eng:pol-DATA.INVENT` | Covered             | A pin states an exact version, and `tools/` lists what is chosen.                                                          |
 | `PINNED`  | MUST     |                                                        |                         |                                                                                                                |                       | Gap                 | `std-CI` pins every action to a commit, and `std-CONFIG` every other dependency to one version. Neither lists this clause. |
 | `SCREEN`  | MUST     | `eng:std-DEPS`                                         |                         |                                                                                                                |                       | Covered             | A new package is screened before the pull request adding it merges.                                                        |
 | `SUPPORT` | MUST     |                                                        |                         |                                                                                                                |                       | Gap                 | `std-CONFIG` pins every tool to an exact version, and nothing asks whether the vendor still supports it.                   |

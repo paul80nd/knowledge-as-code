@@ -180,9 +180,9 @@ do. What each of these numbers means, and what a producer's move obliges of the 
 [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a workflow publishes it.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
-outside the gate is invisible. The `lint` job runs `actionlint` and then zizmor over every workflow, and [ctl-0015]
-says which rules zizmor checks. Nothing checks a permission nobody uses, or a secret written into a script body. A
-reviewer catches both.
+outside the gate is invisible. The `lint` job runs `actionlint` over every workflow, and then zizmor over every workflow
+and each `dependabot.yml`. [ctl-0015] says which rules zizmor checks. Nothing checks a permission nobody uses, or a
+secret written into a script body. A reviewer catches both.
 
 A checkout keeping its credential lets every later step push with the job's token, a test run or a package restore
 included. The one `git push` here, to the `marketplace` branch, takes the token in its own step, so the restores and builds

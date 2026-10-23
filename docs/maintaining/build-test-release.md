@@ -147,7 +147,7 @@ pip install -r docs/requirements.txt
 mkdocs build              # fails on a dead link, because mkdocs.yml sets strict
 yamllint --strict .       # every YAML file
 actionlint                # every workflow
-zizmor .github/workflows template/.github/workflows   # every workflow, for insecure patterns
+zizmor .github template/.github   # every workflow and dependabot.yml, for insecure patterns
 ```
 
 zizmor also asks GitHub about each pinned commit when `GH_TOKEN` is set, as it is in CI.

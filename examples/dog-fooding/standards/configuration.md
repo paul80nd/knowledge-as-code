@@ -5,7 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.ASSETS, eng:pol-EVER.ORPHAN, eng:pol-EVER.PARITY,
   eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-SUPL.REVIEW, eng:pol-TRUS.INVENT, eng:pol-TRUS.SOURCE ]
-verified-by: [ ctl-0004, ctl-0005 ]
+verified-by: [ ctl-0004, ctl-0005, ctl-0015 ]
 applies-to:
   - all
 review-by: "2027-09-02"
@@ -42,6 +42,9 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is
   what [OpenSSF Scorecard]'s `Dependency-Update-Tool` check asks for.
 - Every ecosystem it tracks **MUST** have a `schedule:`.
+- Each ecosystem in `.github/dependabot.yml` and `template/.github/dependabot.yml` **MUST** wait seven days before it
+  proposes a release.
+- A security update **MUST NOT** wait.
 - Packages that only move as a set **SHOULD** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
 
@@ -90,6 +93,7 @@ _**Covers:** `eng:pol-PIPE.CONFIG`_
   directory: /docs
   schedule:
     interval: weekly
+  cooldown: {default-days: 7}
 
 # in docs/requirements.txt
 mkdocs==1.6.1
@@ -129,6 +133,7 @@ the departure is still right.
 - [ ] Every file the change touches is tracked, and contains no credential.
 - [ ] Every dependency it adds names one exact version.
 - [ ] `.github/dependabot.yml` names the directory that manifest sits in.
+- [ ] Every ecosystem in both `dependabot.yml` files sets `cooldown: {default-days: 7}`.
 - [ ] Every new value has a comment giving its reason.
 - [ ] Any new `.yamllint` override gives the reason it departs from the baseline.
 - [ ] `kac update --check --from ../../` passes in each corpus the change reaches.
@@ -140,9 +145,11 @@ The tool finds the corpus by walking up for a `.corpus.yaml`, and finds what to 
 rule above is the one the rest depend on.
 
 The `lint` job in `.github/workflows/kac.yml` runs `yamllint --strict .`, so the shape rules fail a build without
-waiting on a reviewer. `kac update --check` checks the overlay copies. A seed, such as a type page or a `_template.md`,
-is copied by hand, and nothing compares it. No command checks a comment: whether it gives a reason, and whether that
-reason is true. That is what a reviewer is reading for.
+waiting on a reviewer. The same job runs zizmor, which fails an ecosystem with a cooldown under seven days, as
+[ctl-0015] describes. A cooldown gives a compromised release a week to be found and withdrawn before it reaches a pull
+request. Dependabot never applies a cooldown to a security update. `kac update --check` checks the overlay copies. A
+seed, such as a type page or a `_template.md`, is copied by hand, and nothing compares it. No command checks a comment:
+whether it gives a reason, and whether that reason is true. That is what a reviewer is reading for.
 
 The four overrides in `.yamllint` are the whole departure from the baseline, and each states its reason beside it.
 Adding a fifth is a decision, not a convenience, so they sit in one file a reviewer can read at once.
@@ -154,11 +161,14 @@ Adding a fifth is a decision, not a convenience, so they sit in one file a revie
 - **Normative.** [yamllint] sets how a YAML file here is shaped. Its `default` ruleset is the baseline, and
   `.yamllint` states the four overrides this repository adds on top of it.
 - **Normative.** [OpenSSF Scorecard] defines `Dependency-Update-Tool`, the check the Dependabot rules above satisfy.
+- **Normative.** [zizmor] defines `dependabot-cooldown`, the audit the cooldown rule satisfies.
 - **Informative.** [EditorConfig] defines the format of `.editorconfig`, which states the same settings for an editor.
 - **Informative.** [YAML 1.2.2] is the specification that decides how an unquoted scalar is read.
 
 ## Changelog
 
+- 2026-10-23: each ecosystem in either `dependabot.yml` waits seven days before it proposes a release. A security
+  update does not wait.
 - 2026-10-19: only an overlay copy has to match its source as `kac update --check` reports. A seed is copied by hand,
   and nothing compares it.
 - 2026-10-18: a grouped update, the opening comment, a comment that leaves its value alone and
@@ -172,5 +182,7 @@ say why in the change.
 [EditorConfig]: https://editorconfig.org
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md
 [YAML 1.2.2]: https://yaml.org/spec/1.2.2/
+[ctl-0015]: ../controls/0015-zizmor.md
 [std-CI]: workflows.md
 [yamllint]: https://yamllint.readthedocs.io/en/stable/rules.html
+[zizmor]: https://docs.zizmor.sh/audits/#dependabot-cooldown
