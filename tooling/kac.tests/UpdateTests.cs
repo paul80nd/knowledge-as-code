@@ -482,7 +482,7 @@ public class UpdateTests
 
     private static Schema TypeSchema() => Schema.Load(Repo.Root);
 
-    private static Adopted Adopt(IReadOnlySet<string> corpusFiles, IReadOnlyList<string>? held,
+    private static AdoptionAsked Adopt(IReadOnlySet<string> corpusFiles, IReadOnlyList<string>? held,
         string? add = null, string? drop = null) =>
         Update.Adopt(corpusFiles, new CorpusDescriptor { Types = held?.ToList() }, TypeSchema(),
             [.. TypeSchema().ByFolder.Keys], add, drop);

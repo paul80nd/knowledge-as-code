@@ -71,7 +71,7 @@ public sealed record Adoption(
     string? Account);
 
 /// <summary>Exactly one of the two is set.</summary>
-public sealed record Adopted(Adoption? Adoption, string? Problem)
+public sealed record AdoptionAsked(Adoption? Adoption, string? Problem)
 {
     [MemberNotNullWhen(true, nameof(Problem))]
     [MemberNotNullWhen(false, nameof(Adoption))]
@@ -344,7 +344,7 @@ public static class Update
     /// Giving up a type refuses where its folder holds records, because deleting a record is deleting knowledge. With
     /// neither flag, returns the types the corpus already holds.
     /// </summary>
-    public static Adopted Adopt(IReadOnlySet<string> corpusFiles, CorpusDescriptor descriptor, Schema schema,
+    public static AdoptionAsked Adopt(IReadOnlySet<string> corpusFiles, CorpusDescriptor descriptor, Schema schema,
         IReadOnlyList<string> declared, string? add, string? drop)
     {
         var held = descriptor.Types;
@@ -390,8 +390,8 @@ public static class Update
             FilesOf(corpusFiles, type, dropping),
             $"update: gave up {dropping}. Its schema, its page and {folder}/ went with it."));
 
-        static Adopted Accept(Adoption adoption) => new(adoption, null);
-        static Adopted Refuse(string message) => new(null, message);
+        static AdoptionAsked Accept(Adoption adoption) => new(adoption, null);
+        static AdoptionAsked Refuse(string message) => new(null, message);
     }
 
     /// <summary>
