@@ -364,6 +364,123 @@ public class ExporterTests
         => Assert.Equal("Read [the long guide](../guide.md) first.",
             ExportedScope("Read [the long\nguide][guide] first.\n\n[guide]: ../guide.md"));
 
+    [Theory]
+    [InlineData("Read [two](gls-two.md).", $"Read [two]({Blob}/glossary/gls-two.md).")]
+    [InlineData("Read [two](./gls-two.md).", $"Read [two]({Blob}/glossary/gls-two.md).")]
+    [InlineData("Read [two](/glossary/gls-two.md).", $"Read [two]({Blob}/glossary/gls-two.md).")]
+    [InlineData("Read [two][].\n\n[two]: gls-two.md", $"Read [two]({Blob}/glossary/gls-two.md).")]
+    public void A_relative_link_to_a_record_travels_as_the_address_the_corpus_publishes_it_at(
+        string written, string travels)
+        => Assert.Equal(travels, ScopeAt(Published, written));
+
+    [Theory]
+    [InlineData("Read [beta](gls-two.md#beta).", $"Read [beta]({Blob}/glossary/gls-two.md#beta).")]
+    [InlineData("Read [beta][].\n\n[beta]: gls-two.md#beta \"Beta\"",
+        $"Read [beta]({Blob}/glossary/gls-two.md#beta \"Beta\").")]
+    public void A_relative_link_with_an_anchor_travels_as_the_address_with_that_anchor(string written, string travels)
+        => Assert.Equal(travels, ScopeAt(Published, written));
+
+    [Fact]
+    public void A_relative_link_to_a_page_that_is_no_record_travels_as_its_address()
+        => Assert.Equal($"See [the type]({Blob}/glossary.md).", ScopeAt(Published, "See [the type](../glossary.md)."));
+
+    [Theory]
+    [InlineData("See [notes](<the notes.md>).")]
+    [InlineData("See [notes].\n\n[notes]: <the notes.md>")]
+    public void An_address_holding_a_space_travels_in_angle_brackets(string written)
+        => Assert.Equal($"See [notes](<{Blob}/glossary/the notes.md>).", ScopeAt(Published, written));
+
+    [Theory]
+    [InlineData("See ![the flow](flow.png).")]
+    [InlineData("See [the flow](flow.png).")]
+    [InlineData("See ![two](gls-two.md).")]
+    [InlineData("See [one](../services/one.md).")]
+    [InlineData("See [up](../../outside.md).")]
+    public void A_relative_link_to_no_page_the_corpus_holds_travels_as_written(string written)
+        => Assert.Equal(written, ScopeAt(Published, written));
+
+    [Fact]
+    public void An_image_reference_to_a_page_travels_inline_with_its_target_as_written()
+        => Assert.Equal("See ![two](gls-two.md).", ScopeAt(Published, "See ![two][].\n\n[two]: gls-two.md"));
+
+    [Theory]
+    [InlineData("See [the spec](https://example.com/spec.md).")]
+    [InlineData("See [alpha](#alpha).")]
+    [InlineData("Write to [us](mailto:someone@example.com).")]
+    public void An_absolute_or_anchor_only_link_travels_as_written(string written)
+        => Assert.Equal(written, ScopeAt(Published, written));
+
+    [Theory]
+    [InlineData("Read [two](gls-two.md#beta).")]
+    [InlineData("Read [two].\n\n[two]: gls-two.md#beta")]
+    public void A_corpus_with_no_address_keeps_a_relative_target(string written)
+        => Assert.Equal("Read [two](gls-two.md#beta).", ScopeAt(null, written));
+
+    [Fact]
+    public void A_relative_link_in_a_term_line_travels_as_the_address()
+    {
+        var lines = Lines(Exporter.Plan(Linked("### Alpha\n\nSee [beta](gls-two.md#beta).\n\n"
+                                               + "**Not:** the other, in [two].\n\n[two]: gls-two.md\n"),
+            Published, null, Run));
+        var alpha = lines.Single(l => l.Text("id") == "gls-one.alpha");
+
+        Assert.Equal($"See [beta]({Blob}/glossary/gls-two.md#beta).", alpha.Text("definition"));
+        Assert.Equal($"the other, in [two]({Blob}/glossary/gls-two.md).", alpha.Text("not"));
+    }
+
+    [Fact]
+    public void An_inherited_link_travels_as_the_address_its_producer_published()
+    {
+        var produced = Exporter.Plan(Linked("### Alpha\n\nSee [beta](gls-two.md#beta).\n", scope: "Read [two]."
+            + "\n\n[two]: gls-two.md"), Published, null, Run);
+        var line = Single(produced, "glossary/terms.jsonl").Content.Split('\n')[0];
+        var record = Single(produced, "glossary/gls-one.json").Content;
+
+        var consumed = Holding(Consumed("eng", line), new InheritedRecord("eng", "gls-one.json", record));
+        var plan = Exporter.Plan(Corpus(), Elsewhere, null, Run, [consumed]);
+
+        Assert.Equal($"See [beta]({Blob}/glossary/gls-two.md#beta).",
+            Lines(plan).Single(l => l.Text("id") == "eng:gls-one.alpha").Text("definition"));
+        Assert.Equal($"Read [two]({Blob}/glossary/gls-two.md).",
+            JsonDocument.Parse(Single(plan, "glossary/eng/gls-one.json").Content).RootElement
+                .GetProperty("sections").GetProperty("Scope").GetString());
+    }
+
+    /// <summary>What <c>Published</c> fills its template with, up to the record's path.</summary>
+    private const string Blob = "https://github.com/example/corpus/blob/0123456789abcdef0123456789abcdef01234567";
+
+    /// <summary>A second address, so an inherited link built from it would show.</summary>
+    private static readonly Publishing? Elsewhere = Publishing.For(
+        new CorpusDescriptor
+        {
+            PublishingTarget = Publishing.GitHub,
+            Base = "https://github.com/example/consumer"
+        },
+        "fedcba9876543210fedcba9876543210fedcba98");
+
+    /// <summary>
+    /// <c>gls-one</c> with <c>terms</c> and <c>scope</c>, beside <c>gls-two</c>, the glossary's type page, an image and a
+    /// page whose name has a space.
+    /// </summary>
+    private static LoadedCorpus Linked(string terms, string scope = "What this admits.")
+    {
+        var corpus = Corpus(GlossaryType(),
+            ("gls-one", Glossary("gls-one", null, terms, scope: scope)),
+            ("gls-two", Glossary("gls-two", null, "### Beta\n\nB.\n")));
+
+        var paths = new HashSet<string>(corpus.Docs.Select(d => d.Rel), StringComparer.Ordinal)
+            { "glossary.md", "glossary/flow.png", "glossary/the notes.md" };
+        corpus.Tree = new Tree(paths, rel => corpus.Docs.FirstOrDefault(d => d.Rel == rel)?.Text ?? "");
+
+        return corpus;
+    }
+
+    /// <summary>The <c>Scope</c> section of <c>gls-one</c> in <c>Linked</c>, exported at <c>publishing</c>.</summary>
+    private static string? ScopeAt(Publishing? publishing, string scope) =>
+        JsonDocument.Parse(Single(Exporter.Plan(Linked("### Alpha\n\nA.\n", scope), publishing, null, Run),
+                "glossary/gls-one.json").Content)
+            .RootElement.GetProperty("sections").GetProperty("Scope").GetString();
+
     /// <summary>The <c>Scope</c> section as the export writes it, from <c>scope</c> as a record states it.</summary>
     private static string? ExportedScope(string scope) =>
         Sections(GlossaryType(), scope).GetProperty("Scope").GetString();
