@@ -1,0 +1,63 @@
+type: sprocket
+label: Sprocket
+label-plural: Sprockets
+folder: sprockets
+page: sprockets.md
+tier: descriptive
+lifecycle: living
+summary: A fixture type, carrying the lines every type owes so that only its part line is under test here.
+goes-here: A sprocket, which is a thing this fixture has and nothing else does
+detail: >
+  Carrying the lines every type owes so that only its part line is under test here.
+
+lineage:
+  prior-art: None. A fixture type has no ancestor to claim.
+
+notes: >
+  A fixture type laid over the real schema, so that a part line naming a list field is reported. No real type
+  names one.
+
+id:
+  prefix: spr
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [live, retired]
+    in-force: live
+    description: Where the sprocket is in its life.
+
+  shelves:
+    required: false
+    type: list
+    of: string
+    description: The shelves the sprocket is kept on.
+
+sections:
+  required: [What it does]
+  optional: [Teeth]
+
+parts:
+  source: headings
+  section: Teeth
+  noun: tooth
+
+export:
+  version: 1
+  parts:
+    fidelity: full
+    line:
+      id: part.id
+      title: part.text
+      shelves: front.shelves
+
+index:
+  columns: [id, title, status, owner]
+  sort: id

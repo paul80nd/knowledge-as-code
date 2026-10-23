@@ -55,6 +55,7 @@ full statement of each one.
 [`Schema.feature`][Schema.feature]:
 
 * A schema that promises what the tool cannot deliver is reported against the file that says so
+* A part line naming a list field is reported against the type, not the record filling it
 
 [`Clean.feature`][Clean.feature]:
 

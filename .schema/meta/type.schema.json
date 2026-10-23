@@ -483,7 +483,7 @@
       ]
     },
     "lineSource": {
-      "description": "Where one key of a part line takes its value from. `part.lead`, `part.bullets` and `part.aside.<Label>` read a part's body, which only a `source: headings` type gives a part. A `source: table` type sends the row through `part.text` and its columns. `front.<field>` is a field the type declares or inherits, `column.<Header>` is a header its `parts.columns:` declares, `part.aside.<Label>` is a label its `parts.asides:` declares, and `part.citations.<Label>` is the footnote a field reconciles against.",
+      "description": "Where one key of a part line takes its value from. `part.lead`, `part.bullets` and `part.aside.<Label>` read a part's body, which only a `source: headings` type gives a part. A `source: table` type sends the row through `part.text` and its columns. `front.<field>` is a field the type declares or inherits, with one value. `column.<Header>` is a header its `parts.columns:` declares, `part.aside.<Label>` is a label its `parts.asides:` declares, and `part.citations.<Label>` is the footnote a field reconciles against.",
       "anyOf": [
         {
           "enum": [
