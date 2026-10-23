@@ -88,7 +88,7 @@ Cite as `std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it`.
 
 Status: active.
 
-Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose records changed has moved its content-version (`ci`, active).
+Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export changed has moved its content-version (`ci`, active).
 
 ### A checkout leaves no credential behind
 

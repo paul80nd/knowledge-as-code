@@ -34,6 +34,6 @@
     "Where it is used": "* [svc-kac] is published to nuget.org with the key it returns."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5d2fe43eb501425005276c550f92d88e6063c774/examples/dog-fooding/tools/workflows/nuget-login.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1db53215acade9021ebbd53e16432c4523392da1/examples/dog-fooding/tools/workflows/nuget-login.md"
   }
 }
