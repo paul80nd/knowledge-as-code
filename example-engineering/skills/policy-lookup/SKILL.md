@@ -105,11 +105,19 @@ A clause cites another clause by writing its id in its own words. Search for tha
 
 ## Say when a policy is unsettled
 
-Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
+Read the `status` that puts a policy in force from `inForce`, a string, `null`, or absent, on the `policies` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
+`reviewBy` on every line you quote, and tell the reader what you saw:
 
+* **The `inForce` value**: in force. Answer from it.
 * **`status: draft`**: the policy was a proposal when the export was taken.
 * **`status: retired`**: the policy was withdrawn, and binds nothing.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`reviewBy` earlier than today**: the policy passed the date it was meant to be read again.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no policy in force on the strength of its status.
+`draft` and `retired` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 

@@ -136,11 +136,20 @@ published control for the rest.
 
 ## Say when a control is unsettled
 
-Read `status` and `review-by` before you rely on a control, and tell the reader what you saw:
+Read the `status` that puts a control in force from `inForce`, a string, `null`, or absent, on the `controls` entry of
+`types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
+`review-by` before you rely on a control, and tell the reader what you saw:
 
+* **The `inForce` value**: in force. Answer from it.
 * **`status: planned`**: the check is intended and is not running. Nothing proves the rule today.
 * **`status: retired`**: the check was stood down. Find what replaced it, and quote that.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written, and say the control proves
+  nothing today.
 * **`review-by` earlier than today**: nobody has confirmed the control still runs as this record says.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no control in force on the strength of its status.
+`planned` and `retired` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 

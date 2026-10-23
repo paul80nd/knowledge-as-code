@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-CI.a-version-moves-by-hand-and-publishes-once](https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/dog-fooding/standards/workflows.md#a-version-moves-by-hand-and-publishes-once) says the release notes \"**MUST** be that version's section of\n  `tooling/kac/CHANGELOG.md`\".",
+    "What it checks": "* [std-CI.a-version-moves-by-hand-and-publishes-once](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/standards/workflows.md#a-version-moves-by-hand-and-publishes-once) says the release notes \"**MUST** be that version's section of\n  `tooling/kac/CHANGELOG.md`\".",
     "How it works": "`ChangelogTests` in `tooling/kac.tests` runs three tests:\n\n* The first reads the `<Version>` element from `tooling/kac/kac.csproj` and looks for a `## <version> - <date>`\n  heading in `tooling/kac/CHANGELOG.md`.\n* The second fails a heading with nothing under it, which is a section added to satisfy the first test and left empty.\n* The third reads `docs/index.md`, which tells a reader the tool is early because it has not reached 1.0.0. It fails\n  that sentence once the version reaches 1.0.0.\n\nThe `tool` job runs all three under `dotnet test --project tooling/kac.tests`.",
     "Coverage and gaps": "These tests cover the section for the version in front of them. A reviewer judges whether that section describes the change, and a reader would notice it in the published release.\n\nThe first test also covers the rename. A `<Version>` that moved without a section of its own fails, so a release cannot ship with its entries still under `## Unreleased`.\n\nNothing checks that a change to `kac` took its line under `## Unreleased`, and nothing checks that the branch owner decided to release before `<Version>` moved. A reviewer catches both."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c32ef7e752de946ec0ebf6d1dadc53305cf06df5/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }

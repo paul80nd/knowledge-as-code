@@ -114,12 +114,20 @@ published standard for the rest.
 
 ## Say when a standard is unsettled
 
-Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
+Read the `status` that puts a standard in force from `inForce`, a string, `null`, or absent, on the `standards` entry
+of `types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
+`reviewBy` on every line you quote, and tell the reader what you saw:
 
+* **The `inForce` value**: in force. Answer from it.
 * **`status: draft`**: the standard was a proposal when the export was taken.
 * **`status: deprecated`**: the standard is on its way out, and new work is not built to it.
 * **`status: superseded`**: another standard replaced it. Find that one, and quote it.
+* **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`reviewBy` earlier than today**: the standard passed the date it was meant to be read again.
+
+**Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
+the key existed has none. Say so, and give `status` as written. Call no standard in force on the strength of its
+status. `draft`, `deprecated` and `superseded` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
