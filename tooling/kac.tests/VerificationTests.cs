@@ -28,10 +28,9 @@ public class VerificationTests
         foreach (var (was, now) in Diff.Changed(before, "MR")
                      .Where(file => RecordPath.IsRecord(file.Now, folders)))
         {
-            // git answers nothing for a path it cannot spell as one argument, which is a path with a
-            // space in it. Reported rather than skipped: a record this guard silently passed over reads
-            // exactly like one it approved.
-            if (Git.Run(Repo.Root, $"show {before}:{was}") is not { } text)
+            // Reported, not skipped: a record this guard silently passed over reads exactly like one it
+            // approved.
+            if (Git.Run(Repo.Root, "show", $"{before}:{was}") is not { } text)
             {
                 unread.Add(was);
                 continue;

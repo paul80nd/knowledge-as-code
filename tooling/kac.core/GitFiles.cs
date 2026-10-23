@@ -8,7 +8,7 @@ public static class GitFiles
     /// </summary>
     public static List<string>? Tracked(string root)
     {
-        if (Git.Run(root, "ls-files --cached --others --exclude-standard") is not { } listing) return null;
+        if (Git.Run(root, "ls-files", "--cached", "--others", "--exclude-standard") is not { } listing) return null;
         return
         [
             .. listing

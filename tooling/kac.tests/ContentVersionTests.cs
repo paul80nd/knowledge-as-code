@@ -50,7 +50,7 @@ public class ContentVersionTests
                 continue;
 
             // A corpus this branch created has no export to compare, and its first stamp stands.
-            if (Git.Run(Repo.Root, $"show {before}:{folder}/{Descriptor}") is not { } then) continue;
+            if (Git.Run(Repo.Root, "show", $"{before}:{folder}/{Descriptor}") is not { } then) continue;
 
             var moved = PublishedExport.Moved(Committed(before, folder), Working(folder), today);
 
@@ -82,12 +82,12 @@ public class ContentVersionTests
     private static Revision Committed(string commit, string folder)
     {
         var prefix = folder + "/";
-        var paths = Listed($"ls-tree -r -z --name-only {commit} -- {prefix}")
+        var paths = Listed("ls-tree", "-r", "-z", "--name-only", commit, "--", prefix)
             .Where(path => path.StartsWith(prefix, StringComparison.Ordinal))
             .Select(path => path[prefix.Length..])
             .ToHashSet(StringComparer.Ordinal);
 
-        var schema = Listed($"ls-tree -z --name-only {commit} -- {SchemaDir}/")
+        var schema = Listed("ls-tree", "-z", "--name-only", commit, "--", SchemaDir + "/")
             .Where(path => path.EndsWith(".yaml", StringComparison.Ordinal))
             .ToDictionary(path => path[(SchemaDir.Length + 1)..], path => Show(commit, path),
                 StringComparer.Ordinal);
@@ -114,15 +114,16 @@ public class ContentVersionTests
             new Tree(paths, rel => Files.ReadLf(Path.Combine(root, rel))), schema);
     }
 
-    private static IEnumerable<string> Listed(string args) =>
+    private static IEnumerable<string> Listed(params string[] args) =>
         Asked(args).Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
     /// <summary>Line endings normalised, as <c>Files.ReadLf</c> reads the working tree.</summary>
-    private static string Show(string commit, string path) => Asked($"show {commit}:{path}").Replace("\r\n", "\n");
+    private static string Show(string commit, string path) => Asked("show", $"{commit}:{path}").Replace("\r\n", "\n");
 
     /// <exception cref="InvalidOperationException">Where git could not answer.</exception>
-    private static string Asked(string args) =>
-        Git.Run(Repo.Root, args) ?? throw new InvalidOperationException($"git {args} failed, so nothing was compared.");
+    private static string Asked(params string[] args) =>
+        Git.Run(Repo.Root, args)
+        ?? throw new InvalidOperationException($"git {string.Join(' ', args)} failed, so nothing was compared.");
 
     /// <summary>Null where the descriptor states none.</summary>
     private static string? Stated(string folder) =>
