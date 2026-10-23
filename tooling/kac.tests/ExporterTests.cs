@@ -258,6 +258,28 @@ public class ExporterTests
     }
 
     [Fact]
+    public void A_wrapped_line_opening_with_a_code_span_joins_the_paragraph()
+        => Assert.Equal("Run the build, not `kac` on your path.", Scope("Run the build, not\n`kac` on your path."));
+
+    [Theory]
+    [InlineData("Run this:\n```sh\nkac validate\n```")]
+    [InlineData("Run this:\n````md\n```sh\nkac validate\n```\n````")]
+    [InlineData("Run this:\n~~~sh\nkac validate\n~~~")]
+    public void A_fence_is_left_exactly_as_written(string fenced)
+        => Assert.Equal(fenced, Scope(fenced));
+
+    [Fact]
+    public void A_wrapped_line_opening_with_a_triple_backtick_code_span_joins_the_paragraph()
+        => Assert.Equal("Quote a backtick as ``` ` ``` in a sentence.",
+            Scope("Quote a backtick as\n``` ` ``` in a sentence."));
+
+    private static string? Scope(string scope) =>
+        JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n", scope: scope))),
+                    "glossary/gls-one.json").Content)
+            .RootElement.GetProperty("sections").GetProperty("Scope").GetString();
+
+    [Fact]
     public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()
     {
         var corpus = Corpus(
