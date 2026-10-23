@@ -43,7 +43,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       # Each job holds its own checkout, so this packs the `source:` payments and dog-fooding name itself.
       - name: Build the package this corpus consumes
@@ -130,7 +130,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       # Only here: the corpus stood up below is generated as it is created, and the starter reads no template/.
       - name: Validate the template where it is authored
@@ -327,7 +327,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       # An export refuses where what it consumes is not restored, and this job holds its own checkout.
       - name: Build the package this corpus consumes
@@ -375,7 +375,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       - name: Publish from one corpus, consume it from another, and break it on purpose
         shell: bash

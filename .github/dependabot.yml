@@ -46,6 +46,18 @@ updates:
         patterns:
           - Spectre.Console*
 
+  # global.json pins the SDK with `rollForward: disable`, so CI and a contributor build with one version.
+  - package-ecosystem: dotnet-sdk
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    # tol-dotnet-sdk approves the 10.0 line, so a new major is a decision for that record and not a patch.
+    ignore:
+      - dependency-name: '*'
+        update-types: [version-update:semver-major]
+
   # MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
   - package-ecosystem: pip
     directory: /docs

@@ -5,12 +5,12 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-21T19:18:00Z
+  at: 2026-10-23T12:01:12Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.36.0
 sources:
-  - { resource: example-dogfooding, version: "0.75.7" }
+  - { resource: example-dogfooding, version: "0.75.8" }
   - { resource: example-engineering, version: "0.38.2" }
 verified:
   - { at: 2026-10-23T08:35:00Z, by: human:paul.law }
@@ -144,7 +144,7 @@ where the rule and the practice differ.
 |-----------|----------|-----------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|---------|-------------------------------------------------------------------------------------------------------|
 | `INTEG`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                             | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `ctl-0011`, `eng:ctl-0004` |                        | Covered | Every job runs on a pull request into `main`.                                                         |
 | `BLOCK`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                             | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `ctl-0011`, `eng:ctl-0004` |                        | Covered | The branch rule sets `validate` as the check a merge waits for.                                       |
-| `REPRO`   | MUST     |                                         | `dev-no-reproducible-build` |                                                                                                                                                    |                        | Gap     | The SDK installs as `10.0.x`, so version control alone does not say which SDK built a commit.         |
+| `REPRO`   | MUST     |                                         | `dev-no-reproducible-build` |                                                                                                                                                    |                        | Gap     | No standard here states it. `global.json` pins the SDK, which closed the listed deviation.            |
 | `LEVELS`  | MUST     | `eng:std-NETTST`, `eng:std-TEST`        |                             | `ctl-0009`, `eng:ctl-0008`                                                                                                                         |                        | Covered | Unit, behaviour and golden layers each catch a different fault.                                       |
 | `MAPPED`  | MUST     |                                         |                             |                                                                                                                                                    |                        | Gap     | The coverage gate asks every rule the schema declares for a fixture, and no standard states the duty. |
 | `REGRESS` | MUST     | `eng:std-GATES`                         |                             | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `eng:ctl-0004`                                                                         | `eng:pol-VURM.REGRESS` | Covered | A fixed defect keeps the test that catches it.                                                        |

@@ -43,7 +43,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       # The flat container answers 404 for a package never published, which is not a failure.
       - name: Decide whether this version is new
@@ -97,7 +97,7 @@ jobs:
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       # Asked again about the merge commit, because a published version cannot be replaced, only followed.
       - name: Run kac.core unit tests

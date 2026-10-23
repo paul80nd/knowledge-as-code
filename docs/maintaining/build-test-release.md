@@ -1,7 +1,8 @@
 # Build, test and release `kac`
 
-Clone the repository, install the .NET 10 SDK, and build every project from the repository root. `kac` is a .NET tool
-that checks a corpus (one repository of knowledge records kept in git) against the schema each type of record declares.
+Clone the repository, install the .NET SDK that `global.json` names, and build every project from the repository root.
+`kac` is a .NET tool that checks a corpus (one repository of knowledge records kept in git) against the schema each type
+of record declares.
 
 ```sh
 git clone https://github.com/paul80nd/knowledge-as-code.git
@@ -16,10 +17,13 @@ root unless its block changes directory.
 
 | Tool                      | Needed for                                  |
 |---------------------------|---------------------------------------------|
-| .NET 10 SDK               | building `kac` and running every test layer |
+| .NET SDK                  | building `kac` and running every test layer |
 | Python 3.10 or newer      | building the site and running `yamllint`    |
 | `actionlint`              | checking the workflows                      |
 | `jq`, `curl`, Claude Code | the round-trip scripts                      |
+
+`global.json` at the repository root pins the SDK to one version, and `dotnet` refuses to run here with any other. Its
+error names the version to install. CI installs the same version.
 
 On macOS, `brew install yamllint actionlint` installs both linters at the versions CI pins.
 
