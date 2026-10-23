@@ -151,3 +151,7 @@ rules:
     severity: warning
     max-words: five
     postures: [Obliged]
+
+  - id: alternatives-have-verdicts
+    description: Every alternative a widget weighed states an outcome.
+    severity: eror

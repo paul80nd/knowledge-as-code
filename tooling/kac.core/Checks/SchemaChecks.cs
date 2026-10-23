@@ -481,6 +481,10 @@ public static class SchemaChecks
 
     private static void CheckRule(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)
     {
+        if (rule.SeverityWritten is { } written && !RuleSpec.Severities.ContainsKey(written))
+            Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares 'severity: {written}', which the tool does not "
+                         + $"read. A severity is {List(RuleSpec.Severities.Keys)}.", f, rule.Line);
+
         if (rule.Problem is { } problem)
         {
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));

@@ -13,7 +13,8 @@ so the golden is the schema pass and nothing else.
   `required-when:` outside the vocabulary, and `values: $enums.sensitivity` where `_enums.yaml` declares no such enum.
   The loader asks for severity first, so a rule omitting both reports only the missing severity. The two faults
   therefore need a rule each.
-* **Undispatched** — a rule claiming `severity: warning` that nothing implements, `id.style: roman-numeral`,
+* **Undispatched** — a rule claiming `severity: warning` that nothing implements, `severity: eror` on
+  `alternatives-have-verdicts`, a rule class, `id.style: roman-numeral`,
   `index.order: newest-first`, `tier: experimental`, `type: tiemstamp` on a field, `of: bool` on a list, a `values:`
   list on a `type: list` field, a `min-items:` on a `type: string` field, an `in-force:` on a `type: string` field, a
   `part-required:` on a field naming no `ref:` to resolve the part against, and a `type: id` with no `ref:` at all,
@@ -21,9 +22,10 @@ so the golden is the schema pass and nothing else.
   finding, so `SchemaCheckTests` pins that third way in rather than a fourth field here. It pins the id on an entry key
   too, which is reported whatever the key declares, because the reference pass never walks an `entry:` block.
 * **Config** — `max-words: 5` on `widgets-are-brief`, an `expr:` rule, which reads no config. `y-statement-present`
-  declares `postures:`, which its class does not read, and `max-words: five`, which is not a word limit. These are the
-  only findings here that give a line, because each is reported against the rule's own entry. A misspelt posture is
-  judged against the register the records cite, so it needs records, and `AlignmentRollupTests` pins it.
+  declares `postures:`, which its class does not read, and `max-words: five`, which is not a word limit. These and the
+  misspelt severity are the only findings here that give a line, because each is reported against the rule's own
+  entry. A misspelt posture is judged against the register the records cite, so it needs records, and
+  `AlignmentRollupTests` pins it.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
   is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
   pointing at `widgets`, which keeps no parts, a `status:` stating a range and naming no `in-force:` value, an

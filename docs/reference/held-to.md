@@ -14,6 +14,7 @@ such as a `rules:` entry nothing runs or an `id.style:` no code reads. Every fin
 | `values: $enums.x` where `_enums.yaml` declares no `x`                                   | `schema-unreadable`  |
 | `shape: x` where `_shapes.yaml` declares no `x`, or a `shape:` beside an `entry:` block  | `schema-unreadable`  |
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers           | `schema-dispatch`    |
+| A rule `severity:` that is neither `error` nor `warning`                                 | `schema-dispatch`    |
 | A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
 | A config key, such as `max-words:`, on an `expr:` rule or a rule whose class ignores it  | `schema-dispatch`    |
 | A config value its rule cannot use, which then checks no record: `max-words: five`       | `schema-dispatch`    |
@@ -112,7 +113,7 @@ read.
 
 A rule you have not built yet keeps its `description:`, drops its `severity:`, and the type page renders it under
 **Declared, not yet enforced**. `kac checks` does not list it. A rule naming a severity that nothing dispatches is
-`schema-dispatch`.
+`schema-dispatch`. So is a `severity:` spelt as anything but `error` or `warning`, `Error` included.
 
 ## Where to go next
 
