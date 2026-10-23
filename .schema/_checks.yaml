@@ -4,8 +4,6 @@
 
 checks:
 
-  # ── schema ───────────────────────────────────────────────────────────────────
-
   schema-unknown-key:
     severity: error
     on-type-page: false
@@ -40,8 +38,6 @@ checks:
     notes: >
       The lookup from folder to schema goes by file name, so a type naming any other folder hides every record
       beneath it. See <https://paul80nd.github.io/knowledge-as-code/reference/held-to/#what-schema-shape-asks>.
-
-  # ── frontmatter ──────────────────────────────────────────────────────────────
 
   type:
     severity: error
@@ -187,8 +183,6 @@ checks:
     severity: error
     description: The id's discriminator is the same string as the filename's.
 
-  # ── identity ─────────────────────────────────────────────────────────────────
-
   filename-pattern:
     severity: error
     description: The filename matches the type's `filename.pattern`.
@@ -246,8 +240,6 @@ checks:
       Reported once, naming the first placeholder, since an unfinished copy has a dozen. The file has an id, a
       title and every section, so every other check passes and it reads as complete until someone follows a link to
       `{{a}}.md`.
-
-  # ── the parts of a record ────────────────────────────────────────────────────
 
   part-id-unique:
     severity: error
@@ -333,8 +325,6 @@ checks:
     notes: >
       A second modal in a row means a citation of that id can only ever pick out half of what the row says. The check
       reads modals only, so two obligations written under a single modal pass.
-
-  # ── links ────────────────────────────────────────────────────────────────────
 
   link-resolves:
     severity: error
@@ -557,8 +547,6 @@ checks:
     notes: >
       A page describes the records beneath it and is not one, so it has no id, tier or status. Nothing else reports
       it: a page is forked, and a forked file is never compared against upstream.
-
-  # ── content ──────────────────────────────────────────────────────────────────
 
   y-statement:
     severity: warning
