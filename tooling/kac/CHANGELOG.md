@@ -34,6 +34,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac export` wrote `null` under that key on every line of the flat file. `schema-shape` now reports the source
   against the type file, whether the type declares the field or `_universal.yaml` does, such as `tags`. Name a field
   with one value, or drop the key. The record file still has the field whole.
+- **`kac export` writes a part line arriving by two routes once.** A corpus consuming both a producer and that
+  producer's own producer met the grandparent's part lines twice, stamped alike. The parts file had both copies, and
+  the manifest's `parts` count included both, so the breadcrumb overstated what the corpus holds. Each line is now
+  written and counted once, as a record file already was. The export changes only for a corpus consuming that way, so
+  move its `content-version` by a patch.
 
 ## 0.37.0 - 2026-10-21
 
