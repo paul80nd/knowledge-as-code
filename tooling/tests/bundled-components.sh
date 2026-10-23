@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
-# bundled-components: check that a plugin holds every component its bundle.json kept, and none it trimmed.
-# Usage: sh tooling/tests/bundled-components.sh <plugin directory>. The `corpora` job runs it over `.dist/plugin`,
-# and `round-trip.sh` runs it over the installed copy. A component is a directory or a file, so both pass `[ -e ]`.
+# bundled-components: check that a plugin holds every component its bundle.json kept, none it trimmed, and
+# nothing in .claude-plugin/ but plugin.json. Usage: sh tooling/tests/bundled-components.sh <plugin directory>.
+# The `corpora` job runs it over `.dist/plugin`, and `round-trip.sh` runs it over the installed copy. A component
+# is a directory or a file, so both pass `[ -e ]`.
 #
 # Held to the subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no process substitution.
 
@@ -47,11 +48,11 @@ EOF
 
 [ -z "$missing" ] || fail "bundle.json kept components $PLUGIN_DIR does not hold:$missing"
 
-stray=''
+leftover=''
 while read -r component; do
   [ -n "$component" ] || continue
   if [ -e "$PLUGIN_DIR/$component" ]; then
-    stray="$stray $component"
+    leftover="$leftover $component"
   else
     echo "bundled-components: $component was trimmed, and is absent."
   fi
@@ -59,6 +60,14 @@ done <<EOF
 $TRIMMED
 EOF
 
-[ -z "$stray" ] || fail "bundle.json trimmed components $PLUGIN_DIR holds anyway:$stray"
+[ -z "$leftover" ] || fail "bundle.json trimmed components $PLUGIN_DIR holds anyway:$leftover"
 
-echo "bundled-components: $PLUGIN_DIR holds what bundle.json kept, and nothing it trimmed."
+# Claude Code loads nothing from .claude-plugin/ but the manifest, so a component filed there is lost.
+STRAY=$(find "$PLUGIN_DIR/.claude-plugin" -mindepth 1 -maxdepth 1 ! -name plugin.json)
+if [ -n "$STRAY" ]; then
+  echo "bundled-components: filed inside .claude-plugin/, where nothing loads it:"
+  echo "$STRAY"
+  exit 1
+fi
+
+echo "bundled-components: $PLUGIN_DIR holds what bundle.json kept, nothing it trimmed, and no stray file."

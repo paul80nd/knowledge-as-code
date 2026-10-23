@@ -131,9 +131,14 @@ claude plugin validate ./.dist --strict            # the marketplace beside it
 sh ../../tooling/tests/bundled-components.sh .dist/plugin
 ```
 
-`bundled-components.sh` fails when a component `bundle.json` kept is missing from the plugin, or one it trimmed is
-present. A component is a skill directory, a hook directory or a view's file. `round-trip.sh` runs the same script over
-the installed copy.
+`bundled-components.sh` fails in three cases:
+
+* A component `bundle.json` kept is missing from the plugin. A component is a skill directory, a hook directory or a
+  view's file.
+* A component it trimmed is present.
+* `.claude-plugin/` contains anything except `plugin.json`. Claude Code loads nothing else from there.
+
+`round-trip.sh` runs the same script over the installed copy.
 
 ## Check the site and the configuration
 

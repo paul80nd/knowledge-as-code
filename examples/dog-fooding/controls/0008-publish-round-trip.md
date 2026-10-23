@@ -33,10 +33,10 @@ A corpus that validates can still export a package nobody can install.
 
 Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora. `bundle` fails on a
 directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then
-`claude plugin validate --strict` runs over the assembled plugin and over its marketplace. Two more checks follow it.
-`tooling/tests/bundled-components.sh` fails a component `bundle.json` kept that is missing from the tree, or one it
-trimmed that is present. A component is a skill or hook directory, or a view's file. The job then checks that
-`.claude-plugin/` contains `plugin.json` and nothing else.
+`claude plugin validate --strict` runs over the assembled plugin and over its marketplace.
+`tooling/tests/bundled-components.sh` follows it. It fails a component `bundle.json` kept that is missing from the
+tree, or one it trimmed that is present. A component is a skill or hook directory, or a view's file. It also fails
+where `.claude-plugin/` contains anything but `plugin.json`.
 
 `round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`. It runs
 `bundled-components.sh` over the installed copy, then asks each skill in it the questions that skill describes. Where

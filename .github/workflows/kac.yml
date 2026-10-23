@@ -85,28 +85,14 @@ jobs:
         run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding
-      # no component at all passes it. The two guards below close that: the tree must hold every component
-      # bundle.json kept and none it trimmed, and .claude-plugin/ must hold the manifest and nothing else,
-      # because a component filed in there is loaded by nothing.
-      #
-      # `shell: sh` below limits this to the POSIX subset Git Bash and older macOS bash agree on.
+      # no component at all passes it. bundled-components.sh closes that: the tree must hold every component
+      # bundle.json kept and none it trimmed, and .claude-plugin/ must hold the manifest and nothing else.
       - name: Validate the assembled plugin and its marketplace
         shell: sh
-        env:
-          TEMPDIR: ${{ runner.temp }}
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
-
           sh ../../tooling/tests/bundled-components.sh .dist/plugin
-
-          find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
-
-          if [ -s "$TEMPDIR/stray.txt" ]; then
-            echo "filed inside .claude-plugin/, where nothing loads it:"
-            cat "$TEMPDIR/stray.txt"
-            exit 1
-          fi
 
   # Nothing here is per-corpus, so it runs once beside the matrix above.
   tool:
