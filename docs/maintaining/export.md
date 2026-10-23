@@ -38,7 +38,7 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
 * a type two corpora state at two in-force statuses
 * one corpus arriving twice, at two versions
 * a part line naming a record whose file the export does not write
-* a consumed type with no record files, where its part lines or its manifest counts say it has records
+* a consumed type with fewer record files than its manifest counts, or none where its part lines say it has records
 
 ## What it promises a consumer
 

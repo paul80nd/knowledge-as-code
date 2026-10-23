@@ -361,13 +361,16 @@ public static class Exporter
     }
 
     /// <summary>
-    /// The refusal for a consumed type that sent no record file while its part lines or manifest counts say it has
-    /// records. Null where a record file arrived, and for an empty type, which the export leaves out.
+    /// The refusal for a consumed type that sent fewer record files than its manifest counts, or none while its part
+    /// lines say it has records. Null where every counted file arrived, and for an empty type, which the export leaves
+    /// out. <c>Records</c> is what arrived from this producer alone, so this corpus's own records never fill the count.
     /// </summary>
     private static string? Lost(InheritedType theirs, string shortcode)
     {
         var fault = theirs switch
         {
+            { Records.Count: > 0 and var n } when n < theirs.StatedRecords =>
+                $"with {n} of the {theirs.StatedRecords} record files its manifest counts",
             { Records.Count: > 0 } => null,
             { PartLines.Count: > 0 and var n } => $"with {Count(n, "part line")} and no record files",
             { StatedRecords: > 0 and var n } => $"with no record files, and its manifest counts {Count(n, "record")}",

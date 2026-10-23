@@ -1214,6 +1214,33 @@ public class ExporterTests
     }
 
     [Fact]
+    public void A_producer_s_copy_with_no_record_files_refuses_where_the_grandparent_s_files_arrive_directly()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Holding(Consumed("eng", TheirInheritedLine)),
+            Holding(Consumed("gp", OldLine), Old));
+
+        Assert.Empty(plan.Files);
+        Assert.StartsWith("'glossary' arrives from eng with 1 part line and no record files.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_type_with_fewer_record_files_than_its_manifest_counts_refuses()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        theirs = theirs with { Types = [theirs.Types[0] with { StatedRecords = 3 }] };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), theirs);
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' arrives from eng with 1 of the 3 record files its manifest counts. "
+            + "Re-export and re-pack eng, then run kac restore.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
     public void A_consumed_type_with_no_records_and_no_lines_is_skipped_without_a_word()
     {
         var plan = Merged(Corpus(), Holding(Consumed("eng")));

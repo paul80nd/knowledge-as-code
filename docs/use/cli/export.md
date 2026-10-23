@@ -93,10 +93,11 @@ The others are a consumed corpus at an export format this `kac` cannot read, and
 shape or a different section fidelity from yours. Fix the first by re-exporting and re-packing upstream. The second is a
 decision about the two corpora, not about this command.
 
-`export` then checks the export it planned. Two faults there end the run too:
+`export` then checks the export it planned. Each of these ends the run too:
 
 * a part line naming a record whose file the export does not write
-* a consumed type that arrives with no record files, where its part lines or its manifest counts say it has records
+* a consumed type that arrives with fewer record files than its producer's manifest counts
+* a consumed type that arrives with no record files, where its part lines say it has records
 
 Re-export and re-pack the corpus that sent the type, then run `restore`. A consumed type that has no records, no part
 lines and counts of zero is left out without a message.
