@@ -647,8 +647,8 @@ public static class Exporter
         static bool Structural(string line) =>
             Bullet(line) || Heading(line) || line[0] is '>' or '|' || Fence(line) || Ordered(line);
 
-        // CommonMark 4.5: three or more backticks or tildes, and a backtick in a backtick fence's info string makes
-        // the line a code span.
+        // CommonMark 0.31.2, 4.5: three or more backticks or tildes. A backtick in a backtick fence's info string
+        // makes the line a code span.
         static bool Fence(string line) =>
             line.StartsWith("~~~", StringComparison.Ordinal)
             || (line.StartsWith("```", StringComparison.Ordinal) && !line.TrimStart('`').Contains('`'));

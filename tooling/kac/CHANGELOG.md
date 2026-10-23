@@ -25,10 +25,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   list, such as `dependency-criticality` or `list-order`, now names that entry. A finding about the whole record, such
   as `required-field`, `unknown-key` or `key-order`, stays on the opening `---`.
 - **`kac export` joins a wrapped line that opens with a code span.** A paragraph whose later line started with a
-  backtick, such as `` `kac` ``, travelled with the source's line breaks in it. Only a fence keeps a paragraph as
-  written: a line opening with three or more backticks, or three or more tildes. A `~~~` fence was joined before, and
-  now arrives as written. The export changes wherever a record has either, so move `content-version` by a patch, and
-  each consumer's `resolved:` lock with it.
+  backtick, such as `` `kac` ``, travelled with the source's line breaks in it. Of the lines opening with a backtick
+  or a tilde, only a fence keeps a paragraph as written: three or more backticks, or three or more tildes. A `~~~`
+  fence was joined before, and now arrives as written. The export changes wherever a record has either, so move
+  `content-version` by a patch, and each consumer's `resolved:` lock with it.
 
 ## 0.37.0 - 2026-10-21
 
