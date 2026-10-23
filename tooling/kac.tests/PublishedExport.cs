@@ -11,8 +11,8 @@ internal sealed record Revision(string Name, Tree Corpus, IReadOnlyDictionary<st
 
 /// <summary>
 /// What a corpus publishes, built in-process by this build's <c>Exporter</c> whichever revision it reads, so a change to
-/// <c>kac</c> alone moves no byte. Inherited records are left out of both builds: <c>.imports/</c> is untracked, so git
-/// keeps no base revision of them.
+/// <c>kac</c> alone moves no byte. <c>Moved</c> leaves inherited records out of both builds: <c>.imports/</c> is
+/// untracked, so git keeps no base revision of them.
 /// </summary>
 internal static class PublishedExport
 {
@@ -41,7 +41,17 @@ internal static class PublishedExport
     /// The export's files by path. The run states no timestamp, commit or dirty flag, so two calls over one revision
     /// return the same bytes.
     /// </summary>
-    private static Dictionary<string, string> Files(Revision revision, DateOnly today)
+    private static Dictionary<string, string> Files(Revision revision, DateOnly today) =>
+        Built(revision, today).ToDictionary(file => file.Path,
+            file => file.Path == Exporter.ManifestFile ? WithoutMechanismVersion(file.Content) : file.Content,
+            StringComparer.Ordinal);
+
+    /// <summary>
+    /// The export's files as <c>kac export</c> would write them, with <c>inherited</c> merged in where it is given.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Where the exporter refuses the revision.</exception>
+    internal static IReadOnlyList<ExportFile> Built(Revision revision, DateOnly today,
+        IReadOnlyList<InheritedCorpus>? inherited = null)
     {
         var descriptor = CorpusDescriptor.Parse(
             revision.Corpus.Exists(Corpus.Descriptor) ? revision.Corpus.Read(Corpus.Descriptor) : "");
@@ -49,16 +59,14 @@ internal static class PublishedExport
         var corpus = Corpus.Load(revision.Corpus, Schema.Load(revision.Schema, descriptor.Enums), descriptor);
 
         var plan = Exporter.Plan(corpus, Publishing.For(descriptor, LinkRef), null,
-            new ExportRun("", today, null, null));
+            new ExportRun("", today, null, null), inherited);
 
         if (plan.Refused.Count > 0)
             throw new InvalidOperationException(
                 $"{revision.Name} cannot be exported, so its export was not compared:\n  "
                 + string.Join("\n  ", plan.Refused));
 
-        return plan.Files.ToDictionary(file => file.Path,
-            file => file.Path == Exporter.ManifestFile ? WithoutMechanismVersion(file.Content) : file.Content,
-            StringComparer.Ordinal);
+        return plan.Files;
     }
 
     /// <summary>The manifest without <c>mechanismVersion</c>, which a template take moves in every corpus.</summary>

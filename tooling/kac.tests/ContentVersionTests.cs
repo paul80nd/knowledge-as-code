@@ -1,7 +1,8 @@
+using System.Text;
 using kac.core;
 
-// `validate` sees one revision, so this compares two exports, as `VerificationTests` compares two records. `ctl-0011`
-// names where its reach differs from `std-VERS`.
+// `validate` sees one revision, so this compares two, as `VerificationTests` compares two records. `ctl-0011` names
+// where its reach differs from `std-VERS`.
 
 namespace kac.tests;
 
@@ -30,11 +31,7 @@ public class ContentVersionTests
             $"no folder under '{RecordPath.Published}/' keeps a {Descriptor}, so this guard is checking "
             + "nothing. Either the corpora moved, or the descriptor was renamed.");
 
-        // Every status, because adding, rewriting, renaming and deleting a file can each change an export.
-        var touched = Diff.Changed(before, "AMRD")
-            .SelectMany(file => new[] { file.Was, file.Now })
-            .Concat(Diff.Untracked())
-            .ToList();
+        var touched = Touched(before);
 
         var schemaMoved = touched.Any(path => path.StartsWith(SchemaDir + "/", StringComparison.Ordinal));
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -67,6 +64,176 @@ public class ContentVersionTests
             + string.Join("\n  ", unmoved)
             + $"\nMove {Stamp} in each {Descriptor}. std-VERS says which part of it a change moves.");
     }
+
+    [Fact]
+    public void A_corpus_whose_resolved_lock_moved_has_moved_its_content_version()
+    {
+        var before = Diff.Against();
+        if (before is null) return;
+
+        var unmoved = new List<string>();
+
+        foreach (var corpus in Corpora().Order(StringComparer.Ordinal))
+        {
+            var folder = $"{RecordPath.Published}/{corpus}";
+            if (Git.Run(Repo.Root, "show", $"{before}:{folder}/{Descriptor}") is not { } then) continue;
+
+            var now = Files.ReadLf(Path.Combine(Repo.Root, folder, Descriptor));
+            var was = Locks(then);
+            var held = Locks(now);
+
+            // An entry added or removed moves its lock from or to nothing.
+            var moved = was.Keys.Union(held.Keys)
+                .Order(StringComparer.Ordinal)
+                .Where(key => was.GetValueOrDefault(key) != held.GetValueOrDefault(key))
+                .Select(key => $"{key} from {was.GetValueOrDefault(key) ?? "nothing"} to "
+                               + $"{held.GetValueOrDefault(key) ?? "nothing"}")
+                .ToList();
+
+            if (moved.Count == 0 || VersionRange.Newer(Version(now) ?? "", Version(then) ?? "")) continue;
+
+            unmoved.Add($"{folder} at {Version(now)}\n      " + string.Join("\n      ", moved));
+        }
+
+        Assert.True(unmoved.Count == 0,
+            $"these corpora moved a resolved: lock under consumes: and left {Stamp} where it was:\n  "
+            + string.Join("\n  ", unmoved)
+            + $"\nMove {Stamp} in each {Descriptor} by the part its producer moved. std-VERS states the rule.");
+    }
+
+    [Fact]
+    public void A_corpus_whose_bundle_takes_a_changed_component_has_moved_its_content_version()
+    {
+        var before = Diff.Against();
+        if (before is null) return;
+
+        var touched = Touched(before).ToHashSet(StringComparer.Ordinal);
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var unmoved = new List<string>();
+
+        foreach (var corpus in Corpora().Order(StringComparer.Ordinal))
+        {
+            var folder = $"{RecordPath.Published}/{corpus}";
+            var root = Path.Combine(Repo.Root, folder);
+            var from = CorpusDescriptor.Parse(Files.ReadLf(Path.Combine(root, Descriptor))).PluginFrom;
+
+            var ownDir = $"{folder}/{Bundler.SourceDir}";
+            var own = Bundler.Read(Path.Combine(root, Bundler.SourceDir)) ?? [];
+            var sharedDir = from is null ? null : Rel(Path.Combine(root, from));
+            var shared = sharedDir is null ? [] : Bundler.Read(Path.Combine(Repo.Root, sharedDir)) ?? [];
+            var tree = sharedDir is null ? own : Bundler.Merge(shared, own);
+
+            // The merged tree keeps the very file it read, so a shared file the corpus overrides drops out here.
+            var changed = Changed(touched, ownDir, own)
+                .Concat(sharedDir is null ? [] : Changed(touched, sharedDir, shared))
+                .Where(file => tree.Any(kept => ReferenceEquals(kept, file)))
+                .ToList();
+            if (changed.Count == 0) continue;
+
+            // A corpus this branch created has no stamp to compare, and its first stamp stands.
+            if (Git.Run(Repo.Root, "show", $"{before}:{folder}/{Descriptor}") is not { } then) continue;
+
+            var plan = Bundler.Plan(new BundleSource(tree, [.. Exported(folder, today).Select(Bytes)]));
+            if (plan.Problems.Count > 0)
+                throw new InvalidOperationException(
+                    $"{folder} cannot be bundled, so its plugin was not compared:\n  "
+                    + string.Join("\n  ", plan.Problems));
+
+            var bundled = plan.Files.Select(file => file.Path).ToHashSet(StringComparer.Ordinal);
+            var reached = changed
+                .Where(file => bundled.Contains($"{Dist.PluginDir}/{file.Path}"))
+                .Select(file => file.Path)
+                .Order(StringComparer.Ordinal)
+                .ToList();
+
+            if (reached.Count == 0 || VersionRange.Newer(Stated(folder) ?? "", Version(then) ?? "")) continue;
+
+            unmoved.Add($"{folder} at {Stated(folder)}\n      "
+                        + string.Join("\n      ", reached.Take(ListedPerCorpus))
+                        + (reached.Count > ListedPerCorpus
+                            ? $"\n      and {reached.Count - ListedPerCorpus} more"
+                            : ""));
+        }
+
+        Assert.True(unmoved.Count == 0,
+            $"these corpora bundle a skill, a hook or a manifest this branch changed, and left {Stamp} where it "
+            + "was:\n  "
+            + string.Join("\n  ", unmoved)
+            + $"\nMove {Stamp} in each {Descriptor}. std-VERS says which part of it a change moves.");
+    }
+
+    /// <summary>
+    /// Every path the branch added, changed, renamed or deleted, committed or not, at both ends of a rename. Each of
+    /// those can change an export or a bundle.
+    /// </summary>
+    private static List<string> Touched(string before) =>
+        Diff.Changed(before, "AMRD")
+            .SelectMany(file => new[] { file.Was, file.Now })
+            .Concat(Diff.Untracked())
+            .ToList();
+
+    /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched.</summary>
+    private static IEnumerable<BundleFile> Changed(
+        IReadOnlySet<string> touched, string dir, IReadOnlyList<BundleFile> tree) =>
+        tree.Where(file => touched.Contains($"{dir}/{file.Path}"));
+
+    /// <summary>Forward-slashed and relative to the repository.</summary>
+    private static string Rel(string path) =>
+        Path.GetRelativePath(Repo.Root, Path.GetFullPath(path)).Replace('\\', '/');
+
+    /// <summary>
+    /// The export <c>kac export</c> would write from the working tree. Each corpus it consumes is built the same way
+    /// from its folder here, and merged in as <c>kac restore</c> would leave it.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Where a corpus it consumes has no folder here.</exception>
+    private static IReadOnlyList<ExportFile> Exported(string folder, DateOnly today)
+    {
+        var descriptor = CorpusDescriptor.Parse(Files.ReadLf(Path.Combine(Repo.Root, folder, Descriptor)));
+        var restored = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        foreach (var entry in descriptor.Consumes)
+        {
+            var producer = Producer(entry.Corpus)
+                           ?? throw new InvalidOperationException(
+                               $"{folder} consumes {entry.Corpus}, and no corpus under '{RecordPath.Published}/' "
+                               + "is called that, so its bundle was not compared.");
+
+            foreach (var file in Exported(producer, today))
+                restored[$"{entry.Shortcode}/{file.Path}"] = file.Content;
+        }
+
+        var (inherited, _) = Inherited.Read(
+            descriptor.Consumes,
+            dir => [.. Inside(restored, dir).Where(name => !name.Contains('/', StringComparison.Ordinal))],
+            dir => [.. Inside(restored, dir)
+                .Where(name => name.Contains('/', StringComparison.Ordinal))
+                .Select(name => name[..name.IndexOf('/', StringComparison.Ordinal)])
+                .Distinct(StringComparer.Ordinal)],
+            restored.GetValueOrDefault);
+
+        return PublishedExport.Built(Working(folder), today, inherited);
+    }
+
+    private static IEnumerable<string> Inside(Dictionary<string, string> files, string dir) =>
+        files.Keys
+            .Where(path => path.StartsWith(dir + "/", StringComparison.Ordinal))
+            .Select(path => path[(dir.Length + 1)..]);
+
+    /// <summary>The folder of the corpus here that calls itself <c>name</c>, or null.</summary>
+    private static string? Producer(string? name) =>
+        Corpora()
+            .Select(corpus => $"{RecordPath.Published}/{corpus}")
+            .FirstOrDefault(folder =>
+                CorpusDescriptor.Parse(Files.ReadLf(Path.Combine(Repo.Root, folder, Descriptor))).Name == name);
+
+    private static BundleFile Bytes(ExportFile file) => new(file.Path, Encoding.UTF8.GetBytes(file.Content));
+
+    /// <summary>Each <c>consumes:</c> entry's <c>resolved:</c> lock, by the corpus it names.</summary>
+    private static Dictionary<string, string?> Locks(string descriptor) =>
+        CorpusDescriptor.Parse(descriptor).Consumes
+            .GroupBy(entry => entry.Corpus ?? entry.Shortcode ?? "", StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.First().Resolved, StringComparer.Ordinal);
 
     private static IReadOnlySet<string> Corpora() =>
         Directory
