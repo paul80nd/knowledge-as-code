@@ -370,11 +370,14 @@ names, and an entry key containing a list is an array inside it.
 **Prose arrives unwrapped.** The 120-column wrap is joined, and blank lines stay. A list, heading, quote, table or fence
 arrives exactly as written.
 
-**A link in a section arrives inline.** An inline link arrives with its target exactly as the author wrote it. A
-relative target is relative to the record's `path`. A full, collapsed or shortcut reference link arrives as an inline
-link to the target its definition states, with the definition's title. An image reference arrives as an inline image.
-A reference with no definition, and one inside a code span, arrives as written. The definitions themselves never
-travel.
+**A link in a section or a part line arrives inline.** An inline link arrives with its target exactly as the author
+wrote it. A relative target is relative to the record's `path`. A full, collapsed or shortcut reference link arrives as
+an inline link to the target its definition states, with the definition's title. An image reference arrives as an
+inline image. A reference with no definition, and one inside a code span, arrives as written. The definitions
+themselves never travel.
+
+On a part line, this covers a value read from `part.lead`, `part.aside.<Label>` or `part.bullets`. A value read from
+`part.text` or `column.<Header>` is plain text, so a link there arrives as its words alone.
 
 **Output is deterministic.** Ordering is ordinal everywhere but a term line's own position, which sorts
 case-insensitively on the term. Two runs from one commit produce identical bytes but for `generatedAt`.
