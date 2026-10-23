@@ -112,7 +112,7 @@ Read the `status` that puts an entry in force from `inForce`, a string, `null`, 
 the key existed has none. Say so, and give `status` as written. Call no entry in force on the strength of its status.
 `draft` still means what the bullet above says.
 
-The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside either.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
 ## Say when the nearest entry is about something else
 
