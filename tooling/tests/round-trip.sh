@@ -93,35 +93,9 @@ EXPORT_MANIFEST="$ROOT/$CORPUS_ROOT/manifest.json"
 [ -f "$EXPORT_MANIFEST" ] || fail "the installed plugin holds no $CORPUS_ROOT/manifest.json."
 
 # A component surviving when its type stayed behind is a skill pointing at files the export never wrote.
-# `bundle.json` travels inside the plugin, so both lists are read from the installed copy.
+# `bundle.json` travels inside the plugin, so the guard reads it from the installed copy.
+sh "$(dirname "$0")/bundled-components.sh" "$ROOT" || fail "the installed plugin does not match its bundle.json."
 BUNDLE="$ROOT/bundle.json"
-[ -f "$BUNDLE" ] || fail "the installed plugin holds no bundle.json."
-
-jqr '.included[].path' "$BUNDLE" > "$WORK/included.txt"
-jqr '.trimmed[].path' "$BUNDLE" > "$WORK/trimmed.txt"
-
-# Two lists read as empty leave every assertion below true of nothing and still close on a pass. Two
-# ways to arrive there: jq fails, which `jqr` cannot report because POSIX sh has no `pipefail`, or a
-# key is renamed, which jq answers with `null` rather than an error. Asking for the type catches both,
-# because `select` on a false condition writes nothing at all.
-COMPONENTS=$(jqr 'select((.included | type) == "array" and (.trimmed | type) == "array")
-  | (.included | length) + (.trimmed | length)' "$BUNDLE")
-[ -n "$COMPONENTS" ] && [ "$COMPONENTS" -gt 0 ] \
-  || fail "bundle.json names no component under included and trimmed."
-
-while read -r component; do
-  [ -n "$component" ] || continue
-  [ -e "$ROOT/$component" ] || fail "bundle.json kept $component and the installed plugin does not hold it."
-  echo "round-trip: $component installed."
-done < "$WORK/included.txt"
-
-while read -r component; do
-  [ -n "$component" ] || continue
-  if [ -e "$ROOT/$component" ]; then
-    fail "$component was trimmed and the installed plugin holds it anyway."
-  fi
-  echo "round-trip: $component trimmed, and absent from the install."
-done < "$WORK/trimmed.txt"
 
 # Each skill names the parts file of the type in its `requires`, and no other type's. Skills only: a hook
 # renders its text when the bundle is assembled and searches nothing.

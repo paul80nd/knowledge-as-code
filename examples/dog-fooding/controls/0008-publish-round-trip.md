@@ -33,14 +33,16 @@ A corpus that validates can still export a package nobody can install.
 
 Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora. `bundle` fails on a
 directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then
-`claude plugin validate --strict` runs over the assembled plugin and over its marketplace. Two more checks follow it:
-every component `bundle.json` lists is in the tree, as a skill or hook directory or a view's file, and
+`claude plugin validate --strict` runs over the assembled plugin and over its marketplace. Two more checks follow it.
+`tooling/tests/bundled-components.sh` fails a component `bundle.json` kept that is missing from the tree, or one it
+trimmed that is present. A component is a skill or hook directory, or a view's file. The job then checks that
 `.claude-plugin/` contains `plugin.json` and nothing else.
 
-`round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`, then asks each
-skill in it the questions that skill describes. Where the build index ships, it checks that the build-index hook pushes
-at most 10,000 characters, and runs the installed script twice for one session to check that it prints once. It logs
-how long a later call takes on a small input and on a 200 KB one, and fails on neither.
+`round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`. It runs
+`bundled-components.sh` over the installed copy, then asks each skill in it the questions that skill describes. Where
+the build index ships, it checks that the build-index hook pushes at most 10,000 characters, and runs the installed
+script twice for one session to check that it prints once. It logs how long a later call takes on a small input and on
+a 200 KB one, and fails on neither.
 
 `import-round-trip` publishes from `engineering`, consumes it from `payments`, renames a clause upstream, and asserts
 the downstream build fails and reports that clause.
