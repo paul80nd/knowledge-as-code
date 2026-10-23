@@ -153,7 +153,9 @@ public class GeneratedFilePlanTests
             f => f.Path == "adrs.md");
 
         Assert.Equal(GeneratedFiles.FileState.Drifted, first.State);
+        Assert.True(first.Stale);
         Assert.Equal(GeneratedFiles.FileState.UpToDate, second.State);
+        Assert.False(second.Stale);
     }
 
     [Fact]
