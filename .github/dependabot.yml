@@ -34,13 +34,12 @@ updates:
       prefix: build
     groups:
       # The test packages move as a set. `Reqnroll.xunit.v3` is built against a particular
-      # `xunit.v3`, and both test projects carry the same three, so raised one at a time
-      # they would arrive as pull requests that cannot be merged alone.
+      # `xunit.v3`, so raised one at a time they would arrive as pull requests that cannot be
+      # merged alone.
       test-packages:
         patterns:
           - xunit*
           - Reqnroll*
-          - Microsoft.NET.Test.Sdk
       # tol-spectre-console approves both at one range, and one assessment covers them together.
       spectre:
         patterns:

@@ -35,7 +35,7 @@ tags: [ changelog, releases, versioning ]
 * The third reads `docs/index.md`, which tells a reader the tool is early because it has not reached 1.0.0. It fails
   that sentence once the version reaches 1.0.0.
 
-The `tool` job runs all three under `dotnet test tooling/kac.tests`.
+The `tool` job runs all three under `dotnet test --project tooling/kac.tests`.
 
 ## Coverage and gaps
 

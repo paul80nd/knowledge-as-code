@@ -56,8 +56,8 @@ corpus-facing half of each of those pages, around tables generated from the type
 
 A command page opens with a usage block generated from the parser's own command model, and `CliReferenceTests` holds it
 to matching. A command that grows an option gets its page back in step with
-`KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`. Read the diff afterwards, because the update blesses a regression as
-happily as a fix.
+`KAC_UPDATE_DOCS=1 dotnet test --project tooling/kac.tests`. Read the diff afterwards, because the update blesses a
+regression as happily as a fix.
 
 Beneath that block, each page follows the same sections in this order: **What it does**, **Examples**, **Known
 limits**. That set is fixed, and it is what lets a reader ask the same question of any command and find the answer in

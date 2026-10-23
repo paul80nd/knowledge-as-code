@@ -15,6 +15,8 @@ permissions:
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  # xunit.v3 brings in Microsoft.Testing.Extensions.Telemetry, which reads this variable.
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: '1'
 
 jobs:
   # Each corpus declares a different `types:`, so the matrix proves the framework holds for a subset too.
@@ -193,10 +195,10 @@ jobs:
         # Empty on a push, where there is no base to compare, so the guards reading git history read nothing.
         env:
           KAC_BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || '' }}
-        run: dotnet test tooling/kac.tests
+        run: dotnet test --project tooling/kac.tests
 
       - name: Run kac feature tests
-        run: dotnet test tooling/kac.features
+        run: dotnet test --project tooling/kac.features
 
       - name: Run the golden test suite
         run: dotnet run tooling/kac-tests.cs

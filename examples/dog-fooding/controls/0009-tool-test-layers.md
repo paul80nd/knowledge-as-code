@@ -35,8 +35,8 @@ Each layer asserts something different about the same corpus.
 
 The `tool` job runs three commands:
 
-* `dotnet test tooling/kac.tests` for the unit layer.
-* `dotnet test tooling/kac.features` for the Reqnroll behaviour specs.
+* `dotnet test --project tooling/kac.tests` for the unit layer.
+* `dotnet test --project tooling/kac.features` for the Reqnroll behaviour specs.
 * `dotnet run tooling/kac-tests.cs` for the golden fixtures.
 
 [Build, test and release](https://paul80nd.github.io/knowledge-as-code/maintaining/build-test-release/) says what

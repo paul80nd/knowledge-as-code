@@ -29,7 +29,7 @@ tags: [ goldens, testing ]
   * `<path> differs from the committed export: <the first difference>`
   * `no expectation for <what> at <file>. run with --update, then read the diff`
 * It prints `MISSING <name>: no golden.`
-* One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.
+* One of `dotnet run tooling/kac-tests.cs` and `dotnet test --project tooling/kac.tests` passes while the other fails.
 * The branch is green on your machine and red in CI.
 
 ## Impact
@@ -67,7 +67,7 @@ The export golden is a contract a consumer reads.
 **Did only `dotnet test` fail, and does it fail on your machine as well?**
 
 ```sh
-dotnet test tooling/kac.tests
+dotnet test --project tooling/kac.tests
 ```
 
 * **Yes** → the golden suite is not the cause. The failing test's message says what to change. Change it, then go to
@@ -83,7 +83,7 @@ dotnet test tooling/kac.tests
 
   ```sh
   git fetch origin main
-  KAC_BASE_REF=origin/main dotnet test tooling/kac.tests
+  KAC_BASE_REF=origin/main dotnet test --project tooling/kac.tests
   ```
 
   Where a test now fails, its message says what to change. Change it, then go to [Resolution](#resolution) and start
@@ -137,12 +137,12 @@ Run steps 1 to 4 from the root of the repository.
 4. Run all three test layers, one at a time:
 
    ```sh
-   dotnet test tooling/kac.tests
-   dotnet test tooling/kac.features
+   dotnet test --project tooling/kac.tests
+   dotnet test --project tooling/kac.features
    GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs
    ```
 
-   The first two each end on a summary line opening `Passed!`. The golden suite ends `all <n> scenario(s) passed.`
+   The first two each print `Test run summary: Passed!`. The golden suite ends `all <n> scenario(s) passed.`
 
 5. Run `kac generate` in each corpus you changed, and in `template/`. From a corpus under `examples/`:
 
