@@ -359,7 +359,30 @@ public class BundlerTests
         var plan = Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest()]);
 
         Assert.False(Written(plan, Bundler.ManifestFile).TryGetProperty("version", out _));
-        Assert.Contains(plan.Warnings, w => w.Contains("no contentVersion"));
+        Assert.Contains(
+            "the export states no content version and .claude-plugin/plugin.json states no version, so the plugin "
+            + "has none and nothing will install it. Set content-version in .corpus.yaml and export again.",
+            plan.Warnings);
+    }
+
+    [Fact]
+    public void A_corpus_with_no_content_version_keeps_the_manifest_version_and_names_it()
+    {
+        const string versioned = """
+                                 {
+                                   "version": "0.0.1",
+                                   "metadata": { "corpusRoot": "corpus", "components": [] }
+                                 }
+                                 """;
+
+        var plan = Plan(plugin: [(Bundler.ManifestFile, versioned)], export: [Manifest()]);
+
+        Assert.Equal("0.0.1", Written(plan, Bundler.ManifestFile).GetProperty("version").GetString());
+        Assert.Contains(
+            "the export states no content version, so the plugin keeps version 0.0.1 from "
+            + ".claude-plugin/plugin.json. Set content-version in .corpus.yaml and export again to choose the "
+            + "version it publishes.",
+            plan.Warnings);
     }
 
     [Fact]

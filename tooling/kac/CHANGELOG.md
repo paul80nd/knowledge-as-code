@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **`kac bundle` names the version a plugin keeps when the corpus states none.** Where `.corpus.yaml` had no
+  `content-version`, `bundle` warned that the plugin had no version and nothing would install it. The plugin kept the
+  version its own `plugin.json` states, so the warning was wrong. It now names that version. Set `content-version` and
+  export again to choose the version a plugin publishes.
+
 ## 0.38.0 - 2026-10-23
 
 ### Fixed

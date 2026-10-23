@@ -216,9 +216,15 @@ public static class Bundler
 
         // `docs/use/cli/bundle.md` says why the plugin takes the content version and not the format version.
         var version = exportManifest.ContentVersion;
+        var manifestVersion = JsonRead.Str(manifest["version"]);
+        var published = version ?? manifestVersion;
         if (version is null)
-            warnings.Add("the export states no contentVersion, so the plugin manifest carries no version "
-                         + "and nothing will install it. Set content-version in .corpus.yaml.");
+            warnings.Add(manifestVersion is null
+                ? $"the export states no content version and {ManifestFile} states no version, so the plugin has "
+                  + "none and nothing will install it. Set content-version in .corpus.yaml and export again."
+                : $"the export states no content version, so the plugin keeps version {manifestVersion} from "
+                  + $"{ManifestFile}. Set content-version in .corpus.yaml and export again to choose the version "
+                  + "it publishes.");
 
         // A path no component owns is unconditional and travels whatever the corpus adopted.
         var files = (from file in source.PluginTree
@@ -259,7 +265,7 @@ public static class Bundler
 
         files.Add(Utf8($"{Dist.PluginDir}/{RecordFile}",
             Serialize(new BundleRecord(
-                RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
+                RecordVersion, pluginName, published, corpusRoot,
                 new BundleExport(
                     exportManifest.FormatVersion, exportManifest.Corpus,
                     exportManifest.ContentVersion, [.. carried.Select(c => c.Type)]),
@@ -270,7 +276,7 @@ public static class Bundler
 
         return new BundlePlan(
             [.. files.OrderBy(f => f.Path, StringComparer.Ordinal)],
-            pluginName, version ?? JsonRead.Str(manifest["version"]), included, trimmed, warnings, problems);
+            pluginName, published, included, trimmed, warnings, problems);
     }
 
     /// <summary>
