@@ -376,10 +376,14 @@ reference with no definition, and one inside a code span, arrives as written. Th
 
 **A relative link arrives as the address of the page it points at.** This applies where the corpus has an address. The
 target must resolve to a Markdown file the corpus contains, such as a record, a type page or a framework page. The
-export fills in the [template](#the-human-form-as-a-template) with that file's path and the target's anchor. Any other
-link or image keeps the target its author or its definition wrote. That covers an absolute URL, an anchor alone, an
-image, and a target that resolves to nothing in the corpus. A relative target that stays is relative to the record's
-`path`. An inherited record arrives exactly as its producer exported it.
+export fills in the [template](#the-human-form-as-a-template) with that file's path and the target's anchor. A query
+on the target, such as `?plain=1`, is dropped. A link to a type's folder, such as `../runbooks/`, arrives as the
+address of that type's page.
+
+Any other link or image keeps the target its author or its definition wrote. That covers an absolute URL, an anchor
+alone, an image, and a target that resolves to nothing in the corpus. A relative target that stays is relative to the
+record's `path`. An inherited record arrives exactly as its producer exported it. A package exported by `kac` 0.38.0
+or earlier has relative targets, and they stay relative until that producer publishes a new version.
 
 On a part line, this covers a value read from `part.lead`, `part.aside.<Label>` or `part.bullets`. A value read from
 `part.text` or `column.<Header>` is plain text, so a link there arrives as its words alone.
@@ -442,11 +446,11 @@ files moves that type's `shapeVersion` like any other. A fresh bundle of one exp
 
 ## Three versions, and none implies another
 
-| Version          | Covers                                                                    | Moved by          |
-|------------------|---------------------------------------------------------------------------|-------------------|
-| `formatVersion`  | the manifest's keys, the layout of the tree, and how a link is built      | the tool          |
-| `shapeVersion`   | one type's files, given on that type's entry under `types`                | the type's schema |
-| `contentVersion` | what the corpus knows, as `content-version` in `.corpus.yaml`             | you, by hand      |
+| Version          | Covers                                                                                        | Moved by          |
+|------------------|-----------------------------------------------------------------------------------------------|-------------------|
+| `formatVersion`  | the manifest's keys, the layout of the tree, and how a reader builds a link from the manifest | the tool          |
+| `shapeVersion`   | one type's files, given on that type's entry under `types`                                    | the type's schema |
+| `contentVersion` | what the corpus knows, as `content-version` in `.corpus.yaml`                                 | you, by hand      |
 
 `contentVersion` is the one a consumer depends on by name. [`pack`](../use/cli/pack.md) publishes the export at that
 version.
@@ -472,7 +476,8 @@ Reordering the keys within a line moves nothing. Reordering the records in a fla
 order means something within a chain.
 
 A change to one type's files moves that type's `shapeVersion`. A change to the manifest, to the layout of the tree, or
-to how a link is built moves `formatVersion`.
+to how a reader builds a link from the manifest moves `formatVersion`. A link written into exported prose is a target
+like any other, and changing it moves neither number.
 
 ## What a type cannot say
 
