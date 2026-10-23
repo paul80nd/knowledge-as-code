@@ -1076,17 +1076,21 @@ public class SchemaCheckTests
         Refs = key == "ref" ? ["widgets"] : [],
         MinRecords = key == "min-records" ? 2 : null,
         MirrorsSection = key == "mirrors-section" ? "Sign-offs" : null,
-        Reciprocal = key == "reciprocal" ? "signed" : null
+        Reciprocal = key == "reciprocal" ? "signed" : null,
+        MirrorsCitations = key == "mirrors-citations" ? "Signed off" : null
     };
 
+    /// <summary><c>mirrors-citations:</c> with no <c>ref:</c> is a second finding, which this case leaves aside.</summary>
     [Theory]
     [InlineData("ref")]
     [InlineData("min-records")]
     [InlineData("mirrors-section")]
     [InlineData("reciprocal")]
+    [InlineData("mirrors-citations")]
     public void A_key_read_from_scalar_entries_on_a_list_of_objects_is_reported(string key)
     {
-        var finding = Assert.Single(Check(Widgets(sections: ["Sign-offs"], fields: [("signoffs", Signoffs(key))])));
+        var finding = Assert.Single(Check(Widgets(sections: ["Sign-offs"], fields: [("signoffs", Signoffs(key))])),
+            x => x.Message.Contains("declares 'of: object'"));
 
         Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Equal(".schema/widgets.yaml", finding.File);

@@ -28,7 +28,7 @@ such as a `rules:` entry nothing runs or an `id.style:` no code reads. Every fin
 | A `type: id` or an `of: id` on an entry key, which the reference pass never walks        | `schema-dispatch`    |
 | An `entry:` block or a `shape:` on a field whose value is never an object                | `schema-dispatch`    |
 | `type: object` or `of: object` with neither an `entry:` block nor a `shape:`             | `schema-shape`       |
-| `ref:`, `min-records:`, `mirrors-section:` or `reciprocal:` on an `of: object` field     | `schema-shape`       |
+| A key that reads each entry as one plain value, such as `ref:`, on an `of: object` field | `schema-shape`       |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
 | A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |

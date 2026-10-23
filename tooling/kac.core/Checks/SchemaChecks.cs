@@ -476,6 +476,7 @@ public static class SchemaChecks
         if (spec.MinRecords is not null) yield return "min-records";
         if (spec.MirrorsSection is not null) yield return "mirrors-section";
         if (spec.Reciprocal is not null) yield return "reciprocal";
+        if (spec.MirrorsCitations is not null) yield return "mirrors-citations";
     }
 
     private static void CheckRule(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)

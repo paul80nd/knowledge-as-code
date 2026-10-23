@@ -60,9 +60,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   count every entry of a list, whatever its shape. A value `required-field` reads as absent, such as `~`, `null` or
   `—`, is absent to `present()` too.
 - **`kac validate` refuses a key on a list of objects that would check nothing.** `ref:`, `min-records:`,
-  `mirrors-section:` and `reciprocal:` each read a list entry as one plain value. On a field declared `of: object`,
-  each passed in silence and checked no record. `schema-shape` now reports each against the type file, or against
-  `_universal.yaml`. Drop the key, or declare the field `of: id`.
+  `mirrors-section:`, `mirrors-citations:` and `reciprocal:` each read a list entry as one plain value. On a field
+  declared `of: object`, each passed in silence and checked no record. `schema-shape` now reports each against the
+  type file, or against `_universal.yaml`. Drop the key, or declare the field `of: id`.
 
 ## 0.37.0 - 2026-10-21
 
