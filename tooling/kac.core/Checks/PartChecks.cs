@@ -179,7 +179,6 @@ public static class PartChecks
                     $"clause '{row.Id ?? row.IdText}' carries a second '{second}': one obligation per clause, or the "
                     + "citation is ambiguous.", row.Line);
 
-            // Reported once, against the first row breaking the grouping.
             var rank = spec.Rank(modal);
             if (rank < highest && !disordered)
             {
