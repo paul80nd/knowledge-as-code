@@ -176,13 +176,13 @@ jobs:
           } >> "$GITHUB_ENV"
 
       # No --skip-duplicate: the step above decides, and swallowing the registry's refusal would leave a green run
-      # that published nothing.
+      # that published nothing. GitHub Packages offers no trusted publishing, so the push takes github.token.
       - name: Publish to GitHub Packages
         if: env.NEW == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
           FEED: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
-        run: |
+        run: | # zizmor: ignore[use-trusted-publishing]
           set -e
 
           dotnet nuget push "examples/${{ matrix.corpus }}/.dist/package/$ID.$VERSION.nupkg" \

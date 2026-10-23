@@ -34,15 +34,16 @@ this repository has no configuration file for it.
 
 ## Coverage and gaps
 
-actionlint reports nothing about these two faults:
+actionlint reports nothing about whether a workflow is safe to run. [ctl-0015] runs zizmor in the same job, and checks
+part of the permission, pinning and checkout rules of [std-CI]. Neither linter checks these faults, and a reviewer
+catches them:
 
 * a permission a job declares and never uses
-* a credential written in the wrong place
-
-A reviewer catches both. Those faults are most of what [std-CI] states: its permission, credential, pinning and
-publishing rules have no check here.
+* a secret written into a script body, or printed to the log
+* a write permission declared on more than one job, or a publish with no verifying job before it
 
 actionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job.
 
+[ctl-0015]: 0015-zizmor.md
 [std-CI]: ../standards/workflows.md
 [std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main

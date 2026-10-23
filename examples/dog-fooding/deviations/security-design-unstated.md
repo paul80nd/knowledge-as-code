@@ -43,8 +43,8 @@ and as reviewer. A triage step filled in by that person would miss it a third ti
 
 ## What compensates
 
-* [std-CI] limits each job to the least permission it needs. [ctl-0003] says actionlint checks no such thing, so a
-  reviewer does.
+* [std-CI] limits each job to the least permission it needs. [ctl-0015] fails a workflow granting more than read at its
+  top level, and a reviewer checks that each job uses the permission it declares.
 * `.github/SECURITY.md` is public, so a reader can see what CI contains and where a report is in scope.
 * `eng:std-CSSTY` turns the analysers on, so their security rules fail a build without a reviewer looking.
 
@@ -63,6 +63,6 @@ The `kac` tool, the workflows, and the documentation site's build.
 * [dev-one-maintainer] is why one person fills the author, reviewer and approver roles.
 * [std-CI] states the permission rules a standard would cite.
 
-[ctl-0003]: ../controls/0003-actionlint.md
+[ctl-0015]: ../controls/0015-zizmor.md
 [dev-one-maintainer]: one-maintainer.md
 [std-CI]: ../standards/workflows.md

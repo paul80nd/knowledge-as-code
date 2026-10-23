@@ -27,6 +27,7 @@
 |----------------|----------------------------------|----------|------------|------------------|
 | tol-actionlint | [actionlint](lint/actionlint.md) | approved | 2027-09-02 | MIT              |
 | tol-yamllint   | [yamllint](lint/yamllint.md)     | approved | 2027-09-02 | GPL-3.0-or-later |
+| tol-zizmor     | [zizmor](lint/zizmor.md)         | approved | 2027-10-23 | MIT              |
 
 ## Release
 

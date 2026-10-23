@@ -50,7 +50,7 @@ requires `validate`.
 |---------------------|---------------------------------------------------------------------------------------------------------|
 | `corpora`           | `validate`, `generate --check`, `update --check`, `export`, `bundle` and `pack` in each corpus          |
 | `tool`              | The template's own checks, the unit, feature and golden layers, and a corpus created by the packed tool |
-| `lint`              | `yamllint --strict` and `actionlint`                                                                    |
+| `lint`              | `yamllint --strict`, `actionlint` and `zizmor`                                                          |
 | `docs`              | `mkdocs build`, which fails on a dead link                                                              |
 | `round-trip`        | `tooling/tests/round-trip.sh` over `library`, `engineering` and `payments`, on Linux and Windows                                  |
 | `import-round-trip` | `tooling/tests/import-round-trip.sh`, on Linux and Windows                                              |
