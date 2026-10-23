@@ -48,8 +48,8 @@ public static class ValueChecks
         {
             if (!IsBareKey(node))
                 report.Err(new CheckId("bare-key"),
-                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
-                    line);
+                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value "
+                    + "(not null, ~, \"\", '', or —).", line);
 
             // A field declaring `required-when:` is exempt, because whether it is optional depends on another field.
             else if (!spec.Required && spec.RequiredWhen is null)

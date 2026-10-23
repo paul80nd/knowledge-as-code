@@ -258,7 +258,7 @@
       "line": 8,
       "severity": "error",
       "check": "bare-key",
-      "message": "'target' is absent but not a bare key. Use 'target:' with no value (not null, ~, \"\", or —)."
+      "message": "'target' is absent but not a bare key. Use 'target:' with no value (not null, ~, \"\", '', or —)."
     },
     {
       "file": "offerings/borrower-notifications.md",

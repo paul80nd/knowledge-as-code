@@ -39,9 +39,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   written and counted once, as a record file already was.
 - **`kac validate` reads an em dash as an absent value.** A field written as `target: —` passed every check, though
   `bare-key` says an absent value is never an em dash. A required field with no `pattern:` validated clean with nothing
-  filled in. `bare-key` now reports the spelling, and `required-field` reports the field. A quoted `"—"` counts too, as
-  `""` already does. A dash beside other text, such as `— tbc`, is still a value. The checks table on
-  `knowledge-as-code/metadata.md` now lists `''` beside `""`, so run `kac generate` to bring that page up to date.
+  filled in. `bare-key` now reports the spelling, and `required-field` reports the field. A quoted `"—"` counts, as `""`
+  does. A dash beside other text, such as `— tbc`, is a value. The `bare-key` message and the checks table on
+  `knowledge-as-code/metadata.md` now list `''` beside `""`, so run `kac generate` to update that page.
 
 ## 0.37.0 - 2026-10-21
 
