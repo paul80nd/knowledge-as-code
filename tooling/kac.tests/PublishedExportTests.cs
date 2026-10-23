@@ -120,6 +120,22 @@ public class PublishedExportTests
     }
 
     [Fact]
+    public void A_template_take_alone_moves_nothing()
+    {
+        static string TookTemplate(int version) => Descriptor + $"\nupstream:\n  template-version: {version}\n";
+
+        static Revision WithTemplateVersion(int version) =>
+            At("revision", new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                [".corpus.yaml"] = TookTemplate(version),
+                [Record] = Note()
+            });
+
+        Assert.Equal(24, CorpusDescriptor.Parse(TookTemplate(24)).TemplateVersion);
+        Assert.Empty(PublishedExport.Moved(WithTemplateVersion(23), WithTemplateVersion(24), Today));
+    }
+
+    [Fact]
     public void Two_builds_over_one_revision_write_the_same_bytes() =>
         Assert.Empty(PublishedExport.Moved(With(Note()), With(Note()), Today));
 

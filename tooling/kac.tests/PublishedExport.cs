@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using kac.core;
 
 namespace kac.tests;
@@ -19,8 +20,8 @@ internal static class PublishedExport
     private const string LinkRef = "ref";
 
     /// <summary>
-    /// Each export path whose bytes differ between the two revisions, in ordinal order. A path one side writes and the
-    /// other does not is included.
+    /// Each export path whose bytes differ between the two revisions, in ordinal order, with <c>mechanismVersion</c>
+    /// left out of the manifest. A path one side writes and the other does not is included.
     /// </summary>
     /// <exception cref="InvalidOperationException">Where the exporter refuses either revision.</exception>
     internal static IReadOnlyList<string> Moved(Revision before, Revision after, DateOnly today)
@@ -55,6 +56,19 @@ internal static class PublishedExport
                 $"{revision.Name} cannot be exported, so its export was not compared:\n  "
                 + string.Join("\n  ", plan.Refused));
 
-        return plan.Files.ToDictionary(file => file.Path, file => file.Content, StringComparer.Ordinal);
+        return plan.Files.ToDictionary(file => file.Path,
+            file => file.Path == Exporter.ManifestFile ? WithoutMechanismVersion(file.Content) : file.Content,
+            StringComparer.Ordinal);
+    }
+
+    /// <summary>The manifest without <c>mechanismVersion</c>, which a template take moves in every corpus.</summary>
+    private static string WithoutMechanismVersion(string manifest)
+    {
+        var node = JsonNode.Parse(manifest)?.AsObject()
+                   ?? throw new InvalidOperationException($"{Exporter.ManifestFile} is not a JSON object.");
+
+        node.Remove("mechanismVersion");
+
+        return node.ToJsonString();
     }
 }

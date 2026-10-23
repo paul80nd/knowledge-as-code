@@ -149,7 +149,7 @@ restore keeps a folder that already contains 0.10.0.
 
 ## Conformance checklist
 
-- [ ] Every corpus whose records changed, or whose bundled skills changed what they tell a reader to do, has moved
+- [ ] Every corpus whose export changed, or whose bundled skills changed what they tell a reader to do, has moved
       its `content-version`, at the major, minor or patch that change earns.
 - [ ] Where a field's value format or name changed, or a field was added or removed, the `export:` block of every type
       it reached decided which component that corpus moved.
