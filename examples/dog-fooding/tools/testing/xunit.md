@@ -18,25 +18,24 @@ tags: [ testing, unit-tests ]
 
 `Tool: tol-xunit` `APPROVED`
 
-The test framework two of the three test layers run on: the unit tests in `kac.tests`, and the behaviour specs in
-`kac.features` that [tol-reqnroll] binds to it.
+The test framework all three test layers run on: the unit tests in `kac.tests`, the behaviour specs in `kac.features`
+that [tol-reqnroll] binds to it, and the golden scenarios in `kac.goldens`.
 
 ## What we use it for
 
 `kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature
-documents through the same runner, so one `dotnet test --project <path>` command covers either project.
+documents through the same runner. `kac.goldens` runs `kac` as a process over each fixture and compares what it wrote
+with the committed goldens, one test case per fixture. One `dotnet test --project <path>` command covers any of the
+three.
 
-Both projects reference xUnit as `xunit.v3`, which makes each project a Microsoft.Testing.Platform app. `global.json`
-sets `test.runner` to `Microsoft.Testing.Platform`, so `dotnet test` runs each project as that app. A trait filter is
-an argument to the app: `--filter-trait "Kind=Repository"` selects the repository tests, and `--filter-not-trait`
-skips them.
+All three projects reference xUnit as `xunit.v3`, which makes each project a Microsoft.Testing.Platform app.
+`global.json` sets `test.runner` to `Microsoft.Testing.Platform`, so `dotnet test` runs each project as that app. A
+trait filter is an argument to the app: `--filter-trait "Kind=Repository"` selects the repository tests, and
+`--filter-not-trait` skips them. In `kac.goldens`, `--filter-trait "Scenario=<name>"` selects one fixture.
 
 `xunit.v3` brings in `Microsoft.Testing.Extensions.Telemetry`, which sends usage data to Microsoft unless told not to.
 Both workflows set `TESTINGPLATFORM_TELEMETRY_OPTOUT` and `DOTNET_CLI_TELEMETRY_OPTOUT`, so CI sends none. A
 contributor's machine sends it unless one of the two is set there.
-
-The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output
-against committed goldens, and reports its own results.
 
 ## Where it is used
 

@@ -24,7 +24,7 @@ generated files with an older wording without saying so.
 `examples/` proves the tool against what it holds, and `template/` is what a new corpus receives.
 
 **A warning fails the build.** [`Directory.Build.props`](Directory.Build.props) sets `TreatWarningsAsErrors`,
-`EnforceCodeStyleInBuild` and `AnalysisLevel` at `latest`, for every project here and for `kac-tests.cs`, and
+`EnforceCodeStyleInBuild` and `AnalysisLevel` at `latest`, for every project here, and
 [`.editorconfig`](.editorconfig) is where the style itself is written. Both hold locally as well as in CI, on purpose: a
 check running in one and not the other is how the thing it catches reaches `main`.
 [`eng:std-CSSTY`](../examples/engineering/standards/platform/dotnet/code-style.md) says what those settings oblige you
@@ -68,9 +68,9 @@ from the framework carrying them, and one that has gone is a block that stopped 
 
 ## The fixtures
 
-* **Run the golden suite after touching `.schema/`**, not just `kac validate`, because every fixture reads the real
-  schema. The `update` and `new` scenarios read no fixture corpus at all: each stands one up from the real template, so
-  a manifest change reaches them too.
+* **Run the golden suite after touching `.schema/`**, with `dotnet test --project tooling/kac.goldens`, not just
+  `kac validate`, because every fixture reads the real schema. The `update` and `new` scenarios read no fixture corpus
+  at all: each stands one up from the real template, so a manifest change reaches them too.
 * **A required field added to `_universal.yaml` fails every fixture record with `required-field`.** Write the field into
   each record under `tests/fixtures/` in the same change. An optional field needs none of this.
 * **`FixtureDateTests` sees a date only through the field a rule names.** It reads the fields named by `field('...')` or
@@ -103,8 +103,8 @@ A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.featu
 holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the goldens
 will not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
-**A schema edit breaks a scenario that `--update` cannot repair.** `--update` regenerates the goldens and leaves the
-feature files, so repair each broken expectation by hand and prove it with
+**A schema edit breaks a scenario that `KAC_UPDATE_GOLDENS` cannot repair.** The update regenerates the goldens and
+leaves the feature files, so repair each broken expectation by hand and prove it with
 `dotnet test --project tooling/kac.features`. A schema edit breaks a scenario in two ways:
 
 * **A message the schema decides.** A scenario quotes it in full. An enum's values, a field's pattern, a threshold and a
@@ -141,10 +141,11 @@ substitution.
   after the end of the previous member and read the comment above what you added.
 * **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the
   push is what stops a run inside that window failing. The version check ahead of it cannot see in.
-* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: [`kac-tests.cs`](kac-tests.cs),
-  [`kac.features/Harness.cs`](kac.features/Harness.cs) and [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two
-  of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
-  unify any of them without keeping those distinctions.
+* **Three walk-ups look for `kac.slnx`, and each of them means the repository**:
+  [`kac.goldens/Suite.cs`](kac.goldens/Suite.cs), [`kac.features/Harness.cs`](kac.features/Harness.cs) and
+  [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two of its own: `.corpus.yaml` finds the corpus, and
+  `.schema/` above it finds what to judge that corpus against. Do not unify any of them without keeping those
+  distinctions.
 * **`VerificationTests` and `ContentVersionTests` read git history, so a shallow checkout leaves them reading
   nothing.** The job running `dotnet test --project tooling/kac.tests` checks out with `fetch-depth: 0` and passes the
   base branch in `KAC_BASE_REF`. A job that sets the variable and cannot reach the branch fails. A job that sets

@@ -112,8 +112,11 @@ whole of what that command does, so a refusal cannot stop it and go unnoticed he
 and the files the run left, and [`CLAUDE.md`](CLAUDE.md#the-feature-specs-pin-more-than-findings) says why not the
 output.
 
-The golden layer builds `kac/` once per run and invokes the built assembly. Each scenario is then a real process,
-without paying `dotnet run`'s up-to-date check for every one.
+The golden layer is `kac.goldens`, run with `dotnet test --project tooling/kac.goldens`. It builds `kac/` once per run
+and invokes the built assembly. Each scenario is then a real process, without paying `dotnet run`'s up-to-date check
+for every one. Each fixture is one test case, and the scenarios run in parallel. `KAC_UPDATE_GOLDENS=1` on the same
+command regenerates the goldens, as [Update the goldens](../docs/maintaining/build-test-release.md#update-the-goldens)
+shows.
 
 Every layer reads the schema from [`../.schema/`](../.schema/), the one copy at the repository root. A schema edit
 therefore ripples into every fixture in the same run, rather than into a copy someone has to keep in step.

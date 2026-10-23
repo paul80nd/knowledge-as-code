@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-23T12:01:12Z
+  at: 2026-10-23T13:15:24Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.36.0
 sources:
-  - { resource: example-dogfooding, version: "0.75.9" }
+  - { resource: example-dogfooding, version: "0.75.10" }
   - { resource: example-engineering, version: "0.38.3" }
 verified:
-  - { at: 2026-10-23T16:00:00Z, by: human:paul.law }
+  - { at: 2026-10-23T13:32:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -155,7 +155,7 @@ where the rule and the practice differ.
 | `OFTEN`   | SHOULD   |                                         |                             |                                                                                                                                                    |                        | Gap     | Branch size is a habit here, and no standard states one.                                              |
 | `FLOW`    | SHOULD   |                                         |                             |                                                                                                                                                    |                        | Gap     | A push to `main` publishes. Nothing records how long a change took, or how often one failed.          |
 | `WARN`    | SHOULD   | `eng:std-CSSTY`                         |                             | `eng:ctl-0009`                                                                                                                                     |                        | Covered | The analysers decide, and a suppression is local and says why.                                        |
-| `COVER`   | SHOULD   | `eng:std-NETTST`, `eng:std-TEST`        |                             | `ctl-0009`, `eng:ctl-0008`                                                                                                                         |                        | Covered | `kac-tests.cs` runs the coverage gate.                                                                |
+| `COVER`   | SHOULD   | `eng:std-NETTST`, `eng:std-TEST`        |                             | `ctl-0009`, `eng:ctl-0008`                                                                                                                         |                        | Covered | `kac.goldens` runs the coverage gate.                                                                 |
 | `BITWISE` | COULD    |                                         |                             |                                                                                                                                                    |                        | Gap     | Nothing asks two builds of the tool to produce the same bytes.                                        |
 | `FAULTS`  | COULD    |                                         |                             |                                                                                                                                                    |                        | Gap     | No suite here is checked by breaking the code it covers.                                              |
 

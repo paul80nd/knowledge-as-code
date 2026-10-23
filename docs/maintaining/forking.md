@@ -63,7 +63,7 @@ The `new` golden fixture expects the upstream URL in `framework.base`. Regenerat
 diff:
 
 ```sh
-dotnet run tooling/kac-tests.cs -- --update new
+KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "Scenario=new"
 ```
 
 ## The documentation site

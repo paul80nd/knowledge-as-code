@@ -1,7 +1,7 @@
 The committed output of `kac generate` over a corpus with one type, which is the golden for every generated block.
 
 The corpus stands up `adrs` alone and holds two ADRs, one accepted and one proposed. The run asserts
-`generate --check` finds every generated file fresh. A change to a generator fails here until `--update` rewrites the
+`generate --check` finds every generated file fresh. A change to a generator fails here until an update rewrites the
 files under `corpus/`, and the diff is the change a corpus would see.
 
 * `adrs/_index.md` pins the index table, with a `decided-on` cell filled for the accepted ADR and empty for the

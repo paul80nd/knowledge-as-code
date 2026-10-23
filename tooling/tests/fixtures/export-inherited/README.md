@@ -38,5 +38,6 @@ The expectations [the suite README](../../README.md) describes for an `export` s
 carries.
 
 `expected-dist/` is the export itself, committed file for file. A diff under it is a change to a published contract.
-Regenerate it with `dotnet run tooling/kac-tests.cs -- --update export-inherited`, read what moved, and say in the
-commit message why it moved.
+Regenerate it with
+`KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "Scenario=export-inherited"`, read what
+moved, and say in the commit message why it moved.

@@ -68,8 +68,8 @@ public class CommandsTests
         JsonDocument.Parse(File.ReadAllText(Path.Combine(root, Dist.Export, Exporter.ManifestFile))).RootElement;
 
     /// <summary>
-    /// A golden fixture's corpus, assembled the way <c>kac-tests.cs</c> assembles it: the real schema above it, and an
-    /// empty descriptor to mark it as a corpus where the fixture carries none.
+    /// A golden fixture's corpus, assembled the way <c>kac.goldens/Runner.cs</c> assembles it: the real schema above
+    /// it, and an empty descriptor to mark it as a corpus where the fixture carries none.
     /// </summary>
     private static string Fixture(string name)
     {
