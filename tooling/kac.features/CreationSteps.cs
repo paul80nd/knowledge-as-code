@@ -13,7 +13,10 @@ public sealed class CreationSteps(Workspace ws)
     /// </summary>
     private string _root = "";
     private string _folder = "";
+    private string _template = "";
     private int _before;
+
+    private const string DeviationLink = "[deviation](../deviations.md)";
 
     [AfterScenario]
     public void Clean()
@@ -69,6 +72,39 @@ public sealed class CreationSteps(Workspace ws)
         Commit();
         _before = Count();
     }
+
+    /// <summary>
+    /// A copy of this repository's template, beside the folder and outside its repository, so the edit leaves the tree
+    /// clean.
+    /// </summary>
+    [Given("a template whose standards template links the deviations page by reference")]
+    public void GivenATemplateWhoseStandardsTemplateLinksTheDeviationsPageByReference()
+    {
+        _template = Path.Combine(_root, "template-copy");
+        var manifest = Manifest.LoadFrom(Path.Combine(Harness.RepoRoot, Manifest.FileName));
+        var tracked = GitFiles.Tracked(Harness.RepoRoot)
+                      ?? throw new InvalidOperationException("kac.features: the repository has no git listing.");
+
+        // The manifest withholds itself, and `new` reads it from the template's root.
+        foreach (var path in tracked.Where(p => p == Manifest.FileName
+                                                || manifest.Resolve(p) is Manifest.Overlay or Manifest.Seed))
+        {
+            var to = Path.Combine(_template, path.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(to) ?? _template);
+            File.Copy(Path.Combine(Harness.RepoRoot, path), to);
+        }
+
+        var page = Path.Combine(_template, "template", "standards", "_template.md");
+        var inline = File.ReadAllText(page);
+        Assert.Contains(DeviationLink, inline);
+        File.WriteAllText(page,
+            inline.Replace(DeviationLink, "[deviation][deviations]", StringComparison.Ordinal)
+            + "\n[deviations]: ../deviations.md\n");
+    }
+
+    [When(@"I create a corpus there from that template adopting ""(.*)""")]
+    public void WhenICreateACorpusThereFromThatTemplateAdopting(string types)
+        => ws.Exit = Creation.Create(_folder, from: _template, types: types);
 
     [When("I create a corpus there")]
     public void WhenICreateACorpusThere() => ws.Exit = Creation.Create(_folder);

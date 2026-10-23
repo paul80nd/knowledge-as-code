@@ -90,6 +90,7 @@ Each refusal exits `1` and writes nothing.
 * Each hook script arrives with its execute bit
 * A corpus that declined types is sent no link it cannot follow
 * A corpus adopting a single type validates
+* A reference to a declined type's page loses its definition and keeps its words
 * A corpus adopting every type keeps the links between its type pages
 * A full update changes nothing on the corpus new just created
 

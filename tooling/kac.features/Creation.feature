@@ -82,6 +82,14 @@ Scenario: A corpus adopting a single type validates
   Then it succeeds
   And no link fails to resolve
 
+Scenario: A reference to a declined type's page loses its definition and keeps its words
+  Given a git repository
+  And a template whose standards template links the deviations page by reference
+  When I create a corpus there from that template adopting "standards,policies"
+  Then it succeeds
+  And no link fails to resolve
+  And "standards/_template.md" in the new corpus says "request a deviation. To depart"
+
 Scenario: A corpus adopting every type keeps the links between its type pages
   Given a git repository
   When I create a corpus there adopting "all"

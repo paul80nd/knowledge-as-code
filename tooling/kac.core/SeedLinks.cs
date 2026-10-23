@@ -27,9 +27,9 @@ public sealed record UnlinkedPage(string Path, IReadOnlyList<UnlinkedLine> Lines
 
 /// <summary>
 /// The cross-references a corpus receives on the seed pages it is sent. A link to a declined type's page is taken out
-/// and its text left standing. A line linking into a declined type's folder is removed whole, with the definition
-/// behind it. Seeds only: an overlay file is identical in every corpus, and <c>framework-names-types</c> refuses such a
-/// link there outright.
+/// and its text left standing, and a reference definition naming that page goes with it. A line linking into a
+/// declined type's folder is removed whole, with the definition behind it. Seeds only: an overlay file is identical in
+/// every corpus, and <c>framework-names-types</c> refuses such a link there outright.
 /// </summary>
 public static partial class SeedLinks
 {
@@ -46,6 +46,18 @@ public static partial class SeedLinks
     [GeneratedRegex(@"^ {0,3}\[(?<label>[^\]\r\n]+)\]:[ \t]*(?:\.\./)*(?<folder>[A-Za-z0-9][A-Za-z0-9._-]*)/",
         RegexOptions.Multiline)]
     private static partial Regex FolderDefinition();
+
+    /// <summary>A reference definition naming a type's root page, by the paths <c>PageLink</c> reads.</summary>
+    [GeneratedRegex(@"^ {0,3}\[(?<label>[^\]\r\n]+)\]:[ \t]*(?:\.\./)?(?<page>[A-Za-z0-9][A-Za-z0-9._-]*)\.md"
+                    + @"(?:#[^\s]*)?(?:[ \t][^\r\n]*)?\r?$", RegexOptions.Multiline)]
+    private static partial Regex PageDefinition();
+
+    /// <summary>
+    /// A reference link in its full, collapsed or shortcut form. An empty <c>label</c> group is the collapsed form, and
+    /// a missing one the shortcut. Brackets followed by <c>(</c> are an inline link.
+    /// </summary>
+    [GeneratedRegex(@"(?<!\])\[(?<text>[^\[\]\r\n]+)\](?:\[(?<label>[^\[\]\r\n]*)\])?(?![(\[])")]
+    private static partial Regex ReferenceLink();
 
     /// <summary>Each line with its own ending, so a page keeps the line endings it was checked out with.</summary>
     [GeneratedRegex(@"[^\r\n]*(?:\r\n|\n|\r|$)")]
@@ -87,31 +99,57 @@ public static partial class SeedLinks
         var text = new StringBuilder(markdown.Length);
         var lines = new List<UnlinkedLine>();
         var number = 0;
+        var labels = PageLabels(markdown, declined.Pages);
 
-        foreach (Match line in Line().Matches(WithoutFolderLines(markdown, declined.Folders)))
+        foreach (Match line in Line().Matches(WithoutLines(markdown, declined.Folders, labels)))
         {
             if (line.Length == 0) continue;
             number++;
 
             var types = new List<string>();
-            text.Append(PageLink().Replace(line.Value, m =>
-            {
-                if (!declined.Pages.TryGetValue(m.Groups["page"].Value, out var type)) return m.Value;
-                if (!types.Contains(type, StringComparer.Ordinal)) types.Add(type);
-                return m.Groups["text"].Value;
-            }));
+            var inline = PageLink().Replace(line.Value, m =>
+                declined.Pages.TryGetValue(m.Groups["page"].Value, out var type)
+                    ? KeepText(m, type, types)
+                    : m.Value);
+            text.Append(ReferenceLink().Replace(inline, m =>
+                labels.TryGetValue(Label(m), out var type) ? KeepText(m, type, types) : m.Value));
             if (types.Count > 0) lines.Add(new UnlinkedLine(number, types));
         }
 
         return (text.ToString(), lines);
     }
 
+    /// <summary>The label a reference link cites. The collapsed and shortcut forms cite their own text.</summary>
+    private static string Label(Match reference) =>
+        reference.Groups["label"] is { Success: true, Length: > 0 } label ? label.Value : reference.Groups["text"].Value;
+
+    /// <summary>The words a link to <paramref name="type"/> leaves standing. Adds the type to <paramref name="types"/>
+    /// once.</summary>
+    private static string KeepText(Match link, string type, List<string> types)
+    {
+        if (!types.Contains(type, StringComparer.Ordinal)) types.Add(type);
+        return link.Groups["text"].Value;
+    }
+
+    /// <summary>Each label defined as a declined type's page, with that type's folder, matched as <c>WithoutLines</c>
+    /// says.</summary>
+    private static Dictionary<string, string> PageLabels(string markdown, IReadOnlyDictionary<string, string> pages)
+    {
+        var labels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (Match m in PageDefinition().Matches(markdown))
+            if (pages.TryGetValue(m.Groups["page"].Value, out var type))
+                labels.TryAdd(m.Groups["label"].Value, type);
+        return labels;
+    }
+
     /// <summary>
     /// A line goes where it defines a label into a declined folder, cites one of those labels, or links into such a
-    /// folder inline. Labels match case-insensitively, as Markdown matches them. A line that went from between two
-    /// blank lines takes one of them with it.
+    /// folder inline. A line defining one of the page <paramref name="pageLabels"/> goes too, and the lines citing it
+    /// stay. Labels match case-insensitively, as Markdown matches them. A line that went from between two blank lines
+    /// takes one of them with it.
     /// </summary>
-    private static string WithoutFolderLines(string markdown, IReadOnlySet<string> folders)
+    private static string WithoutLines(string markdown, IReadOnlySet<string> folders,
+        IReadOnlyDictionary<string, string> pageLabels)
     {
         var labels = FolderDefinition().Matches(markdown)
             .Where(m => folders.Contains(m.Groups["folder"].Value))
@@ -128,7 +166,9 @@ public static partial class SeedLinks
             var text = line.Value.TrimEnd('\r', '\n');
 
             if (FolderLink().Matches(text).Any(f => folders.Contains(f.Groups["folder"].Value))
-                || labels.Any(l => text.Contains(l, StringComparison.OrdinalIgnoreCase)))
+                || labels.Any(l => text.Contains(l, StringComparison.OrdinalIgnoreCase))
+                || (PageDefinition().Match(text) is { Success: true } page
+                    && pageLabels.ContainsKey(page.Groups["label"].Value)))
             {
                 dropped = true;
                 continue;

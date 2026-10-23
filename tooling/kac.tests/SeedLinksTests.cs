@@ -104,6 +104,41 @@ public class SeedLinksTests
                 + "[pol-{{a}}]: ../policies/{{a}}.md\n[std-{{a}}]: ../standards/{{a}}.md\n",
                 Declined));
 
+    [Theory]
+    [InlineData("Request a [waiver][pol].", "Request a waiver.")]
+    [InlineData("Request a [pol][].", "Request a pol.")]
+    [InlineData("Request a [pol].", "Request a pol.")]
+    [InlineData("Request a [Pol].", "Request a Pol.")]
+    [InlineData("Request a [pol]: soon.", "Request a pol: soon.")]
+    [InlineData("Request a [waiver][pol] or a [pol].", "Request a waiver or a pol.")]
+    public void A_definition_naming_a_declined_page_goes_and_each_use_keeps_its_text(string sent, string received)
+        => Assert.Equal(
+            $"{received}\n\n[std]: ../standards.md\n",
+            SeedLinks.Unlinked($"{sent}\n\n[pol]: ../policies.md#scope\n[std]: ../standards.md\n", Declined));
+
+    [Theory]
+    [InlineData("Request a [waiver][std].\n\n[std]: ../standards.md\n")]
+    [InlineData("Request a [std].\n\n[std]: standards.md\n")]
+    public void A_definition_naming_an_adopted_page_is_left_alone(string sent)
+        => Assert.Equal(sent, SeedLinks.Unlinked(sent, Declined));
+
+    [Fact]
+    public void An_inline_link_sharing_a_removed_label_is_left_alone()
+        => Assert.Equal(
+            "A [pol](https://example.test/) and a pol.\n",
+            SeedLinks.Unlinked("A [pol](https://example.test/) and a [pol].\n[pol]: ../policies.md\n", Declined));
+
+    /// <summary><c>catalogue</c> is the page of the declined <c>services</c> type.</summary>
+    [Fact]
+    public void A_line_citing_a_removed_definition_is_reported_by_the_type_it_named()
+    {
+        var (_, lines) = SeedLinks.Unlink("# Title\n\nSee the [svc][].\n\n[svc]: catalogue.md\n", Declined);
+
+        var line = Assert.Single(lines);
+        Assert.Equal(3, line.Number);
+        Assert.Equal(["services"], line.Types);
+    }
+
     [Fact]
     public void A_removed_line_between_two_blank_lines_takes_one_of_them_with_it()
         => Assert.Equal(
