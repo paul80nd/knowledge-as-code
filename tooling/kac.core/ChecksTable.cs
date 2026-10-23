@@ -28,7 +28,7 @@ public static class ChecksTable
         ("key-order", [new("key-order")], "Key order is a topological extension of the schema's field order.", null),
         ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
         ("bare-key", [new("bare-key")],
-            "An absent value is a bare key, never `null`, `~`, `\"\"`, `—` or an unquoted `{{…}}`.", null),
+            "An absent value is a bare key, never `null`, `~`, `\"\"`, `''`, `—` or an unquoted `{{…}}`.", null),
         ("empty-optional-key", [new("empty-optional-key")],
             "An optional field is filled in or left out, rather than written with no value.", null),
         ("date-quoted / date-format", [new("date-quoted"), new("date-format")],

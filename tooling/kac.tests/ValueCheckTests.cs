@@ -418,6 +418,11 @@ public class ValueCheckTests
     [InlineData("field: ~\n", true)]
     [InlineData("field: null\n", true)]
     [InlineData("field: []\n", true)]
+    [InlineData("field: —\n", true)]
+    [InlineData("field:   —  \n", true)] // YAML trims a plain scalar
+    [InlineData("field: \"—\"\n", true)] // quoting is not read, as for "" and ''
+    [InlineData("field: \" — \"\n", false)]
+    [InlineData("field: — tbc\n", false)]
     [InlineData("field: something\n", false)]
     [InlineData("field: [ a ]\n", false)]
     [InlineData("field: {{owner}}\n", true)] // an unquoted placeholder, which YAML reads as a mapping

@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 67,
+    "validated": 68,
     "templates": 18,
     "skipped": 0,
-    "errors": 31,
+    "errors": 33,
     "warnings": 56,
     "infos": 0
   },
@@ -245,6 +245,20 @@
       "severity": "warning",
       "check": "nfr-in-date",
       "message": "this target's `review-by` has passed. Check the number is still the one that was agreed, then set `review-by` to the next day somebody looks at it."
+    },
+    {
+      "file": "nfrs/0004-target-left-as-a-dash.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'target'."
+    },
+    {
+      "file": "nfrs/0004-target-left-as-a-dash.md",
+      "line": 8,
+      "severity": "error",
+      "check": "bare-key",
+      "message": "'target' is absent but not a bare key. Use 'target:' with no value (not null, ~, \"\", or —)."
     },
     {
       "file": "offerings/borrower-notifications.md",

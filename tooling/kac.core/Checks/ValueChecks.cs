@@ -81,7 +81,7 @@ public static class ValueChecks
     public static bool IsAbsent(YamlNode node, FieldSpec? spec = null) =>
         node switch
         {
-            YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL",
+            YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL" or "—",
             YamlSequenceNode seq => seq.Children.Count == 0,
             // A mapping is a value only where the field declares `object`. Anywhere else it is an unquoted placeholder.
             YamlMappingNode map => spec?.Type != "object" || map.Children.Count == 0,
