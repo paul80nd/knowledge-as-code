@@ -51,5 +51,5 @@ Scenario: A part line naming a list field is reported against the type, not the 
   When I validate the corpus
   Then validation reports 1 documents and 0 skipped
   And the findings are exactly:
-    | file                   | line | check        | message                                                                                                                                                                                                                                                              |
-    | .schema/sprockets.yaml |      | schema-shape | type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', which is a list. A line reads one value from a field, so the key would be null on every line. Name a field holding one value, or drop the key: the record file already contains the list. |
+    | file                   | line | check        | message                                                                                                                                                                                                                         |
+    | .schema/sprockets.yaml |      | schema-shape | type 'sprockets' declares 'export.parts.line: shelves' at 'front.shelves', and that field is a list. A line reads one value from a field, so the key would be null on every line. Name a field with one value, or drop the key. |

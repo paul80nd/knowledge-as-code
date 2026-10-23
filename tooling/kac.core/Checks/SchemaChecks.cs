@@ -238,9 +238,9 @@ public static class SchemaChecks
                         + "than a field."));
                 else if (spec.Type == "list")
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', which is a list. A "
-                        + "line reads one value from a field, so the key would be null on every line. Name a field "
-                        + "holding one value, or drop the key: the record file already contains the list."));
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and that field is a "
+                        + "list. A line reads one value from a field, so the key would be null on every line. Name a "
+                        + "field with one value, or drop the key."));
                 return;
             }
 

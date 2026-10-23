@@ -640,7 +640,7 @@ public class SchemaCheckTests
             fields: [("shelves", new FieldSpec { Name = "shelves", Type = "list", Of = "string" })])));
 
         Assert.Equal("schema-shape", found.Check.Value);
-        Assert.Contains("at 'front.shelves', which is a list", found.Message);
+        Assert.Contains("at 'front.shelves', and that field is a list", found.Message);
     }
 
     [Fact]
@@ -656,7 +656,7 @@ public class SchemaCheckTests
         ])));
 
         Assert.Equal("schema-shape", found.Check.Value);
-        Assert.Contains("at 'front.signoffs', which is a list", found.Message);
+        Assert.Contains("at 'front.signoffs', and that field is a list", found.Message);
     }
 
     [Fact]
@@ -674,7 +674,7 @@ public class SchemaCheckTests
         }));
 
         Assert.Equal("schema-shape", found.Check.Value);
-        Assert.Contains("at 'front.tags', which is a list", found.Message);
+        Assert.Contains("at 'front.tags', and that field is a list", found.Message);
     }
 
     [Fact]
