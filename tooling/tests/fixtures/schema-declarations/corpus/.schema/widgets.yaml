@@ -93,6 +93,14 @@ fields:
   sponsor:
     type: id
 
+  signoffs:
+    type: list
+    of: object
+    entry:
+      on:
+        type: date
+    ref: widgets
+
 sections:
   required:
     - Summary

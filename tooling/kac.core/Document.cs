@@ -329,8 +329,8 @@ public partial class Doc
 
     /// <summary>
     /// Derived first, because a derived key is never the author's: <c>derived-key</c> reports one written, and this
-    /// keeps the two from disagreeing. <c>FrontList</c> reads the same way, so <c>field()</c> and <c>present()</c>
-    /// agree.
+    /// keeps the two from disagreeing. <c>FrontNode</c> reads the same way, so <c>field()</c> and <c>present()</c>
+    /// agree on a derived key.
     /// </summary>
     public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null
@@ -340,6 +340,8 @@ public partial class Doc
 
     /// <summary>
     /// A scalar is the one-entry case, so a check asks the same of <c>depends-on: [a, b]</c> and <c>successor: x</c>.
+    /// Reads scalar entries only and drops a mapping. <c>schema-shape</c> refuses every key that would send an
+    /// <c>of: object</c> field here.
     /// </summary>
     public List<string> FrontList(string key)
     {

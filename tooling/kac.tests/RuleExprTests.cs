@@ -114,6 +114,27 @@ public class RuleExprTests
         Assert.True(Eval("entries('implemented-by') == 0", "id: ofr-refund\nimplemented-by: []"));
     }
 
+    private const string TwoAlignments =
+        "id: pol-0001\naligns-with:\n  - { framework: ISO 27001:2022, clause: A.5.1 }\n"
+        + "  - { framework: NIST CSF 2.0, clause: GV.PO-01 }";
+
+    [Fact]
+    public void Entries_counts_a_list_of_objects()
+        => Assert.True(Eval("entries('aligns-with') == 2", TwoAlignments));
+
+    [Fact]
+    public void Present_reads_a_list_of_objects()
+        => Assert.True(Eval("present('aligns-with')", TwoAlignments));
+
+    /// <summary><c>required-field</c> reads each of these as absent, and <c>present()</c> agrees with it.</summary>
+    [Theory]
+    [InlineData("~")]
+    [InlineData("null")]
+    [InlineData("\"\"")]
+    [InlineData("—")]
+    public void Present_is_false_for_a_value_written_as_empty(string empty)
+        => Assert.False(Eval("present('owner')", $"id: adr-0001\nowner: {empty}"));
+
     [Fact]
     public void Section_matches_a_heading_whatever_its_case()
         => Assert.True(Eval("section('context')", body: "## Context\n\nProse."));

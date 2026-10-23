@@ -27,8 +27,9 @@ so the golden is the schema pass and nothing else.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
   is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
   pointing at `widgets`, which keeps no parts, a `status:` stating a range and naming no `in-force:` value, an
-  `in-force:` its own `values:` does not include, a `summary:` too long for the table cell it becomes, and no
-  `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
+  `in-force:` its own `values:` does not include, a `ref:` on a list of objects, a `summary:` too long for the table
+  cell it becomes, and no `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
+  `ref:` stands for the five keys that read each entry as one plain value, and `SchemaCheckTests` pins the others.
   `label-plural:` and `detail:` are present, since a type with nothing to say about itself would report the same fault
   four times and pin nothing extra.
 * **Export** — a projection every part of which resolves to nothing: `colour` where the type declares no such field,

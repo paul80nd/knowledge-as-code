@@ -420,6 +420,13 @@ public static class SchemaChecks
                 $"field '{name}' declares '{declared}' and neither an 'entry:' block nor a 'shape:', so "
                 + "nothing says what it holds. Declare the keys, name a shape, or give it a scalar type."));
 
+        if (spec.Of == "object")
+            foreach (var key in ScalarEntryKeys(spec))
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"field '{name}' declares 'of: object' and '{key}:'. That key reads each entry as one plain "
+                    + "value, and every entry here is an object, so it would check nothing. Drop the key, or "
+                    + "declare the field 'of: id'."));
+
         if (spec.Entry is { Count: > 0 } && !holdsObjects)
             Dispatch(at, $"field '{name}' declares "
                          + $"{(spec.Shape.Length > 0 ? $"'shape: {spec.Shape}'" : "an 'entry:' block")} and "
@@ -460,6 +467,16 @@ public static class SchemaChecks
                 $"field '{name}' declares 'mirrors-citations: {label}' and no 'ref:'. The line gathers "
                 + "citations of another record, and this field carries none, so the two sides could "
                 + "never meet. Declare a 'ref:', or drop the key."));
+    }
+
+    /// <summary>The keys whose checks read the field's value through <c>Doc.FrontList</c>.</summary>
+    private static IEnumerable<string> ScalarEntryKeys(FieldSpec spec)
+    {
+        if (spec.Refs.Count > 0) yield return "ref";
+        if (spec.MinRecords is not null) yield return "min-records";
+        if (spec.MirrorsSection is not null) yield return "mirrors-section";
+        if (spec.Reciprocal is not null) yield return "reciprocal";
+        if (spec.MirrorsCitations is not null) yield return "mirrors-citations";
     }
 
     private static void CheckRule(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)

@@ -1069,6 +1069,57 @@ public class SchemaCheckTests
         Assert.Contains($"field 'sponsor' declares '{declared}' and no 'ref:'", finding.Message);
     }
 
+    /// <summary>A sound list of objects that declares <c>key</c> as well.</summary>
+    private static FieldSpec Signoffs(string key) => new()
+    {
+        Name = "signoffs", Type = "list", Of = "object", Entry = [new FieldSpec { Name = "on", Type = "date" }],
+        Refs = key == "ref" ? ["widgets"] : [],
+        MinRecords = key == "min-records" ? 2 : null,
+        MirrorsSection = key == "mirrors-section" ? "Sign-offs" : null,
+        Reciprocal = key == "reciprocal" ? "signed" : null,
+        MirrorsCitations = key == "mirrors-citations" ? "Signed off" : null
+    };
+
+    /// <summary><c>mirrors-citations:</c> with no <c>ref:</c> is a second finding, which this case leaves aside.</summary>
+    [Theory]
+    [InlineData("ref")]
+    [InlineData("min-records")]
+    [InlineData("mirrors-section")]
+    [InlineData("reciprocal")]
+    [InlineData("mirrors-citations")]
+    public void A_key_read_from_scalar_entries_on_a_list_of_objects_is_reported(string key)
+    {
+        var finding = Assert.Single(Check(Widgets(sections: ["Sign-offs"], fields: [("signoffs", Signoffs(key))])),
+            x => x.Message.Contains("declares 'of: object'"));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains($"field 'signoffs' declares 'of: object' and '{key}:'", finding.Message);
+    }
+
+    [Fact]
+    public void A_key_read_from_scalar_entries_on_a_universal_list_of_objects_is_reported()
+    {
+        var schema = WithTiers();
+        var universal = new Dictionary<string, FieldSpec>(schema.Universal) { ["signoffs"] = Signoffs("ref") };
+        var finding = Assert.Single(Check(new Schema
+        {
+            Checks = schema.Checks, Tiers = schema.Tiers, UniversalOrder = ["tier", "signoffs"],
+            Universal = universal, ByFolder = schema.ByFolder
+        }));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Equal(".schema/_universal.yaml", finding.File);
+        Assert.Contains("field 'signoffs' declares 'of: object' and 'ref:'", finding.Message);
+    }
+
+    [Fact]
+    public void A_ref_on_a_list_of_ids_passes()
+        => Assert.Empty(Check(Widgets(fields:
+        [
+            ("depends-on", new FieldSpec { Name = "depends-on", Type = "list", Of = "id", Refs = ["widgets"] })
+        ])));
+
     [Theory]
     [InlineData(null)]
     [InlineData("widgets")]
