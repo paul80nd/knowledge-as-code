@@ -34,6 +34,19 @@ public class CommandsTests
     }
 
     [Fact]
+    public void Report_writes_no_file_for_a_corpus_whose_descriptor_states_no_name()
+    {
+        var root = Fixture("report");
+        File.WriteAllText(Path.Combine(root, ".corpus.yaml"), "content-version: 1.2.3\n");
+        var to = Path.Combine(root, "reports", "clause-coverage.md");
+
+        var exit = Commands.Report(root, "coverage", "9.9.9", "2026-06-15T09:00:00Z", to);
+
+        Assert.Equal(1, exit);
+        Assert.False(File.Exists(to));
+    }
+
+    [Fact]
     public void Validate_asks_the_registry_it_is_given_about_each_locked_import()
     {
         var root = Fixture("import-versions");

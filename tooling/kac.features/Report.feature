@@ -58,6 +58,7 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
 
 Scenario: A frameworks report counts the clauses citing each reference
   Given the export-policies fixture corpus
+  And the descriptor names the corpus "policies-fixture"
   When I write the "frameworks" report to "frameworks-report.md"
   Then it succeeds
   And "frameworks-report.md" contains "| ISO 27001:2022 | Obliged | 1 | 0 |"
@@ -111,6 +112,13 @@ Scenario: A report kept as a record has its id and owner reported until a person
 Scenario: A report refuses a path a file already occupies
   Given the report fixture corpus
   And "reports/clause-coverage.md" is replaced with "Verdicts a person wrote."
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  Then it refuses
+  And nothing is written
+
+Scenario: A report refuses to write a file for a corpus its descriptor does not name
+  Given the report fixture corpus
+  And the descriptor states no "corpus"
   When I write the "coverage" report to "reports/clause-coverage.md"
   Then it refuses
   And nothing is written

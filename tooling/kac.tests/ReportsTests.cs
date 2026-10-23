@@ -67,6 +67,11 @@ public class ReportsTests
     }
 
     [Fact]
+    public void A_corpus_its_descriptor_does_not_name_is_cited_as_this_corpus()
+        => Assert.Equal([new ReportSource("this corpus", "2.1.0")],
+            Reports.Sources(new CorpusDescriptor { ContentVersion = "2.1.0" }, []));
+
+    [Fact]
     public void The_stamp_names_the_release_without_the_commit_the_build_carries()
         => Assert.Equal("kac/0.24.0", ReportStamp.ForTool("0.24.0+f7e3108a720ad698197fe8c08f8f6c51323777ea",
             "2026-08-08T10:00:00Z", []).By);

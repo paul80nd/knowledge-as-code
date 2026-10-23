@@ -546,17 +546,17 @@ public static class Commands
 
         var corpus = Corpus.Load(corpusRoot);
 
+        if (outPath is not null && corpus.Descriptor.Name is null)
+            return Fail("report: .corpus.yaml states no `corpus:`, so nothing was written. A report kept as a record "
+                        + "cites the corpus by that name. Write `corpus:` in .corpus.yaml, or leave out --out to "
+                        + "print the report.");
+
         var (inherited, notRestored) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
         if (notRestored.Count > 0)
             return Fail($"report: nothing is restored for {string.Join(", ", notRestored)}, which this corpus "
                         + "consumes and a report reads. Run kac restore.");
 
-        var sources = new List<ReportSource>
-        {
-            new(corpus.Descriptor.Name ?? corpusRoot, corpus.Descriptor.ContentVersion)
-        };
-        sources.AddRange(inherited.Select(i => new ReportSource(i.Corpus ?? i.Shortcode, i.ContentVersion)));
-
+        var sources = Reports.Sources(corpus.Descriptor, inherited);
         var plan = Reports.Plan(name, corpus, inherited, ReportStamp.ForTool(toolVersion, at, sources));
         if (plan is null) return Fail($"report: '{name}' named no report this build can write.");
 

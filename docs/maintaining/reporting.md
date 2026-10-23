@@ -34,6 +34,7 @@ Each refusal exits `1` and writes nothing.
 * an `--out` path a file already occupies, so a run never overwrites a person's verdicts.
   [`--out`](../use/cli/report.md#-out)
 * a consumed corpus with nothing restored under `.imports/`. [What it does](../use/cli/report.md#what-it-does)
+* an `--out` run over a corpus whose `.corpus.yaml` states no `corpus:`. [`--out`](../use/cli/report.md#-out)
 
 ## Specified by
 
@@ -48,13 +49,12 @@ Each refusal exits `1` and writes nothing.
 * Two runs over an unchanged corpus write the same report
 * A report kept as a record has its id and owner reported until a person fills them in
 * A report refuses a path a file already occupies
+* A report refuses to write a file for a corpus its descriptor does not name
 * A report name that is not built in is refused
 * A report refuses a consumed corpus that has not been restored
 
 ## Unspecified
 
-* What `sources` lists for a corpus whose descriptor states no `corpus:`. A run writes the corpus's absolute path,
-  which [#863](https://github.com/paul80nd/knowledge-as-code/issues/863) reports as a bug.
 * `--out` resolving against where the command was typed. Scenarios share one working directory, so none can move it
   safely.
 * What a run prints without `--out`. A scenario reads the disk and the exit code, never the output.

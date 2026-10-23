@@ -20,6 +20,14 @@ public sealed class ReportSteps(Workspace ws)
         ws.Write(path, content + "\n");
     }
 
+    [Given(@"the descriptor names the corpus ""(.*)""")]
+    public void GivenTheDescriptorNamesTheCorpus(string name)
+    {
+        var descriptor = ws.Read(".corpus.yaml");
+        Assert.DoesNotContain("\ncorpus:", "\n" + descriptor);
+        ws.Write(".corpus.yaml", descriptor + $"corpus: {name}\n");
+    }
+
     /// <summary>
     /// Writes the restored export's framework file, and points its manifest entry for the type at it.
     /// </summary>
