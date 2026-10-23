@@ -22,11 +22,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` states each type's in-force status in the manifest.** Each entry under `types` has `inForce`, the
   `status` value its schema declares as `in-force:`, or null for a type with no `status` range. An inherited type
   states its producer's value, and two corpora stating different values for one type stop the export. `kac bundle`
-  reads it for the review view, which named `active` whatever the schema said. An export without the key still
-  bundles, and its review view says the status is not stated. `formatVersion` stays at 4.
+  reads it for the review view, which named `active` for a standard whatever the schema said. An export without the key
+  still bundles, and its review view says the status is not stated. `formatVersion` stays at 4.
 
 ### Fixed
 
+- **`kac bundle` names the status a control is in force at in the review view.** The view said a control checks a rule
+  only where its status is `active`, whatever the controls schema declared as `in-force:`. It now reads `inForce` on
+  the controls entry of the export's manifest, as it does for standards. Where the entry states none, the view says so,
+  says no control is known to check a rule, and leaves every obligation to the reviewer.
 - **`present()` and `entries()` read a filled-in object field.** On a report holding `generated:` with its keys,
   `present('generated')` read false and `entries('generated')` read 0. An unquoted `{{…}}` placeholder still reads as
   absent. `kac validate` reports one under an object field, or in a list of objects, as it does under any other field.
