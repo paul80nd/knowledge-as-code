@@ -6,7 +6,7 @@ status: active
 verifies: [ std-CI ]
 mechanism: ci
 frequency: per-pr
-evidence: The `lint` job's log on the pull request, under the step "Check the workflows for insecure patterns".
+evidence: The `lint` job's log on the pull request, under the step "Check the workflows and Dependabot for insecure patterns".
 applies-to:
   - all
 review-by: "2027-10-23"
@@ -33,9 +33,9 @@ zizmor settles whether a workflow is safe to run, once actionlint has settled th
 
 ## How it works
 
-The `lint` job installs zizmor at the version `.github/requirements.txt` pins, then runs it over `.github/workflows/`
-and `template/.github/workflows/`. It runs with the default persona and no configuration file. Any finding exits
-non-zero and fails the job.
+The `lint` job installs zizmor at the version `.github/requirements.txt` pins, then runs it over `.github/` and
+`template/.github/`. In each folder it reads the workflows and `dependabot.yml`. It runs with the default persona and
+no configuration file. Any finding exits non-zero and fails the job.
 
 The step passes `github.token` as `GH_TOKEN`. With a token, zizmor runs its online audits, which ask GitHub about each
 pinned commit and each action's advisories.
@@ -66,9 +66,12 @@ It reports nothing about these rules of [std-CI]:
 zizmor also reports a template expansion an attacker can write, and a trigger such as `pull_request_target`. No rule of
 [std-CI] states either one, and the workflows here have neither.
 
-zizmor collects workflows only under the two folders the step names. Dependabot's configuration is not one of them.
+In each `dependabot.yml`, its `dependabot-cooldown` audit fails an ecosystem that waits fewer than seven days before
+proposing a new release. Each ecosystem here sets `cooldown: {default-days: 7}`. No rule of [std-CONFIG] states a
+cooldown.
 
 [std-CI]: ../standards/workflows.md
 [std-CI.a-checkout-leaves-no-credential-behind]: ../standards/workflows.md#a-checkout-leaves-no-credential-behind
 [std-CI.a-job-declares-the-permission-it-needs]: ../standards/workflows.md#a-job-declares-the-permission-it-needs
 [std-CI.every-action-is-pinned-to-a-commit]: ../standards/workflows.md#every-action-is-pinned-to-a-commit
+[std-CONFIG]: ../standards/configuration.md
