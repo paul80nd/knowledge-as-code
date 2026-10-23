@@ -26,9 +26,10 @@ public interface ICorpusRule
     void Check(CorpusRuleContext ctx);
 }
 
+/// <param name="ById">Resolve an id through this, so it resolves exactly as <c>ref-resolves</c> does.</param>
+/// <param name="ReposBase">Null where the descriptor states no <c>repos-base</c>.</param>
 public sealed record CorpusRuleContext(
     IReadOnlyList<Doc> Docs,
-    // Resolve an id through `ById`, so it resolves exactly as `ref-resolves` did.
     IReadOnlyDictionary<string, Doc> ById,
     Tree Tree,
     TypeSchema Type,
@@ -36,7 +37,6 @@ public sealed record CorpusRuleContext(
     // The content version of this corpus under its own name, and of each consumed corpus under the name its descriptor
     // gives.
     IReadOnlyDictionary<string, string> Versions,
-    // Null where the descriptor states no `repos-base`.
     string? ReposBase,
     Action<Doc, CheckId, string, int?> Err,
     Action<Doc, CheckId, string, int?> Warn)

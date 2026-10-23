@@ -47,11 +47,11 @@ public sealed class NoDependencyCycles : ICorpusRule
                     .Order(StringComparer.Ordinal)
             ];
 
-        // Entered in id order, so the same corpus is always walked the same way.
         var state = new Dictionary<string, Step>(StringComparer.Ordinal);
         var path = new List<string>();
         var reported = new HashSet<string>(StringComparer.Ordinal);
 
+        // Entered in id order, so the same corpus is always walked the same way.
         foreach (var id in edges.Keys.Order(StringComparer.Ordinal))
             Visit(id);
         return;

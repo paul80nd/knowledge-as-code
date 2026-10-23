@@ -19,7 +19,6 @@ public sealed class AlignmentRollup : ICorpusRule
 
     public IReadOnlyList<string> Reads => [Postures];
 
-    /// <summary>The standings that bind, as the rule's <c>postures:</c> spells them.</summary>
     private static List<string> Binding(RuleSpec spec) => Yaml.StrList(spec.Config.GetValueOrDefault(Postures));
 
     /// <summary>
@@ -205,12 +204,20 @@ internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
         ? "The rule names no standings, so nothing it cites can bind."
         : $"File it under {Join(postures)}, or under a standing that binds nothing.";
 
+    /// <summary>
+    /// The level-two heading the label's register entry sits under. Null where the label links no entry, or the entry
+    /// sits under no level-two heading.
+    /// </summary>
     public string? Filed(Doc doc, string label)
     {
         if (Anchor(doc, label) is not ({ } page, { } anchor)) return null;
         return Placed(page).GetValueOrDefault(anchor)?.Standing;
     }
 
+    /// <summary>
+    /// Null where no link with this label has a <c>#</c> fragment and resolves to a page. A pair is returned whether or
+    /// not an entry is filed at the anchor.
+    /// </summary>
     public (string Page, string Anchor)? Reaches(Doc doc, string label) =>
         Anchor(doc, label) is ({ } page, { } anchor) ? (page, anchor) : null;
 
@@ -288,6 +295,10 @@ public static class Alignment
         }
     }
 
+    /// <summary>
+    /// One pair per label, in the order given. A null reference means the cell cites the framework as a whole, or does
+    /// not show the label after the previous one.
+    /// </summary>
     public static IEnumerable<(string Framework, string? Reference)> References(
         string cell, IReadOnlyList<string> labels)
     {
