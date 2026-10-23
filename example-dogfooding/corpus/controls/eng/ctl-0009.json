@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices a blanket suppression today.\n\nThe check proves a `Justification` is present, and a reviewer still judges whether it gives a reason. A `.editorconfig` severity change may be a deliberate rule for the whole repository. The check fails it anyway, and a reviewer decides. An attribute split across lines passes a pattern that reads one line."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2f5c77ebb6a74ac84b9e525832d7411cbe098bc9/examples/engineering/controls/0009-suppression-justified.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2d7c7641373bd6b71f91be09a65428c084868f93/examples/engineering/controls/0009-suppression-justified.md"
   }
 }
