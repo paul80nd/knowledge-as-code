@@ -174,8 +174,8 @@ Confirmed when both consumers restore and validate with no errors. If a step doe
 ## Related
 
 * [ctl-0007] is the check that runs `validate` in every corpus.
-* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] is the rule a stale lock breaches.
+* [std-VERS.CONSUME] is the rule a stale lock breaches.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md
 [std-VERS]: ../standards/versioning.md
-[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
+[std-VERS.CONSUME]: ../standards/versioning.md#consume-a-producers-move-obliges-every-consumer-in-the-same-pull-request

@@ -23,14 +23,14 @@ identity granted to that service in that environment. Nothing else keeps a secre
 
 ## Rules
 
-### A secret comes from the store
+### STORE: A secret comes from the store
 
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload.
 - An environment below production **MUST** have its own secrets, distinct from production's.
 
 _**Covers:** [pol-ENVS].REUSE, [pol-SCRT].STORE_
 
-### Nowhere else holds a secret
+### NOWHERE: Nowhere else holds a secret
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test
   fixture.
@@ -40,7 +40,7 @@ _**Covers:** [pol-ENVS].REUSE, [pol-SCRT].STORE_
 
 _**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
 
-### Every secret rotates
+### ROTATE: Every secret rotates
 
 - A secret **MUST** be replaceable in the store without a code change or a rebuild.
 - Every secret **MUST** rotate on a period recorded against it in the store.

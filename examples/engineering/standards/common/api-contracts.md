@@ -24,7 +24,7 @@ implementation against that contract. A change a consumer cannot absorb ships as
 
 ## Rules
 
-### The contract is the source of truth
+### SPEC: The contract is the source of truth
 
 - A service **MUST** publish a machine-readable contract for every interface it exposes, committed to the repository
   that builds the service.
@@ -36,7 +36,7 @@ implementation against that contract. A change a consumer cannot absorb ships as
 
 _**Covers:** [pol-INTC].HOLDS, [pol-INTC].SPEC_
 
-### Every endpoint authenticates and validates
+### AUTH: Every endpoint authenticates and validates
 
 - A contract **MUST** state the authentication each endpoint takes.
 - A contract **MUST** declare an endpoint that takes no authentication as public.
@@ -48,7 +48,7 @@ _**Covers:** [pol-INTC].HOLDS, [pol-INTC].SPEC_
 
 _**Covers:** [pol-INTC].EXPOSE, [pol-INTC].SECURE_
 
-### A change carries a version and a notice
+### VERSION: A change carries a version and a notice
 
 - A published interface **MUST** have a version a consumer can pin to.
 - An HTTP interface **SHOULD** put its major version in the path, as `/v2/`, unless the contract states another

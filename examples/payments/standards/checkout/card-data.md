@@ -22,7 +22,7 @@ token. No card number, expiry date or security code crosses a boundary we own.
 
 ## Rules
 
-### The card goes straight to the PSP
+### DIRECT: The card goes straight to the PSP
 
 - A checkout page **MUST** collect card details in a frame the PSP serves.
 - A checkout page **MUST NOT** post a card field to a host we operate.
@@ -33,7 +33,7 @@ token. No card number, expiry date or security code crosses a boundary we own.
 
 _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
 
-### Nothing we own stores a card
+### NOSTORE: Nothing we own stores a card
 
 - A datastore **MUST NOT** keep a card number, an expiry date or a security code, in any column, document or blob.
 - A support tool **MUST NOT** offer a field that accepts a card number, even where a customer reads one out over the
@@ -42,7 +42,7 @@ _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
 
 _**Covers:** `eng:pol-DATA.MINIMAL`_
 
-### The split of responsibility is written down
+### SPLIT: The split of responsibility is written down
 
 - The PSP contract **MUST** state which PCI DSS requirements the PSP answers for and which we do.
 - A change to how the checkout collects a card **MUST** be reviewed against that split before it ships.

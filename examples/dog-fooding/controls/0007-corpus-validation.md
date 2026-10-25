@@ -3,7 +3,7 @@ id: ctl-0007
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES, std-VERS ]
+verifies: [ eng:std-GATES.BUILD, std-VERS.CONSUME ]
 mechanism: ci
 frequency: per-pr
 evidence: The `corpora` job's log on the pull request, one run per corpus, plus the `tool` job's template steps.
@@ -22,9 +22,9 @@ Every pull request checks each corpus in this repository against `.schema/`.
 
 ## What it checks
 
-* `eng:std-GATES.every-change-is-built-and-tested-automatically` says the build "**MUST** run from a clean checkout,
+* `eng:std-GATES.BUILD` says the build "**MUST** run from a clean checkout,
   on an agent that is not a person's own machine".
-* `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request` says a consuming corpus "**MUST** move
+* `std-VERS.CONSUME` says a consuming corpus "**MUST** move
   the `resolved:` lock of its `consumes:` entry in the pull request moving the producer's `content-version`".
 
 ## How it works

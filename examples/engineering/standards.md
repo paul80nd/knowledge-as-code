@@ -123,6 +123,7 @@ this type's records.
 |-----------------------------|---------|-------------------------------------------------------------------------------------------------------------|
 | `derived-key`               | error   | A field derived from the record's folder is not written in frontmatter.                                     |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                              |
+| `part-id-format`            | error   | Each part heading opens with its id, as `### PERMS: A job declares the permission it needs`.                |
 | `part-modal / part-nested`  | error   | A part heading states its obligations as bullets, each with a declared modal in bold and no list inside it. |
 | `modal-outside-rules`       | warning | Only the parts section binds: no bullet outside it names a declared modal.                                  |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.       |

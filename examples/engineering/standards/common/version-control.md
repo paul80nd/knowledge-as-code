@@ -23,7 +23,7 @@ reviewed merge from an identified author.
 
 ## Rules
 
-### The repository holds everything the service needs
+### REPO: The repository holds everything the service needs
 
 - A repository **MUST** contain the source, the build definition, the infrastructure definition, the configuration
   templates and the recovery scripts for the services it owns.
@@ -33,7 +33,7 @@ reviewed merge from an identified author.
 
 _**Covers:** [pol-EVER].ASSETS, [pol-EVER].ORPHAN, [pol-EVER].PARITY_
 
-### Every change is attributable and reviewed
+### ATTRIB: Every change is attributable and reviewed
 
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
 - A commit **MUST** name the work item that asked for the change.

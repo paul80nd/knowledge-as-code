@@ -23,7 +23,7 @@ repository. Analysers run as part of the build. A warning is a defect.
 
 ## Rules
 
-### The conventions come from one file
+### ONEFILE: The conventions come from one file
 
 - A repository holding C# **MUST** have an `.editorconfig` at its root.
 - That `.editorconfig` **SHOULD** be the .NET runtime team's own.
@@ -35,14 +35,14 @@ repository. Analysers run as part of the build. A warning is a defect.
 
 _**Covers:** [pol-AUTV].WARN, [pol-SECD].CODING_
 
-### A suppression is local and says why
+### SUPPR: A suppression is local and says why
 
 - A suppression **MUST** sit on the member it applies to, with a `Justification` giving the reason.
 - A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
 
 _**Covers:** [pol-AUTV].WARN_
 
-### The security rules the analysers cover
+### SECURE: The security rules the analysers cover
 
 - Code **MUST** build a SQL command through a parameter rather than by joining strings.
 - Code **MUST** use the framework's cryptography.

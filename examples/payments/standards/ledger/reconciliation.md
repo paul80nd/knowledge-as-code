@@ -23,7 +23,7 @@ break. A break has a named owner until it closes.
 
 ## Rules
 
-### The run happens every day
+### DAILY: The run happens every day
 
 - A reconciliation **MUST** run once a day against the PSP's settlement file for the previous day.
 - The run **MUST** match a settlement row to a ledger entry on the PSP reference.
@@ -34,7 +34,7 @@ break. A break has a named owner until it closes.
 
 _**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-DERV.FAILED`, `eng:pol-DERV.RUNLOG`_
 
-### A break is named and owned
+### BREAK: A break is named and owned
 
 - The run **MUST** classify each break: in the file and not the ledger, in the ledger and not the file, or matched with
   a different amount.
@@ -44,10 +44,10 @@ _**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-DERV.FAILED`, `eng:pol-DERV.RUNLOG`_
 
 _**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-OBSV.ALERTS`_
 
-### Nothing downstream reads an unreconciled day
+### HOLD: Nothing downstream reads an unreconciled day
 
 - A revenue report **MUST NOT** include a day whose reconciliation has not passed.
-- A team **MUST** close a break with a ledger correction under [std-LEDGER.nothing-amends-an-entry].
+- A team **MUST** close a break with a ledger correction under [std-LEDGER.NOAMEND].
 - A team **MUST NOT** close a break by editing the run's output.
 
 _**Covers:** `eng:pol-DERV.FAILED`_
@@ -89,4 +89,4 @@ turns a slow drift between the file and the ledger into a break somebody sees th
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
 say why in the change.
 
-[std-LEDGER.nothing-amends-an-entry]: entries.md#nothing-amends-an-entry
+[std-LEDGER.NOAMEND]: entries.md#noamend-nothing-amends-an-entry

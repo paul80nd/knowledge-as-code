@@ -24,7 +24,7 @@ off takes a recorded deviation with a named owner.
 
 ## Rules
 
-### Every change is built and tested automatically
+### BUILD: Every change is built and tested automatically
 
 - A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it.
 - The build **MUST** run from a clean checkout, on an agent that is not a person's own machine.
@@ -34,7 +34,7 @@ off takes a recorded deviation with a named owner.
 
 _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].MACHINE, [pol-AUTV].REGRESS_
 
-### A failing check stops the change
+### BLOCK: A failing check stops the change
 
 - Branch policy **MUST** block a merge while any required check is failing.
 - A team **MUST NOT** merge over a failing check without a recorded deviation.

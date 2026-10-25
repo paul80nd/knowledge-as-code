@@ -29,7 +29,7 @@ pinned, and each has an assessment in its tool record stating what was checked a
 
 ## Rules
 
-### A Markdown author owns the structure of a page
+### STRUCT: A Markdown author owns the structure of a page
 
 - A page **MUST** open on one H1.
 - Heading levels **MUST** descend one at a time.
@@ -45,7 +45,7 @@ pinned, and each has an assessment in its tool record stating what was checked a
 
 _**Covers:** `eng:pol-A11Y.CONFORM`, `eng:pol-A11Y.UPFRONT`_
 
-### The theme owns contrast, focus and keyboard reach
+### THEME: The theme owns contrast, focus and keyboard reach
 
 - `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Zensical ships, unless the change shows that its colours
   meet [WCAG 2.2 AA].
@@ -57,7 +57,7 @@ _**Covers:** `eng:pol-A11Y.CONFORM`, `eng:pol-A11Y.UPFRONT`_
 
 _**Covers:** `eng:pol-A11Y.CONFORM`_
 
-### `kac` carries no meaning in colour alone
+### COLOUR: `kac` carries no meaning in colour alone
 
 - Every message **MUST** state its meaning in words.
 - Colour **MUST** repeat what the words already say.
@@ -70,7 +70,7 @@ _**Covers:** `eng:pol-A11Y.CONFORM`_
 
 _**Covers:** `eng:pol-A11Y.UPFRONT`_
 
-### A pinned component carries an accessibility assessment
+### ASSESS: A pinned component carries an accessibility assessment
 
 - A third-party component rendering either surface **MUST** have an assessment in its tool record.
 - The assessment **MUST** name what was checked, and how.
@@ -81,7 +81,7 @@ _**Covers:** `eng:pol-A11Y.UPFRONT`_
 
 _**Covers:** `eng:pol-A11Y.VENDOR`_
 
-### What falls short is written down where a reader finds it
+### GAPS: What falls short is written down where a reader finds it
 
 - A shortfall an assessment recorded **MUST** sit in the tool record for the component it was found in.
 - A tool record **MUST NOT** claim a conformance level nobody verified.
@@ -91,7 +91,7 @@ _**Covers:** `eng:pol-A11Y.VENDOR`_
 
 _**Covers:** `eng:pol-A11Y.PUBLISH`_
 
-### A change that makes either surface worse needs a deviation
+### WORSE: A change that makes either surface worse needs a deviation
 
 - A change knowingly reducing accessibility **MUST NOT** merge without a recorded deviation.
 - The deviation **MUST** name the individual accepting the risk.

@@ -45,7 +45,7 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
    change is useful on its own. Recommend holding where it is one part of a group that is no use apart.
 4. Move `content-version` in each corpus whose own records or schema changed its export, and in each one whose bundle
    includes a skill, a hook or a manifest you changed. A change to `kac` moves none, even where the exported bytes
-   change, as [std-VERS.which-stamps-move-together-and-which-move-alone] states. [std-VERS] says which component moves.
+   change, as [std-VERS.TANDEM] states. [std-VERS] says which component moves.
 5. Move the `resolved:` lock of every consumer of a corpus you moved in step 4. Move its `version:` range as well where
    that producer is below 1.0.0 and its minor moved. Then move that consumer's own `content-version` by the part its
    producer moved, or by the larger part where step 4 already moved it.
@@ -78,20 +78,20 @@ accepted cannot be replaced. Fix a release that shipped wrong in the next patch.
 
 ## Related
 
-* [std-CI.a-version-moves-by-hand-and-publishes-once] states the changelog entry, the `<Version>` move and the
+* [std-CI.RELEASE] states the changelog entry, the `<Version>` move and the
   `content-version` each corpus needs. Steps 2, 3 and 4 say where those fall in the order.
-* [std-VERS.what-a-move-of-each-stamp-means] states what a move of the major, the minor and the patch of
+* [std-VERS.MEANING] states what a move of the major, the minor and the patch of
   `content-version` means. Step 4 is where you pick one.
-* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] states the lock and the range every
+* [std-VERS.CONSUME] states the lock and the range every
   consumer needs, and what proves them before the merge, not in CI. Steps 5 and 6 say where those fall in the order.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what you must do for a file two trees
+* [std-CONFIG.COPIES] states what you must do for a file two trees
   contain. Step 7 is where you prove it.
 * [svc-kac] is what a release publishes.
 
-[std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-CI.RELEASE]: ../standards/workflows.md#release-a-version-moves-by-hand-and-publishes-once
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved
 [std-VERS]: ../standards/versioning.md
-[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
-[std-VERS.what-a-move-of-each-stamp-means]: ../standards/versioning.md#what-a-move-of-each-stamp-means
-[std-VERS.which-stamps-move-together-and-which-move-alone]: ../standards/versioning.md#which-stamps-move-together-and-which-move-alone
+[std-VERS.CONSUME]: ../standards/versioning.md#consume-a-producers-move-obliges-every-consumer-in-the-same-pull-request
+[std-VERS.MEANING]: ../standards/versioning.md#meaning-what-a-move-of-each-stamp-means
+[std-VERS.TANDEM]: ../standards/versioning.md#tandem-which-stamps-move-together-and-which-move-alone
 [svc-kac]: ../services/kac.md

@@ -3,7 +3,7 @@ id: ctl-0004
 type: control
 tier: normative
 status: active
-verifies: [ std-CONFIG ]
+verifies: [ std-CONFIG.YAML ]
 mechanism: ci
 frequency: per-pr
 evidence: The `lint` job's log on the pull request, under the step "Check every YAML file".
@@ -22,7 +22,7 @@ yamllint settles the shape of every YAML file in this repository.
 
 ## What it checks
 
-* [std-CONFIG.the-shape-of-a-yaml-file-is-yamllints-to-decide] says a YAML file "**MUST** pass `yamllint --strict`
+* [std-CONFIG.YAML] says a YAML file "**MUST** pass `yamllint --strict`
   under the `.yamllint` at this repository's root".
 
 ## How it works
@@ -44,4 +44,4 @@ request.
 
 [ctl-0005]: 0005-update-check.md
 [std-CONFIG]: ../standards/configuration.md
-[std-CONFIG.the-shape-of-a-yaml-file-is-yamllints-to-decide]: ../standards/configuration.md#the-shape-of-a-yaml-file-is-yamllints-to-decide
+[std-CONFIG.YAML]: ../standards/configuration.md#yaml-the-shape-of-a-yaml-file-is-yamllints-to-decide

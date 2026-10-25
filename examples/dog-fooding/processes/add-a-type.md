@@ -95,13 +95,13 @@ the same change.
 
 * [prc-change-the-schema] covers the schema half of this.
 * [prc-add-a-record] is how the first record is written.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what you owe a page every tree holds.
+* [std-CONFIG.COPIES] states what you owe a page every tree holds.
   Steps 10 and 22 are where that applies.
-* [std-VERS.which-stamps-move-together-and-which-move-alone] states the stamps that move with `manifest.yaml`. Steps
+* [std-VERS.TANDEM] states the stamps that move with `manifest.yaml`. Steps
   13 and 14 are where they move.
 
 [prc-add-a-record]: add-a-record.md
 [prc-change-the-schema]: change-the-schema.md
 [prc-pull-request]: pull-request.md
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
-[std-VERS.which-stamps-move-together-and-which-move-alone]: ../standards/versioning.md#which-stamps-move-together-and-which-move-alone
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-VERS.TANDEM]: ../standards/versioning.md#tandem-which-stamps-move-together-and-which-move-alone

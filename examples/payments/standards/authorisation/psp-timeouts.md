@@ -22,14 +22,14 @@ state. The service resolves that state by asking the PSP what happened.
 
 ## Rules
 
-### Every call has a deadline
+### TIMEOUT: Every call has a deadline
 
 - A call to the PSP **MUST** have a timeout set in its configuration, so it can change without a release.
 - The authorisation call **SHOULD** time out at 5 seconds.
 
 _**Covers:** `eng:pol-PERF.TARGETS`, `eng:pol-RECV.TIMEOUT`_
 
-### A retry is bounded and backs off
+### RETRY: A retry is bounded and backs off
 
 - A service **SHOULD** retry a connection failure or a `5xx`.
 - A service **MUST NOT** retry a decline, because a decline is the issuer's answer and the card schemes fine a
@@ -44,11 +44,11 @@ _**Covers:** `eng:pol-PERF.TARGETS`, `eng:pol-RECV.TIMEOUT`_
 
 _**Covers:** `eng:pol-RECV.DEGRADE`, `eng:pol-RECV.RETRY`_
 
-### An unknown outcome is resolved
+### UNKNOWN: An unknown outcome is resolved
 
 - A service **MUST** record a timed-out authorisation as unknown.
 - A service **MUST** query the PSP for the outcome of an unknown authorisation, quoting the idempotency key from
-  [std-IDEM.the-caller-chooses-the-key].
+  [std-IDEM.KEY].
 - A service **MUST** resolve every unknown outcome within a window set in its configuration.
 - A service **MUST** raise an alert on an unknown outcome it has not resolved within that window.
 - That window **SHOULD** be 15 minutes.
@@ -107,4 +107,4 @@ say why in the change.
 
 [Exponential backoff and jitter]: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
 [nfr-0001]: ../../nfrs/0001-authorisation-latency.md
-[std-IDEM.the-caller-chooses-the-key]: idempotency.md#the-caller-chooses-the-key
+[std-IDEM.KEY]: idempotency.md#key-the-caller-chooses-the-key

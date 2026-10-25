@@ -22,7 +22,7 @@ cardholder is challenged, and our services pass the outcome on.
 
 ## Rules
 
-### The PSP runs the authentication
+### PSP: The PSP runs the authentication
 
 - The checkout **MUST** start authentication through the PSP's 3-D Secure flow before it asks for an authorisation.
 - A service **MUST** treat an authorisation with no authentication outcome as declined.
@@ -32,16 +32,16 @@ cardholder is challenged, and our services pass the outcome on.
 
 _**Covers:** `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
-### The outcome travels with the payment
+### OUTCOME: The outcome travels with the payment
 
 - An authorisation request **MUST** include the PSP's authentication reference.
-- A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER.an-entry-says-what-produced-it]
+- A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER.SOURCE]
   requires to record it.
 - A service **MUST NOT** retry a declined authorisation with the authentication step left out.
 
 _**Covers:** `eng:pol-INTC.SECURE`, `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
-### The challenge is somebody else's page
+### PAGE: The challenge is somebody else's page
 
 - The checkout **MUST** hand the cardholder to the PSP's challenge page or frame.
 - The checkout **MUST NOT** collect a one-time passcode, a password or a biometric prompt on a page we serve.
@@ -95,5 +95,5 @@ To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart 
 say why in the change.
 
 [EMV 3-D Secure]: https://www.emvco.com/emv-technologies/3-d-secure/
-[std-LEDGER.an-entry-says-what-produced-it]: ../ledger/entries.md#an-entry-says-what-produced-it
+[std-LEDGER.SOURCE]: ../ledger/entries.md#source-an-entry-says-what-produced-it
 [The PSD2 regulatory technical standards on SCA]: https://www.handbook.fca.org.uk/techstandards/PS/2018/2018_389.pdf

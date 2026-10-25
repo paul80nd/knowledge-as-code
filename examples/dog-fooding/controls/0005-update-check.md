@@ -3,7 +3,7 @@ id: ctl-0005
 type: control
 tier: normative
 status: active
-verifies: [ std-CONFIG ]
+verifies: [ std-CONFIG.COPIES ]
 mechanism: ci
 frequency: per-pr
 evidence: The `corpora` job's log on the pull request, under the step "Check the corpus is in step with the template".
@@ -22,7 +22,7 @@ The same file lives in the template and in every corpus. A copy that drifted fai
 
 ## What it checks
 
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says every overlay copy "**MUST** match its
+* [std-CONFIG.COPIES] says every overlay copy "**MUST** match its
   source, as `kac update --check --from ../../` reports in that corpus".
 
 ## How it works
@@ -43,4 +43,4 @@ copy of itself. The check compares no seed, such as a type page or a `_template.
 lands on the path it was read from. Every corpus names `plugin.from`, so it reads the plugin tree from `template/`. A
 corpus created elsewhere gets its own `.editorconfig`, and each corpus here declares that file under `skip:`.
 
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved

@@ -29,7 +29,7 @@ step, which is [zizmor]'s `artipacked` audit. [actionlint] decides the rest of h
 
 ## Rules
 
-### The gate runs on every pull request into main
+### GATE: The gate runs on every pull request into main
 
 - A check that can block a merge **MUST** run in `.github/workflows/kac.yml` on a pull request into `main`.
 - `kac.yml` **MUST** name every one of its jobs in the `needs:` of its `validate` job.
@@ -41,7 +41,7 @@ step, which is [zizmor]'s `artipacked` audit. [actionlint] decides the rest of h
 _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.BRANCH`, `eng:pol-PIPE.ASCODE`,
 `eng:pol-PIPE.GATES`_
 
-### A job declares the permission it needs
+### PERMS: A job declares the permission it needs
 
 - A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard]'s
   `Token-Permissions` check asks for.
@@ -51,7 +51,7 @@ _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.BRANCH`, 
 
 _**Covers:** `eng:pol-ACCS.LEAST`_
 
-### Every action is pinned to a commit
+### PINNED: Every action is pinned to a commit
 
 - A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is
   what [OpenSSF Scorecard]'s `Pinned-Dependencies` check asks for.
@@ -63,7 +63,7 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 
-### A workflow holds no credential of its own
+### CREDS: A workflow holds no credential of its own
 
 - A workflow **MUST** take every credential from GitHub's secret store or from an identity it exchanged.
 - A publish to nuget.org **MUST** authenticate through a trusted publishing policy naming this repository, this
@@ -76,7 +76,7 @@ _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 
 _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `eng:pol-SCRT.STORE`_
 
-### A checkout leaves no credential behind
+### PERSIST: A checkout leaves no credential behind
 
 - A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which
   is what [zizmor]'s `artipacked` audit asks for.
@@ -84,7 +84,7 @@ _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `
 
 _**Covers:** `eng:pol-ACCS.LEAST`_
 
-### One job holds the write permission
+### WRITE: One job holds the write permission
 
 - A publishing workflow **MUST** declare its write permission on one job.
 - A workflow publishing a package or a branch **MUST** declare `needs:` on a job with `contents: read`.
@@ -99,7 +99,7 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 
-### A version moves by hand and publishes once
+### RELEASE: A version moves by hand and publishes once
 
 - A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in the
   pull request making that change.

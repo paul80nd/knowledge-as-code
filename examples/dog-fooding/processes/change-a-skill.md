@@ -112,11 +112,11 @@ it from the working tree to read your change, as this corpus's own `README.md` d
 ## Related
 
 * [std-PLUGIN] states the rules a bundled skill follows. Step 2 is where you read them.
-* [std-VERS.which-stamps-move-together-and-which-move-alone] states which stamps move together. Steps 7, 8 and 9 say
+* [std-VERS.TANDEM] states which stamps move together. Steps 7, 8 and 9 say
   where each falls in the order.
-* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] states what step 10 proves, and why a
+* [std-VERS.CONSUME] states what step 10 proves, and why a
   restore over a kept `.imports/` proves nothing.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states the copy step 6 makes. Nothing proves
+* [std-CONFIG.COPIES] states the copy step 6 makes. Nothing proves
   that one, because each corpus owns its plugin manifest and no check compares the four.
 * [prc-pull-request] merges the change.
 * [svc-marketplace] is what a bundled skill is published through.
@@ -124,10 +124,10 @@ it from the working tree to read your change, as this corpus's own `README.md` d
 [Skills]: https://paul80nd.github.io/knowledge-as-code/use/skills/
 [ctl-0008]: ../controls/0008-publish-round-trip.md
 [prc-pull-request]: pull-request.md
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved
 [std-PLUGIN]: ../standards/plugin.md
 [std-VERS]: ../standards/versioning.md
-[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
-[std-VERS.which-stamps-move-together-and-which-move-alone]: ../standards/versioning.md#which-stamps-move-together-and-which-move-alone
+[std-VERS.CONSUME]: ../standards/versioning.md#consume-a-producers-move-obliges-every-consumer-in-the-same-pull-request
+[std-VERS.TANDEM]: ../standards/versioning.md#tandem-which-stamps-move-together-and-which-move-alone
 [svc-marketplace]: ../services/marketplace.md
 [writing-for-agents]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents

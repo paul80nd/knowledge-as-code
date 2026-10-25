@@ -3,7 +3,7 @@ id: ctl-0002
 type: control
 tier: normative
 status: active
-verifies: [ std-CI ]
+verifies: [ eng:std-GATES.BLOCK, std-CI.GATE ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
@@ -22,10 +22,10 @@ A job the gate does not list still runs and reports. It blocks no merge.
 
 ## What it checks
 
-* [std-CI.the-gate-runs-on-every-pull-request-into-main] says `kac.yml` "**MUST** name every one of its jobs in the
+* [std-CI.GATE] says `kac.yml` "**MUST** name every one of its jobs in the
   `needs:` of its `validate` job".
-* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy "**MUST** block a merge while any required check
-  is failing". The test checks the half of that `kac.yml` decides: that `validate` fails when a job it needs fails.
+* `eng:std-GATES.BLOCK` says branch policy "**MUST** block a merge while any required check is
+  failing". The test checks the half of that `kac.yml` decides: that `validate` fails when a job it needs fails.
 
 ## How it works
 
@@ -48,4 +48,4 @@ outside `validate`'s `needs:` is a fault only `kac.yml` can have.
 The branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`.
 
 [ctl-0001]: 0001-merge-gate.md
-[std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main
+[std-CI.GATE]: ../standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main

@@ -23,8 +23,9 @@ optional field from [the type page](../controls.md#metadata) where you have a va
 **Frontmatter**
 
 * **`id`**: `ctl-` plus a four-digit number, as `ctl-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
-* **`verifies`**: rule-level anchors where the standard has them, and the standard id otherwise. When the way a rule is
-  checked changes, update this control and leave the standard as it is.
+* **`verifies`**: the rules this control checks, as `verifies: [ std-SECRET.ROTATE ]`. A bare standard id is refused, so
+  a control checking every rule of a standard lists every rule. The standard names the control once in `verified-by`.
+  When the way a rule is checked changes, update this control and leave the standard as it is.
 * **`mechanism`**: pick the one that runs today. `not-enforced` is a first-class value and the whole point of the
   coverage report, so do not invent a mechanism to avoid using it. Write the control for an unenforced rule all the
   same, because an unenforced rule you know about is worth more than one you do not.
@@ -42,8 +43,8 @@ One sentence: what this control proves.
 
 The rules this control verifies, quoted or anchored:
 
-* [std-{{a}}] says "Services **MUST** …"
-* [std-{{b}}] says "Responses **MUST NOT** …"
+* [std-{{a}}.{{ID}}] says "Services **MUST** …"
+* [std-{{b}}.{{ID}}] says "Responses **MUST NOT** …"
 
 _(Name rules, not intentions. "We review carefully" is not a control; "the PR template requires a tick against each
 conformance checklist item" is.)_
@@ -61,5 +62,5 @@ guarantee.
 _(If `mechanism` is `not-enforced`, this is the section that matters: say what would need to exist, and what the
 exposure is meanwhile.)_
 
-[std-{{a}}]: ../standards/{{a}}.md#{{anchor}}
-[std-{{b}}]: ../standards/{{b}}.md#{{anchor}}
+[std-{{a}}.{{ID}}]: ../standards/{{a}}.md#{{anchor}}
+[std-{{b}}.{{ID}}]: ../standards/{{b}}.md#{{anchor}}

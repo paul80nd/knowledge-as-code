@@ -3,7 +3,7 @@ id: ctl-0009
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES, eng:std-TEST, std-PLUGIN ]
+verifies: [ eng:std-GATES.BUILD, eng:std-TEST.LEVEL, std-PLUGIN.FROZEN ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under its three test steps.
@@ -22,11 +22,11 @@ Each layer asserts something different about the same corpus.
 
 ## What it checks
 
-* `eng:std-TEST.pick-the-level-from-the-fault` says a team "**MUST** cover a rule about one unit's behaviour with a
+* `eng:std-TEST.LEVEL` says a team "**MUST** cover a rule about one unit's behaviour with a
   test on that unit alone".
-* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push "**MUST** trigger a build and the test
+* `eng:std-GATES.BUILD` says a push "**MUST** trigger a build and the test
   suite, without anyone asking for it".
-* `std-PLUGIN.the-bundle-carries-a-frozen-export-and-nothing-writes-to-it` says a skill "**MUST** report a `status`
+* `std-PLUGIN.FROZEN` says a skill "**MUST** report a `status`
   its type does not treat as in force" and "**MUST** report a review date that has passed, where its type exports
   one". `PluginSkillStalenessTests` holds each lookup skill to both, deriving what it owes from the schema, down to
   the key each type's export writes the date under.
@@ -48,7 +48,7 @@ copied in on each run, so a schema change that alters behaviour shows up in the 
 
 ## Coverage and gaps
 
-No layer reports line coverage, which `eng:std-TEST.know-what-the-suite-reaches` asks for. The golden suite measures
+No layer reports line coverage, which `eng:std-TEST.REACH` asks for. The golden suite measures
 the share of check ids a fixture exercises, and the two figures answer different questions.
 
 The suite runs on a pull request into `main`. A push to a branch with no pull request open triggers nothing, so the

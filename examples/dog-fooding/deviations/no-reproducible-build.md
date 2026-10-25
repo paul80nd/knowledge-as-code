@@ -5,7 +5,7 @@ tier: normative
 status: closed
 departs-from:
   - eng:pol-AUTV.REPRO
-  - std-CONFIG.a-pin-names-an-exact-version
+  - std-CONFIG.PIN
 risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"

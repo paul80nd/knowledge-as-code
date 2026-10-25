@@ -3,7 +3,7 @@ id: ctl-0014
 type: control
 tier: normative
 status: active
-verifies: [ std-A11Y ]
+verifies: [ std-A11Y.ASSESS ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
@@ -23,7 +23,7 @@ A pull request that moves the major or minor of an assessed component fails unti
 
 ## What it checks
 
-* [std-A11Y.a-pinned-component-carries-an-accessibility-assessment] says "The assessment **MUST** name the version it
+* [std-A11Y.ASSESS] says "The assessment **MUST** name the version it
   was made against".
 * It says "A pull request moving a pin to a new major or minor version **MUST** include a new assessment".
 
@@ -53,4 +53,4 @@ this test learns its manifest.
 A patch release inside the range passes, because std-A11Y asks for a new assessment only at a major or a minor.
 
 [std-A11Y]: ../standards/accessibility.md
-[std-A11Y.a-pinned-component-carries-an-accessibility-assessment]: ../standards/accessibility.md#a-pinned-component-carries-an-accessibility-assessment
+[std-A11Y.ASSESS]: ../standards/accessibility.md#assess-a-pinned-component-carries-an-accessibility-assessment

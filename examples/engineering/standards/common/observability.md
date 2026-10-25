@@ -25,7 +25,7 @@ action to take.
 
 ## Rules
 
-### Everything lands in the central store
+### CENTRAL: Everything lands in the central store
 
 - A service **MUST** emit its logs, traces and metrics to the central platform.
 - A service **MUST NOT** keep the only copy of a log, so that losing the host still leaves the evidence.
@@ -33,7 +33,7 @@ action to take.
 
 _**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 
-### One request reads as one timeline
+### TRACE: One request reads as one timeline
 
 - A service **MUST** stamp every record with a timestamp taken from a synchronised clock, stating its offset from UTC.
 - A service **SHOULD** write that timestamp in UTC, because records from several services then sort without
@@ -45,15 +45,15 @@ _**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 
 _**Covers:** [pol-OBSV].CLOCKS, [pol-OBSV].CORREL_
 
-### Telemetry carries no personal data
+### PII: Telemetry carries no personal data
 
 - A service **MUST** redact unmasked personal data before the record is written.
 - A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label.
-  [std-SECRET.nowhere-else-holds-a-secret] states where a secret may appear.
+  [std-SECRET.NOWHERE] states where a secret may appear.
 
 _**Covers:** [pol-OBSV].SECRETS_
 
-### Somebody acts on every alert
+### ALERT: Somebody acts on every alert
 
 - A service **MUST** publish availability and latency objectives.
 - A service **MUST** alert when it is on course to miss one of those objectives.
@@ -110,5 +110,5 @@ say why in the change.
 [ASVS 5.0 requirement 16.2.2]: https://github.com/OWASP/ASVS/blob/v5.0.0_release/5.0/en/0x25-V16-Security-Logging-and-Error-Handling.md
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/
-[std-SECRET.nowhere-else-holds-a-secret]: secret-handling.md#nowhere-else-holds-a-secret
+[std-SECRET.NOWHERE]: secret-handling.md#nowhere-nowhere-else-holds-a-secret
 [pol-OBSV]: ../../policies/operations/obsv-observability.md#clauses

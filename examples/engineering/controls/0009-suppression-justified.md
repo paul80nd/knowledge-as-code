@@ -3,7 +3,7 @@ id: ctl-0009
 type: control
 tier: normative
 status: active
-verifies: [ std-CSSTY ]
+verifies: [ std-CSSTY.SUPPR ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails a change that silences an analyser warning without a reason.
 
 ## What it checks
 
-* [std-CSSTY.a-suppression-is-local-and-says-why] says a suppression "**MUST** sit on the member it applies to, with a
+* [std-CSSTY.SUPPR] says a suppression "**MUST** sit on the member it applies to, with a
   `Justification` giving the reason".
 * It says a repository "**MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file".
 
@@ -45,4 +45,4 @@ The check proves a `Justification` is present, and a reviewer still judges wheth
 severity change may be a deliberate rule for the whole repository. The check fails it anyway, and a reviewer decides. An
 attribute split across lines passes a pattern that reads one line.
 
-[std-CSSTY.a-suppression-is-local-and-says-why]: ../standards/platform/dotnet/code-style.md#a-suppression-is-local-and-says-why
+[std-CSSTY.SUPPR]: ../standards/platform/dotnet/code-style.md#suppr-a-suppression-is-local-and-says-why

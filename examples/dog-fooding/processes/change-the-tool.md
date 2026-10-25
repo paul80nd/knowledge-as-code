@@ -74,12 +74,12 @@ release costs, and step 14 is where you read it.
 
 ## Related
 
-* [std-CI.a-version-moves-by-hand-and-publishes-once] states the changelog entry and the release. Step 12 says where
+* [std-CI.RELEASE] states the changelog entry and the release. Step 12 says where
   the entry falls in the order.
 * [prc-change-the-schema] is the cheaper answer where the check fits an expression.
 * [svc-kac] is what this publishes.
 
 [prc-change-the-schema]: change-the-schema.md
 [prc-pull-request]: pull-request.md
-[std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
+[std-CI.RELEASE]: ../standards/workflows.md#release-a-version-moves-by-hand-and-publishes-once
 [svc-kac]: ../services/kac.md

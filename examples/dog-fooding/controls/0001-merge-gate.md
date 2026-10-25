@@ -3,7 +3,7 @@ id: ctl-0001
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES, std-CI ]
+verifies: [ eng:std-GATES.BLOCK, std-CI.GATE ]
 mechanism: ci
 frequency: per-pr
 evidence: The `validate` check on the pull request, and the branch rule on `main` in the repository settings.
@@ -22,9 +22,9 @@ A failing job in `kac.yml` stops the merge.
 
 ## What it checks
 
-* [std-CI.the-gate-runs-on-every-pull-request-into-main] says the branch rule on `main` "**MUST** name `validate` as
+* [std-CI.GATE] says the branch rule on `main` "**MUST** name `validate` as
   the check a merge waits for".
-* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy "**MUST** block a merge while any required check
+* `eng:std-GATES.BLOCK` says branch policy "**MUST** block a merge while any required check
   is failing".
 
 ## How it works
@@ -46,4 +46,4 @@ reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull req
 half: whether `validate` still needs every job.
 
 [ctl-0002]: 0002-workflow-gate-tests.md
-[std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main
+[std-CI.GATE]: ../standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main

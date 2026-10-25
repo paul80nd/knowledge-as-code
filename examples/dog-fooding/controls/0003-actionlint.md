@@ -3,7 +3,7 @@ id: ctl-0003
 type: control
 tier: normative
 status: active
-verifies: [ std-CI ]
+verifies: [ std-CI.GATE ]
 mechanism: ci
 frequency: per-pr
 evidence: The `lint` job's log on the pull request, under the step "Check the workflows".
@@ -22,7 +22,7 @@ A workflow can be valid YAML and still not run.
 
 ## What it checks
 
-* [std-CI.the-gate-runs-on-every-pull-request-into-main] says a workflow "**MUST** pass `actionlint`, which also puts
+* [std-CI.GATE] says a workflow "**MUST** pass `actionlint`, which also puts
   every `run:` block through shellcheck".
 
 ## How it works
@@ -46,4 +46,4 @@ actionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves wh
 
 [ctl-0015]: 0015-zizmor.md
 [std-CI]: ../standards/workflows.md
-[std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main
+[std-CI.GATE]: ../standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main

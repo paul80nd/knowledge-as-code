@@ -3,7 +3,7 @@ id: ctl-0005
 type: control
 tier: normative
 status: active
-verifies: [ std-API ]
+verifies: [ std-API.VERSION ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails a contract whose routes have no version, or a breaking change mad
 
 ## What it checks
 
-* [std-API.a-change-carries-a-version-and-a-notice] says a published interface "**MUST** have a version a consumer can
+* [std-API.VERSION] says a published interface "**MUST** have a version a consumer can
   pin to".
 * It says an HTTP interface "**SHOULD** put its major version in the path, as `/v2/`, unless the contract states another
   scheme".
@@ -50,9 +50,9 @@ The second needs the contract on `main`, so it belongs in the pipeline.
 A reviewer reading the contract diff is the only thing that notices a missing version today.
 
 Both checks read the contract, so they prove nothing about a route the contract leaves out.
-[std-API.the-contract-is-the-source-of-truth] requires the build to fail where the implementation drifts from the
+[std-API.SPEC] requires the build to fail where the implementation drifts from the
 contract, and no control records a check of that. A header the contract declares is not proof the service sends it. Only
 a test against the running service proves that. The notice period before a version is removed goes unchecked.
 
-[std-API.a-change-carries-a-version-and-a-notice]: ../standards/common/api-contracts.md#a-change-carries-a-version-and-a-notice
-[std-API.the-contract-is-the-source-of-truth]: ../standards/common/api-contracts.md#the-contract-is-the-source-of-truth
+[std-API.VERSION]: ../standards/common/api-contracts.md#version-a-change-carries-a-version-and-a-notice
+[std-API.SPEC]: ../standards/common/api-contracts.md#spec-the-contract-is-the-source-of-truth

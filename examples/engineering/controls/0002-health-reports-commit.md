@@ -3,7 +3,7 @@ id: ctl-0002
 type: control
 tier: normative
 status: active
-verifies: [ std-DEPLOY ]
+verifies: [ std-DEPLOY.ONCE ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails a deployment whose service cannot say which commit it was built f
 
 ## What it checks
 
-* [std-DEPLOY.the-artefact-is-built-once] says an artefact "**MUST** record the commit it was built from, so a running
+* [std-DEPLOY.ONCE] says an artefact "**MUST** record the commit it was built from, so a running
   version identifies the change it came from".
 
 ## How it works
@@ -40,10 +40,10 @@ A pre-commit check or a Claude Code hook sees only the source, and cannot tell w
 A reviewer reading the health handler is the only thing that notices a missing commit today.
 
 The standard names no endpoint and no field, so the check assumes `/health` and `commit`. The other rules under
-[std-DEPLOY.the-artefact-is-built-once] go unchecked:
+[std-DEPLOY.ONCE] go unchecked:
 
 * the pipeline builds once and promotes that build
 * the deployment record names the artefact, the change and the approval
 * nothing deploys an artefact built outside the pipeline
 
-[std-DEPLOY.the-artefact-is-built-once]: ../standards/common/deployment.md#the-artefact-is-built-once
+[std-DEPLOY.ONCE]: ../standards/common/deployment.md#once-the-artefact-is-built-once

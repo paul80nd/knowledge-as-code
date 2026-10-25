@@ -3,7 +3,7 @@ id: ctl-0003
 type: control
 tier: normative
 status: active
-verifies: [ std-OBS ]
+verifies: [ std-OBS.ALERT ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails an alert rule that leaves out who acts on it, or what they do fir
 
 ## What it checks
 
-* [std-OBS.somebody-acts-on-every-alert] says an alert "**MUST** name the accountable owner and the first action to
+* [std-OBS.ALERT] says an alert "**MUST** name the accountable owner and the first action to
   take".
 
 ## How it works
@@ -43,8 +43,8 @@ A reviewer reading the alert rules is the only thing that notices a missing owne
 
 The standard names no field for the owner or the first action, so the check assumes `owner` and `first_action`. It
 proves a value is present, and a reviewer still judges whether the first action is one somebody can take. The other
-rules under [std-OBS.somebody-acts-on-every-alert] go unchecked, and so does
-[std-OBS.one-request-reads-as-one-timeline].
+rules under [std-OBS.ALERT] go unchecked, and so does
+[std-OBS.TRACE].
 
-[std-OBS.one-request-reads-as-one-timeline]: ../standards/common/observability.md#one-request-reads-as-one-timeline
-[std-OBS.somebody-acts-on-every-alert]: ../standards/common/observability.md#somebody-acts-on-every-alert
+[std-OBS.TRACE]: ../standards/common/observability.md#trace-one-request-reads-as-one-timeline
+[std-OBS.ALERT]: ../standards/common/observability.md#alert-somebody-acts-on-every-alert

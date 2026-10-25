@@ -23,7 +23,7 @@ tokens at 13 months, logs at 90 days, and the customer's contact details when th
 
 ## Rules
 
-### Each store has one period
+### PERIOD: Each store has one period
 
 - The ledger **MUST** keep an entry for seven years from the date it was written.
 - A service **MUST** delete a card token 13 months after its last use.
@@ -32,7 +32,7 @@ tokens at 13 months, logs at 90 days, and the customer's contact details when th
 
 _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 
-### Deletion happens without anyone asking
+### PURGE: Deletion happens without anyone asking
 
 - A service **MUST** delete data that has passed its period, without anyone asking.
 - A scheduled job **SHOULD** delete it, at least weekly, unless the store expires data itself.
@@ -41,7 +41,7 @@ _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 
 _**Covers:** `eng:pol-DATA.DELETE`_
 
-### An erasure request is answered
+### ERASE: An erasure request is answered
 
 - A service **MUST** remove the customer's contact details on an erasure request.
 - A service **MUST** replace the customer's name in the ledger with the order reference.

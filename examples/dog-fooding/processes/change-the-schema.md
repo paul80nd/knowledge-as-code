@@ -73,7 +73,7 @@ reading the shape before it has to be told.
   type against its sources.
 * [prc-change-a-skill] changes the lookup skill that restates a type's exported sections.
 * [prc-change-the-tool] adds a rule the expression grammar cannot ask.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what you must do for a type page and a
+* [std-CONFIG.COPIES] states what you must do for a type page and a
   `_template.md`, because both live in every tree that adopted the type. Step 3 is where that applies.
 * [prc-pull-request] merges the change.
 
@@ -81,4 +81,4 @@ reading the shape before it has to be told.
 [prc-change-a-skill]: change-a-skill.md
 [prc-change-the-tool]: change-the-tool.md
 [prc-pull-request]: pull-request.md
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved

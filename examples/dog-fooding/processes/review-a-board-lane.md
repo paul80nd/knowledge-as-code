@@ -85,11 +85,11 @@ count the items carrying a `Phase` before and after.
 
 ## Related
 
-* [std-PROSE.what-stays-true] sends agreed but unbuilt work to the issue tracker. This process is how that tracker
+* [std-PROSE.TRUE] sends agreed but unbuilt work to the issue tracker. This process is how that tracker
   stays worth reading.
 * [prc-pull-request] is not run here, because this process changes no file.
 * `harvest-findings` triages the `kac:finding` issues and drafts the record one asks for. This process reads a whole
   lane, whoever filed it.
 
 [prc-pull-request]: pull-request.md
-[std-PROSE.what-stays-true]: ../standards/prose.md#what-stays-true
+[std-PROSE.TRUE]: ../standards/prose.md#true-what-stays-true

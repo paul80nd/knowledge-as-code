@@ -60,7 +60,7 @@ and helps only when a session loads it and acts on it. A check fails a broken ru
 |-----------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `tier` *†       | `normative`                                                               | The record's trust level, fixed for the type and checked against the folder.                                |
 | `status` *†     | `active` `planned` `retired`                                              | Whether the record is in force, intended, or stood down, whatever its `mechanism` is. In force at `active`. |
-| `verifies` *    | list                                                                      | The standard ids this control checks, as rule-level anchors where possible.                                 |
+| `verifies` *    | list                                                                      | The rules this control checks, as `std-CI.PERMS`.                                                           |
 | `mechanism` *   | `ci` `review-checklist` `manual` `runtime-alert` `not-enforced`           | How the check runs, or `not-enforced` where nothing checks the rule.                                        |
 | `frequency`     | `continuous` `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual` | How often it runs, or `continuous` where the check never stops. Required when `mechanism != not-enforced`.  |
 | `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.            |

@@ -23,7 +23,7 @@ outcome and charges the customer nothing further.
 
 ## Rules
 
-### The caller chooses the key
+### KEY: The caller chooses the key
 
 - A request that authorises, captures or refunds **MUST** include an `Idempotency-Key` header.
 - The caller **MUST** send the same key on every retry of one attempt.
@@ -33,7 +33,7 @@ outcome and charges the customer nothing further.
 
 _**Covers:** `eng:pol-INTC.SPEC`, `eng:pol-RECV.IDEMPOT`_
 
-### The service answers a repeat from its record
+### REPEAT: The service answers a repeat from its record
 
 - A service **MUST** store the key with the outcome before it responds to the first request.
 - A service **MUST** return the stored outcome for a repeated key, with the same status and body.
@@ -46,7 +46,7 @@ _**Covers:** `eng:pol-INTC.SPEC`, `eng:pol-RECV.IDEMPOT`_
 
 _**Covers:** `eng:pol-RECV.IDEMPOT`_
 
-### An in-flight repeat waits or is told to wait
+### WAIT: An in-flight repeat waits or is told to wait
 
 - A service **MUST** return `409` where the key is recorded and the first request has not finished.
 - A service **MUST NOT** start a second call to the PSP while the first is in flight for the same key.
