@@ -21,7 +21,7 @@ One clause covered, so the report has an edge to draw.
 
 ## Rules
 
-### A covered clause names its standard
+### NAMED: A covered clause names its rule
 
 - This standard **MUST** name the clause it discharges, so the coverage row carries an id.
 
@@ -33,7 +33,7 @@ This file is the example.
 
 ## Conformance checklist
 
-- [ ] The coverage report names this standard against `pol-COVR.WRITTEN`.
+- [ ] The coverage report names this rule against `pol-COVR.WRITTEN`.
 
 ## Rationale and provenance
 

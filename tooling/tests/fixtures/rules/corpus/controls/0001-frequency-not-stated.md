@@ -4,7 +4,7 @@ type: control
 tier: normative
 status: active
 owner: human:alex.doe
-verifies: [std-ERRORS]
+verifies: [std-ERRORS.WHAT]
 mechanism: ci
 evidence: The build log for the pipeline this control runs in.
 review-by: "2030-01-01"

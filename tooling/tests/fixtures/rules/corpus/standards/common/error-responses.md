@@ -20,7 +20,7 @@ it cites no authority, so nothing says who decided any of it.
 
 ## Rules
 
-### A failure says what happened
+### WHAT: A failure says what happened
 
 - A failure **MUST** be answered with the status code that describes it.
 - A response to a failure **MUST** include a body the caller can act on.

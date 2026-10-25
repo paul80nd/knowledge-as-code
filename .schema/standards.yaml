@@ -176,19 +176,21 @@ sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
   optional: [Sources and further reading, Changelog]
 
-# A rule is an H3 under `Rules`, addressed by the anchor its heading slugs to. The heading is the part, so
-# a citation addresses one heading's run of obligations and never a single bullet. Each bullet beneath
-# states one obligation: the subject first, then one of the modals below, in bold capitals.
+# A rule is an H3 under `Rules` opening with its id, as `### PERMS: A job declares the permission it needs`,
+# cited as `std-CI.PERMS` and linked by the slug of the whole heading. The heading is the part, so a citation
+# addresses one heading's run of obligations and never a single bullet. Each bullet beneath states one
+# obligation: the subject first, then one of the modals below, in bold capitals.
 parts:
   source: headings
   section: Rules
   noun: rule
+  id-pattern: '^[A-Z][A-Z0-9]{1,6}$'
   binding: [MUST, MUST NOT]
   advisory: [SHOULD, SHOULD NOT, MAY]
 
 # `Rules` is absent from the export's `sections:` because its headings are parts, and `parts:` exports them.
 export:
-  version: 2
+  version: 3
   fields: [id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to,
            review-by, tags]
   sections:
@@ -211,8 +213,8 @@ export:
       anchor: part.anchor
       links: part.links
   notes: >
-    A rule travels as its heading and one entry for each bullet beneath it. An entry states the bullet's
-    level and its text, in the Markdown the standard wrote it in. See
+    A rule travels as its id, its heading with the id taken off, and one entry for each bullet beneath it.
+    An entry states the bullet's level and its text, in the Markdown the standard wrote it in. See
     <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#standards>.
 index:
   columns: [id, title, category, status, derived-from, review-by]

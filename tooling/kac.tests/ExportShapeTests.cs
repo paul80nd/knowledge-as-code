@@ -148,7 +148,7 @@ public class ExportShapeTests
             Where it lives: full
             Dependencies: full
             Data: full
-        standards@2
+        standards@3
           fields: id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to, review-by, tags
           sections:
             Summary: full

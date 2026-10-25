@@ -4,7 +4,7 @@ type: deviation
 tier: normative
 status: draft
 departs-from:
-  - std-ERRORS.a-failure-says-what-happened
+  - std-ERRORS.WHAT
 risk: low
 review-by: "2020-06-01"
 owner: human:alex.doe

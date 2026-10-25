@@ -252,7 +252,7 @@ Scenario: A bundle writes each view the plugin manifest declares
 Scenario: A view whose types the export lacks is trimmed, and written nowhere
   Given the bundle fixture corpus
   And it has been exported
-  And the plugin tree declares the view "views/review.md" as "review" reading "standards@2"
+  And the plugin tree declares the view "views/review.md" as "review" reading "standards@3"
   When I bundle
   Then it succeeds
   And the bundle trims "views/review.md" because "the export carries no standards"

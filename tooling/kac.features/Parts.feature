@@ -2,7 +2,7 @@ Feature: The parts of a record
 A record's parts are the children something else may cite, and each type says where it keeps them. A
 policy keeps its in a clause table, so kac checks the table's shape, each row's id and each row's modal.
 A glossary keeps its as the headings its terms are written as, where the address is derived and only the
-address can be wrong. Both are held to the same two things: no two parts of a record share an address,
+address can be wrong. A standard keeps its as headings too, each opening with the id a citation names. Both are held to the same two things: no two parts of a record share an address,
 and every citation reaches the part it names, written with the separator the corpus uses.
 
 Driven in-process against the broken-parts fixture: the same corpus its JSON golden pins.
@@ -112,6 +112,12 @@ Scenario: A list written inside a rule's bullet is refused
     | line | check       | message |
     |   25 | part-nested | rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it. |
 
+Scenario: A rule heading opening with no id is refused
+  When I validate the corpus
+  Then the findings for "standards/noid-a-rule-with-no-id.md" are exactly:
+    | line | check          | message |
+    |   22 | part-id-format | rule 'Every secret is read at run time' opens with no id matching ^[A-Z][A-Z0-9]{1,6}$, so nothing can cite it. Write the heading as '### <ID>: Every secret is read at run time'. |
+
 Scenario: A parts section holding no headings is told what belongs there
   When I validate the corpus
   Then the findings for "glossary/none-terms-section-empty.md" are exactly:
@@ -120,7 +126,7 @@ Scenario: A parts section holding no headings is told what belongs there
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 21 documents and 0 skipped
+  Then validation reports 22 documents and 0 skipped
   And the findings are exactly:
     | file                                  | severity | line | check            | message                                                                                                                        |
     | glossary/dupe-two-terms-alike.md      | error    |   27 | part-id-unique   | two terms here address as 'identity-line': a citation of it names both and reaches neither.                                    |
@@ -147,3 +153,4 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | standards/moda-rules-that-bind-nobody.md | error |   30 | part-modal       | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |
     | standards/moda-rules-that-bind-nobody.md | error |   32 | part-modal       | rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY. |
     | standards/nest-a-rule-holding-a-list.md  | error |   25 | part-nested      | rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it. |
+    | standards/noid-a-rule-with-no-id.md      | error |   22 | part-id-format   | rule 'Every secret is read at run time' opens with no id matching ^[A-Z][A-Z0-9]{1,6}$, so nothing can cite it. Write the heading as '### <ID>: Every secret is read at run time'. |

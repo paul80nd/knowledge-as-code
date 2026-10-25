@@ -21,7 +21,7 @@ A standard with one control checking it, so the review view lists that control b
 
 ## Rules
 
-### The artefact records its commit
+### COMMIT: The artefact records its commit
 
 - An artefact **MUST** record the commit it was built from.
 - A service **SHOULD** report that commit on its health endpoint.

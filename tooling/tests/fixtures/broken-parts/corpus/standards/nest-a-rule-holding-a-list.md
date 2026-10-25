@@ -19,7 +19,7 @@ A standard whose rule hides two of its points inside a bullet.
 
 ## Rules
 
-### Every secret is read at run time
+### RUNTIME: Every secret is read at run time
 
 - A service **MUST** read its secrets from the vault.
   - The vault is the one the platform team runs.

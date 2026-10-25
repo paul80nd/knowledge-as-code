@@ -105,7 +105,7 @@ internal static class Runner
                 problems.Add("the file --out wrote is not what the same report printed");
             if (!written.EndsWith("\n", StringComparison.Ordinal) || written.EndsWith("\n\n", StringComparison.Ordinal))
                 problems.Add("the file does not end on one newline, as every other record here does");
-            if (!written.Contains("| `WRITTEN` | MUST | `std-COVER` |", StringComparison.Ordinal))
+            if (!written.Contains("| `WRITTEN` | MUST | `std-COVER.NAMED` |", StringComparison.Ordinal))
                 problems.Add("the covered clause did not reach the file");
 
             if (refuseExit != 1) problems.Add($"a second --out over the same path exited {refuseExit}, not 1");

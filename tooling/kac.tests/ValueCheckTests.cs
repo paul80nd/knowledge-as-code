@@ -238,8 +238,8 @@ public class ValueCheckTests
     [InlineData("adr-0007")]
     [InlineData("svc-search")]
     [InlineData("pol-VURM.TIMEBOX")]
-    [InlineData("std-ERRORS.a-failure-says-what-happened")]
-    [InlineData("eng:std-ERRORS.a-failure-says-what-happened")]
+    [InlineData("std-ERRORS.WHAT")]
+    [InlineData("eng:std-ERRORS.WHAT")]
     [InlineData("gls-search.title")]
     public void Every_id_style_is_id_shaped_in_a_list(string id)
         => Assert.Empty(Run($"field: [ {id} ]\n", new FieldSpec { Name = "field", Type = "list", Of = "id" }));

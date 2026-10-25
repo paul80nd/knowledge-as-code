@@ -21,7 +21,7 @@ Valid in every respect except its review date, which fell in 2020.
 
 ## Rules
 
-### A record states the day it is read again
+### REREAD: A record states the day it is read again
 
 - A record here **MUST** state a `review-by` that has not passed.
 

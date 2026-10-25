@@ -10,7 +10,7 @@ Scenario: A coverage report marks each clause covered or uncovered and leaves th
   Then it succeeds
   And only "reports/clause-coverage.md" changed
   And "reports/clause-coverage.md" contains "| `pol-COVR` | 2 | 1 | 1 |"
-  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER` |  |  |  | covered | |"
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER.NAMED` |  |  |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  |  |  |  | uncovered | |"
 
 Scenario: A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
@@ -32,7 +32,7 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     ---
     id: ctl-0001
     type: control
-    verifies: [std-COVER]
+    verifies: [std-COVER.NAMED]
     ---
 
     # The coverage check
@@ -54,7 +54,7 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     """
   When I write the "coverage" report to "reports/clause-coverage.md"
   Then it succeeds
-  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER` |  | `ctl-0001` |  | covered | |"
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER.NAMED` |  | `ctl-0001` |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | `dev-open-door` |  | `pol-PAIR.OPEN` | uncovered | |"
 
 Scenario: A coverage row leaves out a deviation that is no longer in force
