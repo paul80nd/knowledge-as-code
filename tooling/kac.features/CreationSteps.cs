@@ -123,7 +123,7 @@ public sealed class CreationSteps(Workspace ws)
     [When(@"I create a corpus there with kac ""(.*)""")]
     public void WhenICreateACorpusThereWithKac(string tool) => ws.Exit = Creation.Create(_folder, tool: tool);
 
-    /// <summary>Committed, so the update meets a clean tree as it would after Dependabot's pull request merged.</summary>
+    /// <summary>Committed, so the update meets the clean tree a merged Dependabot pull request leaves.</summary>
     [When(@"the corpus moves its tool manifest to kac ""(.*)""")]
     public void WhenTheCorpusMovesItsToolManifestToKac(string version)
     {

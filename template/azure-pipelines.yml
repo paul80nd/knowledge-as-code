@@ -12,9 +12,18 @@
 #   main -> Build Validation -> + -> select this pipeline -> Required.
 # The `pr:` block is kept for intent, and works as written if the repository is mirrored to GitHub.
 #
-# `UseDotNet@2` runs the newest release of major 2 your organisation has installed. To pin one, write
-# its full version after the `@`, as `UseDotNet@2.<minor>.<patch>`, copied from the task's log. Your
-# organisation must have that version. Dependabot does not read Azure tasks, so you move it by hand.
+# Posting the findings to the pull request needs one more console setting: give the project's build
+# service *Contribute to pull requests* on this repository, under Project settings -> Repositories ->
+# <your-repo> -> Security.
+#
+# Dependabot reads none of the pins below, so you move each by hand:
+# * `kac` is pinned in `.config/dotnet-tools.json`, at the version `kac new` wrote. Move it with
+#   `dotnet tool update KnowledgeAsCode.Tool`, and commit the file.
+# * The .NET SDK is pinned at 10.0.402, because the validate step has the access token. Move it to a
+#   release listed at https://dotnet.microsoft.com/download/dotnet/10.0.
+# * `UseDotNet@2` runs the newest release of major 2 your organisation has installed. To pin one, write
+#   its full version after the `@`, as `UseDotNet@2.<minor>.<patch>`, copied from the task's log. Your
+#   organisation must have that version.
 
 trigger: none # no CI on branch pushes; PR validation is via branch policy
 
@@ -35,16 +44,16 @@ steps:
     displayName: Install the .NET 10 SDK
     inputs:
       packageType: sdk
-      version: 10.0.x
+      version: 10.0.402
 
-  # Installs the version `.config/dotnet-tools.json` pins, so a step holding the access token runs no
-  # release you did not choose. Move the pin with `dotnet tool update KnowledgeAsCode.Tool`, and commit it.
+  # Installs the version `.config/dotnet-tools.json` pins, so a step with the access token runs no
+  # release you did not choose.
   - script: dotnet tool restore
     displayName: Install the pinned kac
     workingDirectory: $(Build.SourcesDirectory)
 
   # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-  # Posting the findings to the pull request needs the build service to have Contribute to pull requests.
+  # Only this step gets the token, because only it posts.
   - script: dotnet tool run kac validate
     displayName: Validate frontmatter, links and structure
     workingDirectory: $(Build.SourcesDirectory)

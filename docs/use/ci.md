@@ -59,7 +59,7 @@ dotnet tool install KnowledgeAsCode.Tool
 `dotnet tool update KnowledgeAsCode.Tool` moves the pin. On GitHub, Dependabot's `nuget` ecosystem reads the manifest
 and proposes each new `kac` as a pull request.
 
-## Posting the findings to the pull request
+## The pull request comment
 
 `kac validate` posts its findings to the pull request as a comment where the step has a token that can write to it.
 Give the token only to the step running `validate`, and only once `kac` is pinned, so a job with a write permission runs
@@ -113,7 +113,7 @@ jobs:
 
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.402
 
       - name: Install the pinned kac
         run: dotnet tool restore
@@ -133,6 +133,9 @@ Each action is pinned to a commit, because a tag can be moved to other code. The
 compromised release has time to be withdrawn. The checkout sets `persist-credentials: false`, so no later step can push
 with the job's token.
 
+The SDK is pinned to one release, because the job has a write permission. Dependabot does not read `dotnet-version`, so
+move it by hand.
+
 ## Azure Pipelines
 
 ```yaml
@@ -151,7 +154,7 @@ steps:
     displayName: Install .NET 10 SDK
     inputs:
       packageType: sdk
-      version: 10.0.x
+      version: 10.0.402
 
   - script: dotnet tool restore
     displayName: Install the pinned kac

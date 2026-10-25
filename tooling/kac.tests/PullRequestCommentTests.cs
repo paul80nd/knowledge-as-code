@@ -232,7 +232,7 @@ public class PullRequestCommentTests
     [Fact]
     public void No_token_on_a_clean_run_says_nothing()
     {
-        var said = new PullRequestComment(GitHubPr, send: null).Post("example-dogfooding", Findings, hasFindings: false);
+        var said = new PullRequestComment(GitHubPr, send: null).Post("example-dogfooding", Clean, hasFindings: false);
 
         Assert.Null(said);
     }

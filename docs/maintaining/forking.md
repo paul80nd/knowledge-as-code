@@ -37,7 +37,7 @@ nuget.org gives a package id to whoever publishes it first, so a fork needs an i
 | `.github/workflows/publish-tool.yml` | The `dotnet tool install` line, the flat-container URL in lower case, the `.nupkg` name and the environment `url` |
 | `.github/workflows/kac.yml`          | The `dotnet tool install` line in the `tool` job                                                                  |
 | `tooling/kac.core/New.cs`            | `ToolPackage`, the id in lower case that `kac new` writes into `.config/dotnet-tools.json`                        |
-| `template/azure-pipelines.yml`       | The `dotnet tool update` line in the comment above the restore                                                    |
+| `template/azure-pipelines.yml`       | The `dotnet tool update` line in the header comment                                                               |
 
 Then set up the publish itself:
 

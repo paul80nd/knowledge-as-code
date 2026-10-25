@@ -26,9 +26,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   leaves the exit code alone. Without the token, a run with findings prints a note and a clean run prints nothing. An
   info finding and `--json` write neither, and a local run is unchanged.
 - **`kac new` pins itself in `.config/dotnet-tools.json`.** The tool manifest names the release of the `kac` that ran
-  `new`, and `kac update` never compares, writes or reports it. Both starter pipelines run `dotnet tool restore` and
-  then `dotnet tool run kac`, so each can hold the token `validate` posts with. The GitHub starter grants
-  `pull-requests: write` and passes `GITHUB_TOKEN` to the validate step, and the Azure starter passes
+  `new`, and `kac update` never compares, writes or reports it. Both starter pipelines install .NET SDK 10.0.402, run
+  `dotnet tool restore` and then `dotnet tool run kac`, so each can take the token `validate` posts with. The GitHub
+  starter grants `pull-requests: write` and passes `GITHUB_TOKEN` to the validate step, and the Azure starter passes
   `SYSTEM_ACCESSTOKEN`. The starter's `dependabot.yml` gains a `nuget` entry, which proposes each new `kac`.
 
 ### Changed

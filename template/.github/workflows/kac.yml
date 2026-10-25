@@ -9,6 +9,10 @@
 # Each action is pinned to a commit, because a tag can be moved to other code, and `kac` is pinned in
 # `.config/dotnet-tools.json`. `.github/dependabot.yml` moves each of them.
 #
+# The .NET SDK is pinned at 10.0.402, because the validate job has a write token. Dependabot does not
+# read `dotnet-version`, so you move it by hand to a release listed at
+# https://dotnet.microsoft.com/download/dotnet/10.0.
+#
 # The Azure Pipelines twin sits at `azure-pipelines.yml`. Keep whichever one your corpus runs on and
 # delete the other.
 
@@ -38,9 +42,9 @@ jobs:
 
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.402
 
-      # Installs the version `.config/dotnet-tools.json` pins, so a job holding a write token runs no
+      # Installs the version `.config/dotnet-tools.json` pins, so a job with a write token runs no
       # release you did not choose. `.github/dependabot.yml` proposes each new one as a pull request.
       - name: Install the pinned kac
         run: dotnet tool restore

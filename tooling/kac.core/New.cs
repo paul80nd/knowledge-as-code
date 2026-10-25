@@ -79,7 +79,7 @@ public static class New
     private const string ReadmeFile = "README.md";
 
     /// <summary>Where <c>dotnet tool restore</c> looks, which the starter pipelines run.</summary>
-    public const string ToolManifestFile = ".config/dotnet-tools.json";
+    private const string ToolManifestFile = ".config/dotnet-tools.json";
 
     /// <summary>
     /// Lower case, as <c>dotnet tool install</c> writes it. <c>docs/maintaining/forking.md</c> lists it among the
@@ -141,11 +141,11 @@ public static class New
 
     /// <summary>
     /// <c>declines</c> answers whether a destination belongs to a type the corpus did not adopt. <c>DeclinesTypes</c>
-    /// builds one from the template's schema. <c>tool</c> is the version of the <c>kac</c> running, which the tool
-    /// manifest pins.
+    /// builds one from the template's schema. <c>toolVersion</c> is the version of the <c>kac</c> running, which the
+    /// tool manifest pins.
     /// </summary>
     public static NewPlan Plan(IReadOnlySet<string> templateFiles, Manifest manifest, NewAnswers answers,
-        Upstream upstream, Func<string, bool> declines, string tool)
+        Upstream upstream, Func<string, bool> declines, string toolVersion)
     {
         var copied = new List<PlannedFile>();
         var declinedTypes = new List<string>();
@@ -194,7 +194,7 @@ public static class New
 
         var composed = new List<ComposedFile>
         {
-            new(DescriptorFile, Descriptor(answers, upstream)), new(ToolManifestFile, ToolManifest(tool))
+            new(DescriptorFile, Descriptor(answers, upstream)), new(ToolManifestFile, ToolManifest(toolVersion))
         };
 
         // A `README.md` the template sends wins over the composed one.
@@ -344,14 +344,14 @@ public static class New
     /// The shape <c>dotnet new tool-manifest</c> and <c>dotnet tool install</c> write together. Build metadata is
     /// dropped, so <c>0.39.0+5fa039b0</c> pins <c>0.39.0</c>.
     /// </summary>
-    public static string ToolManifest(string tool) =>
+    private static string ToolManifest(string toolVersion) =>
         $$"""
           {
             "version": 1,
             "isRoot": true,
             "tools": {
               "{{ToolPackage}}": {
-                "version": "{{tool.Split('+')[0]}}",
+                "version": "{{toolVersion.Split('+')[0]}}",
                 "commands": [
                   "kac"
                 ],

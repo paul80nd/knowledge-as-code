@@ -2,7 +2,7 @@
 #
 # It moves the commit each action in `workflows/kac.yml` is pinned to, and the version comment beside
 # it, so a pinned action still takes its fixes. The `nuget` entry moves the `kac` version that
-# `.config/dotnet-tools.json` pins, so its `directory` is the folder holding `.config/`.
+# `.config/dotnet-tools.json` pins, so its `directory` is the folder containing `.config/`.
 #
 # It waits seven days before it proposes a new release, so a compromised one has a week to be found
 # and withdrawn before it reaches a pull request. A security update is never delayed.

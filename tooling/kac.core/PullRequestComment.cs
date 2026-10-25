@@ -87,8 +87,8 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
 {
     /// <summary>
     /// Updates the corpus's earlier comment to <paramref name="summary"/>, or posts one where
-    /// <paramref name="hasFindings"/>. Null where a clean run found no earlier comment, or had no token to look with, so
-    /// nothing was written.
+    /// <paramref name="hasFindings"/>. Null where nothing was written: a clean run found no earlier comment, or had no
+    /// token to look with.
     /// </summary>
     public Commented? Post(string corpus, string summary, bool hasFindings)
     {
