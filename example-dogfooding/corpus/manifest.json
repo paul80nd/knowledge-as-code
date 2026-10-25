@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.82.1",
+  "contentVersion": "0.82.2",
   "mechanismVersion": 24,
-  "commit": "de1052793a20d282ab940dc3ead028817917b96b",
+  "commit": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae",
   "dirty": false,
-  "generatedAt": "2026-10-25T10:33:48Z",
+  "generatedAt": "2026-10-25T18:57:38Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/de1052793a20d282ab940dc3ead028817917b96b/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "de1052793a20d282ab940dc3ead028817917b96b"
+    "ref": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -43,10 +43,10 @@
       "contentVersion": "0.40.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/de1052793a20d282ab940dc3ead028817917b96b/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "de1052793a20d282ab940dc3ead028817917b96b"
+        "ref": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae"
       },
       "reposBase": null,
       "tracker": {
