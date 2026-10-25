@@ -650,7 +650,7 @@
           "minLength": 1
         },
         "allow-literal": {
-          "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. `kac` takes a value listed here as written. On a list the exemption applies to the entry, so the ids beside it are still checked as ids.",
+          "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. `kac` takes a value listed here as written. On a list the exemption applies to the entry, so the ids beside it are still checked as ids. On an object field the word stands in place of the object, and the export writes it as a string.",
           "type": "array",
           "minItems": 1,
           "items": {

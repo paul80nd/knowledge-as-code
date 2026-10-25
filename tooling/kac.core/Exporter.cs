@@ -765,11 +765,15 @@ public static class Exporter
 
     /// <summary>
     /// In the shape its type declared: a list field is always an array and an object field an object, so a consumer
-    /// reads one key one way. See <c>docs/reference/export.md</c>.
+    /// reads one key one way. An object field holding a word its <c>allow-literal:</c> admits travels as that word.
+    /// See <c>docs/reference/export.md</c>.
     /// </summary>
     private static JsonNode? Value(YamlNode? node, FieldSpec? spec)
     {
-        if (spec?.Type == "object") return Mapping(node, spec);
+        if (spec?.Type == "object")
+            return node is YamlScalarNode { Value: var word } && spec.IsLiteral(word)
+                ? JsonValue.Create(word)
+                : Mapping(node, spec);
         if (spec?.Type != "list") return JsonValue.Create(Absent((node as YamlScalarNode)?.Value));
 
         // A list written as one scalar is the one-entry case, as `Doc.FrontList` reads it. An empty list is null,

@@ -337,6 +337,35 @@ public class ValueCheckTests
         Assert.Empty(Run("field: never\n", spec));
     }
 
+    /// <summary>
+    /// The <c>run</c> shape as <c>_shapes.yaml</c> declares it, on a field admitting <c>never</c>.
+    /// </summary>
+    private static FieldSpec RunShape() => new()
+    {
+        Name = "field",
+        Type = "object",
+        AllowLiteral = ["never"],
+        Entry =
+        [
+            new FieldSpec { Name = "at", Type = "date", Required = true },
+            new FieldSpec { Name = "by", Type = "string", Required = true },
+            new FieldSpec { Name = "method", Type = "enum", Values = ["live", "tabletop"] }
+        ]
+    };
+
+    [Fact]
+    public void A_literal_short_circuits_an_object_field()
+        => Assert.Empty(Run("field: never\n", RunShape()));
+
+    [Fact]
+    public void An_object_field_admitting_a_literal_still_checks_a_mapping()
+        => Assert.Equal(["date-quoted", "entry-key"],
+            Ids(Run("field: { at: 2026-10-20, method: tabletop }\n", RunShape())));
+
+    [Fact]
+    public void An_object_field_refuses_a_scalar_it_does_not_admit()
+        => Assert.Equal("entry-shape", Assert.Single(Run("field: \"2026-10-20\"\n", RunShape())).Check.Value);
+
     [Fact]
     public void A_literal_in_a_list_exempts_the_entry_and_not_the_field()
     {
