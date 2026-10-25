@@ -245,7 +245,10 @@ jobs:
   # corpus, a runner or a job being added or dropped.
   #
   # Every job belongs here. One left out still runs and blocks nothing. `WorkflowGateTests` fails it.
+  #
+  # `always()` runs the gate after a job fails, because GitHub counts a skipped required check as passing.
   validate:
+    if: always()
     needs:
       - corpora
       - tool
@@ -255,8 +258,17 @@ jobs:
       - import-round-trip
     runs-on: ubuntu-latest
     steps:
-      - name: Report that the gate passed
-        run: echo "every job passed."
+      - name: Fail unless every job passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          for result in $RESULTS; do
+            if [ "$result" != success ]; then
+              echo "a job the gate waits for ended as $result."
+              exit 1
+            fi
+          done
+          echo "every job passed."
 
   # A job of its own because `strict:` in mkdocs.yml makes a dead link or a dead anchor fail.
   docs:

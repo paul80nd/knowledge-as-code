@@ -30,8 +30,11 @@ A failing job in `kac.yml` stops the merge.
 ## How it works
 
 `kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and
-`import-round-trip`. The job itself runs one `echo`. GitHub reports `validate` once every job in that list has passed,
-so the branch rule requires one check name.
+`import-round-trip`. The branch rule requires that one check name. The job runs after the others whatever they report,
+because its `if:` is `always()`. Its one step reads each job's result and fails unless every one is `success`.
+
+Without `always()`, a failed job would skip `validate`. GitHub counts a skipped required check as passing, so the
+merge would not wait.
 
 Three of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)`
 and three more. A branch rule naming the matrix would wait for a check that never arrives.
