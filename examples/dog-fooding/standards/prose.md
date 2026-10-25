@@ -38,7 +38,7 @@ shape on top of them.
   a clause, and a service *returns* what a caller asked for.
 - A sentence **SHOULD** state one idea.
 - An instruction **SHOULD** give one step.
-- A heading **MUST** name its topic, because a rule heading in a standard becomes its clause id.
+- A heading **MUST** name its topic, because the anchor a link lands on is the slug of the heading.
 - A heading **SHOULD** be in sentence case.
 - Three or more parallel items **SHOULD** be a list or a table.
 

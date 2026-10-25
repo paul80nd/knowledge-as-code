@@ -441,7 +441,7 @@ Each view lists the rules under their standard's id, title and status.
 * **`build-index`** opens on how many rules the corpus states, then lists each rule by title. A rule's id is its
   standard's id, a dot, and the id its heading opens with.
 * **`review`** lists each rule with the id to cite, the controls whose `verifies` names it, and its obligations. A
-  control naming the standard whole is listed under every rule of it.
+  control naming the standard whole, as an export from before rule ids may, is listed under every rule of it.
 
 A view reads the files of each type it needs at the shape version its plugin manifest declares, so a change to those
 files moves that type's `shapeVersion` like any other. A fresh bundle of one export writes every view byte for byte.

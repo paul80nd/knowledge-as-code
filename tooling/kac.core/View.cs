@@ -135,7 +135,7 @@ public static class View
             {
                 text.Append($"\n### {rule.Title}\n\nCite as `{rule.Id}`.\n");
 
-                // A control naming the standard whole is listed under every rule of it.
+                // A control naming the standard whole, as an export from before rule ids may, is under every rule.
                 if (controls is not null)
                 {
                     var checking = controls

@@ -196,7 +196,7 @@ public static class Reports
             return new CoverageRow(c, coveredBy,
                 departures.GetValueOrDefault(c.Id) ?? [],
                 [
-                    .. coveredBy.SelectMany(by => Checking(by, controls))
+                    .. coveredBy.SelectMany(by => ControlsFor(by, controls))
                         .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)
                 ],
                 pairs.GetValueOrDefault(c.Id));
@@ -379,8 +379,8 @@ public static class Reports
     }
 
     /// <summary>
-    /// Each standard covering the clause, named by the rules whose <c>Covers</c> line cites it. A standard none of whose
-    /// rules cites it is named whole, which is how a record exported without its rules is read.
+    /// Each standard covering the clause, named by the rules whose <c>Covers</c> line cites it. A standard none of
+    /// whose rules cites it is named whole, which is how a record exported without its rules is read.
     /// </summary>
     private static List<string> CoveredBy(
         string clause, Dictionary<string, List<string>> covers, Dictionary<string, List<string>> rules)
@@ -397,10 +397,10 @@ public static class Reports
     }
 
     /// <summary>
-    /// The controls naming this rule, and those naming its standard whole. A standard named whole folds every control
-    /// naming one of its rules into it.
+    /// The controls naming this rule, and those naming its standard whole, as an export from before rule ids may. A
+    /// standard named whole folds every control naming one of its rules into it.
     /// </summary>
-    private static IEnumerable<string> Checking(string coveredBy, Dictionary<string, List<string>> controls)
+    private static IEnumerable<string> ControlsFor(string coveredBy, Dictionary<string, List<string>> controls)
     {
         var cited = Citation.Read(coveredBy);
 

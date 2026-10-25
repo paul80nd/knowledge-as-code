@@ -307,7 +307,7 @@
           "$ref": "#/$defs/notes"
         },
         "source": {
-          "description": "Where the parts are written. `table` reads the rows of the first table under `section:`, each with its own authored id. `headings` reads the headings at `level` under it, each addressed by the anchor the heading slugs to.",
+          "description": "Where the parts are written. `table` reads the rows of the first table under `section:`, each with its own authored id. `headings` reads the headings at `level` under it, each addressed by the id it opens with where `id-pattern` is declared, and by the anchor the heading slugs to where it is not.",
           "enum": [
             "table",
             "headings"

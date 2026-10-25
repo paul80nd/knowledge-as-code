@@ -2,8 +2,9 @@ Feature: The parts of a record
 A record's parts are the children something else may cite, and each type says where it keeps them. A
 policy keeps its in a clause table, so kac checks the table's shape, each row's id and each row's modal.
 A glossary keeps its as the headings its terms are written as, where the address is derived and only the
-address can be wrong. A standard keeps its as headings too, each opening with the id a citation names. Both are held to the same two things: no two parts of a record share an address,
-and every citation reaches the part it names, written with the separator the corpus uses.
+address can be wrong. A standard keeps its as headings too, each opening with the id a citation names. All
+three are held to the same two things: no two parts of a record share an address, and every citation
+reaches the part it names, written with the separator the corpus uses.
 
 Driven in-process against the broken-parts fixture: the same corpus its JSON golden pins.
 

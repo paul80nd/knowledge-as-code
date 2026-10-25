@@ -77,8 +77,9 @@ obligation has no id of its own.
 ## Read the prefix on an id
 
 **A prefix names the corpus that wrote the rule.** `eng:std-TEST.LEVEL` was published by the corpus with shortcode
-`eng`, and a bare `std-TEST.LEVEL` was written here. The prefix is on `id`, `record` and every `seeAlso` value. An inherited rule binds as fully as one written here. Look its `shortcode` up in `sources` in
-`manifest.json`, and name that corpus in words.
+`eng`, and a bare `std-TEST.LEVEL` was written here. The prefix is on `id`, `record` and every `seeAlso` value. An
+inherited rule binds as fully as one written here. Look its `shortcode` up in `sources` in `manifest.json`, and name
+that corpus in words.
 
 **A record file sits under its producer's shortcode.** `eng:std-TEST` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/standards/eng/std-TEST.json`, and a bare `std-TEST` is

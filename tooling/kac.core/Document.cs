@@ -39,7 +39,7 @@ public class PartRow
     /// <c>id-pattern</c>, or a heading's slug where it declares none.
     /// </summary>
     public string? Id;
-    /// <summary>The fragment a link to the part carries: a heading's slug, written whole. Null for a table row.</summary>
+    /// <summary>The fragment a link to a heading part carries: its slug, written whole. Null for a table row.</summary>
     public string? Anchor;
     /// <summary>The Id cell flattened, for quoting back when it is not a span.</summary>
     public string IdText = "";
@@ -544,14 +544,14 @@ public partial class Doc
     /// <summary>
     /// The anchor is the heading's slug, written whole, so a link and the export name one place. Where the type
     /// declares an <c>id-pattern</c> the id is the prefix before <c>: </c>, and the text is what follows it. Otherwise
-    /// the slug is the id as well. A heading of punctuation alone leaves both null, and so does a missing prefix.
+    /// the slug is the id as well. A heading of punctuation alone leaves both null, and a missing prefix the id.
     /// </summary>
     private static PartRow AddHeading(Doc doc, HeadingBlock h, PartSpec spec)
     {
         var text = Md.PlainText(h.Inline);
         var slug = Md.Slug(text);
         var anchor = slug.Length > 0 ? slug : null;
-        var (id, title) = spec.IdPatternRegex is { } pattern ? Prefixed(text, pattern) : (anchor, text);
+        var (id, title) = spec.IdPatternRegex is { } pattern ? SplitIdPrefix(text, pattern) : (anchor, text);
 
         var row = new PartRow
         {
@@ -567,8 +567,9 @@ public partial class Doc
         return row;
     }
 
-    /// <summary>A null id where the heading opens with nothing the pattern takes, and the heading whole as text.</summary>
-    private static (string? Id, string Text) Prefixed(string heading, System.Text.RegularExpressions.Regex pattern)
+    /// <summary>A null id, and the heading whole, where it opens with nothing the pattern takes.</summary>
+    private static (string? Id, string Text) SplitIdPrefix(
+        string heading, System.Text.RegularExpressions.Regex pattern)
     {
         var colon = heading.IndexOf(": ", StringComparison.Ordinal);
         if (colon <= 0) return (null, heading);

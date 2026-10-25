@@ -438,7 +438,7 @@ public class PartCheckTests
     }
 
     [Fact]
-    public void A_rule_headings_anchor_is_the_slug_of_the_whole_heading()
+    public void A_rule_heading_s_anchor_is_the_slug_of_the_whole_heading()
     {
         var doc = Parse("## Rules\n\n### PERMS: A job declares the permission it needs\n\n" + Obligation,
             IdentifiedRules(), "standards").Item1;

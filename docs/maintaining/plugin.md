@@ -149,8 +149,8 @@ A view is a file `View` renders into the plugin from the export, after the trim.
   id and `verifies` are read with that shortcode, so a control from `eng` checks `eng:std-DEPLOY.ONCE`.
 * **It states a standard's status once, in or under the standard's heading.** A rule line repeats its standard's
   status, so a view reads it from the first rule. The build index puts the status in the heading, to keep the file
-  short. The review view lists a control under each rule its `verifies` names, and under every rule of a standard it
-  names whole.
+  short. The review view lists a control under each rule its `verifies` names, and under every rule of a standard
+  that an export from before rule ids names whole.
 * **The review view names the status in force from the manifest.** It reads `inForce` on the standards entry and on
   the controls entry. Where an entry states none, as an export from an older `kac` does, the view says the export does
   not state it. For controls, it then says no control is known to check a rule.
