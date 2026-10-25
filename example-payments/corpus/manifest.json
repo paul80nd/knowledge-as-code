@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.36.0",
+  "contentVersion": "0.37.0",
   "mechanismVersion": 24,
-  "commit": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae",
+  "commit": "b61e5891804d5b7c99885eb005c35a0c257dc581",
   "dirty": false,
-  "generatedAt": "2026-10-25T18:57:35Z",
+  "generatedAt": "2026-10-25T19:39:00Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae"
+    "ref": "b61e5891804d5b7c99885eb005c35a0c257dc581"
   },
   "reposBase": "https://git.example.com/example-payments",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.40.0",
+      "contentVersion": "0.41.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "7912e0bf3bf4296cc127ccd8a8fb0d558179fbae"
+        "ref": "b61e5891804d5b7c99885eb005c35a0c257dc581"
       },
       "reposBase": null,
       "tracker": {
@@ -169,7 +169,7 @@
     },
     {
       "type": "standards",
-      "shapeVersion": 2,
+      "shapeVersion": 3,
       "records": 21,
       "parts": 66,
       "dir": "standards",
@@ -206,7 +206,7 @@
     },
     {
       "type": "controls",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 9,
       "parts": 0,
       "dir": "controls",

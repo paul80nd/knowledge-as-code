@@ -6,17 +6,17 @@ Each rule below gives the id a finding cites, then its obligations, one to a bul
 - **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its reason conforms, and the departure is a judgement call.
 - **MAY** permits, and a change cannot break it.
 - A standard is in force at status `active`. A finding under any other status is not in force.
-- A standard's controls are listed with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
+- Each rule's controls are listed under it, with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
 
 ## std-API: An interface is described by a contract in the repository
 
 Status: draft.
 
-Controls: `ctl-0005` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
-
 ### A change carries a version and a notice
 
-Cite as `std-API.a-change-carries-a-version-and-a-notice`.
+Cite as `std-API.VERSION`.
+
+Controls: `ctl-0005` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
 
 - A published interface **MUST** have a version a consumer can pin to.
 - An HTTP interface **SHOULD** put its major version in the path, as `/v2/`, unless the contract states another scheme.
@@ -26,7 +26,9 @@ Cite as `std-API.a-change-carries-a-version-and-a-notice`.
 
 ### Every endpoint authenticates and validates
 
-Cite as `std-API.every-endpoint-authenticates-and-validates`.
+Cite as `std-API.AUTH`.
+
+Controls: none.
 
 - A contract **MUST** state the authentication each endpoint takes.
 - A contract **MUST** declare an endpoint that takes no authentication as public.
@@ -37,7 +39,9 @@ Cite as `std-API.every-endpoint-authenticates-and-validates`.
 
 ### The contract is the source of truth
 
-Cite as `std-API.the-contract-is-the-source-of-truth`.
+Cite as `std-API.SPEC`.
+
+Controls: none.
 
 - A service **MUST** publish a machine-readable contract for every interface it exposes, committed to the repository that builds the service.
 - Where the implementation and the contract disagree, a team **MUST** treat the implementation as the defect.
@@ -49,11 +53,11 @@ Cite as `std-API.the-contract-is-the-source-of-truth`.
 
 Status: draft.
 
-Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
-
 ### A published tag never moves
 
-Cite as `std-CONT.a-published-tag-never-moves`.
+Cite as `std-CONT.TAG`.
+
+Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A pipeline **MUST** tag an image with the build's own version.
 - A registry **MUST** refuse a second push to a tag that already exists.
@@ -61,7 +65,9 @@ Cite as `std-CONT.a-published-tag-never-moves`.
 
 ### The base image is chosen and pinned
 
-Cite as `std-CONT.the-base-image-is-chosen-and-pinned`.
+Cite as `std-CONT.BASE`.
+
+Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A Dockerfile **MUST** take its base image from the organisation's registry.
 - A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
@@ -69,7 +75,9 @@ Cite as `std-CONT.the-base-image-is-chosen-and-pinned`.
 
 ### The container holds only what the service needs
 
-Cite as `std-CONT.the-container-holds-only-what-the-service-needs`.
+Cite as `std-CONT.MINIMAL`.
+
+Controls: none.
 
 - An image **MUST** declare a non-root `USER`.
 - A container **MUST** run as that user.
@@ -81,18 +89,20 @@ Cite as `std-CONT.the-container-holds-only-what-the-service-needs`.
 
 Status: draft.
 
-Controls: `ctl-0009` Nothing checks that a suppression is local and justified (`not-enforced`, active).
-
 ### A suppression is local and says why
 
-Cite as `std-CSSTY.a-suppression-is-local-and-says-why`.
+Cite as `std-CSSTY.SUPPR`.
+
+Controls: `ctl-0009` Nothing checks that a suppression is local and justified (`not-enforced`, active).
 
 - A suppression **MUST** sit on the member it applies to, with a `Justification` giving the reason.
 - A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
 
 ### The conventions come from one file
 
-Cite as `std-CSSTY.the-conventions-come-from-one-file`.
+Cite as `std-CSSTY.ONEFILE`.
+
+Controls: none.
 
 - A repository holding C# **MUST** have an `.editorconfig` at its root.
 - That `.editorconfig` **SHOULD** be the .NET runtime team's own.
@@ -104,7 +114,9 @@ Cite as `std-CSSTY.the-conventions-come-from-one-file`.
 
 ### The security rules the analysers cover
 
-Cite as `std-CSSTY.the-security-rules-the-analysers-cover`.
+Cite as `std-CSSTY.SECURE`.
+
+Controls: none.
 
 - Code **MUST** build a SQL command through a parameter rather than by joining strings.
 - Code **MUST** use the framework's cryptography.
@@ -115,18 +127,20 @@ Cite as `std-CSSTY.the-security-rules-the-analysers-cover`.
 
 Status: draft.
 
-Controls: `ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
-
 ### A way back exists before the change goes
 
-Cite as `std-DEPLOY.a-way-back-exists-before-the-change-goes`.
+Cite as `std-DEPLOY.WAYBACK`.
+
+Controls: none.
 
 - A release **MUST** have a stated rollback or recovery path before it starts.
 - A database migration **MUST** leave the previous version of the service able to run against the new schema, unless the migration removes data the previous version reads.
 
 ### Change approval
 
-Cite as `std-DEPLOY.change-approval`.
+Cite as `std-DEPLOY.APPROVE`.
+
+Controls: none.
 
 - A change **MUST** be approved by someone other than its author before it reaches production.
 - The approval **MUST** be recorded where the change is, such as in branch protection.
@@ -137,26 +151,32 @@ Cite as `std-DEPLOY.change-approval`.
 
 ### Configuration sits outside the artefact
 
-Cite as `std-DEPLOY.configuration-sits-outside-the-artefact`.
+Cite as `std-DEPLOY.CONFIG`.
+
+Controls: none.
 
 - A service **MUST** read environment-specific configuration at start-up, from outside the artefact.
 - An artefact **MUST NOT** contain a hostname, connection string or feature setting that differs between environments.
 
 ### Production changes through the pipeline alone
 
-Cite as `std-DEPLOY.production-changes-through-the-pipeline-alone`.
+Cite as `std-DEPLOY.PIPE`.
+
+Controls: none.
 
 - A change **MUST** reach production through the automated pipeline.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
 ### The artefact is built once
 
-Cite as `std-DEPLOY.the-artefact-is-built-once`.
+Cite as `std-DEPLOY.ONCE`.
+
+Controls: `ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
 
 - A pipeline **MUST** build the artefact once, and promote that build to every environment.
 - An artefact **MUST** record the commit it was built from, so a running version identifies the change it came from.
@@ -167,11 +187,11 @@ Cite as `std-DEPLOY.the-artefact-is-built-once`.
 
 Status: draft.
 
-Controls: none.
-
 ### What happens afterwards
 
-Cite as `std-DEPS.what-happens-afterwards`.
+Cite as `std-DEPS.UPKEEP`.
+
+Controls: none.
 
 - A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule.
 - A team **MUST** rank a finding by its severity and by whether the affected path runs.
@@ -180,7 +200,9 @@ Cite as `std-DEPS.what-happens-afterwards`.
 
 ### What happens before adoption
 
-Cite as `std-DEPS.what-happens-before-adoption`.
+Cite as `std-DEPS.ADOPT`.
+
+Controls: none.
 
 - Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
 - Somebody **MUST** check a new package's licence against the licences the [conformance checklist](#conformance-checklist) allows before that pull request merges.
@@ -191,7 +213,9 @@ Cite as `std-DEPS.what-happens-before-adoption`.
 
 ### Where a package comes from
 
-Cite as `std-DEPS.where-a-package-comes-from`.
+Cite as `std-DEPS.SOURCE`.
+
+Controls: none.
 
 - A build **MUST** resolve packages from the organisation's feed, which proxies the public registries.
 - A repository **MUST** commit a lockfile pinning every direct and transitive dependency to a version.
@@ -203,11 +227,11 @@ Cite as `std-DEPS.where-a-package-comes-from`.
 
 Status: draft.
 
-Controls: `ctl-0004` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
-
 ### A failing check stops the change
 
-Cite as `std-GATES.a-failing-check-stops-the-change`.
+Cite as `std-GATES.BLOCK`.
+
+Controls: `ctl-0004` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
 
 - Branch policy **MUST** block a merge while any required check is failing.
 - A team **MUST NOT** merge over a failing check without a recorded deviation.
@@ -218,7 +242,9 @@ Cite as `std-GATES.a-failing-check-stops-the-change`.
 
 ### Every change is built and tested automatically
 
-Cite as `std-GATES.every-change-is-built-and-tested-automatically`.
+Cite as `std-GATES.BUILD`.
+
+Controls: none.
 
 - A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it.
 - The build **MUST** run from a clean checkout, on an agent that is not a person's own machine.
@@ -229,11 +255,11 @@ Cite as `std-GATES.every-change-is-built-and-tested-automatically`.
 
 Status: draft.
 
-Controls: none.
-
 ### A significant incident is reviewed
 
-Cite as `std-INCSEV.a-significant-incident-is-reviewed`.
+Cite as `std-INCSEV.REVIEW`.
+
+Controls: none.
 
 - A sev1 or sev2 incident **MUST** be treated as significant wherever a policy here names one.
 - A sev1 or sev2 incident **MUST** have a postmortem.
@@ -241,7 +267,9 @@ Cite as `std-INCSEV.a-significant-incident-is-reviewed`.
 
 ### Every incident has a severity
 
-Cite as `std-INCSEV.every-incident-has-a-severity`.
+Cite as `std-INCSEV.ASSIGN`.
+
+Controls: none.
 
 - Whoever declares an incident **MUST** set its severity at declaration.
 - An incident **MUST** be sev1 where a `critical` service is unavailable, or where customers' money has been taken, refunded or paid out wrongly, or their personal data is wrong or exposed, at any scale.
@@ -251,7 +279,9 @@ Cite as `std-INCSEV.every-incident-has-a-severity`.
 
 ### The severity moves with what is known
 
-Cite as `std-INCSEV.the-severity-moves-with-what-is-known`.
+Cite as `std-INCSEV.REVISE`.
+
+Controls: none.
 
 - The incident lead **MUST** raise the severity as soon as the incident meets a higher level.
 - The incident lead **SHOULD** lower the severity once the incident no longer meets its level, because a sev1 response held open costs the people paged for it.
@@ -260,7 +290,9 @@ Cite as `std-INCSEV.the-severity-moves-with-what-is-known`.
 
 ### The severity sets the response
 
-Cite as `std-INCSEV.the-severity-sets-the-response`.
+Cite as `std-INCSEV.RESPOND`.
+
+Controls: none.
 
 - A sev1 or sev2 **MUST** have a named incident lead.
 - A sev1 **MUST** page the on-call engineer as soon as it is declared.
@@ -273,11 +305,11 @@ Cite as `std-INCSEV.the-severity-sets-the-response`.
 
 Status: draft.
 
-Controls: `ctl-0008` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
-
 ### A unit test crosses no boundary
 
-Cite as `std-NETTST.a-unit-test-crosses-no-boundary`.
+Cite as `std-NETTST.UNIT`.
+
+Controls: none.
 
 - A unit test **MUST NOT** open a socket, read the filesystem, or start a container.
 - A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something.
@@ -286,7 +318,9 @@ Cite as `std-NETTST.a-unit-test-crosses-no-boundary`.
 
 ### An integration test starts what it needs
 
-Cite as `std-NETTST.an-integration-test-starts-what-it-needs`.
+Cite as `std-NETTST.INTEG`.
+
+Controls: none.
 
 - An integration test **MUST** start the dependencies it needs.
 - An integration test **MUST NOT** share an instance of a dependency with another run.
@@ -296,7 +330,9 @@ Cite as `std-NETTST.an-integration-test-starts-what-it-needs`.
 
 ### Coverage is collected by the build
 
-Cite as `std-NETTST.coverage-is-collected-by-the-build`.
+Cite as `std-NETTST.COVER`.
+
+Controls: `ctl-0008` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
 
 - A build **MUST** collect coverage from its test run and publish the report.
 - A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with `Microsoft.Testing.Extensions.CodeCoverage` referenced.
@@ -304,7 +340,9 @@ Cite as `std-NETTST.coverage-is-collected-by-the-build`.
 
 ### The framework and the project layout
 
-Cite as `std-NETTST.the-framework-and-the-project-layout`.
+Cite as `std-NETTST.LAYOUT`.
+
+Controls: none.
 
 - A repository **MUST** use one test framework across its test projects.
 - Every test project **MUST** run under `dotnet test`.
@@ -312,17 +350,17 @@ Cite as `std-NETTST.the-framework-and-the-project-layout`.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## std-OBS: A service ships its telemetry to one place, keyed by one id
 
 Status: draft.
 
-Controls: `ctl-0003` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
-
 ### Everything lands in the central store
 
-Cite as `std-OBS.everything-lands-in-the-central-store`.
+Cite as `std-OBS.CENTRAL`.
+
+Controls: none.
 
 - A service **MUST** emit its logs, traces and metrics to the central platform.
 - A service **MUST NOT** keep the only copy of a log, so that losing the host still leaves the evidence.
@@ -330,7 +368,9 @@ Cite as `std-OBS.everything-lands-in-the-central-store`.
 
 ### One request reads as one timeline
 
-Cite as `std-OBS.one-request-reads-as-one-timeline`.
+Cite as `std-OBS.TRACE`.
+
+Controls: none.
 
 - A service **MUST** stamp every record with a timestamp taken from a synchronised clock, stating its offset from UTC.
 - A service **SHOULD** write that timestamp in UTC, because records from several services then sort without conversion.
@@ -341,7 +381,9 @@ Cite as `std-OBS.one-request-reads-as-one-timeline`.
 
 ### Somebody acts on every alert
 
-Cite as `std-OBS.somebody-acts-on-every-alert`.
+Cite as `std-OBS.ALERT`.
+
+Controls: `ctl-0003` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
 
 - A service **MUST** publish availability and latency objectives.
 - A service **MUST** alert when it is on course to miss one of those objectives.
@@ -351,27 +393,31 @@ Cite as `std-OBS.somebody-acts-on-every-alert`.
 
 ### Telemetry carries no personal data
 
-Cite as `std-OBS.telemetry-carries-no-personal-data`.
+Cite as `std-OBS.PII`.
+
+Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## std-PR: A pull request carries its reasoning and one accountable approval
 
 Status: draft.
 
-Controls: `ctl-0007` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
-
 ### A change arrives as a pull request
 
-Cite as `std-PR.a-change-arrives-as-a-pull-request`.
+Cite as `std-PR.ARRIVE`.
+
+Controls: none.
 
 - A change **MUST** arrive on the default branch as a merged pull request, not as a direct push.
 - A pull request description **MUST** link the work item that asked for the change.
 
 ### Agent-produced work says what produced it
 
-Cite as `std-PR.agent-produced-work-says-what-produced-it`.
+Cite as `std-PR.AGENT`.
+
+Controls: `ctl-0007` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
 
 - A pull request containing agent-produced work **MUST** name the agent, the model and the prompt or task that produced it.
 - Agent-produced work **MUST** have the approval of a named person, who owns the change afterwards.
@@ -381,7 +427,9 @@ Cite as `std-PR.agent-produced-work-says-what-produced-it`.
 
 ### Somebody other than the author approves it
 
-Cite as `std-PR.somebody-other-than-the-author-approves-it`.
+Cite as `std-PR.APPROVE`.
+
+Controls: none.
 
 - A pull request **MUST** have at least one approval from somebody other than the author before it merges.
 - A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone.
@@ -391,25 +439,29 @@ Cite as `std-PR.somebody-other-than-the-author-approves-it`.
 
 Status: draft.
 
-Controls: `ctl-0006` Nothing checks a repository for a committed secret (`not-enforced`, active).
-
 ### A secret comes from the store
 
-Cite as `std-SECRET.a-secret-comes-from-the-store`.
+Cite as `std-SECRET.STORE`.
+
+Controls: none.
 
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload.
 - An environment below production **MUST** have its own secrets, distinct from production's.
 
 ### Every secret rotates
 
-Cite as `std-SECRET.every-secret-rotates`.
+Cite as `std-SECRET.ROTATE`.
+
+Controls: none.
 
 - A secret **MUST** be replaceable in the store without a code change or a rebuild.
 - Every secret **MUST** rotate on a period recorded against it in the store.
 
 ### Nowhere else holds a secret
 
-Cite as `std-SECRET.nowhere-else-holds-a-secret`.
+Cite as `std-SECRET.NOWHERE`.
+
+Controls: `ctl-0006` Nothing checks a repository for a committed secret (`not-enforced`, active).
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test fixture.
 - A build **MUST NOT** embed a secret in an artefact or an image.
@@ -420,11 +472,11 @@ Cite as `std-SECRET.nowhere-else-holds-a-secret`.
 
 Status: draft.
 
-Controls: none.
-
 ### Know what the suite reaches
 
-Cite as `std-TEST.know-what-the-suite-reaches`.
+Cite as `std-TEST.REACH`.
+
+Controls: none.
 
 - A build **MUST** report line coverage.
 - A build **MUST** fail where coverage falls below the figure the repository records.
@@ -432,7 +484,9 @@ Cite as `std-TEST.know-what-the-suite-reaches`.
 
 ### Pick the level from the fault
 
-Cite as `std-TEST.pick-the-level-from-the-fault`.
+Cite as `std-TEST.LEVEL`.
+
+Controls: none.
 
 - A team **MUST** cover a rule about one unit's behaviour with a test on that unit alone.
 - A team **MUST** cover an agreement between two components with a test that exercises both.
@@ -443,7 +497,9 @@ Cite as `std-TEST.pick-the-level-from-the-fault`.
 
 ### The data is never a real customer's
 
-Cite as `std-TEST.the-data-is-never-a-real-customers`.
+Cite as `std-TEST.DATA`.
+
+Controls: none.
 
 - A test **MUST** run against generated data, or against production data that a masking step has already processed.
 - A team **MUST NOT** copy unmasked production data into a test fixture, a seed script or a local database.
@@ -453,11 +509,11 @@ Cite as `std-TEST.the-data-is-never-a-real-customers`.
 
 Status: draft.
 
-Controls: none.
-
 ### Every change is attributable and reviewed
 
-Cite as `std-VCS.every-change-is-attributable-and-reviewed`.
+Cite as `std-VCS.ATTRIB`.
+
+Controls: none.
 
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
 - A commit **MUST** name the work item that asked for the change.
@@ -467,7 +523,9 @@ Cite as `std-VCS.every-change-is-attributable-and-reviewed`.
 
 ### The repository holds everything the service needs
 
-Cite as `std-VCS.the-repository-holds-everything-the-service-needs`.
+Cite as `std-VCS.REPO`.
+
+Controls: none.
 
 - A repository **MUST** contain the source, the build definition, the infrastructure definition, the configuration templates and the recovery scripts for the services it owns.
 - A repository **MUST NOT** depend on an asset kept only on a workstation, in a cloud portal or in an unversioned share.

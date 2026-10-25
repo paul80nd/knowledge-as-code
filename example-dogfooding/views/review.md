@@ -6,17 +6,17 @@ Each rule below gives the id a finding cites, then its obligations, one to a bul
 - **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its reason conforms, and the departure is a judgement call.
 - **MAY** permits, and a change cannot break it.
 - A standard is in force at status `active`. A finding under any other status is not in force.
-- A standard's controls are listed with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
+- Each rule's controls are listed under it, with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
 
 ## std-A11Y: The documentation site and kac are usable without sight, a mouse or colour
 
 Status: active.
 
-Controls: `ctl-0012` Nothing checks a page or the output for accessibility (`not-enforced`, active); `ctl-0014` A pinned component's assessment names the version it is pinned at (`ci`, active).
-
 ### A change that makes either surface worse needs a deviation
 
-Cite as `std-A11Y.a-change-that-makes-either-surface-worse-needs-a-deviation`.
+Cite as `std-A11Y.WORSE`.
+
+Controls: none.
 
 - A change knowingly reducing accessibility **MUST NOT** merge without a recorded deviation.
 - The deviation **MUST** name the individual accepting the risk.
@@ -26,7 +26,9 @@ Cite as `std-A11Y.a-change-that-makes-either-surface-worse-needs-a-deviation`.
 
 ### A Markdown author owns the structure of a page
 
-Cite as `std-A11Y.a-markdown-author-owns-the-structure-of-a-page`.
+Cite as `std-A11Y.STRUCT`.
+
+Controls: `ctl-0012` Nothing checks a page or the output for accessibility (`not-enforced`, active).
 
 - A page **MUST** open on one H1.
 - Heading levels **MUST** descend one at a time.
@@ -42,7 +44,9 @@ Cite as `std-A11Y.a-markdown-author-owns-the-structure-of-a-page`.
 
 ### A pinned component carries an accessibility assessment
 
-Cite as `std-A11Y.a-pinned-component-carries-an-accessibility-assessment`.
+Cite as `std-A11Y.ASSESS`.
+
+Controls: `ctl-0014` A pinned component's assessment names the version it is pinned at (`ci`, active).
 
 - A third-party component rendering either surface **MUST** have an assessment in its tool record.
 - The assessment **MUST** name what was checked, and how.
@@ -53,7 +57,9 @@ Cite as `std-A11Y.a-pinned-component-carries-an-accessibility-assessment`.
 
 ### kac carries no meaning in colour alone
 
-Cite as `std-A11Y.kac-carries-no-meaning-in-colour-alone`.
+Cite as `std-A11Y.COLOUR`.
+
+Controls: `ctl-0012` Nothing checks a page or the output for accessibility (`not-enforced`, active).
 
 - Every message **MUST** state its meaning in words.
 - Colour **MUST** repeat what the words already say.
@@ -66,7 +72,9 @@ Cite as `std-A11Y.kac-carries-no-meaning-in-colour-alone`.
 
 ### The theme owns contrast, focus and keyboard reach
 
-Cite as `std-A11Y.the-theme-owns-contrast-focus-and-keyboard-reach`.
+Cite as `std-A11Y.THEME`.
+
+Controls: none.
 
 - `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Zensical ships, unless the change shows that its colours meet [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 - `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
@@ -76,7 +84,9 @@ Cite as `std-A11Y.the-theme-owns-contrast-focus-and-keyboard-reach`.
 
 ### What falls short is written down where a reader finds it
 
-Cite as `std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it`.
+Cite as `std-A11Y.GAPS`.
+
+Controls: none.
 
 - A shortfall an assessment recorded **MUST** sit in the tool record for the component it was found in.
 - A tool record **MUST NOT** claim a conformance level nobody verified.
@@ -88,18 +98,20 @@ Cite as `std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it`.
 
 Status: active.
 
-Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
-
 ### A checkout leaves no credential behind
 
-Cite as `std-CI.a-checkout-leaves-no-credential-behind`.
+Cite as `std-CI.PERSIST`.
+
+Controls: `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 - A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which is what [zizmor](https://docs.zizmor.sh/audits/#artipacked)'s `artipacked` audit asks for.
 - A step needing git write access **MUST** supply the token itself.
 
 ### A job declares the permission it needs
 
-Cite as `std-CI.a-job-declares-the-permission-it-needs`.
+Cite as `std-CI.PERMS`.
+
+Controls: `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 - A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Token-Permissions` check asks for.
 - A job needing wider access **MUST** declare that permission on itself.
@@ -108,7 +120,9 @@ Cite as `std-CI.a-job-declares-the-permission-it-needs`.
 
 ### A version moves by hand and publishes once
 
-Cite as `std-CI.a-version-moves-by-hand-and-publishes-once`.
+Cite as `std-CI.RELEASE`.
+
+Controls: `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active).
 
 - A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in the pull request making that change.
 - A pull request **MUST NOT** move `<Version>` in `tooling/kac/kac.csproj` unless the branch owner has decided to release.
@@ -124,7 +138,9 @@ Cite as `std-CI.a-version-moves-by-hand-and-publishes-once`.
 
 ### A workflow holds no credential of its own
 
-Cite as `std-CI.a-workflow-holds-no-credential-of-its-own`.
+Cite as `std-CI.CREDS`.
+
+Controls: none.
 
 - A workflow **MUST** take every credential from GitHub's secret store or from an identity it exchanged.
 - A publish to nuget.org **MUST** authenticate through a trusted publishing policy naming this repository, this workflow file and the `nuget.org` environment.
@@ -136,7 +152,9 @@ Cite as `std-CI.a-workflow-holds-no-credential-of-its-own`.
 
 ### Every action is pinned to a commit
 
-Cite as `std-CI.every-action-is-pinned-to-a-commit`.
+Cite as `std-CI.PINNED`.
+
+Controls: `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 - A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Pinned-Dependencies` check asks for.
 - A pinned step **SHOULD** state the released version in a trailing comment, as `# v7.0.1`, because a reviewer reads the version there.
@@ -146,7 +164,9 @@ Cite as `std-CI.every-action-is-pinned-to-a-commit`.
 
 ### One job holds the write permission
 
-Cite as `std-CI.one-job-holds-the-write-permission`.
+Cite as `std-CI.WRITE`.
+
+Controls: none.
 
 - A publishing workflow **MUST** declare its write permission on one job.
 - A workflow publishing a package or a branch **MUST** declare `needs:` on a job with `contents: read`.
@@ -161,7 +181,9 @@ Cite as `std-CI.one-job-holds-the-write-permission`.
 
 ### The gate runs on every pull request into main
 
-Cite as `std-CI.the-gate-runs-on-every-pull-request-into-main`.
+Cite as `std-CI.GATE`.
+
+Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active).
 
 - A check that can block a merge **MUST** run in `.github/workflows/kac.yml` on a pull request into `main`.
 - `kac.yml` **MUST** name every one of its jobs in the `needs:` of its `validate` job.
@@ -174,11 +196,11 @@ Cite as `std-CI.the-gate-runs-on-every-pull-request-into-main`.
 
 Status: active.
 
-Controls: `ctl-0004` Every YAML file passes yamllint (`ci`, active); `ctl-0005` Every corpus holds the file the template sends it (`ci`, active); `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
-
 ### A file says what it is for, and why each value is what it is
 
-Cite as `std-CONFIG.a-file-says-what-it-is-for-and-why-each-value-is-what-it-is`.
+Cite as `std-CONFIG.PURPOSE`.
+
+Controls: none.
 
 - A configuration file **SHOULD** open with a comment saying what it is for, or with the `# yaml-language-server: $schema=` line naming what describes it.
 - A comment **MUST** give the reason a value is what it is.
@@ -187,7 +209,9 @@ Cite as `std-CONFIG.a-file-says-what-it-is-for-and-why-each-value-is-what-it-is`
 
 ### A pin names an exact version
 
-Cite as `std-CONFIG.a-pin-names-an-exact-version`.
+Cite as `std-CONFIG.PIN`.
+
+Controls: `ctl-0015` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 - A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Dependency-Update-Tool` check asks for.
@@ -199,7 +223,9 @@ Cite as `std-CONFIG.a-pin-names-an-exact-version`.
 
 ### A value living in more than one tree is copied and proved
 
-Cite as `std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved`.
+Cite as `std-CONFIG.COPIES`.
+
+Controls: `ctl-0005` Every corpus holds the file the template sends it (`ci`, active).
 
 - A setting every project under `tooling/` takes **SHOULD** sit in `tooling/Directory.Build.props`.
 - You **MUST** copy a file `manifest.yaml` names into `template/` and into each corpus under `examples/`.
@@ -211,7 +237,9 @@ Cite as `std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved`.
 
 ### Every value the build reads is committed
 
-Cite as `std-CONFIG.every-value-the-build-reads-is-committed`.
+Cite as `std-CONFIG.COMMIT`.
+
+Controls: none.
 
 - A value deciding how this repository builds, validates or publishes **MUST** sit in a tracked file.
 - A setting only a provider's console can store **MUST** be named in the header comment of the file it affects.
@@ -221,7 +249,9 @@ Cite as `std-CONFIG.every-value-the-build-reads-is-committed`.
 
 ### The shape of a YAML file is yamllint's to decide
 
-Cite as `std-CONFIG.the-shape-of-a-yaml-file-is-yamllints-to-decide`.
+Cite as `std-CONFIG.YAML`.
+
+Controls: `ctl-0004` Every YAML file passes yamllint (`ci`, active).
 
 - A YAML file **MUST** pass `yamllint --strict` under the `.yamllint` at this repository's root.
 - `.yamllint` **MUST** extend yamllint's `default` ruleset.
@@ -234,11 +264,11 @@ Cite as `std-CONFIG.the-shape-of-a-yaml-file-is-yamllints-to-decide`.
 
 Status: active.
 
-Controls: `ctl-0008` Every corpus publishes, installs and is read back (`ci`, active); `ctl-0009` Three test layers run before a merge (`ci`, active).
-
 ### A deviation request an agent files asks for the owner it cannot name
 
-Cite as `std-PLUGIN.a-deviation-request-an-agent-files-asks-for-the-owner-it-cannot-name`.
+Cite as `std-PLUGIN.DEVREQ`.
+
+Controls: none.
 
 - A deviation request **MUST** open its body with a fenced block whose info string is `yaml kac-deviation`.
 - That block **MUST** open on `corpus`, naming the corpus that will contain the record.
@@ -263,7 +293,9 @@ Cite as `std-PLUGIN.a-deviation-request-an-agent-files-asks-for-the-owner-it-can
 
 ### A finding an agent files is an observation, and proposes no record
 
-Cite as `std-PLUGIN.a-finding-an-agent-files-is-an-observation-and-proposes-no-record`.
+Cite as `std-PLUGIN.FINDING`.
+
+Controls: none.
 
 - A finding **MUST** open its body with a fenced block whose info string is `yaml kac-finding`.
 - That block **MUST** open on `corpus`, naming the corpus the finding is about.
@@ -285,7 +317,9 @@ Cite as `std-PLUGIN.a-finding-an-agent-files-is-an-observation-and-proposes-no-r
 
 ### A framework finding travels stripped, and only by hand
 
-Cite as `std-PLUGIN.a-framework-finding-travels-stripped-and-only-by-hand`.
+Cite as `std-PLUGIN.STRIP`.
+
+Controls: none.
 
 - A skill **MUST** compare the framework block's address with the tracker block's, both targets and both bases normalised.
 - Where the two are equal, a skill **MUST** mark the finding and copy nothing.
@@ -296,7 +330,9 @@ Cite as `std-PLUGIN.a-framework-finding-travels-stripped-and-only-by-hand`.
 
 ### A hook runs in a POSIX shell, and pushes a view once a session
 
-Cite as `std-PLUGIN.a-hook-runs-in-a-posix-shell-and-pushes-a-view-once-a-session`.
+Cite as `std-PLUGIN.HOOK`.
+
+Controls: none.
 
 - A hook **MUST** run under a POSIX shell.
 - A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
@@ -309,7 +345,9 @@ Cite as `std-PLUGIN.a-hook-runs-in-a-posix-shell-and-pushes-a-view-once-a-sessio
 
 ### A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
 
-Cite as `std-PLUGIN.a-router-sends-a-known-need-to-its-lookup-and-reads-any-other-type-from-a-file-it-loads-when-routed-there`.
+Cite as `std-PLUGIN.ROUTER`.
+
+Controls: none.
 
 - A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill shipped.
 - Where that lookup did not ship, a router **MUST** say so and name the type it needed.
@@ -325,7 +363,9 @@ Cite as `std-PLUGIN.a-router-sends-a-known-need-to-its-lookup-and-reads-any-othe
 
 ### A skill assumes only that the session can read a file
 
-Cite as `std-PLUGIN.a-skill-assumes-only-that-the-session-can-read-a-file`.
+Cite as `std-PLUGIN.READS`.
+
+Controls: none.
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
@@ -338,7 +378,9 @@ Cite as `std-PLUGIN.a-skill-assumes-only-that-the-session-can-read-a-file`.
 
 ### A skill names the type of every field it describes
 
-Cite as `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes`.
+Cite as `std-PLUGIN.TYPES`.
+
+Controls: `ctl-0008` Every corpus publishes, installs and is read back (`ci`, active).
 
 - A skill describing a field **MUST** name that field's JSON type.
 - A skill **MUST** say that a field with no value is present and `null`, where the export writes it that way.
@@ -349,7 +391,9 @@ Cite as `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes`.
 
 ### A skill reads a rule's keyword as what departing from it costs
 
-Cite as `std-PLUGIN.a-skill-reads-a-rules-keyword-as-what-departing-from-it-costs`.
+Cite as `std-PLUGIN.KEYWORD`.
+
+Controls: none.
 
 - A skill reporting a rule **MUST** say that departing from a `MUST` or `MUST NOT` takes a deviation the rule's owner accepts.
 - Where the bundle carries `request-deviation`, a skill **MUST** send that departure to it.
@@ -361,7 +405,9 @@ Cite as `std-PLUGIN.a-skill-reads-a-rules-keyword-as-what-departing-from-it-cost
 
 ### A skill says what its corpus did not carry
 
-Cite as `std-PLUGIN.a-skill-says-what-its-corpus-did-not-carry`.
+Cite as `std-PLUGIN.GAPS`.
+
+Controls: none.
 
 - A skill **MUST** read `types` in `manifest.json` before it says what is missing.
 - A skill **MUST** name what stayed behind, and send the reader to the published record for it.
@@ -372,7 +418,9 @@ Cite as `std-PLUGIN.a-skill-says-what-its-corpus-did-not-carry`.
 
 ### A skill states what it is for, and the reason for each rule it gives
 
-Cite as `std-PLUGIN.a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives`.
+Cite as `std-PLUGIN.REASON`.
+
+Controls: none.
 
 - A skill **SHOULD** state what it is for, the intent of the type it reads, and the reason behind each rule it gives.
 - A skill **SHOULD** set out steps only where the order is the content: a record of a type an agent follows, or a write-back or review whose order a rule fixes.
@@ -380,7 +428,9 @@ Cite as `std-PLUGIN.a-skill-states-what-it-is-for-and-the-reason-for-each-rule-i
 
 ### A skill writes back to the tracker the corpus states
 
-Cite as `std-PLUGIN.a-skill-writes-back-to-the-tracker-the-corpus-states`.
+Cite as `std-PLUGIN.TRACKER`.
+
+Controls: none.
 
 - A skill **MUST** send a correction to the backlog the record's corpus addresses under `tracker`.
 - A skill **MUST NOT** file a correction on the address a `publishing` block states, because a published form and a backlog are one address on GitHub and two on Azure DevOps, where the project holds the backlog and the repository inside it holds none.
@@ -393,7 +443,9 @@ Cite as `std-PLUGIN.a-skill-writes-back-to-the-tracker-the-corpus-states`.
 
 ### plugin.json declares every component and the types it reads
 
-Cite as `std-PLUGIN.pluginjson-declares-every-component-and-the-types-it-reads`.
+Cite as `std-PLUGIN.DECLARE`.
+
+Controls: `ctl-0008` Every corpus publishes, installs and is read back (`ci`, active).
 
 - Every skill directory and hook directory in the plugin tree **MUST** appear under `metadata.components`.
 - A component **MUST** name every record type it opens a file of, at the shape version it reads, as `glossary@1`: in `requires` where it cannot work without the type, and in `optional` where it can.
@@ -408,7 +460,9 @@ Cite as `std-PLUGIN.pluginjson-declares-every-component-and-the-types-it-reads`.
 
 ### The bundle carries a frozen export, and nothing writes to it
 
-Cite as `std-PLUGIN.the-bundle-carries-a-frozen-export-and-nothing-writes-to-it`.
+Cite as `std-PLUGIN.FROZEN`.
+
+Controls: `ctl-0009` Three test layers run before a merge (`ci`, active).
 
 - The export inside a plugin **MUST** be the bytes `kac export` wrote.
 - A skill **MUST NOT** write to any file under `${CLAUDE_PLUGIN_ROOT}`.
@@ -423,7 +477,9 @@ Cite as `std-PLUGIN.the-bundle-carries-a-frozen-export-and-nothing-writes-to-it`
 
 ### Triage routes a finding with a label, and says why in a comment
 
-Cite as `std-PLUGIN.triage-routes-a-finding-with-a-label-and-says-why-in-a-comment`.
+Cite as `std-PLUGIN.TRIAGE`.
+
+Controls: none.
 
 - A skill triaging findings **MUST** travel into a corpus's working tree, and **MUST NOT** be a component of a plugin.
 - A skill triaging findings **MUST** read the corpus it is about from the `.corpus.yaml` it walks up to.
@@ -457,11 +513,11 @@ Cite as `std-PLUGIN.triage-routes-a-finding-with-a-label-and-says-why-in-a-comme
 
 Status: active.
 
-Controls: `ctl-0013` Nothing checks prose against the house style (`not-enforced`, active).
-
 ### Commit messages and pull requests
 
-Cite as `std-PROSE.commit-messages-and-pull-requests`.
+Cite as `std-PROSE.COMMITS`.
+
+Controls: none.
 
 - A subject line **MUST** say what changed.
 - A subject line **SHOULD** be in the imperative, with no full stop.
@@ -471,7 +527,9 @@ Cite as `std-PROSE.commit-messages-and-pull-requests`.
 
 ### The base style
 
-Cite as `std-PROSE.the-base-style`.
+Cite as `std-PROSE.BASE`.
+
+Controls: none.
 
 - Prose **MUST** follow the Microsoft Writing Style Guide, except where a clause below changes it.
 - A sentence **SHOULD** state the rule or the fact before the reason.
@@ -482,13 +540,15 @@ Cite as `std-PROSE.the-base-style`.
 - A word on that list **MAY** appear where it is itself the plain verb. A heading *names* a topic, a standard *cites* a clause, and a service *returns* what a caller asked for.
 - A sentence **SHOULD** state one idea.
 - An instruction **SHOULD** give one step.
-- A heading **MUST** name its topic, because a rule heading in a standard becomes its clause id.
+- A heading **MUST** name its topic, because the anchor a link lands on is the slug of the heading.
 - A heading **SHOULD** be in sentence case.
 - Three or more parallel items **SHOULD** be a list or a table.
 
 ### What prose must not change
 
-Cite as `std-PROSE.what-prose-must-not-change`.
+Cite as `std-PROSE.INTACT`.
+
+Controls: none.
 
 - You **MUST** leave alone an identifier, a path, a flag, a command, and the output a command printed.
 - You **MUST** leave alone a heading you may not rename, the H1 of a record, and every clause id.
@@ -500,7 +560,9 @@ Cite as `std-PROSE.what-prose-must-not-change`.
 
 ### What stays true
 
-Cite as `std-PROSE.what-stays-true`.
+Cite as `std-PROSE.TRUE`.
+
+Controls: none.
 
 - Prose **MUST** describe what exists today. Agreed but unbuilt work **MUST** go to the issue tracker.
 - A schema rule the tool does not implement **MUST** be written as declared and not running.
@@ -510,7 +572,9 @@ Cite as `std-PROSE.what-stays-true`.
 
 ### Where this repository differs from Microsoft
 
-Cite as `std-PROSE.where-this-repository-differs-from-microsoft`.
+Cite as `std-PROSE.DIFFERS`.
+
+Controls: `ctl-0013` Nothing checks prose against the house style (`not-enforced`, active).
 
 - Spelling **MUST** be British.
 - An em dash **MUST NOT** appear. A full stop, a comma or a colon replaces it.
@@ -527,11 +591,11 @@ Cite as `std-PROSE.where-this-repository-differs-from-microsoft`.
 
 Status: active.
 
-Controls: `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active).
-
 ### A producer's move obliges every consumer in the same pull request
 
-Cite as `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request`.
+Cite as `std-VERS.CONSUME`.
+
+Controls: `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active); `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active).
 
 - A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in the pull request moving the producer's `content-version`.
 - That consumer **MUST** move its own `content-version` wherever its `resolved:` lock moves, by the part the producer moved, because its export now publishes what the producer changed.
@@ -545,7 +609,9 @@ Cite as `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-reque
 
 ### A published version is never replaced
 
-Cite as `std-VERS.a-published-version-is-never-replaced`.
+Cite as `std-VERS.FINAL`.
+
+Controls: none.
 
 - A published `<Version>` or `content-version` **MUST NOT** be pushed again, replaced or deleted.
 - A correction **MUST** ship as a new version.
@@ -553,7 +619,9 @@ Cite as `std-VERS.a-published-version-is-never-replaced`.
 
 ### A reader meeting a stamp it does not know stops
 
-Cite as `std-VERS.a-reader-meeting-a-stamp-it-does-not-know-stops`.
+Cite as `std-VERS.UNKNOWN`.
+
+Controls: none.
 
 - `kac bundle` **MUST** refuse an export whose `formatVersion` is not the one that build reads.
 - `kac bundle` **MUST** leave out a component whose type the export includes at a `shapeVersion` the component did not name.
@@ -563,7 +631,9 @@ Cite as `std-VERS.a-reader-meeting-a-stamp-it-does-not-know-stops`.
 
 ### A stamp is a semantic version, a count, or a range
 
-Cite as `std-VERS.a-stamp-is-a-semantic-version-a-count-or-a-range`.
+Cite as `std-VERS.FORMS`.
+
+Controls: none.
 
 - `content-version` in a corpus's `.corpus.yaml` and `<Version>` in `tooling/kac/kac.csproj` **MUST** be written and read under [Semantic Versioning 2.0.0](https://semver.org).
 - `descriptor-version`, `upstream.template-version`, `version:` in `manifest.yaml`, `version:` under `export:` in a `.schema/<type>.yaml`, `formatVersion`, `mechanismVersion` and a type's `shapeVersion` **MUST** each be a whole number that only increases.
@@ -575,7 +645,9 @@ Cite as `std-VERS.a-stamp-is-a-semantic-version-a-count-or-a-range`.
 
 ### What a move of each stamp means
 
-Cite as `std-VERS.what-a-move-of-each-stamp-means`.
+Cite as `std-VERS.MEANING`.
+
+Controls: `ctl-0011` Every corpus whose export, lock or bundle changed has moved its content-version (`ci`, active).
 
 - `content-version` **MUST** be read as a statement about what the corpus publishes rather than about the file.
 - What a corpus publishes **MUST** be read as its export, and never as the repository its records are readable in.
@@ -596,7 +668,9 @@ Cite as `std-VERS.what-a-move-of-each-stamp-means`.
 
 ### Which stamps move together, and which move alone
 
-Cite as `std-VERS.which-stamps-move-together-and-which-move-alone`.
+Cite as `std-VERS.TANDEM`.
+
+Controls: none.
 
 - `content-version`, the `resolved:` lock of every consumer of that corpus, and each of those consumers' own `content-version` **MUST** move in one pull request.
 - `version:` in `manifest.yaml` and the `upstream.template-version` of every corpus here **MUST** move in one pull request.
@@ -609,11 +683,11 @@ Cite as `std-VERS.which-stamps-move-together-and-which-move-alone`.
 
 Status: draft.
 
-Controls: `eng:ctl-0005` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
-
 ### A change carries a version and a notice
 
-Cite as `eng:std-API.a-change-carries-a-version-and-a-notice`.
+Cite as `eng:std-API.VERSION`.
+
+Controls: `eng:ctl-0005` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
 
 - A published interface **MUST** have a version a consumer can pin to.
 - An HTTP interface **SHOULD** put its major version in the path, as `/v2/`, unless the contract states another scheme.
@@ -623,7 +697,9 @@ Cite as `eng:std-API.a-change-carries-a-version-and-a-notice`.
 
 ### Every endpoint authenticates and validates
 
-Cite as `eng:std-API.every-endpoint-authenticates-and-validates`.
+Cite as `eng:std-API.AUTH`.
+
+Controls: none.
 
 - A contract **MUST** state the authentication each endpoint takes.
 - A contract **MUST** declare an endpoint that takes no authentication as public.
@@ -634,7 +710,9 @@ Cite as `eng:std-API.every-endpoint-authenticates-and-validates`.
 
 ### The contract is the source of truth
 
-Cite as `eng:std-API.the-contract-is-the-source-of-truth`.
+Cite as `eng:std-API.SPEC`.
+
+Controls: none.
 
 - A service **MUST** publish a machine-readable contract for every interface it exposes, committed to the repository that builds the service.
 - Where the implementation and the contract disagree, a team **MUST** treat the implementation as the defect.
@@ -646,11 +724,11 @@ Cite as `eng:std-API.the-contract-is-the-source-of-truth`.
 
 Status: draft.
 
-Controls: `eng:ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
-
 ### A published tag never moves
 
-Cite as `eng:std-CONT.a-published-tag-never-moves`.
+Cite as `eng:std-CONT.TAG`.
+
+Controls: `eng:ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A pipeline **MUST** tag an image with the build's own version.
 - A registry **MUST** refuse a second push to a tag that already exists.
@@ -658,7 +736,9 @@ Cite as `eng:std-CONT.a-published-tag-never-moves`.
 
 ### The base image is chosen and pinned
 
-Cite as `eng:std-CONT.the-base-image-is-chosen-and-pinned`.
+Cite as `eng:std-CONT.BASE`.
+
+Controls: `eng:ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A Dockerfile **MUST** take its base image from the organisation's registry.
 - A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
@@ -666,7 +746,9 @@ Cite as `eng:std-CONT.the-base-image-is-chosen-and-pinned`.
 
 ### The container holds only what the service needs
 
-Cite as `eng:std-CONT.the-container-holds-only-what-the-service-needs`.
+Cite as `eng:std-CONT.MINIMAL`.
+
+Controls: none.
 
 - An image **MUST** declare a non-root `USER`.
 - A container **MUST** run as that user.
@@ -678,18 +760,20 @@ Cite as `eng:std-CONT.the-container-holds-only-what-the-service-needs`.
 
 Status: draft.
 
-Controls: `eng:ctl-0009` Nothing checks that a suppression is local and justified (`not-enforced`, active).
-
 ### A suppression is local and says why
 
-Cite as `eng:std-CSSTY.a-suppression-is-local-and-says-why`.
+Cite as `eng:std-CSSTY.SUPPR`.
+
+Controls: `eng:ctl-0009` Nothing checks that a suppression is local and justified (`not-enforced`, active).
 
 - A suppression **MUST** sit on the member it applies to, with a `Justification` giving the reason.
 - A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
 
 ### The conventions come from one file
 
-Cite as `eng:std-CSSTY.the-conventions-come-from-one-file`.
+Cite as `eng:std-CSSTY.ONEFILE`.
+
+Controls: none.
 
 - A repository holding C# **MUST** have an `.editorconfig` at its root.
 - That `.editorconfig` **SHOULD** be the .NET runtime team's own.
@@ -701,7 +785,9 @@ Cite as `eng:std-CSSTY.the-conventions-come-from-one-file`.
 
 ### The security rules the analysers cover
 
-Cite as `eng:std-CSSTY.the-security-rules-the-analysers-cover`.
+Cite as `eng:std-CSSTY.SECURE`.
+
+Controls: none.
 
 - Code **MUST** build a SQL command through a parameter rather than by joining strings.
 - Code **MUST** use the framework's cryptography.
@@ -712,18 +798,20 @@ Cite as `eng:std-CSSTY.the-security-rules-the-analysers-cover`.
 
 Status: draft.
 
-Controls: `eng:ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
-
 ### A way back exists before the change goes
 
-Cite as `eng:std-DEPLOY.a-way-back-exists-before-the-change-goes`.
+Cite as `eng:std-DEPLOY.WAYBACK`.
+
+Controls: none.
 
 - A release **MUST** have a stated rollback or recovery path before it starts.
 - A database migration **MUST** leave the previous version of the service able to run against the new schema, unless the migration removes data the previous version reads.
 
 ### Change approval
 
-Cite as `eng:std-DEPLOY.change-approval`.
+Cite as `eng:std-DEPLOY.APPROVE`.
+
+Controls: none.
 
 - A change **MUST** be approved by someone other than its author before it reaches production.
 - The approval **MUST** be recorded where the change is, such as in branch protection.
@@ -734,26 +822,32 @@ Cite as `eng:std-DEPLOY.change-approval`.
 
 ### Configuration sits outside the artefact
 
-Cite as `eng:std-DEPLOY.configuration-sits-outside-the-artefact`.
+Cite as `eng:std-DEPLOY.CONFIG`.
+
+Controls: none.
 
 - A service **MUST** read environment-specific configuration at start-up, from outside the artefact.
 - An artefact **MUST NOT** contain a hostname, connection string or feature setting that differs between environments.
 
 ### Production changes through the pipeline alone
 
-Cite as `eng:std-DEPLOY.production-changes-through-the-pipeline-alone`.
+Cite as `eng:std-DEPLOY.PIPE`.
+
+Controls: none.
 
 - A change **MUST** reach production through the automated pipeline.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
 ### The artefact is built once
 
-Cite as `eng:std-DEPLOY.the-artefact-is-built-once`.
+Cite as `eng:std-DEPLOY.ONCE`.
+
+Controls: `eng:ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
 
 - A pipeline **MUST** build the artefact once, and promote that build to every environment.
 - An artefact **MUST** record the commit it was built from, so a running version identifies the change it came from.
@@ -764,11 +858,11 @@ Cite as `eng:std-DEPLOY.the-artefact-is-built-once`.
 
 Status: draft.
 
-Controls: none.
-
 ### What happens afterwards
 
-Cite as `eng:std-DEPS.what-happens-afterwards`.
+Cite as `eng:std-DEPS.UPKEEP`.
+
+Controls: none.
 
 - A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule.
 - A team **MUST** rank a finding by its severity and by whether the affected path runs.
@@ -777,7 +871,9 @@ Cite as `eng:std-DEPS.what-happens-afterwards`.
 
 ### What happens before adoption
 
-Cite as `eng:std-DEPS.what-happens-before-adoption`.
+Cite as `eng:std-DEPS.ADOPT`.
+
+Controls: none.
 
 - Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
 - Somebody **MUST** check a new package's licence against the licences the [conformance checklist](#conformance-checklist) allows before that pull request merges.
@@ -788,7 +884,9 @@ Cite as `eng:std-DEPS.what-happens-before-adoption`.
 
 ### Where a package comes from
 
-Cite as `eng:std-DEPS.where-a-package-comes-from`.
+Cite as `eng:std-DEPS.SOURCE`.
+
+Controls: none.
 
 - A build **MUST** resolve packages from the organisation's feed, which proxies the public registries.
 - A repository **MUST** commit a lockfile pinning every direct and transitive dependency to a version.
@@ -800,11 +898,11 @@ Cite as `eng:std-DEPS.where-a-package-comes-from`.
 
 Status: draft.
 
-Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active); `ctl-0008` Every corpus publishes, installs and is read back (`ci`, active); `ctl-0009` Three test layers run before a merge (`ci`, active); `ctl-0010` The documentation site builds with no dead link (`ci`, active); `eng:ctl-0004` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
-
 ### A failing check stops the change
 
-Cite as `eng:std-GATES.a-failing-check-stops-the-change`.
+Cite as `eng:std-GATES.BLOCK`.
+
+Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `eng:ctl-0004` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
 
 - Branch policy **MUST** block a merge while any required check is failing.
 - A team **MUST NOT** merge over a failing check without a recorded deviation.
@@ -815,7 +913,9 @@ Cite as `eng:std-GATES.a-failing-check-stops-the-change`.
 
 ### Every change is built and tested automatically
 
-Cite as `eng:std-GATES.every-change-is-built-and-tested-automatically`.
+Cite as `eng:std-GATES.BUILD`.
+
+Controls: `ctl-0007` Every corpus validates and its generated output is fresh (`ci`, active); `ctl-0008` Every corpus publishes, installs and is read back (`ci`, active); `ctl-0009` Three test layers run before a merge (`ci`, active); `ctl-0010` The documentation site builds with no dead link (`ci`, active).
 
 - A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it.
 - The build **MUST** run from a clean checkout, on an agent that is not a person's own machine.
@@ -826,11 +926,11 @@ Cite as `eng:std-GATES.every-change-is-built-and-tested-automatically`.
 
 Status: draft.
 
-Controls: none.
-
 ### A significant incident is reviewed
 
-Cite as `eng:std-INCSEV.a-significant-incident-is-reviewed`.
+Cite as `eng:std-INCSEV.REVIEW`.
+
+Controls: none.
 
 - A sev1 or sev2 incident **MUST** be treated as significant wherever a policy here names one.
 - A sev1 or sev2 incident **MUST** have a postmortem.
@@ -838,7 +938,9 @@ Cite as `eng:std-INCSEV.a-significant-incident-is-reviewed`.
 
 ### Every incident has a severity
 
-Cite as `eng:std-INCSEV.every-incident-has-a-severity`.
+Cite as `eng:std-INCSEV.ASSIGN`.
+
+Controls: none.
 
 - Whoever declares an incident **MUST** set its severity at declaration.
 - An incident **MUST** be sev1 where a `critical` service is unavailable, or where customers' money has been taken, refunded or paid out wrongly, or their personal data is wrong or exposed, at any scale.
@@ -848,7 +950,9 @@ Cite as `eng:std-INCSEV.every-incident-has-a-severity`.
 
 ### The severity moves with what is known
 
-Cite as `eng:std-INCSEV.the-severity-moves-with-what-is-known`.
+Cite as `eng:std-INCSEV.REVISE`.
+
+Controls: none.
 
 - The incident lead **MUST** raise the severity as soon as the incident meets a higher level.
 - The incident lead **SHOULD** lower the severity once the incident no longer meets its level, because a sev1 response held open costs the people paged for it.
@@ -857,7 +961,9 @@ Cite as `eng:std-INCSEV.the-severity-moves-with-what-is-known`.
 
 ### The severity sets the response
 
-Cite as `eng:std-INCSEV.the-severity-sets-the-response`.
+Cite as `eng:std-INCSEV.RESPOND`.
+
+Controls: none.
 
 - A sev1 or sev2 **MUST** have a named incident lead.
 - A sev1 **MUST** page the on-call engineer as soon as it is declared.
@@ -870,11 +976,11 @@ Cite as `eng:std-INCSEV.the-severity-sets-the-response`.
 
 Status: draft.
 
-Controls: `eng:ctl-0008` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
-
 ### A unit test crosses no boundary
 
-Cite as `eng:std-NETTST.a-unit-test-crosses-no-boundary`.
+Cite as `eng:std-NETTST.UNIT`.
+
+Controls: none.
 
 - A unit test **MUST NOT** open a socket, read the filesystem, or start a container.
 - A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something.
@@ -883,7 +989,9 @@ Cite as `eng:std-NETTST.a-unit-test-crosses-no-boundary`.
 
 ### An integration test starts what it needs
 
-Cite as `eng:std-NETTST.an-integration-test-starts-what-it-needs`.
+Cite as `eng:std-NETTST.INTEG`.
+
+Controls: none.
 
 - An integration test **MUST** start the dependencies it needs.
 - An integration test **MUST NOT** share an instance of a dependency with another run.
@@ -893,7 +1001,9 @@ Cite as `eng:std-NETTST.an-integration-test-starts-what-it-needs`.
 
 ### Coverage is collected by the build
 
-Cite as `eng:std-NETTST.coverage-is-collected-by-the-build`.
+Cite as `eng:std-NETTST.COVER`.
+
+Controls: `eng:ctl-0008` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
 
 - A build **MUST** collect coverage from its test run and publish the report.
 - A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with `Microsoft.Testing.Extensions.CodeCoverage` referenced.
@@ -901,7 +1011,9 @@ Cite as `eng:std-NETTST.coverage-is-collected-by-the-build`.
 
 ### The framework and the project layout
 
-Cite as `eng:std-NETTST.the-framework-and-the-project-layout`.
+Cite as `eng:std-NETTST.LAYOUT`.
+
+Controls: none.
 
 - A repository **MUST** use one test framework across its test projects.
 - Every test project **MUST** run under `dotnet test`.
@@ -909,17 +1021,17 @@ Cite as `eng:std-NETTST.the-framework-and-the-project-layout`.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
 Status: draft.
 
-Controls: `eng:ctl-0003` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
-
 ### Everything lands in the central store
 
-Cite as `eng:std-OBS.everything-lands-in-the-central-store`.
+Cite as `eng:std-OBS.CENTRAL`.
+
+Controls: none.
 
 - A service **MUST** emit its logs, traces and metrics to the central platform.
 - A service **MUST NOT** keep the only copy of a log, so that losing the host still leaves the evidence.
@@ -927,7 +1039,9 @@ Cite as `eng:std-OBS.everything-lands-in-the-central-store`.
 
 ### One request reads as one timeline
 
-Cite as `eng:std-OBS.one-request-reads-as-one-timeline`.
+Cite as `eng:std-OBS.TRACE`.
+
+Controls: none.
 
 - A service **MUST** stamp every record with a timestamp taken from a synchronised clock, stating its offset from UTC.
 - A service **SHOULD** write that timestamp in UTC, because records from several services then sort without conversion.
@@ -938,7 +1052,9 @@ Cite as `eng:std-OBS.one-request-reads-as-one-timeline`.
 
 ### Somebody acts on every alert
 
-Cite as `eng:std-OBS.somebody-acts-on-every-alert`.
+Cite as `eng:std-OBS.ALERT`.
+
+Controls: `eng:ctl-0003` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
 
 - A service **MUST** publish availability and latency objectives.
 - A service **MUST** alert when it is on course to miss one of those objectives.
@@ -948,27 +1064,31 @@ Cite as `eng:std-OBS.somebody-acts-on-every-alert`.
 
 ### Telemetry carries no personal data
 
-Cite as `eng:std-OBS.telemetry-carries-no-personal-data`.
+Cite as `eng:std-OBS.PII`.
+
+Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/7912e0bf3bf4296cc127ccd8a8fb0d558179fbae/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/b61e5891804d5b7c99885eb005c35a0c257dc581/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
 Status: draft.
 
-Controls: `eng:ctl-0007` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
-
 ### A change arrives as a pull request
 
-Cite as `eng:std-PR.a-change-arrives-as-a-pull-request`.
+Cite as `eng:std-PR.ARRIVE`.
+
+Controls: none.
 
 - A change **MUST** arrive on the default branch as a merged pull request, not as a direct push.
 - A pull request description **MUST** link the work item that asked for the change.
 
 ### Agent-produced work says what produced it
 
-Cite as `eng:std-PR.agent-produced-work-says-what-produced-it`.
+Cite as `eng:std-PR.AGENT`.
+
+Controls: `eng:ctl-0007` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
 
 - A pull request containing agent-produced work **MUST** name the agent, the model and the prompt or task that produced it.
 - Agent-produced work **MUST** have the approval of a named person, who owns the change afterwards.
@@ -978,7 +1098,9 @@ Cite as `eng:std-PR.agent-produced-work-says-what-produced-it`.
 
 ### Somebody other than the author approves it
 
-Cite as `eng:std-PR.somebody-other-than-the-author-approves-it`.
+Cite as `eng:std-PR.APPROVE`.
+
+Controls: none.
 
 - A pull request **MUST** have at least one approval from somebody other than the author before it merges.
 - A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone.
@@ -988,25 +1110,29 @@ Cite as `eng:std-PR.somebody-other-than-the-author-approves-it`.
 
 Status: draft.
 
-Controls: `eng:ctl-0006` Nothing checks a repository for a committed secret (`not-enforced`, active).
-
 ### A secret comes from the store
 
-Cite as `eng:std-SECRET.a-secret-comes-from-the-store`.
+Cite as `eng:std-SECRET.STORE`.
+
+Controls: none.
 
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload.
 - An environment below production **MUST** have its own secrets, distinct from production's.
 
 ### Every secret rotates
 
-Cite as `eng:std-SECRET.every-secret-rotates`.
+Cite as `eng:std-SECRET.ROTATE`.
+
+Controls: none.
 
 - A secret **MUST** be replaceable in the store without a code change or a rebuild.
 - Every secret **MUST** rotate on a period recorded against it in the store.
 
 ### Nowhere else holds a secret
 
-Cite as `eng:std-SECRET.nowhere-else-holds-a-secret`.
+Cite as `eng:std-SECRET.NOWHERE`.
+
+Controls: `eng:ctl-0006` Nothing checks a repository for a committed secret (`not-enforced`, active).
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test fixture.
 - A build **MUST NOT** embed a secret in an artefact or an image.
@@ -1017,11 +1143,11 @@ Cite as `eng:std-SECRET.nowhere-else-holds-a-secret`.
 
 Status: draft.
 
-Controls: `ctl-0009` Three test layers run before a merge (`ci`, active).
-
 ### Know what the suite reaches
 
-Cite as `eng:std-TEST.know-what-the-suite-reaches`.
+Cite as `eng:std-TEST.REACH`.
+
+Controls: none.
 
 - A build **MUST** report line coverage.
 - A build **MUST** fail where coverage falls below the figure the repository records.
@@ -1029,7 +1155,9 @@ Cite as `eng:std-TEST.know-what-the-suite-reaches`.
 
 ### Pick the level from the fault
 
-Cite as `eng:std-TEST.pick-the-level-from-the-fault`.
+Cite as `eng:std-TEST.LEVEL`.
+
+Controls: `ctl-0009` Three test layers run before a merge (`ci`, active).
 
 - A team **MUST** cover a rule about one unit's behaviour with a test on that unit alone.
 - A team **MUST** cover an agreement between two components with a test that exercises both.
@@ -1040,7 +1168,9 @@ Cite as `eng:std-TEST.pick-the-level-from-the-fault`.
 
 ### The data is never a real customer's
 
-Cite as `eng:std-TEST.the-data-is-never-a-real-customers`.
+Cite as `eng:std-TEST.DATA`.
+
+Controls: none.
 
 - A test **MUST** run against generated data, or against production data that a masking step has already processed.
 - A team **MUST NOT** copy unmasked production data into a test fixture, a seed script or a local database.
@@ -1050,11 +1180,11 @@ Cite as `eng:std-TEST.the-data-is-never-a-real-customers`.
 
 Status: draft.
 
-Controls: none.
-
 ### Every change is attributable and reviewed
 
-Cite as `eng:std-VCS.every-change-is-attributable-and-reviewed`.
+Cite as `eng:std-VCS.ATTRIB`.
+
+Controls: none.
 
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
 - A commit **MUST** name the work item that asked for the change.
@@ -1064,7 +1194,9 @@ Cite as `eng:std-VCS.every-change-is-attributable-and-reviewed`.
 
 ### The repository holds everything the service needs
 
-Cite as `eng:std-VCS.the-repository-holds-everything-the-service-needs`.
+Cite as `eng:std-VCS.REPO`.
+
+Controls: none.
 
 - A repository **MUST** contain the source, the build definition, the infrastructure definition, the configuration templates and the recovery scripts for the services it owns.
 - A repository **MUST NOT** depend on an asset kept only on a workstation, in a cloud portal or in an unversioned share.
