@@ -208,10 +208,11 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     }
 
     /// <summary>
-    /// The fragment a link into a part carries. A heading's slug is its id and its anchor alike. A table row has no
-    /// fragment a renderer emits, so a link into a clause lands on the section holding the table.
+    /// The fragment a link into a part carries: a heading's slug, written whole. A table row has no fragment a renderer
+    /// emits, so a link into a clause lands on the section holding the table.
     /// </summary>
-    public string Anchor(string partId) => Source == Table ? Publishing.Anchor(Section) : partId;
+    public string Anchor(PartRow part) =>
+        Source == Table ? Publishing.Anchor(Section) : part.Anchor ?? part.Id ?? "";
 
     /// <summary>The sources an extractor exists for. <c>schema-dispatch</c> reads them from here.</summary>
     public const string Table = "table";

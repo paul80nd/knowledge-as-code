@@ -78,6 +78,9 @@ public static class ChecksTable
         ("part-none / part-empty", [new("part-none"), new("part-empty")],
             "The parts section holds at least one heading, and each has something under it.",
             t => t.Parts?.Source == PartSpec.Headings),
+        ("part-id-format", [new("part-id-format")],
+            "Each part heading opens with its id, as `### PERMS: A job declares the permission it needs`.",
+            t => t.Parts is { Source: PartSpec.Headings, IdPattern.Length: > 0 }),
         // Only where the type declares modals: a glossary has heading parts too, and no obligations.
         ("part-modal / part-nested", [new("part-modal"), new("part-nested")],
             "A part heading states its obligations as bullets, each with a declared modal in bold and no "

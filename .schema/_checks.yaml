@@ -176,8 +176,8 @@ checks:
     description: The id's discriminator has the shape the type's `id.style` declares.
     notes: >
       The record's own id, and nothing around it. A citation may open with a producer's shortcode and close with a
-      part. Each of those is spelled to suit what it points at, so a policy's clause is a mnemonic and a standard's
-      rule is a heading slug. Whether the part exists is `ref-resolves`.
+      part. Each of those is spelled to suit what it points at, so a policy's clause and a standard's rule are each a
+      mnemonic, and a glossary's term is a heading slug. Whether the part exists is `ref-resolves`.
 
   id-matches-filename:
     severity: error
@@ -291,6 +291,14 @@ checks:
       changelog entry recording a modal and a checklist item restating a rule stay out of this. A warning rather
       than an error, because the rule infers an intention from a shape and an `Examples` section may bullet the
       rule it demonstrates.
+
+  part-id-format:
+    severity: error
+    description: Where a heading source declares an `id-pattern`, each heading opens with an id matching it.
+    notes: >
+      Written `### PERMS: A job declares the permission it needs`, the id first and a colon and a space after it.
+      A heading without one cannot be cited, so this is an error at every status. The anchor stays the slug of the
+      whole heading, so a link written to it keeps working.
 
   clause-table:
     severity: error

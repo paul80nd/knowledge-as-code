@@ -668,9 +668,11 @@ public static class Validator
                     // A target of the wrong type is already reported, and has no counterpart field to answer with.
                     if (!Admits(admitted, target)) continue;
 
+                    // A part citation folds to its record, so `verifies: std-CI.PERMS` answers `verified-by` on std-CI.
                     var back = target.FrontList(spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
-                    if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
+                    if (!back.Any(b => string.Equals(Citation.Read(b).Whole, selfId,
+                            StringComparison.OrdinalIgnoreCase)))
                         f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("reciprocal"),
                             $"'{name}: {targetId}' is not reciprocated: {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
                 }

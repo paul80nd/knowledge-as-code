@@ -349,7 +349,7 @@
           }
         },
         "id-pattern": {
-          "description": "What an authored part id must match: the half after the dot, as in `pol-VURM.TIMEBOX`. Read for `source: table` only, because `kac` derives a heading's id from the heading itself.",
+          "description": "What an authored part id must match: the half after the dot, as in `pol-VURM.TIMEBOX`. Under `source: headings` each heading opens with its id, as `### PERMS: A job declares the permission it needs`. Omit it there and the id is the slug of the heading.",
           "$ref": "#/$defs/regex"
         },
         "binding": {
