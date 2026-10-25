@@ -27,10 +27,10 @@
     "Who it is for": "Anyone at the checkout. Paying needs no account, so the group is every visitor with an order to settle.",
     "Why it exists": "Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.",
     "Surfaces": "The checkout page, and the payment frame the payment service provider serves inside it.",
-    "Where the detail lives": "* **Implemented by**: [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/payments/services/payment-api.md), [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/payments/services/payment-ledger.md)\n* **Specified in**: [gh#2101](https://git.example.com/example-payments/payment-api/issues/2101), [gh#2140](https://git.example.com/example-payments/payment-api/issues/2140)\n* **Constrained by**: [nfr-0001](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/payments/nfrs/0001-authorisation-latency.md)",
-    "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/payments/nfrs/0001-authorisation-latency.md) does not cover that wait."
+    "Where the detail lives": "* **Implemented by**: [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/payments/services/payment-api.md), [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/payments/services/payment-ledger.md)\n* **Specified in**: [gh#2101](https://git.example.com/example-payments/payment-api/issues/2101), [gh#2140](https://git.example.com/example-payments/payment-api/issues/2140)\n* **Constrained by**: [nfr-0001](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/payments/nfrs/0001-authorisation-latency.md)",
+    "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/payments/nfrs/0001-authorisation-latency.md) does not cover that wait."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/payments/offerings/card-payment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/payments/offerings/card-payment.md"
   }
 }

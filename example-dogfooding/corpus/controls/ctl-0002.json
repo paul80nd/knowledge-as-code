@@ -23,11 +23,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/standards/workflows.md#the-gate-runs-on-every-pull-request-into-main) says `kac.yml` \"**MUST** name every one of its jobs in the\n  `needs:` of its `validate` job\".",
+    "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/standards/workflows.md#the-gate-runs-on-every-pull-request-into-main) says `kac.yml` \"**MUST** name every one of its jobs in the\n  `needs:` of its `validate` job\".",
     "How it works": "`WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It compares that set against `validate`'s `needs:` plus `validate` itself. The `tool` job runs it under `dotnet test --project tooling/kac.tests`.\n\nComparing sets catches two faults. A job added with no line in `needs:` fails. A `needs:` entry listing a job the file no longer declares fails as well.",
-    "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. The publishing workflows gate nothing, so a job outside `validate`'s `needs:` is a fault only `kac.yml` can have.\n\nThe branch rule sits outside the repository. [ctl-0001](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/controls/0001-merge-gate.md) covers whether it still names `validate`."
+    "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. The publishing workflows gate nothing, so a job outside `validate`'s `needs:` is a fault only `kac.yml` can have.\n\nThe branch rule sits outside the repository. [ctl-0001](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/controls/0001-merge-gate.md) covers whether it still names `validate`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
   }
 }

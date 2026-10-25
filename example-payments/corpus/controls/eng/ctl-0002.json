@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-DEPLOY.the-artefact-is-built-once](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/standards/common/deployment.md#the-artefact-is-built-once) says an artefact \"**MUST** record the commit it was built from, so a running\n  version identifies the change it came from\".",
+    "What it checks": "* [std-DEPLOY.the-artefact-is-built-once](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/engineering/standards/common/deployment.md#the-artefact-is-built-once) says an artefact \"**MUST** record the commit it was built from, so a running\n  version identifies the change it came from\".",
     "How it works": "Nothing runs. The check this rule needs is a step at the end of each deployment. It requests the service's health endpoint and compares the commit it reports with the commit the pipeline built:\n\n```sh\ntest \"$(curl -fsS \"$SERVICE_URL/health\" | jq -r .commit)\" = \"$BUILD_COMMIT\"\n```\n\nThe step fails the deployment where the two differ, or where the endpoint reports no commit. It runs per deployment. A pre-commit check or a Claude Code hook sees only the source, and cannot tell what a running service reports.",
-    "Coverage and gaps": "A reviewer reading the health handler is the only thing that notices a missing commit today.\n\nThe standard names no endpoint and no field, so the check assumes `/health` and `commit`. The other rules under [std-DEPLOY.the-artefact-is-built-once](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/standards/common/deployment.md#the-artefact-is-built-once) go unchecked:\n\n* the pipeline builds once and promotes that build\n* the deployment record names the artefact, the change and the approval\n* nothing deploys an artefact built outside the pipeline"
+    "Coverage and gaps": "A reviewer reading the health handler is the only thing that notices a missing commit today.\n\nThe standard names no endpoint and no field, so the check assumes `/health` and `commit`. The other rules under [std-DEPLOY.the-artefact-is-built-once](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/engineering/standards/common/deployment.md#the-artefact-is-built-once) go unchecked:\n\n* the pipeline builds once and promotes that build\n* the deployment record names the artefact, the change and the approval\n* nothing deploys an artefact built outside the pipeline"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/controls/0002-health-reports-commit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/engineering/controls/0002-health-reports-commit.md"
   }
 }

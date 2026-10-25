@@ -10,11 +10,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/frameworks.md#wcag). We design it that way from the start.",
+    "Purpose": "The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/engineering/frameworks.md#wcag). We design it that way from the start.",
     "Scope": "All user-facing applications and interfaces we build, and the documents they produce: an exported report, a generated invoice, an email a service sends. Internal tools meet the same standard, because we do not know which of the people using them needs it.",
     "Exceptions": "A third-party component we cannot replace may fall short of the target standard. We record the gap, we provide an equivalent route to the same outcome where one exists, and the accessibility statement says so. Recording a gap honestly is acceptable; concealing it is not."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/policies/governance/a11y-accessibility.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/engineering/policies/governance/a11y-accessibility.md"
   }
 }

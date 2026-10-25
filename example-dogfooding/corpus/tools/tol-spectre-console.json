@@ -23,7 +23,9 @@
     "decided-on": "2026-08-21",
     "review-by": "2027-08-21",
     "decided-in": null,
-    "replaces": "tol-system-commandline",
+    "replaces": [
+      "tol-system-commandline"
+    ],
     "successor": null,
     "tags": [
       "cli",
@@ -33,11 +35,11 @@
   },
   "sections": {
     "What we use it for": "`Program.cs` wires `Spectre.Console.Cli` to each verb, and every option and exit code is declared there. `kac.core` references `Spectre.Console`, and its reporters build what a run prints.\n\nOne library now reads the command line and asks a question. `System.CommandLine` read the command line and `Spectre.Console` asked the question, so the parser moved here in 0.2.1. Taken from the entry for that version in `tooling/kac/CHANGELOG.md`.",
-    "Accessibility": "Assessed at Spectre.Console 0.57.2 and Spectre.Console.Cli 0.57.2, by reading every call that colours or prompts. [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/) covers content a browser renders and applies to no terminal. [std-A11Y](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/standards/accessibility.md) states the rules for the terminal, and this assessment checks `kac` against them.\n\nNothing the tool prints conveys meaning through colour alone. `Commands.Severity` pairs every severity with the word `error`, `warning` or `info`. `Tag` and `Tally` print the word beside the colour. `--no-color` calls `Out.NoColor`, which drops both consoles to `ColorSystem.NoColors`, and Spectre does the same for `NO_COLOR` in the environment. Findings are laid out in a `Grid`, so no box-drawing character separates one column from the next. `--json` writes straight to the stream and never through a renderer. `--yes` answers every prompt `ConsoleAsker` draws. Each question `new` asks has a flag that supplies its answer, except the address the corpus is browsed at, which `--yes` derives from the git remote. `Asking.Asks` returns false where there is no terminal, so an unattended run finishes without waiting.\n\nTwo things fall short. `SelectionPrompt` and `MultiSelectionPrompt` redraw the whole list on each keystroke, which a screen reader may announce in full every time. `--yes` and the per-answer flags avoid both prompts. `Md.Snippet` truncates a long value with a Unicode ellipsis, and nothing substitutes an ASCII form where the terminal reports no Unicode support.",
+    "Accessibility": "Assessed at Spectre.Console 0.57.2 and Spectre.Console.Cli 0.57.2, by reading every call that colours or prompts. [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/) covers content a browser renders and applies to no terminal. [std-A11Y](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/standards/accessibility.md) states the rules for the terminal, and this assessment checks `kac` against them.\n\nNothing the tool prints conveys meaning through colour alone. `Commands.Severity` pairs every severity with the word `error`, `warning` or `info`. `Tag` and `Tally` print the word beside the colour. `--no-color` calls `Out.NoColor`, which drops both consoles to `ColorSystem.NoColors`, and Spectre does the same for `NO_COLOR` in the environment. Findings are laid out in a `Grid`, so no box-drawing character separates one column from the next. `--json` writes straight to the stream and never through a renderer. `--yes` answers every prompt `ConsoleAsker` draws. Each question `new` asks has a flag that supplies its answer, except the address the corpus is browsed at, which `--yes` derives from the git remote. `Asking.Asks` returns false where there is no terminal, so an unattended run finishes without waiting.\n\nTwo things fall short. `SelectionPrompt` and `MultiSelectionPrompt` redraw the whole list on each keystroke, which a screen reader may announce in full every time. `--yes` and the per-answer flags avoid both prompts. `Md.Snippet` truncates a long value with a Unicode ellipsis, and nothing substitutes an ASCII form where the terminal reports no Unicode support.",
     "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
-    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/services/kac.md) uses both packages."
+    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/services/kac.md) uses both packages."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/tools/build/spectre-console.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b57eb9eed273437f83f683bd6e18864d2b6b3372/examples/dog-fooding/tools/build/spectre-console.md"
   }
 }
