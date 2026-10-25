@@ -53,6 +53,9 @@ own `CLAUDE.md` names the producer to `export` and `pack` first.
 
 Where a change reaches what `bundle` writes, run
 [Check the plugin](docs/maintaining/build-test-release.md#check-the-plugin) in each corpus whose plugin it reaches.
+Where it changes what an export publishes, such as a part's key, an anchor or a field a skill reads, also run the
+[round-trip scripts](docs/maintaining/build-test-release.md#the-round-trip-scripts). `round-trip.sh` fetches from
+GitHub at the commit it builds from, so push first.
 
 Where `kac` or a test changed, run the unit, feature and golden
 [test layers](docs/maintaining/build-test-release.md#the-three-test-layers). Each asserts something the others do not,
