@@ -28,15 +28,14 @@ Name the file for the context, in kebab case.
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.
 
-**A glossary every corpus shares names a type and cites no record.** An owning service and a record citation are this
-corpus's, and a corpus that took the file has neither. Leave both out of an entry meant to travel upstream.
+**A glossary every corpus shares names a type and cites no record.** A record citation is this corpus's, and a corpus
+that took the file has none. Leave it out of an entry meant to travel upstream.
 
 **The term.** Write it as an H3, singular and in its canonical casing, in alphabetical position. The anchor is the
 term's identifier, and a term has no numeric id.
 
 **The definition.** Write one paragraph, usually one or two sentences. Name the class the thing belongs to, then what
-sets it apart within that class. Where it needs more, link an explanation for the rest. Name the owning service where
-the concept has one.
+sets it apart within that class. Where it needs more, link an explanation for the rest.
 
 **Follow these drafting rules yourself, because nothing runs them.** They come from [ISO/IEC Directives, Part
 2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5.
@@ -86,9 +85,7 @@ A one-paragraph definition of what the word means in this context.
 **Not:** the neighbouring term it is most often confused with, and the difference in a few words. See
 [gls-{{b}}.{{term}}].
 
-Owned by [svc-{{a}}].
 See [adr-{{a}}].
 
 [adr-{{a}}]: ../adrs/{{a}}.md
 [gls-{{b}}.{{term}}]: {{b}}.md#{{term}}
-[svc-{{a}}]: ../services/{{a}}.md

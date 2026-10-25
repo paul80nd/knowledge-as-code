@@ -50,8 +50,6 @@ The bibliographic description of a title (author, edition, subject headings), st
 **Not:** a knowledge record in this repository, which is a document filed under a type. See
 [gls-knowledge-as-code.record].
 
-Owned by [svc-catalogue-api].
-
 ### Title
 
 A work the consortium has catalogued. The copies of it on the shelves are items.
@@ -60,8 +58,5 @@ A work the consortium has catalogued. The copies of it on the shelves are items.
 
 **Not:** the indexed field of the same name. See [gls-search.title].
 
-Owned by [svc-catalogue-api].
-
 [gls-knowledge-as-code.record]: knowledge-as-code.md#record
 [gls-search.title]: search.md#title
-[svc-catalogue-api]: ../services/catalogue-api.md

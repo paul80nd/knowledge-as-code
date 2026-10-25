@@ -51,7 +51,6 @@ A one-sentence definition of what the word means in this context.
 
 **Not:** the neighbouring term it is most often confused with, and the difference in a few words.
 
-Owned by [svc-{{a}}]. See [adr-{{a}}].
+See [adr-{{a}}].
 
 [adr-{{a}}]: /adrs/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
