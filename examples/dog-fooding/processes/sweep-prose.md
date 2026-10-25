@@ -69,9 +69,9 @@ file half-swept to two sets of rules reads worse than the one you started with.
 ## Related
 
 * [std-PROSE] states the rules a sweep applies.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what step 8 requires of you.
+* [std-CONFIG.COPIES] states what step 8 requires of you.
 * [prc-pull-request] merges the sweep.
 
 [prc-pull-request]: pull-request.md
-[std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved
 [std-PROSE]: ../standards/prose.md

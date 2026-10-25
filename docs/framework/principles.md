@@ -180,5 +180,5 @@ The validator fails a one-sided link because it can see both ends of it, and an 
 is a single place the record could be. A session clones the repository and has the whole graph, with nobody to ask for
 the rest of it. [One corpus or several](../use/one-corpus-or-several.md) says when to split.
 
-[std-plugin]: https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/plugin.md#a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives
+[std-plugin]: https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/plugin.md#reason-a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives
 [wfa]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents

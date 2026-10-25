@@ -65,9 +65,14 @@ reaches a rule written there. Where a bullet names a keyword rather than using o
 modal that moved does, write the keyword in backticks.
 
 Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. A reader hunting one
-rule finds the heading before the bullet. A citation and an export both use the heading as the address, as
-`std-SECRET.every-secret-rotates`. A standard with a single group writes one heading. `part-none` reports a Rules
-section with none.
+rule finds the heading before the bullet. A standard with a single group writes one heading. `part-none` reports a
+Rules section with none.
+
+**Rule ids.** Open each heading with its id, a colon and a space: `### ROTATE: Every secret rotates`. The id matches
+`[A-Z][A-Z0-9]{1,6}`, is unique within the standard, and is immutable once the standard is active. A control's
+`verifies` and any other record cite the rule as `std-{{MNEM}}.{{ID}}`, and a link lands on the slug of the whole
+heading, as `#rotate-every-secret-rotates`. `part-id-format` reports a heading with no id. Draw the id from the heading,
+so a reader meeting `std-SECRET.ROTATE` in a CI failure can guess the rule.
 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.
@@ -110,7 +115,7 @@ The rule in a single scannable sentence: what a reader needs to take away in one
 The normative content, and the only section carrying any. Write each rule as a bullet, and give it one [BCP
 14](https://www.rfc-editor.org/rfc/rfc8174) keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**.
 
-### {{What the rules below hold a reader to}}
+### {{ID}}: {{What the rules below hold a reader to}}
 
 - Services **MUST** {{the outcome}}, because {{the reason, where it is not obvious}}.
 - Responses **SHOULD** {{the usual way}}.

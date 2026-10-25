@@ -21,7 +21,7 @@ The specific half, two folders deep. One topic, two altitudes, and the same file
 
 ## Rules
 
-### A clean record reports nothing
+### CLEAN: A clean record reports nothing
 
 - A record here **MUST** stay free of findings, so the golden pins a clean corpus and nothing else.
 

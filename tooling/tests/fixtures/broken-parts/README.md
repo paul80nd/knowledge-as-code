@@ -10,7 +10,8 @@ the golden has one finding, or one per instance of its fault.
 * **A heading**, in `glossary/`. Two terms that slug to one address, a term with nothing under it, and a `## Terms`
   section with no term in it, for `part-id-unique`, `part-empty` and `part-none`.
 * **A bullet rule**, in `standards/`. A rule with no modal, a modal written plain, a heading with no bullet under it,
-  and a list nested inside a rule, for `part-modal` and `part-nested`.
+  and a list nested inside a rule, for `part-modal` and `part-nested`. A rule heading opening with no id, for
+  `part-id-format`.
 
 Both the table and the heading sources reach `part-id-unique`. `part-ref` fires five ways: a citation of a document
 that does not exist, of a clause or a term its document does not have, one written as a part id beside a link, and one

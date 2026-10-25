@@ -3,7 +3,7 @@ id: ctl-0008
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES, std-PLUGIN ]
+verifies: [ eng:std-GATES.BUILD, std-PLUGIN.DECLARE, std-PLUGIN.TYPES ]
 mechanism: ci
 frequency: per-pr
 evidence: The `corpora`, `round-trip` and `import-round-trip` job logs on the pull request.
@@ -22,11 +22,11 @@ A corpus that validates can still export a package nobody can install.
 
 ## What it checks
 
-* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push "**MUST** trigger a build and the test
+* `eng:std-GATES.BUILD` says a push "**MUST** trigger a build and the test
   suite, without anyone asking for it".
-* `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes` says a skill "**MUST** name the parts file of the
+* `std-PLUGIN.TYPES` says a skill "**MUST** name the parts file of the
   type its component declares, and no other type's".
-* `std-PLUGIN.pluginjson-declares-every-component-and-the-types-it-reads` says every skill directory and hook directory
+* `std-PLUGIN.DECLARE` says every skill directory and hook directory
   in the plugin tree "**MUST** appear under `metadata.components`".
 
 ## How it works

@@ -3,7 +3,7 @@ id: ctl-0015
 type: control
 tier: normative
 status: active
-verifies: [ std-CI, std-CONFIG ]
+verifies: [ std-CI.PERMS, std-CI.PERSIST, std-CI.PINNED, std-CONFIG.PIN ]
 mechanism: ci
 frequency: per-pr
 evidence: The `lint` job's log, under the step "Check the workflows and dependabot.yml for insecure patterns".
@@ -23,15 +23,15 @@ Dependabot waits before it proposes a release.
 
 ## What it checks
 
-* [std-CI.every-action-is-pinned-to-a-commit] says a step "**MUST** pin its action to a commit SHA". zizmor's
+* [std-CI.PINNED] says a step "**MUST** pin its action to a commit SHA". zizmor's
   `unpinned-uses` audit fails a `uses:` naming a tag or a branch. Its `impostor-commit` audit fails a commit that is not
   in the action's own repository.
-* [std-CI.a-checkout-leaves-no-credential-behind] says a checkout "**MUST** set `persist-credentials: false`". zizmor's
+* [std-CI.PERSIST] says a checkout "**MUST** set `persist-credentials: false`". zizmor's
   `artipacked` audit fails a checkout that leaves the setting out.
-* [std-CI.a-job-declares-the-permission-it-needs] says "A workflow **MUST** declare `permissions: contents: read` at
+* [std-CI.PERMS] says "A workflow **MUST** declare `permissions: contents: read` at
   its top level". zizmor's `excessive-permissions` audit fails a workflow with no `permissions:` block, and one granting
   a write permission at its top level.
-* [std-CONFIG.a-pin-names-an-exact-version] says each ecosystem "**MUST** wait seven days before it proposes a
+* [std-CONFIG.PIN] says each ecosystem "**MUST** wait seven days before it proposes a
   release". zizmor's `dependabot-cooldown` audit fails an ecosystem in a `dependabot.yml` whose `cooldown:` sets fewer
   than seven days, or none.
 
@@ -48,7 +48,7 @@ A finding a workflow keeps on purpose takes an inline `# zizmor: ignore[...]` co
 gives the reason. These audits are suppressed that way:
 
 * `adhoc-packages`, on each step installing the Claude Code CLI at `latest`.
-  [std-CI.every-action-is-pinned-to-a-commit] allows a tool at `latest` in a job with `contents: read`, and each of
+  [std-CI.PINNED] allows a tool at `latest` in a job with `contents: read`, and each of
   those jobs has only that.
 * `use-trusted-publishing`, on the push to GitHub Packages in `publish-corpus.yml`. GitHub Packages offers no trusted
   publishing, and that push takes `github.token`.
@@ -67,14 +67,14 @@ It reports nothing about these rules of [std-CI]:
 * a secret printed to the log
 * a write permission declared on more than one job
 
-It does not check that "A security update **MUST NOT** wait", in [std-CONFIG.a-pin-names-an-exact-version].
+It does not check that "A security update **MUST NOT** wait", in [std-CONFIG.PIN].
 Dependabot applies a cooldown to version updates alone, and no `dependabot.yml` key can make a security update wait.
 
 zizmor also reports a template expansion an attacker can write, and a trigger such as `pull_request_target`. No rule of
 [std-CI] states either one, and the workflows here have neither.
 
 [std-CI]: ../standards/workflows.md
-[std-CI.a-checkout-leaves-no-credential-behind]: ../standards/workflows.md#a-checkout-leaves-no-credential-behind
-[std-CI.a-job-declares-the-permission-it-needs]: ../standards/workflows.md#a-job-declares-the-permission-it-needs
-[std-CI.every-action-is-pinned-to-a-commit]: ../standards/workflows.md#every-action-is-pinned-to-a-commit
-[std-CONFIG.a-pin-names-an-exact-version]: ../standards/configuration.md#a-pin-names-an-exact-version
+[std-CI.PERSIST]: ../standards/workflows.md#persist-a-checkout-leaves-no-credential-behind
+[std-CI.PERMS]: ../standards/workflows.md#perms-a-job-declares-the-permission-it-needs
+[std-CI.PINNED]: ../standards/workflows.md#pinned-every-action-is-pinned-to-a-commit
+[std-CONFIG.PIN]: ../standards/configuration.md#pin-a-pin-names-an-exact-version

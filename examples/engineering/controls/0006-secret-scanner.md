@@ -3,7 +3,7 @@ id: ctl-0006
 type: control
 tier: normative
 status: active
-verifies: [ std-SECRET ]
+verifies: [ std-SECRET.NOWHERE ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No secret scanner runs over a repository or its history.
 
 ## What it checks
 
-* [std-SECRET.nowhere-else-holds-a-secret] says a pipeline "**MUST** run a secret scanner over the repository and its
+* [std-SECRET.NOWHERE] says a pipeline "**MUST** run a secret scanner over the repository and its
   history, and fail on a finding".
 * It says a repository "**MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or
   in a test fixture".
@@ -43,4 +43,4 @@ gitleaks finds a secret that matches one of its patterns, so a credential in an 
 job in the pipeline definition a team edits can be removed in the same change. It proves the rule only where branch
 policy requires it as a check the team cannot remove. The rules about images, logs and support tickets go unchecked.
 
-[std-SECRET.nowhere-else-holds-a-secret]: ../standards/common/secret-handling.md#nowhere-else-holds-a-secret
+[std-SECRET.NOWHERE]: ../standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret

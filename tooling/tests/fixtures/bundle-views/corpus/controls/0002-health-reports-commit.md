@@ -3,7 +3,7 @@ id: ctl-0002
 type: control
 tier: normative
 status: active
-verifies: [ std-DEPLOY ]
+verifies: [ std-DEPLOY.COMMIT ]
 mechanism: not-enforced
 review-by: "2031-08-05"
 owner: human:alex.doe
@@ -15,7 +15,7 @@ owner: human:alex.doe
 
 ## What it checks
 
-* [std-DEPLOY] says an artefact **MUST** record the commit it was built from.
+* [std-DEPLOY.COMMIT] says an artefact **MUST** record the commit it was built from.
 
 ## How it works
 

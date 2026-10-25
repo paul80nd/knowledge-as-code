@@ -23,7 +23,7 @@ name and address stay out of every log, trace and error report.
 
 ## Rules
 
-### What a log line may carry
+### FIELDS: What a log line may carry
 
 - A log line **MUST** identify a payment by its order reference, its PSP reference, or both.
 - A log line **MUST NOT** include a card token, in a message, a property or a structured field.
@@ -31,7 +31,7 @@ name and address stay out of every log, trace and error report.
 
 _**Covers:** `eng:pol-DATA.MASK`, `eng:pol-SCRT.LOGS`_
 
-### The redaction runs before the sink
+### REDACT: The redaction runs before the sink
 
 - A service **SHOULD** redact against a list of field names kept in code and covered by a test, rather than against a
   pattern applied where the log is read.
@@ -41,7 +41,7 @@ _**Covers:** `eng:pol-DATA.MASK`, `eng:pol-SCRT.LOGS`_
 
 _**Covers:** `eng:pol-DATA.MASK`, `eng:pol-SCRT.LOGS`_
 
-### A PSP key is a secret and behaves like one
+### KEY: A PSP key is a secret and behaves like one
 
 - A service **MUST** read the PSP's secret key from the managed store at start-up, through the identity granted to that
   workload.

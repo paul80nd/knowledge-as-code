@@ -28,7 +28,7 @@ repository takes a producer's move in the same pull request.
 
 ## Rules
 
-### A stamp is a semantic version, a count, or a range
+### FORMS: A stamp is a semantic version, a count, or a range
 
 - `content-version` in a corpus's `.corpus.yaml` and `<Version>` in `tooling/kac/kac.csproj` **MUST** be written and
   read under [Semantic Versioning 2.0.0].
@@ -43,7 +43,7 @@ repository takes a producer's move in the same pull request.
 
 _**Covers:** `eng:pol-KNOW.DOCS`_
 
-### What a move of each stamp means
+### MEANING: What a move of each stamp means
 
 - `content-version` **MUST** be read as a statement about what the corpus publishes rather than about the file.
 - What a corpus publishes **MUST** be read as its export, and never as the repository its records are readable in.
@@ -73,7 +73,7 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 
 _**Covers:** `eng:pol-KNOW.DOCS`_
 
-### A reader meeting a stamp it does not know stops
+### UNKNOWN: A reader meeting a stamp it does not know stops
 
 - `kac bundle` **MUST** refuse an export whose `formatVersion` is not the one that build reads.
 - `kac bundle` **MUST** leave out a component whose type the export includes at a `shapeVersion` the component did
@@ -84,7 +84,7 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 
 _**Covers:** `eng:pol-KNOW.DOCS`_
 
-### A producer's move obliges every consumer in the same pull request
+### CONSUME: A producer's move obliges every consumer in the same pull request
 
 - A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in the pull request moving the
   producer's `content-version`.
@@ -101,7 +101,7 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 
 _**Covers:** `eng:pol-KNOW.SYNC`_
 
-### Which stamps move together, and which move alone
+### TANDEM: Which stamps move together, and which move alone
 
 - `content-version`, the `resolved:` lock of every consumer of that corpus, and each of those consumers' own
   `content-version` **MUST** move in one pull request.
@@ -115,7 +115,7 @@ _**Covers:** `eng:pol-KNOW.SYNC`_
 
 _**Covers:** `eng:pol-KNOW.SYNC`_
 
-### A published version is never replaced
+### FINAL: A published version is never replaced
 
 - A published `<Version>` or `content-version` **MUST NOT** be pushed again, replaced or deleted.
 - A correction **MUST** ship as a new version.

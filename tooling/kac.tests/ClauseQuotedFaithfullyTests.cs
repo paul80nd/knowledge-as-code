@@ -8,7 +8,7 @@ public class ClauseQuotedFaithfullyTests
     public void A_quotation_the_clause_still_uses_is_left_alone()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the "
+            "* [std-ERRORS.WHAT] says a failure \"**MUST** be answered with the "
             + "status code that describes it\"."));
 
     [Fact]
@@ -16,12 +16,12 @@ public class ClauseQuotedFaithfullyTests
     {
         var found = Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with a `404`\"."));
+            "* [std-ERRORS.WHAT] says a failure \"**MUST** be answered with a `404`\"."));
 
         Assert.Equal("clause-quoted-faithfully", found.Check.Value);
         Assert.Equal(Sev.Error, found.Severity);
         Assert.Equal(
-            "'std-ERRORS.a-failure-says-what-happened' does not say \"**MUST** be answered with a `404`\". "
+            "'std-ERRORS.WHAT' does not say \"**MUST** be answered with a `404`\". "
             + "Re-read the clause in standards/error-responses.md and quote it word for word, or cite the "
             + "clause that says this.",
             found.Message);
@@ -31,14 +31,14 @@ public class ClauseQuotedFaithfullyTests
     public void A_quotation_wrapped_onto_the_next_line_is_read_whole()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the\n"
+            "* [std-ERRORS.WHAT] says a failure \"**MUST** be answered with the\n"
             + "  status code that describes it\"."));
 
     [Fact]
     public void A_clause_wrapped_onto_the_next_line_is_read_whole()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code\n  that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the "
+            "* [std-ERRORS.WHAT] says a failure \"**MUST** be answered with the "
             + "status code that describes it\"."));
 
     [Fact]
@@ -46,65 +46,65 @@ public class ClauseQuotedFaithfullyTests
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.\n"
             + "- A body **MUST** say what the caller can do next.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a body \"**MUST** say what the caller can do next\"."));
+            "* [std-ERRORS.WHAT] says a body \"**MUST** say what the caller can do next\"."));
 
     [Fact]
     public void A_quotation_of_the_heading_itself_is_read()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] is titled \"A failure says what happened\"."));
+            "* [std-ERRORS.WHAT] is titled \"A failure says what happened\"."));
 
     [Fact]
     public void A_quotation_taken_from_the_next_clause_is_reported()
         => Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.\n\n"
-            + "### A body is machine-readable\n\n- A body **MUST** be JSON.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a body \"**MUST** be JSON\"."));
+            + "### BODY: A body is machine-readable\n\n- A body **MUST** be JSON.",
+            "* [std-ERRORS.WHAT] says a body \"**MUST** be JSON\"."));
 
     [Fact]
     public void A_quoted_span_on_a_line_carrying_no_citation_is_left_alone()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
             "The proof is the `tool` job's log, under the step \"Run kac.core unit tests\".\n\n"
-            + "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the "
+            + "* [std-ERRORS.WHAT] says a failure \"**MUST** be answered with the "
             + "status code that describes it\"."));
 
     [Fact]
     public void A_quotation_beside_a_citation_written_as_a_code_span_is_read()
         => Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* `std-ERRORS.a-failure-says-what-happened` says a failure \"**MUST** be answered with a `404`\"."));
+            "* `std-ERRORS.WHAT` says a failure \"**MUST** be answered with a `404`\"."));
 
     [Fact]
     public void A_quotation_of_an_imported_clause_is_skipped()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* `eng:std-ERRORS.a-failure-says-what-happened` says a failure \"**MUST** be answered with a `404`\"."));
+            "* `eng:std-ERRORS.WHAT` says a failure \"**MUST** be answered with a `404`\"."));
 
     [Fact]
     public void A_citation_of_a_record_this_corpus_does_not_have_is_skipped()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* `std-MISSING.a-failure-says-what-happened` says a failure \"**MUST** be answered with a `404`\"."));
+            "* `std-MISSING.WHAT` says a failure \"**MUST** be answered with a `404`\"."));
 
     [Fact]
     public void A_citation_of_a_part_the_record_does_not_have_is_skipped()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* `std-ERRORS.a-body-is-machine-readable` says a failure \"**MUST** be answered with a `404`\"."));
+            "* `std-ERRORS.BODY` says a failure \"**MUST** be answered with a `404`\"."));
 
     [Fact]
     public void A_quotation_that_differs_only_in_case_is_reported()
         => Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**must** be answered with the "
+            "* [std-ERRORS.WHAT] says a failure \"**must** be answered with the "
             + "status code that describes it\"."));
 
     [Fact]
     public void Each_quotation_on_one_line_is_read_separately()
         => Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
-            "* [std-ERRORS.a-failure-says-what-happened] says \"A failure\" and \"is answered with a `404`\"."));
+            "* [std-ERRORS.WHAT] says \"A failure\" and \"is answered with a `404`\"."));
 
     [Fact]
     public void A_clause_written_as_a_table_row_is_read_as_it_was_written()
@@ -123,7 +123,7 @@ public class ClauseQuotedFaithfullyTests
         "standards/error-responses.md",
         "---\nid: std-ERRORS\ntype: standard\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
         + "# Error responses\n\n`Standard: std-ERRORS` `ACTIVE`\n\n## Rules\n\n"
-        + $"### A failure says what happened\n\n{clause}\n",
+        + $"### WHAT: A failure says what happened\n\n{clause}\n",
         "std-ERRORS", control);
 
     /// <summary>The policy's parts are table rows, so the clause is the row the citation names.</summary>
@@ -145,8 +145,8 @@ public class ClauseQuotedFaithfullyTests
         var body = "---\nid: ctl-0001\ntype: control\ntier: normative\nstatus: active\n"
                    + "owner: human:alex.doe\n---\n\n# A merge waits for the validate job\n\n"
                    + $"`Control: ctl-0001` `ACTIVE`\n\n## What it checks\n\n{control}\n\n"
-                   + "[std-ERRORS.a-failure-says-what-happened]: "
-                   + "../standards/error-responses.md#a-failure-says-what-happened\n"
+                   + "[std-ERRORS.WHAT]: "
+                   + "../standards/error-responses.md#what-a-failure-says-what-happened\n"
                    + "[pol-SCRT.STORE]: ../policies/secrets.md#store\n";
 
         var doc = Doc.Parse("controls/0001-merge-gate.md", body, Types);
@@ -175,7 +175,7 @@ public class ClauseQuotedFaithfullyTests
             {
                 Key = "standards",
                 IdPrefix = "std",
-                Parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Rules", Level = 3 }
+                Parts = new PartSpec(PartSpec.Headings, "^[A-Z][A-Z0-9]{1,6}$", [], []) { Section = "Rules", Level = 3 }
             },
             ["policies"] = new()
             {

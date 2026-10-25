@@ -119,10 +119,12 @@ that edge from the framework's end, with the standing beside it.
 A standard is the rulebook you build to. It puts a policy's clauses into practice as imperative rules, with examples
 and a conformance checklist.
 
-`Rules` has one heading per rule, and `kac validate` requires a bold modal on every bullet beneath it. `Summary` says
-what the rules govern, because a rule read without it binds more than the standard does. `Conformance checklist` tests
-what the rules require, and nothing else. `Examples` shows them against one stack, and `Rationale and provenance` says
-why each rule exists.
+`Rules` has one heading per rule, and `kac validate` requires a bold modal on every bullet beneath it. Each heading
+opens with the rule's id, as `### PERMS: A job declares the permission it needs`, and a citation names the rule as
+`std-CI.PERMS`. The id survives a reworded heading, where a slug would not, and a link still lands on the slug of the
+whole heading. `Summary` says what the rules govern, because a rule read without it binds more than the standard does.
+`Conformance checklist` tests what the rules require, and nothing else. `Examples` shows them against one stack, and
+`Rationale and provenance` says why each rule exists.
 
 **A rule states MUST, SHOULD or MAY, as BCP 14 does.** A MUST is the outcome the standard's owner answers for, and
 departing from it takes a deviation. A SHOULD is the usual way to reach it, and whoever departs from it says why in the
@@ -142,9 +144,9 @@ clause writes it as `[pol-INTC].HOLDS`, and that link ends at the policy.
 `common/testing.md`, and the two sit in different folders. A reader follows `depends-on` to know which further standards
 they have to apply. `superseded-by` sends a reader arriving from an old citation to the standard that replaced this one.
 
-**In the export:** each rule travels as its heading and one entry per bullet, giving the bullet's `level` and its text
-in your Markdown, beside `Summary`, `Conformance checklist` and `implements`. `Examples` and `Rationale and provenance`
-stay behind.
+**In the export:** each rule travels as its id, its heading without the id, and one entry per bullet, giving the
+bullet's `level` and its text in your Markdown, beside `Summary`, `Conformance checklist` and `implements`. `Examples`
+and `Rationale and provenance` stay behind.
 
 ### controls
 
@@ -165,11 +167,14 @@ Three more fields date and place the check:
 * `review-by` says when somebody reads the record against the check it describes, which is a different question from how
   often that check runs.
 
-`verifies` points at a whole standard or one rule inside it, and you read the value to tell which. Where a control names
-the record, it vouches for that whole document whatever it checks inside it.
+**`verifies` names the rules a control checks**, each as `std-CI.PERMS`, and never a standard whole. A control checking
+every rule of a standard lists every rule, so a coverage report can say which rule each control proves. The standard's
+`verified-by` names the control once, however many of its rules the control cites, because `reciprocal` folds a rule id
+to its standard.
 
 **In the export:** the fields and the three required sections travel, `not-enforced` controls included, because
-withholding them would publish a coverage figure this corpus cannot show.
+withholding them would publish a coverage figure this corpus cannot show. `verifies` travels as rule ids, as
+`std-CI.PERMS`, which a reader of the shape before it would have read as standard ids.
 
 ### deviations
 

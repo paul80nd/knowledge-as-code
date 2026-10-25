@@ -21,7 +21,7 @@ The general half of a rule that is written at two altitudes. Its filename repeat
 
 ## Rules
 
-### A clean record reports nothing
+### CLEAN: A clean record reports nothing
 
 - A record here **MUST** stay free of findings, so the golden pins a clean corpus and nothing else.
 

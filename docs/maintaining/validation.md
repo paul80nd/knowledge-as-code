@@ -31,7 +31,7 @@ full statement of each one.
 * It checks a field mirroring a section, or the lines carrying a label, agrees with that section or those lines.
   [Referring to an id](../framework/metadata.md#referring-to-an-id)
 * It checks the parts a type keeps: a clause table's shape, ids and modals, a term's heading and the words under it,
-  and a rule's bullets. [Referring to an id](../framework/metadata.md#referring-to-an-id)
+  and a rule's id and bullets. [Referring to an id](../framework/metadata.md#referring-to-an-id)
 * It holds each citation of a part to the part it names, in a code span, a link, or beside a link.
   [Referring to an id](../framework/metadata.md#referring-to-an-id)
 * It reports one fault once, under the check that owns it.
@@ -124,6 +124,7 @@ full statement of each one.
 * A term declared by a heading is held to carrying something under it
 * Every bullet under a rule heading is held to a modal in bold capitals
 * A list written inside a rule's bullet is refused
+* A rule heading opening with no id is refused
 * A parts section holding no headings is told what belongs there
 * The whole corpus produces exactly these findings and nothing else
 

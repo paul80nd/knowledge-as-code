@@ -23,7 +23,7 @@ moves. The container runs as a non-root user and opens one port, the one the ser
 
 ## Rules
 
-### The base image is chosen and pinned
+### BASE: The base image is chosen and pinned
 
 - A Dockerfile **MUST** take its base image from the organisation's registry.
 - A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
@@ -32,7 +32,7 @@ moves. The container runs as a non-root user and opens one port, the one the ser
 
 _**Covers:** [pol-ENVS].BASELIN, [pol-TRUS].SOURCE_
 
-### A published tag never moves
+### TAG: A published tag never moves
 
 - A pipeline **MUST** tag an image with the build's own version.
 - A registry **MUST** refuse a second push to a tag that already exists.
@@ -40,7 +40,7 @@ _**Covers:** [pol-ENVS].BASELIN, [pol-TRUS].SOURCE_
 
 _**Covers:** [pol-TRUS].MUTATE_
 
-### The container holds only what the service needs
+### MINIMAL: The container holds only what the service needs
 
 - An image **MUST** declare a non-root `USER`.
 - A container **MUST** run as that user.

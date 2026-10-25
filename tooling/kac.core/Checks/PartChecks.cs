@@ -88,6 +88,10 @@ public static class PartChecks
                     report.Err(new CheckId("clause-id-format"),
                         $"clause id '{Md.Snippet(row.IdText)}' is not a code span. Write it as "
                         + $"`{Md.Snippet(row.IdText)}`.", row.Line);
+                else if (spec.IdPatternRegex is not null)
+                    report.Err(new CheckId("part-id-format"),
+                        $"{spec.Noun} '{Md.Snippet(row.Text)}' opens with no id matching {spec.IdPattern}, so "
+                        + $"nothing can cite it. Write the heading as '### <ID>: {Md.Snippet(row.Text)}'.", row.Line);
                 continue;
             }
 

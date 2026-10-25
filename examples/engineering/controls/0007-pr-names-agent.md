@@ -3,7 +3,7 @@ id: ctl-0007
 type: control
 tier: normative
 status: active
-verifies: [ std-PR ]
+verifies: [ std-PR.AGENT ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails an agent-produced pull request whose description leaves out the a
 
 ## What it checks
 
-* [std-PR.agent-produced-work-says-what-produced-it] says a pull request containing agent-produced work "**MUST** name
+* [std-PR.AGENT] says a pull request containing agent-produced work "**MUST** name
   the agent, the model and the prompt or task that produced it".
 
 ## How it works
@@ -39,4 +39,4 @@ The check finds agent-produced work only where a trailer or a heading declares i
 at all is a reviewer's judgement. The standard fixes no layout for the three facts, so the check needs one agreed
 first. The rules about approval and self-merge belong to branch policy, and this check reads none of them.
 
-[std-PR.agent-produced-work-says-what-produced-it]: ../standards/common/pull-requests.md#agent-produced-work-says-what-produced-it
+[std-PR.AGENT]: ../standards/common/pull-requests.md#agent-agent-produced-work-says-what-produced-it

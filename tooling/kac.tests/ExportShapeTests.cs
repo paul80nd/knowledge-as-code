@@ -18,7 +18,7 @@ public class ExportShapeTests
             Context: summary
             Decision: full
             Consequences: full
-        controls@1
+        controls@2
           fields: id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by, tags
           sections:
             What it checks: full
@@ -148,7 +148,7 @@ public class ExportShapeTests
             Where it lives: full
             Dependencies: full
             Data: full
-        standards@2
+        standards@3
           fields: id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to, review-by, tags
           sections:
             Summary: full

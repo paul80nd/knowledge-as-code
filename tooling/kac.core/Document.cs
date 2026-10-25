@@ -34,11 +34,16 @@ public class LinkRef
 /// </summary>
 public class PartRow
 {
-    /// <summary>The part's own id: the Id cell's code span, or a heading's slug.</summary>
+    /// <summary>
+    /// The part's own id: the Id cell's code span, the id a heading opens with where the type declares an
+    /// <c>id-pattern</c>, or a heading's slug where it declares none.
+    /// </summary>
     public string? Id;
+    /// <summary>The fragment a link to a heading part carries: its slug, written whole. Null for a table row.</summary>
+    public string? Anchor;
     /// <summary>The Id cell flattened, for quoting back when it is not a span.</summary>
     public string IdText = "";
-    /// <summary>The Clause cell flattened, or the heading as written.</summary>
+    /// <summary>The Clause cell flattened, or the heading as written with any id prefix taken off.</summary>
     public string Text = "";
     /// <summary>The Clause cell flattened by <c>Md.PlainTextWithoutCode</c>.</summary>
     public string TextWithoutCode = "";
@@ -508,7 +513,7 @@ public partial class Doc
                     if (!inSection || spec.Source != PartSpec.Headings) continue;
 
                     Close(h.Span.Start);
-                    open = AddHeading(doc, h);
+                    open = AddHeading(doc, h, spec);
                     continue;
                 }
 
@@ -537,24 +542,40 @@ public partial class Doc
     }
 
     /// <summary>
-    /// The id is the heading's slug, the anchor a link would use, so a citation and a link name one entry. A heading of
-    /// punctuation alone leaves the id null.
+    /// The anchor is the heading's slug, written whole, so a link and the export name one place. Where the type
+    /// declares an <c>id-pattern</c> the id is the prefix before <c>: </c>, and the text is what follows it. Otherwise
+    /// the slug is the id as well. A heading of punctuation alone leaves both null, and a missing prefix the id.
     /// </summary>
-    private static PartRow AddHeading(Doc doc, HeadingBlock h)
+    private static PartRow AddHeading(Doc doc, HeadingBlock h, PartSpec spec)
     {
         var text = Md.PlainText(h.Inline);
         var slug = Md.Slug(text);
+        var anchor = slug.Length > 0 ? slug : null;
+        var (id, title) = spec.IdPatternRegex is { } pattern ? SplitIdPrefix(text, pattern) : (anchor, text);
+
         var row = new PartRow
         {
-            Id = slug.Length > 0 ? slug : null,
+            Id = id,
+            Anchor = anchor,
             IdText = text,
-            Text = text,
+            Text = title,
             Line = h.Line + 1,
             BodyStart = Math.Min(h.Span.End + 1, doc.Text.Length)
         };
 
         doc.Parts.Add(row);
         return row;
+    }
+
+    /// <summary>A null id, and the heading whole, where it opens with nothing the pattern takes.</summary>
+    private static (string? Id, string Text) SplitIdPrefix(
+        string heading, System.Text.RegularExpressions.Regex pattern)
+    {
+        var colon = heading.IndexOf(": ", StringComparison.Ordinal);
+        if (colon <= 0) return (null, heading);
+
+        var id = heading[..colon];
+        return pattern.IsMatch(id) ? (id, heading[(colon + 2)..].Trim()) : (null, heading);
     }
 
     /// <summary>

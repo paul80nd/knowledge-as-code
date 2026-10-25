@@ -12,7 +12,7 @@ public static class View
     /// <summary>Each standard's id and status, and its rules by title, for a session about to write code.</summary>
     public const string BuildIndex = "build-index";
 
-    /// <summary>Each standard's status and controls, and its rules' obligations, for a reviewer.</summary>
+    /// <summary>Each standard's status, and each rule's controls and obligations, for a reviewer.</summary>
     public const string Review = "review";
 
     public static readonly IReadOnlyList<string> Known = [BuildIndex, Review];
@@ -39,7 +39,7 @@ public static class View
     private const string Controls = "controls";
 
     /// <summary>
-    /// One rule as a standards part line states it at shape 2. A component declaring the view pins that shape, so
+    /// One rule as a standards part line states it at shape 3. A component declaring the view pins that shape, so
     /// these keys are the shape's own.
     /// </summary>
     private sealed record Rule(
@@ -49,8 +49,8 @@ public static class View
         string Id, string Title, string Status, string Mechanism, IReadOnlyList<string> Verifies);
 
     /// <summary>
-    /// The hook pushes this text as it stands, so it states facts and gives no instruction. A rule's id is its
-    /// standard's id and the slug of its title, so a line gives the title alone.
+    /// The hook pushes this text as it stands, so it states facts and gives no instruction. A line gives a rule's title
+    /// alone, and the review view gives the id to cite.
     /// </summary>
     private static string RenderBuildIndex(Source source)
     {
@@ -117,7 +117,7 @@ public static class View
         var controlsType = Type(source, Controls);
         text.Append(controls is null
             ? "- This corpus exports no controls, so no rule here has a check recorded against it.\n"
-            : "- A standard's controls are listed with each one's mechanism and status. "
+            : "- Each rule's controls are listed under it, with each one's mechanism and status. "
               + (controlsType?.InForce is { } controlInForce
                   ? $"A control checks a rule only where its status is `{controlInForce}` and its mechanism is `ci` "
                     + "or `runtime-alert`, and then only the obligations named in its record's What it checks section. "
@@ -131,21 +131,23 @@ public static class View
         {
             text.Append($"\n## {standard.Heading}\n\nStatus: {standard.Status}.\n");
 
-            if (controls is not null)
-            {
-                var checking = controls
-                    .Where(c => c.Verifies.Any(v => v == standard.Id || standard.Rules.Any(r => r.Id == v)))
-                    .Select(c => $"`{c.Id}` {c.Title} (`{c.Mechanism}`, {c.Status})")
-                    .ToList();
-
-                text.Append(checking.Count == 0
-                    ? "\nControls: none.\n"
-                    : $"\nControls: {string.Join("; ", checking)}.\n");
-            }
-
             foreach (var rule in standard.Rules)
             {
                 text.Append($"\n### {rule.Title}\n\nCite as `{rule.Id}`.\n");
+
+                // A control naming the standard whole, as an export from before rule ids may, is under every rule.
+                if (controls is not null)
+                {
+                    var checking = controls
+                        .Where(c => c.Verifies.Any(v => v == rule.Id || v == standard.Id))
+                        .Select(c => $"`{c.Id}` {c.Title} (`{c.Mechanism}`, {c.Status})")
+                        .ToList();
+
+                    text.Append(checking.Count == 0
+                        ? "\nControls: none.\n"
+                        : $"\nControls: {string.Join("; ", checking)}.\n");
+                }
+
                 text.Append(rule.Obligations.Count > 0 ? "\n" : "");
 
                 foreach (var obligation in rule.Obligations)

@@ -3,7 +3,7 @@ id: ctl-0010
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES ]
+verifies: [ eng:std-GATES.BUILD ]
 mechanism: ci
 frequency: per-pr
 evidence: The `docs` job's log on the pull request, under the step "Build the site".
@@ -22,7 +22,7 @@ CI builds the site the way `publish-docs.yml` builds it, before it publishes.
 
 ## What it checks
 
-* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push "**MUST** trigger a build and the test
+* `eng:std-GATES.BUILD` says a push "**MUST** trigger a build and the test
   suite, without anyone asking for it".
 
 ## How it works

@@ -23,7 +23,7 @@ for vulnerabilities and licence terms before anyone adopts it. A critical findin
 
 ## Rules
 
-### Where a package comes from
+### SOURCE: Where a package comes from
 
 - A build **MUST** resolve packages from the organisation's feed, which proxies the public registries.
 - A repository **MUST** commit a lockfile pinning every direct and transitive dependency to a version.
@@ -33,7 +33,7 @@ for vulnerabilities and licence terms before anyone adopts it. A critical findin
 
 _**Covers:** [pol-TRUS].INVENT, [pol-TRUS].REPO, [pol-TRUS].SOURCE, [pol-TRUS].UNTRUST_
 
-### What happens before adoption
+### ADOPT: What happens before adoption
 
 - Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
 - Somebody **MUST** check a new package's licence against the licences the
@@ -46,7 +46,7 @@ _**Covers:** [pol-TRUS].INVENT, [pol-TRUS].REPO, [pol-TRUS].SOURCE, [pol-TRUS].U
 
 _**Covers:** [pol-TRUS].LICENCE, [pol-TRUS].SCREEN_
 
-### What happens afterwards
+### UPKEEP: What happens afterwards
 
 - A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule.
 - A team **MUST** rank a finding by its severity and by whether the affected path runs.

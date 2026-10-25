@@ -23,7 +23,7 @@ sev1 or sev2.
 
 ## Rules
 
-### Every incident has a severity
+### ASSIGN: Every incident has a severity
 
 - Whoever declares an incident **MUST** set its severity at declaration.
 - An incident **MUST** be sev1 where a `critical` service is unavailable, or where customers' money has been taken,
@@ -35,7 +35,7 @@ sev1 or sev2.
 
 _**Covers:** [pol-INCR].TRIAGE_
 
-### The severity moves with what is known
+### REVISE: The severity moves with what is known
 
 - The incident lead **MUST** raise the severity as soon as the incident meets a higher level.
 - The incident lead **SHOULD** lower the severity once the incident no longer meets its level, because a sev1 response
@@ -45,7 +45,7 @@ _**Covers:** [pol-INCR].TRIAGE_
 
 _**Covers:** [pol-INCR].TRIAGE_
 
-### The severity sets the response
+### RESPOND: The severity sets the response
 
 - A sev1 or sev2 **MUST** have a named incident lead.
 - A sev1 **MUST** page the on-call engineer as soon as it is declared.
@@ -56,7 +56,7 @@ _**Covers:** [pol-INCR].TRIAGE_
 
 _**Covers:** [pol-INCR].COMMS, [pol-INCR].TRIAGE_
 
-### A significant incident is reviewed
+### REVIEW: A significant incident is reviewed
 
 - A sev1 or sev2 incident **MUST** be treated as significant wherever a policy here names one.
 - A sev1 or sev2 incident **MUST** have a postmortem.

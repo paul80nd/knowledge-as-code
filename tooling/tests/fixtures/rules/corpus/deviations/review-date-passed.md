@@ -4,7 +4,7 @@ type: deviation
 tier: normative
 status: active
 departs-from:
-  - std-ERRORS.a-failure-says-what-happened
+  - std-ERRORS.WHAT
 risk: low
 accepted-on: "2020-01-01"
 review-by: "2020-06-01"

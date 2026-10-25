@@ -26,7 +26,7 @@ integration test starts the dependencies it needs, and shares none of them with 
 
 This standard adds the .NET detail to [std-TEST], which says which level a test belongs at. Read [std-TEST] first.
 
-### The framework and the project layout
+### LAYOUT: The framework and the project layout
 
 - A repository **MUST** use one test framework across its test projects.
 - Every test project **MUST** run under `dotnet test`.
@@ -39,7 +39,7 @@ This standard adds the .NET detail to [std-TEST], which says which level a test 
 
 _**Covers:** [pol-AUTV].LEVELS_
 
-### A unit test crosses no boundary
+### UNIT: A unit test crosses no boundary
 
 - A unit test **MUST NOT** open a socket, read the filesystem, or start a container.
 - A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something.
@@ -48,7 +48,7 @@ _**Covers:** [pol-AUTV].LEVELS_
 
 _**Covers:** [pol-AUTV].LEVELS_
 
-### An integration test starts what it needs
+### INTEG: An integration test starts what it needs
 
 - An integration test **MUST** start the dependencies it needs.
 - An integration test **MUST NOT** share an instance of a dependency with another run.
@@ -58,7 +58,7 @@ _**Covers:** [pol-AUTV].LEVELS_
 
 _**Covers:** [pol-AUTV].LEVELS_
 
-### Coverage is collected by the build
+### COVER: Coverage is collected by the build
 
 - A build **MUST** collect coverage from its test run and publish the report.
 - A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with

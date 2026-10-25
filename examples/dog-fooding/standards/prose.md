@@ -25,7 +25,7 @@ shape on top of them.
 
 ## Rules
 
-### The base style
+### BASE: The base style
 
 - Prose **MUST** follow the Microsoft Writing Style Guide, except where a clause below changes it.
 - A sentence **SHOULD** state the rule or the fact before the reason.
@@ -38,13 +38,13 @@ shape on top of them.
   a clause, and a service *returns* what a caller asked for.
 - A sentence **SHOULD** state one idea.
 - An instruction **SHOULD** give one step.
-- A heading **MUST** name its topic, because a rule heading in a standard becomes its clause id.
+- A heading **MUST** name its topic, because the anchor a link lands on is the slug of the heading.
 - A heading **SHOULD** be in sentence case.
 - Three or more parallel items **SHOULD** be a list or a table.
 
 _**Covers:** `eng:pol-KNOW.AGENTS`_
 
-### Where this repository differs from Microsoft
+### DIFFERS: Where this repository differs from Microsoft
 
 - Spelling **MUST** be British.
 - An em dash **MUST NOT** appear. A full stop, a comma or a colon replaces it.
@@ -59,7 +59,7 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
   contrast inside a clause **MUST** stay, because it names what the clause forbids.
 - One thing **MUST** have one name everywhere.
 
-### What prose must not change
+### INTACT: What prose must not change
 
 - You **MUST** leave alone an identifier, a path, a flag, a command, and the output a command printed.
 - You **MUST** leave alone a heading you may not rename, the H1 of a record, and every clause id.
@@ -72,7 +72,7 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
 - Where this standard and `.schema/` disagree, the schema **MUST** win, and you **MUST** report the contradiction.
 - You **MUST** name in your reply every rule you left behind on one of these grounds.
 
-### What stays true
+### TRUE: What stays true
 
 - Prose **MUST** describe what exists today. Agreed but unbuilt work **MUST** go to the issue tracker.
 - A schema rule the tool does not implement **MUST** be written as declared and not running.
@@ -80,7 +80,7 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
 - Reasoning that lives elsewhere **SHOULD** be cited, not restated, unless the reader may not have the source.
 - You **SHOULD** rewrite the whole block when you add a fact to existing prose.
 
-### Commit messages and pull requests
+### COMMITS: Commit messages and pull requests
 
 - A subject line **MUST** say what changed.
 - A subject line **SHOULD** be in the imperative, with no full stop.

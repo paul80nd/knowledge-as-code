@@ -35,7 +35,7 @@ public sealed class RedefinitionsAreLinked : ICorpusRule
                 // A glossary every corpus shares cannot link a record only one corpus has, so the narrower one is told.
                 if (Depth(ctx, b.Doc) > Depth(ctx, a.Doc)) (a, b) = (b, a);
 
-                var target = $"{Relative(a.Doc.Rel, b.Doc.Rel)}#{b.Part.Id}";
+                var target = $"{Relative(a.Doc.Rel, b.Doc.Rel)}#{b.Part.Anchor}";
                 ctx.Warn(a.Doc, Unlinked,
                     $"'{Md.Snippet(a.Part.Text)}' is defined here and in '{b.Doc.Rel}', and neither entry links to the "
                     + $"other. Link one entry to the other's anchor, as `{target}`, in its `**Not:**` line.",
@@ -71,6 +71,6 @@ public sealed class RedefinitionsAreLinked : ICorpusRule
             .Where(l => !l.IsImage && part.Contains(l.Span))
             .Select(l => l.Url ?? "")
             .Any(url => url.IndexOf('#') is var hash and >= 0
-                        && string.Equals(url[(hash + 1)..], part.Id, StringComparison.Ordinal)
+                        && string.Equals(url[(hash + 1)..], part.Anchor, StringComparison.Ordinal)
                         && LinkChecks.Resolve(tree, from.Rel, url) == to.Rel);
 }

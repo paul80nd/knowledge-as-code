@@ -35,14 +35,14 @@ closes the issue. That skill ships in no plugin, because it writes to the tracke
 
 ## Rules
 
-### A skill states what it is for, and the reason for each rule it gives
+### REASON: A skill states what it is for, and the reason for each rule it gives
 
 - A skill **SHOULD** state what it is for, the intent of the type it reads, and the reason behind each rule it gives.
 - A skill **SHOULD** set out steps only where the order is the content: a record of a type an agent follows, or a
   write-back or review whose order a rule fixes.
 - A skill's description **SHOULD** name each case that triggers it, and each case once.
 
-### A skill assumes only that the session can read a file
+### READS: A skill assumes only that the session can read a file
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
@@ -57,7 +57,7 @@ closes the issue. That skill ships in no plugin, because it writes to the tracke
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
 
-### A skill names the type of every field it describes
+### TYPES: A skill names the type of every field it describes
 
 - A skill describing a field **MUST** name that field's JSON type.
 - A skill **MUST** say that a field with no value is present and `null`, where the export writes it that way.
@@ -68,7 +68,7 @@ _**Covers:** `eng:pol-AGNT.ACCESS`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
-### A skill says what its corpus did not carry
+### GAPS: A skill says what its corpus did not carry
 
 - A skill **MUST** read `types` in `manifest.json` before it says what is missing.
 - A skill **MUST** name what stayed behind, and send the reader to the published record for it.
@@ -79,7 +79,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
-### A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
+### ROUTER: A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
 
 - A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill
   shipped.
@@ -98,7 +98,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
-### `plugin.json` declares every component and the types it reads
+### DECLARE: `plugin.json` declares every component and the types it reads
 
 - Every skill directory and hook directory in the plugin tree **MUST** appear under `metadata.components`.
 - A component **MUST** name every record type it opens a file of, at the shape version it reads, as `glossary@1`: in
@@ -115,7 +115,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.UNPROV`_
 
-### The bundle carries a frozen export, and nothing writes to it
+### FROZEN: The bundle carries a frozen export, and nothing writes to it
 
 - The export inside a plugin **MUST** be the bytes `kac export` wrote.
 - A skill **MUST NOT** write to any file under `${CLAUDE_PLUGIN_ROOT}`.
@@ -131,7 +131,7 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
-### A hook runs in a POSIX shell, and pushes a view once a session
+### HOOK: A hook runs in a POSIX shell, and pushes a view once a session
 
 - A hook **MUST** run under a POSIX shell.
 - A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
@@ -145,7 +145,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
 
-### A skill writes back to the tracker the corpus states
+### TRACKER: A skill writes back to the tracker the corpus states
 
 - A skill **MUST** send a correction to the backlog the record's corpus addresses under `tracker`.
 - A skill **MUST NOT** file a correction on the address a `publishing` block states, because a published form and a
@@ -160,7 +160,7 @@ _**Covers:** `eng:pol-AGNT.ACCESS`_
 
 _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 
-### A finding an agent files is an observation, and proposes no record
+### FINDING: A finding an agent files is an observation, and proposes no record
 
 - A finding **MUST** open its body with a fenced block whose info string is `yaml kac-finding`.
 - That block **MUST** open on `corpus`, naming the corpus the finding is about.
@@ -183,7 +183,7 @@ _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 
-### A deviation request an agent files asks for the owner it cannot name
+### DEVREQ: A deviation request an agent files asks for the owner it cannot name
 
 - A deviation request **MUST** open its body with a fenced block whose info string is `yaml kac-deviation`.
 - That block **MUST** open on `corpus`, naming the corpus that will contain the record.
@@ -213,7 +213,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`, `eng:pol-DEVI.OWNER`,
 `eng:pol-DEVI.PERM`, `eng:pol-DEVI.SURFACE`_
 
-### A skill reads a rule's keyword as what departing from it costs
+### KEYWORD: A skill reads a rule's keyword as what departing from it costs
 
 - A skill reporting a rule **MUST** say that departing from a `MUST` or `MUST NOT` takes a deviation the rule's owner
   accepts.
@@ -230,7 +230,7 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 
 _**Covers:** `eng:pol-DEVI.RECORD`_
 
-### Triage routes a finding with a label, and says why in a comment
+### TRIAGE: Triage routes a finding with a label, and says why in a comment
 
 - A skill triaging findings **MUST** travel into a corpus's working tree, and **MUST NOT** be a component of a
   plugin.
@@ -267,7 +267,7 @@ _**Covers:** `eng:pol-DEVI.RECORD`_
 _**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`,
 `eng:pol-AGNT.UNPROV`_
 
-### A framework finding travels stripped, and only by hand
+### STRIP: A framework finding travels stripped, and only by hand
 
 - A skill **MUST** compare the framework block's address with the tracker block's, both targets and both bases
   normalised.
@@ -494,8 +494,8 @@ a fixed point, and leaves the session to read it, the same way a lookup leaves i
 
 A reviewer leaves a rule out only where a check runs without a person. `ci` and `runtime-alert` run by themselves.
 `review-checklist` and `manual` are a person checking, and in a review that person is the reviewer. A control's
-`verifies` can name a whole standard, so the reviewer reads its What it checks section to learn which obligations it
-covers, and checks the rest.
+`verifies` names the rules it checks, and a rule can hold more obligations than the control watches. So the reviewer
+reads its What it checks section to learn which obligations it covers, and checks the rest.
 
 The frozen export is why a skill states a date and a status. An export reads the same however old it is, so the skill
 is the only thing that can say how old it is. It is also why a correction goes out through the issue tracker: the

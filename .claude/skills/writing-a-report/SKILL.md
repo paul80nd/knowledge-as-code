@@ -101,7 +101,8 @@ marker would be a second thing to keep in step.
 
 ## What the report is not
 
-**It is not a compliance claim.** No column says a clause is verified. A control names a standard rather than a rule,
-so it vouches for a whole document whatever it checks inside it. The `Limits` section says this and stays.
+**It is not a compliance claim.** No column says a clause is verified. `Covered by` names the rules whose `Covers`
+line cites the clause, and `Controls` names each control citing one of those rules. A control may check one obligation
+of a rule and leave the rest. The `Limits` section says this and stays.
 
 **It answers for this corpus alone.** A clause uncovered here may be covered in a corpus consuming this one.

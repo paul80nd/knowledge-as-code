@@ -22,7 +22,7 @@ that was never a real customer's.
 
 ## Rules
 
-### Pick the level from the fault
+### LEVEL: Pick the level from the fault
 
 - A team **MUST** cover a rule about one unit's behaviour with a test on that unit alone.
 - A team **MUST** cover an agreement between two components with a test that exercises both.
@@ -34,7 +34,7 @@ that was never a real customer's.
 
 _**Covers:** [pol-AUTV].LEVELS_
 
-### Know what the suite reaches
+### REACH: Know what the suite reaches
 
 - A build **MUST** report line coverage.
 - A build **MUST** fail where coverage falls below the figure the repository records.
@@ -42,7 +42,7 @@ _**Covers:** [pol-AUTV].LEVELS_
 
 _**Covers:** [pol-AUTV].COVER_
 
-### The data is never a real customer's
+### DATA: The data is never a real customer's
 
 - A test **MUST** run against generated data, or against production data that a masking step has already processed.
 - A team **MUST NOT** copy unmasked production data into a test fixture, a seed script or a local database.

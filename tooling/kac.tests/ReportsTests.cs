@@ -172,11 +172,104 @@ public class ReportsTests
     public void A_clause_a_grandparent_s_standard_implements_reads_covered()
         => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |", Inheriting());
 
+    [Fact]
+    public void A_clause_a_rule_covers_is_covered_by_that_rule()
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |", RuleCoverage());
+
+    [Fact]
+    public void A_control_reaches_a_clause_through_the_rule_covering_it()
+    {
+        var body = RuleCoverage();
+
+        Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |", body);
+        Assert.Contains("| `LEAKED` | MUST | `std-VLT.REVOKE` |  | `ctl-0002` |", body);
+    }
+
+    [Fact]
+    public void A_control_naming_a_standard_whole_reaches_every_rule_in_it()
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001`, `ctl-0003` |",
+            RuleCoverage(whole: true));
+
+    [Fact]
+    public void An_inherited_rule_covering_a_clause_is_named_with_its_producer()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD.STAY` |", Inheriting(rules: true));
+
+    [Fact]
+    public void A_coverage_report_states_that_a_control_vouches_for_the_rule_it_names()
+        => Assert.Contains("`Controls` lists each control naming a rule in `Covered by`", Coverage());
+
     private static string Coverage() => Plan("coverage").Body;
 
-    private static string Inheriting(string inForce = "active")
+    /// <summary>
+    /// A standard whose two rules each cover one clause, a control naming each rule, and with <paramref name="whole"/>
+    /// a third naming the standard whole.
+    /// </summary>
+    private static string RuleCoverage(bool whole = false)
     {
-        var plan = Reports.Plan("coverage", Corpus(), [Grandparent(inForce)], Stamp);
+        var types = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
+        {
+            ["policies"] = PolicyType(),
+            ["standards"] = RuleType(),
+            ["controls"] = Refers("controls", "ctl", "control", "verifies")
+        };
+        var schema = new Schema { ByFolder = types };
+
+        const string vault =
+            """
+            ---
+            id: std-VLT
+            implements: [ pol-SCRT.LEAKED, pol-SCRT.STORE ]
+            ---
+
+            # Vault
+
+            ## Rules
+
+            ### VAULT: Secrets live in the vault
+
+            - A service **MUST** read its secrets from the vault.
+
+            _**Covers:** `pol-SCRT.STORE`_
+
+            ### REVOKE: A leaked secret is revoked
+
+            - A leaked secret **MUST** be revoked within the hour.
+
+            _**Covers:** `pol-SCRT.LEAKED`_
+
+            """;
+
+        var sources = new List<(string, string)>
+        {
+            ("policies/scrt.md", Policy), ("standards/vault.md", vault),
+            ("controls/0001-vault.md", "---\nid: ctl-0001\nverifies: std-VLT.VAULT\n---\n\n# One\n"),
+            ("controls/0002-revoke.md", "---\nid: ctl-0002\nverifies: std-VLT.REVOKE\n---\n\n# Two\n")
+        };
+        if (whole) sources.Add(("controls/0003-whole.md", "---\nid: ctl-0003\nverifies: std-VLT\n---\n\n# Three\n"));
+
+        var docs = sources.Select(s => Doc.Parse(s.Item1, s.Item2, schema)).OfType<Doc>().ToList();
+        Assert.Equal(sources.Count, docs.Count);
+
+        var corpus = new LoadedCorpus
+        {
+            Schema = schema,
+            Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
+            Tree = new Tree(new HashSet<string>(docs.Select(d => d.Rel), StringComparer.Ordinal),
+                rel => docs.FirstOrDefault(d => d.Rel == rel)?.Text ?? ""),
+            Adopted = [.. types.Values],
+            Docs = docs,
+            Templates = [],
+            SkippedNoFrontmatter = 0
+        };
+
+        var plan = Reports.Plan("coverage", corpus, [], Stamp);
+        Assert.NotNull(plan);
+        return plan.Body;
+    }
+
+    private static string Inheriting(string inForce = "active", bool rules = false)
+    {
+        var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules)], Stamp);
         Assert.NotNull(plan);
         return plan.Body;
     }
@@ -185,7 +278,7 @@ public class ReportsTests
     /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
     /// wrote, in the folder eng filed it under.
     /// </summary>
-    private static InheritedCorpus Grandparent(string inForce) =>
+    private static InheritedCorpus Grandparent(string inForce, bool rules = false) =>
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
             null,
@@ -202,9 +295,18 @@ public class ReportsTests
                             """.ReplaceLineEndings("")
                     ],
                     []),
-                new InheritedType("standards", 1, "standards", null, null, null, null, null,
+                new InheritedType("standards", 1, "standards", rules ? "standards/rules.jsonl" : null,
+                    "record", "part", "id", null,
                     new Dictionary<string, string>(StringComparer.Ordinal),
-                    [],
+                    rules
+                        ?
+                        [
+                            """
+                                {"id":"gp:std-OLD.STAY","record":"gp:std-OLD","part":"STAY",
+                                "covers":["pol-OLD.HOLD"],"shortcode":"gp"}
+                                """.ReplaceLineEndings("")
+                        ]
+                        : [],
                     [
                         new InheritedRecord("gp", "std-OLD.json",
                             """{"fields":{"id":"std-OLD","implements":["pol-OLD.HOLD"]}}""")
@@ -373,12 +475,13 @@ public class ReportsTests
         Registered against it.
         """;
 
-    private static LoadedCorpus Corpus()
+    /// <summary>With <paramref name="rules"/>, the standards type is declared as the schema declares it.</summary>
+    private static LoadedCorpus Corpus(bool rules = false)
     {
         var types = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
         {
             ["policies"] = PolicyType(),
-            ["standards"] = Refers("standards", "std", "standard", "implements"),
+            ["standards"] = rules ? RuleType() : Refers("standards", "std", "standard", "implements"),
             ["deviations"] = Refers("deviations", "dev", "deviation", "departs-from", inForce: "active")
         };
 
@@ -411,6 +514,28 @@ public class ReportsTests
             Docs = docs,
             Templates = [],
             SkippedNoFrontmatter = 0
+        };
+    }
+
+    /// <summary>
+    /// A standard as the schema declares it: rules whose headings open with their ids, each closing on a <c>Covers</c>
+    /// line, which the export carries as <c>covers</c>.
+    /// </summary>
+    private static TypeSchema RuleType()
+    {
+        var implements = new FieldSpec { Name = "implements", Type = "list", Of = "id", MirrorsCitations = "Covers" };
+
+        return new TypeSchema
+        {
+            Key = "standards",
+            TypeName = "standard",
+            Folder = "standards",
+            IdPrefix = "std",
+            Fields = new Dictionary<string, FieldSpec>(StringComparer.Ordinal) { ["implements"] = implements },
+            DeclaredFields = [implements],
+            Parts = new PartSpec(PartSpec.Headings, "^[A-Z][A-Z0-9]{1,6}$", ["MUST"], [])
+                { Section = "Rules", Noun = "rule" },
+            Export = new ExportSpec { Line = [("id", "part.id"), ("covers", "part.citations.Covers")] }
         };
     }
 

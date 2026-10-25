@@ -25,7 +25,7 @@ approves it before it goes.
 
 ## Rules
 
-### The artefact is built once
+### ONCE: The artefact is built once
 
 - A pipeline **MUST** build the artefact once, and promote that build to every environment.
 - An artefact **MUST** record the commit it was built from, so a running version identifies the change it came from.
@@ -34,14 +34,14 @@ approves it before it goes.
 
 _**Covers:** [pol-PIPE].LOCAL, [pol-PIPE].SAMEART, [pol-PIPE].TRACE_
 
-### Configuration sits outside the artefact
+### CONFIG: Configuration sits outside the artefact
 
 - A service **MUST** read environment-specific configuration at start-up, from outside the artefact.
 - An artefact **MUST NOT** contain a hostname, connection string or feature setting that differs between environments.
 
 _**Covers:** [pol-PIPE].CONFIG_
 
-### Production changes through the pipeline alone
+### PIPE: Production changes through the pipeline alone
 
 - A change **MUST** reach production through the automated pipeline.
 - A change **MUST** reach each environment below production by promotion from the one before it.
@@ -55,7 +55,7 @@ _**Covers:** [pol-PIPE].CONFIG_
 
 _**Covers:** [pol-ENVS].PROMOTE, [pol-ENVS].SAMEDEF, [pol-PIPE].ASCODE, [pol-PIPE].DEPLOY, [pol-PIPE].MANUAL_
 
-### Change approval
+### APPROVE: Change approval
 
 - A change **MUST** be approved by someone other than its author before it reaches production.
 - The approval **MUST** be recorded where the change is, such as in branch protection.
@@ -68,7 +68,7 @@ _**Covers:** [pol-ENVS].PROMOTE, [pol-ENVS].SAMEDEF, [pol-PIPE].ASCODE, [pol-PIP
 
 _**Covers:** [pol-PIPE].GATES_
 
-### A way back exists before the change goes
+### WAYBACK: A way back exists before the change goes
 
 - A release **MUST** have a stated rollback or recovery path before it starts.
 - A database migration **MUST** leave the previous version of the service able to run against the new schema, unless

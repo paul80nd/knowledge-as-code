@@ -60,8 +60,12 @@ fields:
     type: list
     of: id
     ref: standards
+    part-required: true
     reciprocal: verified-by
-    description: The standard ids this control checks, as rule-level anchors where possible.
+    description: The rules this control checks, as `std-CI.PERMS`.
+    notes: >
+      A control checking every rule of a standard lists every rule. The standard's `verified-by` names the
+      control once, however many of its rules the control cites.
 
   mechanism:
     required: true
@@ -115,7 +119,7 @@ sections:
   optional: [Owner]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by,
            tags]
   sections:

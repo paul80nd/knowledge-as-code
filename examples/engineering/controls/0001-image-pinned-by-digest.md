@@ -3,7 +3,7 @@ id: ctl-0001
 type: control
 tier: normative
 status: active
-verifies: [ std-CONT ]
+verifies: [ std-CONT.BASE, std-CONT.TAG ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,9 +20,9 @@ No check fails a Dockerfile or a deployment that names an image by tag alone.
 
 ## What it checks
 
-* [std-CONT.the-base-image-is-chosen-and-pinned] says a Dockerfile "**MUST** pin the base image by digest rather than by
+* [std-CONT.BASE] says a Dockerfile "**MUST** pin the base image by digest rather than by
   a moving tag".
-* [std-CONT.a-published-tag-never-moves] says a deployment "**MUST** name an image by digest, so the running container
+* [std-CONT.TAG] says a deployment "**MUST** name an image by digest, so the running container
   is the one the pipeline built".
 
 ## How it works
@@ -56,5 +56,5 @@ The check would prove a reference cannot move. It would not prove these:
 * a manifest the pipeline renders gets the digest the pipeline built, so the check has to read the rendered output
   where a placeholder such as `@${IMAGE_DIGEST}` stands in the source
 
-[std-CONT.a-published-tag-never-moves]: ../standards/platform/containers.md#a-published-tag-never-moves
-[std-CONT.the-base-image-is-chosen-and-pinned]: ../standards/platform/containers.md#the-base-image-is-chosen-and-pinned
+[std-CONT.TAG]: ../standards/platform/containers.md#tag-a-published-tag-never-moves
+[std-CONT.BASE]: ../standards/platform/containers.md#base-the-base-image-is-chosen-and-pinned

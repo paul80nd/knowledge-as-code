@@ -24,14 +24,14 @@ the author approves it before it merges.
 
 ## Rules
 
-### A change arrives as a pull request
+### ARRIVE: A change arrives as a pull request
 
 - A change **MUST** arrive on the default branch as a merged pull request, not as a direct push.
 - A pull request description **MUST** link the work item that asked for the change.
 
 _**Covers:** [pol-EVER].BRANCH, [pol-EVER].INTENT_
 
-### Somebody other than the author approves it
+### APPROVE: Somebody other than the author approves it
 
 - A pull request **MUST** have at least one approval from somebody other than the author before it merges.
 - A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone.
@@ -39,7 +39,7 @@ _**Covers:** [pol-EVER].BRANCH, [pol-EVER].INTENT_
 
 _**Covers:** [pol-SECD].CODEREV_
 
-### Agent-produced work says what produced it
+### AGENT: Agent-produced work says what produced it
 
 - A pull request containing agent-produced work **MUST** name the agent, the model and the prompt or task that
   produced it.

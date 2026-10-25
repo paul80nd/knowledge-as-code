@@ -3,7 +3,7 @@ id: ctl-0011
 type: control
 tier: normative
 status: active
-verifies: [ std-CI, std-VERS ]
+verifies: [ std-CI.RELEASE, std-VERS.CONSUME, std-VERS.MEANING ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
@@ -23,11 +23,11 @@ replaces a version it has taken.
 
 ## What it checks
 
-* [std-CI.a-version-moves-by-hand-and-publishes-once] says "`content-version` in a corpus's `.corpus.yaml` **MUST**
+* [std-CI.RELEASE] says "`content-version` in a corpus's `.corpus.yaml` **MUST**
   move in the pull request changing what that corpus knows".
-* [std-VERS.what-a-move-of-each-stamp-means] says "`content-version` **MUST** move where a change reaches a skill, a
+* [std-VERS.MEANING] says "`content-version` **MUST** move where a change reaches a skill, a
   hook or the manifest its bundle includes".
-* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] says "That consumer **MUST** move its own
+* [std-VERS.CONSUME] says "That consumer **MUST** move its own
   `content-version` wherever its `resolved:` lock moves".
 
 ## How it works
@@ -61,7 +61,7 @@ names a branch git cannot reach fails rather than passing on a comparison it nev
 This check reports whether the stamp rose, and never how far. [std-VERS] says which part a change moves, and a
 reviewer judges whether a patch should have been a minor or a major.
 
-The reach is the export. [std-VERS.what-a-move-of-each-stamp-means] says "A change confined to a section a record's
+The reach is the export. [std-VERS.MEANING] says "A change confined to a section a record's
 type leaves out of `export:` **MUST NOT** move `content-version`". A rewritten `Rationale and provenance` on a standard,
 or a frontmatter key no `export:` block names, leaves the export as it was and passes. A `.schema/` edit that changes
 what a record exports fails without a move.
@@ -86,7 +86,7 @@ Only the corpora under `examples/` are read. `template/` states no `content-vers
 A local run with no base branch reads nothing and passes, which is what a run on `main` does. The answer arrives on
 the pull request.
 
-[std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
+[std-CI.RELEASE]: ../standards/workflows.md#release-a-version-moves-by-hand-and-publishes-once
 [std-VERS]: ../standards/versioning.md
-[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
-[std-VERS.what-a-move-of-each-stamp-means]: ../standards/versioning.md#what-a-move-of-each-stamp-means
+[std-VERS.CONSUME]: ../standards/versioning.md#consume-a-producers-move-obliges-every-consumer-in-the-same-pull-request
+[std-VERS.MEANING]: ../standards/versioning.md#meaning-what-a-move-of-each-stamp-means

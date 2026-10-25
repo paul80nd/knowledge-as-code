@@ -19,17 +19,17 @@ A standard whose rules say nothing about how hard they bind.
 
 ## Rules
 
-### A bullet naming no modal
+### NOMODAL: A bullet naming no modal
 
 - A service reads its secrets from the vault.
 
 _**Covers:** [pol-BOLD].CLEAN_
 
-### A keyword left in plain capitals
+### PLAIN: A keyword left in plain capitals
 
 - A service MUST read its secrets from the vault.
 
-### A heading gathering prose
+### PROSE: A heading gathering prose
 
 Secrets come from the vault, and nothing says whether that is a rule.
 

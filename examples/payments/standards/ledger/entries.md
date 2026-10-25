@@ -23,7 +23,7 @@ further pair. The sequence finance read on the day is the sequence they read a y
 
 ## Rules
 
-### An entry is a balanced pair
+### BALANCE: An entry is a balanced pair
 
 - The ledger **MUST** write a movement of money as a debit and a credit of the same amount.
 - An entry **MUST** state the amount in minor units as an integer, with its ISO 4217 currency code.
@@ -32,7 +32,7 @@ further pair. The sequence finance read on the day is the sequence they read a y
 
 _**Covers:** `eng:pol-DERV.EXPECT`_
 
-### Nothing amends an entry
+### NOAMEND: Nothing amends an entry
 
 - The ledger **MUST** refuse an update or a delete on a written entry.
 - The ledger **MUST** record a correction as a reversing pair followed by the intended pair, each stating the entry it
@@ -41,13 +41,13 @@ _**Covers:** `eng:pol-DERV.EXPECT`_
 
 _**Covers:** `eng:pol-DERV.LINEAGE`_
 
-### An entry says what produced it
+### SOURCE: An entry says what produced it
 
 - An entry **MUST** record the order, the PSP reference and the idempotency key from
-  [std-IDEM.the-caller-chooses-the-key].
+  [std-IDEM.KEY].
 - An entry **MUST** record the event that produced it: an authorisation, a capture, a refund or a chargeback.
 - An entry for an authorisation **MUST** record the authentication outcome from
-  [std-SCA.the-outcome-travels-with-the-payment], and who bears the liability for a chargeback.
+  [std-SCA.OUTCOME], and who bears the liability for a chargeback.
 - The ledger **MUST** be able to reproduce a payment's full history from its entries alone.
 
 _**Covers:** `eng:pol-DERV.LINEAGE`_
@@ -95,5 +95,5 @@ To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart 
 say why in the change.
 
 [ISO 4217]: https://www.iso.org/iso-4217-currency-codes.html
-[std-IDEM.the-caller-chooses-the-key]: ../authorisation/idempotency.md#the-caller-chooses-the-key
-[std-SCA.the-outcome-travels-with-the-payment]: ../checkout/customer-authentication.md#the-outcome-travels-with-the-payment
+[std-IDEM.KEY]: ../authorisation/idempotency.md#key-the-caller-chooses-the-key
+[std-SCA.OUTCOME]: ../checkout/customer-authentication.md#outcome-the-outcome-travels-with-the-payment

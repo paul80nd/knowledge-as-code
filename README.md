@@ -23,7 +23,7 @@ An agent writes back by filing an issue on your tracker. A person decides whethe
 * **You can tell whether to trust a record.** Each one has an owner, a status and a review date, so you can see who
   is responsible for it and whether it is current.
 * **Agents build to your rules.** A session looks up the standard that applies and cites the rule it followed, such as
-  `std-SECRET.a-secret-comes-from-the-store`.
+  `std-SECRET.STORE`.
 * **Teams share one set of rules.** A team's corpus can consume an organisation's corpus, so a standard written once
   applies in every repository that takes it.
 

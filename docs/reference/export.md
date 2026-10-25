@@ -315,8 +315,10 @@ A line has the record's `path`, the part's `anchor`, and `links.human`, the link
 wrote the part. An inherited line keeps the link its producer built.
 
 `part` is what a citation resolves against, and `anchor` is the fragment a link lands on. A glossary term's heading slug
-is both, so each line has the pair equal. A policy clause id such as `TIMEBOX` is authored and has no fragment, so
-a clause line's `anchor` is the slug of the section containing the table.
+is both, so each line has the pair equal. A standard's rule id such as `PERMS` is the one its heading opens with, and
+`anchor` is the slug of the whole heading, as `perms-a-job-declares-the-permission-it-needs`. A policy clause id such
+as `TIMEBOX` is authored and has no fragment, so a clause line's `anchor` is the slug of the section containing the
+table.
 
 ### A key name the corpus also defines
 
@@ -437,9 +439,9 @@ moment of the work. It is not part of `.dist/export/`, and another corpus that i
 Each view lists the rules under their standard's id, title and status.
 
 * **`build-index`** opens on how many rules the corpus states, then lists each rule by title. A rule's id is its
-  standard's id, a dot, and the slug of its title.
-* **`review`** lists the controls whose `verifies` names the standard or one of its rules, then each rule's
-  obligations.
+  standard's id, a dot, and the id its heading opens with.
+* **`review`** lists each rule with the id to cite, the controls whose `verifies` names it, and its obligations. A
+  control naming the standard whole, as an export from before rule ids may, is listed under every rule of it.
 
 A view reads the files of each type it needs at the shape version its plugin manifest declares, so a change to those
 files moves that type's `shapeVersion` like any other. A fresh bundle of one export writes every view byte for byte.

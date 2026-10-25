@@ -2,14 +2,14 @@
 
 # Control Index (CTL)
 
-| ID       | Title                                                                                                    | Mechanism    | Frequency | Verifies   | Status |
-|----------|----------------------------------------------------------------------------------------------------------|--------------|-----------|------------|--------|
-| ctl-0001 | [Nothing checks that an image is named by digest](0001-image-pinned-by-digest.md)                        | not-enforced |           | std-CONT   | active |
-| ctl-0002 | [Nothing checks that a running service reports its commit](0002-health-reports-commit.md)                | not-enforced |           | std-DEPLOY | active |
-| ctl-0003 | [Nothing checks that an alert names an owner and a first action](0003-alert-owner-and-action.md)         | not-enforced |           | std-OBS    | active |
-| ctl-0004 | [Nothing checks that a skipped test cites a deviation](0004-skip-cites-deviation.md)                     | not-enforced |           | std-GATES  | active |
-| ctl-0005 | [Nothing checks that an interface change carries a version and a notice](0005-api-version-and-notice.md) | not-enforced |           | std-API    | active |
-| ctl-0006 | [Nothing checks a repository for a committed secret](0006-secret-scanner.md)                             | not-enforced |           | std-SECRET | active |
-| ctl-0007 | [Nothing checks that a pull request names the agent that produced it](0007-pr-names-agent.md)            | not-enforced |           | std-PR     | active |
-| ctl-0008 | [Nothing checks that a .NET build collects coverage](0008-dotnet-coverage.md)                            | not-enforced |           | std-NETTST | active |
-| ctl-0009 | [Nothing checks that a suppression is local and justified](0009-suppression-justified.md)                | not-enforced |           | std-CSSTY  | active |
+| ID       | Title                                                                                                    | Mechanism    | Frequency | Verifies                    | Status |
+|----------|----------------------------------------------------------------------------------------------------------|--------------|-----------|-----------------------------|--------|
+| ctl-0001 | [Nothing checks that an image is named by digest](0001-image-pinned-by-digest.md)                        | not-enforced |           | std-CONT.BASE, std-CONT.TAG | active |
+| ctl-0002 | [Nothing checks that a running service reports its commit](0002-health-reports-commit.md)                | not-enforced |           | std-DEPLOY.ONCE             | active |
+| ctl-0003 | [Nothing checks that an alert names an owner and a first action](0003-alert-owner-and-action.md)         | not-enforced |           | std-OBS.ALERT               | active |
+| ctl-0004 | [Nothing checks that a skipped test cites a deviation](0004-skip-cites-deviation.md)                     | not-enforced |           | std-GATES.BLOCK             | active |
+| ctl-0005 | [Nothing checks that an interface change carries a version and a notice](0005-api-version-and-notice.md) | not-enforced |           | std-API.VERSION             | active |
+| ctl-0006 | [Nothing checks a repository for a committed secret](0006-secret-scanner.md)                             | not-enforced |           | std-SECRET.NOWHERE          | active |
+| ctl-0007 | [Nothing checks that a pull request names the agent that produced it](0007-pr-names-agent.md)            | not-enforced |           | std-PR.AGENT                | active |
+| ctl-0008 | [Nothing checks that a .NET build collects coverage](0008-dotnet-coverage.md)                            | not-enforced |           | std-NETTST.COVER            | active |
+| ctl-0009 | [Nothing checks that a suppression is local and justified](0009-suppression-justified.md)                | not-enforced |           | std-CSSTY.SUPPR             | active |

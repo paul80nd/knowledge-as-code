@@ -3,7 +3,7 @@ id: ctl-0006
 type: control
 tier: normative
 status: active
-verifies: [ std-CI ]
+verifies: [ std-CI.RELEASE ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
@@ -22,7 +22,7 @@ tags: [ changelog, releases, versioning ]
 
 ## What it checks
 
-* [std-CI.a-version-moves-by-hand-and-publishes-once] says the release notes "**MUST** be that version's section of
+* [std-CI.RELEASE] says the release notes "**MUST** be that version's section of
   `tooling/kac/CHANGELOG.md`".
 
 ## How it works
@@ -48,4 +48,4 @@ cannot ship with its entries still under `## Unreleased`.
 Nothing checks that a change to `kac` took its line under `## Unreleased`, and nothing checks that the branch owner
 decided to release before `<Version>` moved. A reviewer catches both.
 
-[std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
+[std-CI.RELEASE]: ../standards/workflows.md#release-a-version-moves-by-hand-and-publishes-once

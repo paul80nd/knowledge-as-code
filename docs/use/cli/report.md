@@ -35,11 +35,12 @@ nothing it cannot justify from a record.
 `coverage` prints `covered` or `uncovered` against each clause, and nothing else. In the `Verdict` column, a person
 writes whether an uncovered clause is a gap or does not apply to this estate. The `Note` beside it says why.
 
-Each coverage row arrives with four values read from frontmatter:
+Each coverage row arrives with four values read from the corpus:
 
-* the standards whose `implements:` lists the clause
+* the rules whose `Covers` line cites the clause, as `std-CI.PERMS`, or a standard whose `implements:` lists it where
+  none of its rules does
 * the deviations in force whose `departs-from:` cites it
-* the controls verifying those standards
+* the controls whose `verifies:` names one of those rules
 * any clause elsewhere in the corpus sharing its key
 
 A deviation is in force while its `status` is the value its type declares in `in-force:`, which is `active`. A `draft`
@@ -137,8 +138,8 @@ kac report coverage
 | **Total**      | **243** | **92**  | **151**   |
 ```
 
-Each policy then gets a section of its own, one row per clause. The rows give the standards covering it, the deviations
-departing from it, the controls behind those standards, and any clause elsewhere sharing its key.
+Each policy then gets a section of its own, one row per clause. The rows give the rules covering it, the deviations
+departing from it, the controls checking those rules, and any clause elsewhere sharing its key.
 
 ### A frameworks report
 
@@ -185,7 +186,8 @@ Fill in `id`, `owner` and the verdicts, then confirm it. `validate` warns once t
 **A producer cannot see its consumers.** A clause uncovered here may be covered in a corpus that consumes this one. Each
 report states that limit in its own text.
 
-**Coverage is not verification.** A control points at a whole standard, so no column claims a clause is verified.
+**Coverage is not verification.** A control may check one obligation of a rule and leave the rest, so no column
+claims a clause is verified.
 
 **A redirect into `reports/` can collide with the run.** `kac` reads every file in that folder, including the one a
 shell has just opened. On Windows the run stops. Use `--out`, which writes after the corpus is read.

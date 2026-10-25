@@ -22,7 +22,7 @@ rather than at the top. That is how the order goes wrong in practice.
 
 ## Rules
 
-### A changelog states the newest change first
+### NEWEST: A changelog states the newest change first
 
 - A changelog entry **MUST** sit above every entry dated before it.
 

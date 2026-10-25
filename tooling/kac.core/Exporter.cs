@@ -1004,8 +1004,8 @@ public static class Exporter
                 ? null
                 : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
 
-            PartLineSource.PartAnchor => JsonValue.Create(t.DeclaredParts.Anchor(part.Id)),
-            PartLineSource.PartLinks => LineLinks(publishing, part.Doc.Rel, t.DeclaredParts.Anchor(part.Id)),
+            PartLineSource.PartAnchor => JsonValue.Create(t.DeclaredParts.Anchor(part.Row)),
+            PartLineSource.PartLinks => LineLinks(publishing, part.Doc.Rel, t.DeclaredParts.Anchor(part.Row)),
 
             PartLineSource.RecordId => JsonValue.Create(part.Record),
             PartLineSource.RecordType => JsonValue.Create(t.Key),
@@ -1016,9 +1016,9 @@ public static class Exporter
 
     /// <summary>
     /// Keyed by label. Matched by line, because a footnote is found per document and a part is a span. Read from the
-    /// footnote, not the links, because <c>[pol-INTC].HOLDS</c> links only the policy.
+    /// footnote, not the links, because <c>[pol-INTC].HOLDS</c> links only the policy. A coverage report reads it too.
     /// </summary>
-    private static IReadOnlyDictionary<string, IReadOnlyList<string>> Citations(
+    internal static IReadOnlyDictionary<string, IReadOnlyList<string>> Citations(
         Doc doc, PartRow part, IReadOnlyList<string> labels)
     {
         var found = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
@@ -1054,9 +1054,10 @@ public static class Exporter
         foreach (var (target, anchor) in CrossReferences(doc, part, byPath, tree))
         {
             if (anchor is null) continue;
-            if (!target.Parts.Any(p => string.Equals(p.Id, anchor, StringComparison.Ordinal))) continue;
+            if (target.Parts.FirstOrDefault(p => string.Equals(p.Anchor, anchor, StringComparison.Ordinal))
+                is not { Id: { } partId }) continue;
 
-            var full = $"{Id(target)}.{anchor}";
+            var full = $"{Id(target)}.{partId}";
             if (!found.Contains(full, StringComparer.Ordinal)) found.Add(full);
         }
 

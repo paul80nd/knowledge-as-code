@@ -22,7 +22,7 @@ bulleted under `Examples`, which is where a clause lands when nobody notices the
 
 ## Rules
 
-### A standard states its obligations under Rules
+### UNDER: A standard states its obligations under Rules
 
 - A standard **MUST** write each obligation as a bullet under a `Rules` heading.
 

@@ -452,57 +452,60 @@ standards_lookup() {
   grep -E '"record": *"std-IDEM"' "$RULES" > "$WORK/rules.txt" \
     || fail "no rule belongs to std-IDEM."
 
-  grep -E '"id": *"std-IDEM.the-caller-chooses-the-key"' "$WORK/rules.txt" > "$WORK/hits.txt" \
-    || fail "std-IDEM carries no the-caller-chooses-the-key rule."
+  grep -E '"id": *"std-IDEM.KEY"' "$WORK/rules.txt" > "$WORK/hits.txt" \
+    || fail "std-IDEM carries no KEY rule."
 
   HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
-  [ "$HITS" = "1" ] || fail "expected one line for std-IDEM.the-caller-chooses-the-key, found $HITS."
+  [ "$HITS" = "1" ] || fail "expected one line for std-IDEM.KEY, found $HITS."
 
   OBLIGATIONS=$(jqr '.obligations[]? | select(.level == "MUST") | .text' "$WORK/hits.txt")
-  [ -n "$OBLIGATIONS" ] || fail "std-IDEM.the-caller-chooses-the-key came back with no MUST obligation."
+  [ -n "$OBLIGATIONS" ] || fail "std-IDEM.KEY came back with no MUST obligation."
 
   # The level is read from a key, and the text still travels as the markdown the standard wrote.
   echo "$OBLIGATIONS" | grep -qF '**MUST**' \
-    || fail "std-IDEM.the-caller-chooses-the-key came back with a MUST whose text lost its bold."
+    || fail "std-IDEM.KEY came back with a MUST whose text lost its bold."
 
-  echo "round-trip: std-IDEM.the-caller-chooses-the-key carries its obligations, level and all."
+  echo "round-trip: std-IDEM.KEY carries its obligations, level and all."
 
   # `MUST NOT` opens with `MUST`, so a rule holding a prohibition shows the longer level survives the export whole.
-  grep -E '"id": *"std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait"' "$RULES" \
-    > "$WORK/prohibition.txt" || fail "std-IDEM carries no an-in-flight-repeat-waits-or-is-told-to-wait rule."
+  grep -E '"id": *"std-IDEM.WAIT"' "$RULES" \
+    > "$WORK/prohibition.txt" || fail "std-IDEM carries no WAIT rule."
 
   jqr '.obligations[]? | select(.level == "MUST NOT") | .text' "$WORK/prohibition.txt" | grep -qF '**MUST NOT**' \
-    || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait came back with no MUST NOT."
+    || fail "std-IDEM.WAIT came back with no MUST NOT."
 
   echo "round-trip: a prohibition arrives as MUST NOT, whole rather than shortened to its first word."
 
-  # A rule resolves to its own heading, so a link built from the template lands on the rule and not on the standard.
+  # A rule is cited by the id its heading opens with, and linked at the slug of the whole heading, so a link built from
+  # the template lands on the rule and not on the standard.
   ANCHOR=$(jqr '.anchor' "$WORK/hits.txt")
   PART=$(jqr '.part' "$WORK/hits.txt")
 
-  [ "$ANCHOR" = "$PART" ] || fail "the rule's anchor is '$ANCHOR' and its part is '$PART'."
+  [ "$PART" = "KEY" ] || fail "the rule's part is '$PART', where its heading opens with 'KEY'."
+  [ "$ANCHOR" = "key-the-caller-chooses-the-key" ] \
+    || fail "the rule's anchor is '$ANCHOR', where its heading slugs to 'key-the-caller-chooses-the-key'."
 
-  echo "round-trip: a rule addresses itself, so its anchor is its own key."
+  echo "round-trip: a rule's part is its id, and its anchor is the slug of its whole heading."
 
-  # A heading-sourced type sorts on the heading. The standard writes this pair the other way round, which is what makes
-  # the assertion say something.
-  FIRST=$(line_of "$RULES" std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait)
-  LAST=$(line_of "$RULES" std-IDEM.the-caller-chooses-the-key)
+  # A heading-sourced type sorts on the heading's text, without its id. The standard writes this pair the other way
+  # round, and the ids sort the other way too, which is what makes the assertion say something.
+  FIRST=$(line_of "$RULES" std-IDEM.WAIT)
+  LAST=$(line_of "$RULES" std-IDEM.KEY)
 
-  [ -n "$FIRST" ] || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait is not in the export."
-  [ -n "$LAST" ] || fail "std-IDEM.the-caller-chooses-the-key is not in the export."
+  [ -n "$FIRST" ] || fail "std-IDEM.WAIT is not in the export."
+  [ -n "$LAST" ] || fail "std-IDEM.KEY is not in the export."
   [ "$FIRST" -lt "$LAST" ] || fail "the rules of std-IDEM came back out of heading order."
 
-  echo "round-trip: the rules of std-IDEM come back sorted on the heading."
+  echo "round-trip: the rules of std-IDEM come back sorted on the heading's text."
 
   # The link's target is stripped out of the words, so `seeAlso` is where the id survives. `std-RECON` points at a
   # rule of `std-LEDGER`.
-  grep -E '"id": *"std-RECON.nothing-downstream-reads-an-unreconciled-day"' "$RULES" \
-    > "$WORK/refers.txt" || fail "std-RECON carries no nothing-downstream-reads-an-unreconciled-day rule."
+  grep -E '"id": *"std-RECON.HOLD"' "$RULES" \
+    > "$WORK/refers.txt" || fail "std-RECON carries no HOLD rule."
 
   SEEALSO=$(jqr '.seeAlso // [] | join(",")' "$WORK/refers.txt")
-  [ "$SEEALSO" = "std-LEDGER.nothing-amends-an-entry" ] \
-    || fail "std-RECON.nothing-downstream-reads-an-unreconciled-day points at '$SEEALSO'."
+  [ "$SEEALSO" = "std-LEDGER.NOAMEND" ] \
+    || fail "std-RECON.HOLD points at '$SEEALSO'."
 
   echo "round-trip: a rule carries the other standard's rule it leans on, as a part id."
 

@@ -419,6 +419,85 @@ public class PartCheckTests
     public void A_heading_source_declaring_no_modals_is_asked_nothing()
         => Assert.Empty(Run("## Terms\n\n### Corpus\n\n- A body of records.\n", Headings(), "glossary"));
 
+    /// <summary>A heading source declaring an <c>id-pattern</c>, which makes each heading open with its id.</summary>
+    private static PartSpec IdentifiedRules() =>
+        new(PartSpec.Headings, "^[A-Z][A-Z0-9]{1,6}$", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
+            { Section = "Rules", Noun = "rule", Level = 3 };
+
+    private const string Obligation = "- A job **MUST** declare the permission it needs.\n";
+
+    [Fact]
+    public void A_rule_heading_opens_with_the_id_a_citation_names()
+    {
+        var doc = Parse("## Rules\n\n### PERMS: A job declares the permission it needs\n\n" + Obligation,
+            IdentifiedRules(), "standards").Item1;
+
+        var part = Assert.Single(doc.Parts);
+        Assert.Equal("PERMS", part.Id);
+        Assert.Equal("A job declares the permission it needs", part.Text);
+    }
+
+    [Fact]
+    public void A_rule_heading_s_anchor_is_the_slug_of_the_whole_heading()
+    {
+        var doc = Parse("## Rules\n\n### PERMS: A job declares the permission it needs\n\n" + Obligation,
+            IdentifiedRules(), "standards").Item1;
+
+        Assert.Equal("perms-a-job-declares-the-permission-it-needs", Assert.Single(doc.Parts).Anchor);
+    }
+
+    [Fact]
+    public void A_term_heading_is_addressed_and_anchored_by_its_slug()
+    {
+        var doc = Parse(Terms + "### Identity line\n\nThe line beneath the H1.\n", Headings(), "glossary").Item1;
+
+        var part = Assert.Single(doc.Parts);
+        Assert.Equal(part.Id, part.Anchor);
+    }
+
+    [Fact]
+    public void A_rule_heading_with_no_id_is_reported()
+    {
+        var found = Run("## Rules\n\n### A job declares the permission it needs\n\n" + Obligation,
+            IdentifiedRules(), "standards");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-id-format", one.Check.Value);
+        Assert.Contains("'A job declares the permission it needs' opens with no id", one.Message);
+    }
+
+    [Theory]
+    [InlineData("perms")]
+    [InlineData("P")]
+    [InlineData("PERMISSIONS")]
+    public void A_rule_id_outside_the_pattern_is_reported(string id)
+    {
+        var found = Run($"## Rules\n\n### {id}: A job declares the permission it needs\n\n" + Obligation,
+            IdentifiedRules(), "standards");
+
+        Assert.Equal("part-id-format", Assert.Single(found).Check.Value);
+    }
+
+    [Fact]
+    public void Two_rules_sharing_an_id_collide()
+    {
+        var found = Run("## Rules\n\n### PERMS: A job declares the permission it needs\n\n" + Obligation
+                        + "\n### PERMS: A token is scoped to its job\n\n" + Obligation,
+            IdentifiedRules(), "standards");
+
+        Assert.Equal("part-id-unique", Assert.Single(found).Check.Value);
+    }
+
+    [Fact]
+    public void A_term_heading_holding_a_colon_keeps_it()
+    {
+        var doc = Parse(Terms + "### Scope: the corpus\n\nA body.\n", Headings(), "glossary").Item1;
+
+        var part = Assert.Single(doc.Parts);
+        Assert.Equal("scope-the-corpus", part.Id);
+        Assert.Equal("Scope: the corpus", part.Text);
+    }
+
     private static List<Finding> Run(string body) => Run(body, Table(), "policies");
 
     private static List<Finding> Run(string body, PartSpec? spec, string folder)

@@ -3,7 +3,7 @@ id: ctl-0008
 type: control
 tier: normative
 status: active
-verifies: [ std-NETTST ]
+verifies: [ std-NETTST.COVER ]
 mechanism: not-enforced
 applies-to:
   - all
@@ -20,7 +20,7 @@ No check fails a .NET build that runs its tests and collects no coverage.
 
 ## What it checks
 
-* [std-NETTST.coverage-is-collected-by-the-build] says a build "**MUST** collect coverage from its test run and publish
+* [std-NETTST.COVER] says a build "**MUST** collect coverage from its test run and publish
   the report".
 * It says a build "**SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under
   VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with
@@ -50,4 +50,4 @@ A reviewer reading the pipeline definition is the only thing that notices a miss
 The check proves a report was written. It does not prove the report was published, or that each test project is
 excluded from its own figure.
 
-[std-NETTST.coverage-is-collected-by-the-build]: ../standards/platform/dotnet/testing.md#coverage-is-collected-by-the-build
+[std-NETTST.COVER]: ../standards/platform/dotnet/testing.md#cover-coverage-is-collected-by-the-build

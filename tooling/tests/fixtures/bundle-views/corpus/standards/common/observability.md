@@ -21,7 +21,7 @@ A standard no control checks, so the review view says so.
 
 ## Rules
 
-### A call forwards the trace
+### TRACE: A call forwards the trace
 
 - A service **MUST** pass the inbound `traceparent` to everything it calls.
 

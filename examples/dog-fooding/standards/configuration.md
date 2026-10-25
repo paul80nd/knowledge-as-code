@@ -26,7 +26,7 @@ YAML itself is shaped, and `.yamllint` lists the few places this repository depa
 
 ## Rules
 
-### Every value the build reads is committed
+### COMMIT: Every value the build reads is committed
 
 - A value deciding how this repository builds, validates or publishes **MUST** sit in a tracked file.
 - A setting only a provider's console can store **MUST** be named in the header comment of the file it affects.
@@ -36,7 +36,7 @@ YAML itself is shaped, and `.yamllint` lists the few places this repository depa
 
 _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 
-### A pin names an exact version
+### PIN: A pin names an exact version
 
 - A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is
@@ -50,7 +50,7 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 
 _**Covers:** `eng:pol-SUPL.REVIEW`, `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.SOURCE`_
 
-### The shape of a YAML file is yamllint's to decide
+### YAML: The shape of a YAML file is yamllint's to decide
 
 - A YAML file **MUST** pass `yamllint --strict` under the `.yamllint` at this repository's root.
 - `.yamllint` **MUST** extend yamllint's `default` ruleset.
@@ -61,7 +61,7 @@ _**Covers:** `eng:pol-SUPL.REVIEW`, `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.SOURCE`
 
 _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.PARITY`_
 
-### A file says what it is for, and why each value is what it is
+### PURPOSE: A file says what it is for, and why each value is what it is
 
 - A configuration file **SHOULD** open with a comment saying what it is for, or with the
   `# yaml-language-server: $schema=` line naming what describes it.
@@ -71,7 +71,7 @@ _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.PARITY`_
 
 _**Covers:** `eng:pol-EVER.PARITY`_
 
-### A value living in more than one tree is copied and proved
+### COPIES: A value living in more than one tree is copied and proved
 
 - A setting every project under `tooling/` takes **SHOULD** sit in `tooling/Directory.Build.props`.
 - You **MUST** copy a file `manifest.yaml` names into `template/` and into each corpus under `examples/`.

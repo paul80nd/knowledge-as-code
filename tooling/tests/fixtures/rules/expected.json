@@ -34,7 +34,7 @@
       "line": 25,
       "severity": "error",
       "check": "clause-quoted-faithfully",
-      "message": "'std-ERRORS.a-failure-says-what-happened' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
+      "message": "'std-ERRORS.WHAT' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
     },
     {
       "file": "controls/0003-review-overdue.md",

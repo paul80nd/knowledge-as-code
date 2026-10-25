@@ -3,7 +3,7 @@ id: ctl-0003
 type: control
 tier: normative
 status: active
-verifies: [std-ERRORS]
+verifies: [std-ERRORS.WHAT]
 mechanism: ci
 frequency: per-pr
 evidence: The pipeline log for the step that runs the check.

@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 21,
+    "validated": 22,
     "templates": 3,
     "skipped": 0,
-    "errors": 22,
+    "errors": 23,
     "warnings": 2,
     "infos": 0
   },
@@ -175,6 +175,13 @@
       "severity": "error",
       "check": "part-nested",
       "message": "rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it."
+    },
+    {
+      "file": "standards/noid-a-rule-with-no-id.md",
+      "line": 22,
+      "severity": "error",
+      "check": "part-id-format",
+      "message": "rule 'Every secret is read at run time' opens with no id matching ^[A-Z][A-Z0-9]{1,6}$, so nothing can cite it. Write the heading as '### <ID>: Every secret is read at run time'."
     }
   ]
 }

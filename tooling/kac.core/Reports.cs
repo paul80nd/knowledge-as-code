@@ -185,25 +185,29 @@ public static class Reports
     {
         var clauses = Clauses(corpus, inherited);
         var covers = Edges(corpus, inherited, Implements);
+        var rules = RuleCovers(corpus, inherited);
         var departures = Edges(corpus, inherited, DepartsFrom, inForceOnly: true);
         var controls = Edges(corpus, inherited, Verifies);
         var pairs = Pairs(clauses);
 
-        var rows = clauses.Select(c => new CoverageRow(c,
-            covers.GetValueOrDefault(c.Id) ?? [],
-            departures.GetValueOrDefault(c.Id) ?? [],
-            [
-                .. (covers.GetValueOrDefault(c.Id) ?? []).SelectMany(s => controls.GetValueOrDefault(s) ?? [])
-                .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)
-            ],
-            pairs.GetValueOrDefault(c.Id))).ToList();
+        var rows = clauses.Select(c =>
+        {
+            var coveredBy = CoveredBy(c.Id, covers, rules);
+            return new CoverageRow(c, coveredBy,
+                departures.GetValueOrDefault(c.Id) ?? [],
+                [
+                    .. coveredBy.SelectMany(by => ControlsFor(by, controls))
+                        .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)
+                ],
+                pairs.GetValueOrDefault(c.Id));
+        }).ToList();
 
         var body = new StringBuilder();
         Limits(body, corpus, inherited,
             "A clause uncovered here may well be covered in a corpus consuming this one, and every "
             + "consumer answers for its own coverage.",
-            "No column here says a clause is verified. A control names a standard and not a rule, so it "
-            + "vouches for a whole document whatever it checks inside it."
+            "No column here says a clause is verified. `Controls` lists each control naming a rule in "
+            + "`Covered by`, and a control may check one obligation of that rule and leave the rest."
             + DeviationsInForce(corpus, inherited) switch
             {
                 [] => "",
@@ -373,6 +377,94 @@ public static class Reports
 
         return found;
     }
+
+    /// <summary>
+    /// Each standard covering the clause, named by the rules whose <c>Covers</c> line cites it. A standard none of
+    /// whose rules cites it is named whole, which is how a record exported without its rules is read.
+    /// </summary>
+    private static List<string> CoveredBy(
+        string clause, Dictionary<string, List<string>> covers, Dictionary<string, List<string>> rules)
+    {
+        var named = rules.GetValueOrDefault(clause) ?? [];
+
+        return
+        [
+            .. (covers.GetValueOrDefault(clause) ?? []).SelectMany(standard =>
+                named.Where(r => string.Equals(Citation.Read(r).Whole, standard, StringComparison.Ordinal))
+                    .Order(StringComparer.Ordinal)
+                    .DefaultIfEmpty(standard))
+        ];
+    }
+
+    /// <summary>
+    /// The controls naming this rule, and those naming its standard whole, as an export from before rule ids may. A
+    /// standard named whole folds every control naming one of its rules into it.
+    /// </summary>
+    private static IEnumerable<string> ControlsFor(string coveredBy, Dictionary<string, List<string>> controls)
+    {
+        var cited = Citation.Read(coveredBy);
+
+        return controls
+            .Where(e => string.Equals(e.Key, coveredBy, StringComparison.Ordinal)
+                        || string.Equals(e.Key, cited.Whole, StringComparison.Ordinal)
+                        || (cited.Part is null
+                            && string.Equals(Citation.Read(e.Key).Whole, cited.Whole, StringComparison.Ordinal)))
+            .SelectMany(e => e.Value);
+    }
+
+    /// <summary>
+    /// Every rule a <c>Covers</c> line ties to a clause, keyed by the clause. The label is the one the field
+    /// <c>implements</c> mirrors, and an inherited rule carries it under the key this schema's export line names.
+    /// </summary>
+    private static Dictionary<string, List<string>> RuleCovers(
+        LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
+    {
+        var found = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+
+        void Add(string clause, string rule) =>
+            (found.TryGetValue(clause, out var list) ? list : found[clause] = []).Add(rule);
+
+        foreach (var doc in corpus.Docs)
+        {
+            if (Label(doc.Type) is not { } label) continue;
+            if (doc.FrontScalar("id") is not { Length: > 0 } record) continue;
+
+            foreach (var row in doc.Parts)
+                if (row.Id is { Length: > 0 } part)
+                    foreach (var clause in Exporter.Citations(doc, row, [label]).GetValueOrDefault(label, []))
+                        Add(clause, $"{record}.{part}");
+        }
+
+        foreach (var source in inherited)
+        foreach (var type in source.Types)
+        {
+            if (corpus.Schema.ByFolder.GetValueOrDefault(type.Type) is not { } local) continue;
+            if (Label(local) is not { } label || local.Export is not { } export) continue;
+
+            var key = export.Line.FirstOrDefault(l => string.Equals(l.Source,
+                PartLineSource.CitationPrefix + label, StringComparison.Ordinal)).Key;
+            if (key is null) continue;
+
+            foreach (var line in type.PartLines)
+            {
+                if (JsonRead.Parse(line) is not { } json) continue;
+                if (JsonRead.Str(json[type.IdKey ?? "id"]) is not { } id) continue;
+                if (json[key] is not JsonArray clauses) continue;
+
+                // A line further up the chain names its own corpus, and its citations were written there.
+                var scope = JsonRead.Str(json[Exporter.ShortcodeKey]) ?? source.Shortcode;
+                foreach (var clause in clauses)
+                    if (JsonRead.Str(clause) is { Length: > 0 } value)
+                        Add(Exporter.Scoped(value, scope), Exporter.Scoped(id, source.Shortcode));
+            }
+        }
+
+        return found;
+    }
+
+    /// <summary>The <c>Covers</c> label a type's <c>implements</c> mirrors, or null where it mirrors none.</summary>
+    private static string? Label(TypeSchema? type) =>
+        type?.Fields.GetValueOrDefault(Implements)?.MirrorsCitations;
 
     /// <summary>
     /// The clause a clause is likely paired with: the same key in another policy. A candidate, which whoever confirms

@@ -8,7 +8,7 @@
       {
         "path": "skills/standards-lookup",
         "requires": [
-          "standards@2"
+          "standards@3"
         ],
         "note": "Reads a rule from corpus/standards/rules.jsonl."
       },
@@ -16,7 +16,7 @@
         "path": "views/build-index.md",
         "view": "build-index",
         "requires": [
-          "standards@2"
+          "standards@3"
         ],
         "note": "Every standard rule by title, id and status."
       },
@@ -24,10 +24,10 @@
         "path": "views/review.md",
         "view": "review",
         "requires": [
-          "standards@2"
+          "standards@3"
         ],
         "optional": [
-          "controls@1"
+          "controls@2"
         ],
         "note": "Each standard rule's obligations, and the controls checking it."
       },
