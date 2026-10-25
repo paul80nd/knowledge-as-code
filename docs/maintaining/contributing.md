@@ -34,7 +34,7 @@ Branch off `main`. A push to `main` is rejected. Before you open the pull reques
    manifest you changed, move `content-version` in that corpus's `.corpus.yaml`. Where that corpus has consumers, move
    their `resolved:` lock and their own `content-version` in the same pull request. A change to `kac` moves no
    `content-version`, even where the exported bytes change.
-   [std-VERS](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/versioning.md#which-stamps-move-together-and-which-move-alone)
+   [std-VERS](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/versioning.md#tandem-which-stamps-move-together-and-which-move-alone)
    states the rule.
 5. Run the [test layers](build-test-release.md#the-three-test-layers) your change touches.
 6. Put a change of behaviour in a commit of its own.

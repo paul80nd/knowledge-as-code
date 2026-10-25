@@ -28,8 +28,8 @@ that export. An install gets the ones whose record types the corpus exported.
 | `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`     |
 | `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`  |
 | `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@1` |
-| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@2` |
-| `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@2` |
+| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@3` |
+| `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@3` |
 
 <!-- END GENERATED: skills-in-the-plugin -->
 

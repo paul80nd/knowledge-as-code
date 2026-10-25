@@ -40,14 +40,14 @@ Each line is one heading of a standard's Rules section, with everything written 
 
 | Field                | Type                     | What it holds                                                                |
 |----------------------|--------------------------|------------------------------------------------------------------------------|
-| `id`                 | string                   | `<standard-id>.<rule-key>`, the address to quote and to cite                 |
-| `title`              | string                   | the heading, which says what the obligations beneath it are about            |
+| `id`                 | string                   | `<standard-id>.<rule-id>`, as `std-CI.PERMS`, the address to quote and cite  |
+| `title`              | string                   | the heading without its id, saying what the obligations beneath it are about |
 | `obligations`        | list of objects, or null | one entry per bullet under that heading, in the order the standard wrote it  |
 | `covers`             | list of strings, or null | the policy clauses this rule discharges                                      |
 | `seeAlso`            | list of strings, or null | the rules of other standards this one points at                              |
 | `type`               | string                   | `standards`, on every line of this file                                      |
 | `record`             | string                   | the standard the rule belongs to                                             |
-| `part`               | string                   | the rule's key inside that standard                                          |
+| `part`               | string                   | the rule's id inside that standard, as `PERMS`                               |
 | `shortcode`          | string, or absent        | the corpus that published the rule. A rule written here carries no such key  |
 | `status`, `reviewBy` | string                   | how far the standard has settled, and the date it was meant to be read again |
 | `links`              | object or null           | `human`, the link to the rule. `null` where nothing can address it           |
@@ -71,13 +71,13 @@ One line can hold obligations at different levels. Compare each `level` whole, b
 * **`SHOULD` and `SHOULD NOT` state the usual way.** The work departs by giving its reason in the change. No deviation.
 * **`MAY` permits.** It blocks nothing.
 
-Quote the entry's `text`, and cite the line's `id`. A rule is addressed by its heading, so an obligation has no id.
+Quote the entry's `text`, and cite the line's `id`. A rule is addressed by the id its heading opens with, so an
+obligation has no id of its own.
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the rule.** `eng:std-TEST.every-test-is-hermetic` was published by the corpus
-with shortcode `eng`, and a bare `std-TEST.every-test-is-hermetic` was written here. The prefix is on `id`, `record` and
-every `seeAlso` value. An inherited rule binds as fully as one written here. Look its `shortcode` up in `sources` in
+**A prefix names the corpus that wrote the rule.** `eng:std-TEST.LEVEL` was published by the corpus with shortcode
+`eng`, and a bare `std-TEST.LEVEL` was written here. The prefix is on `id`, `record` and every `seeAlso` value. An inherited rule binds as fully as one written here. Look its `shortcode` up in `sources` in
 `manifest.json`, and name that corpus in words.
 
 **A record file sits under its producer's shortcode.** `eng:std-TEST` is

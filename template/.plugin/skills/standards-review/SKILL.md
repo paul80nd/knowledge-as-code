@@ -42,9 +42,9 @@ before you start. Where the change is empty, say so and stop, because an empty c
 Read `${CLAUDE_PLUGIN_ROOT}/views/review.md` from its first line to its last. Where one read stops short of the end,
 read on from where it stopped until you reach it. A rule you did not read is a rule you did not check.
 
-The view lists each standard under its id and title, with its status and the controls that check it. Under each
-standard it lists the rules, each with the id to cite and its obligations. Each obligation is one bullet, and its
-keyword is in bold.
+The view lists each standard under its id and title, with its status. Under each standard it lists the rules, each
+with the id to cite, the controls that check it, and its obligations. Each obligation is one bullet, and its keyword is
+in bold.
 
 ## Learn which status is in force
 
@@ -66,13 +66,14 @@ For controls, check every obligation yourself, because you cannot tell which con
 
 ## Decide which rules are yours to check
 
-**Check every obligation yourself, except one an automated control already checks.** A standard's `Controls:` line
-lists each control as its id, its title, then its mechanism and its status in brackets.
+**Check every obligation yourself, except one an automated control already checks.** A rule's `Controls:` line lists
+each control naming that rule, as its id, its title, then its mechanism and its status in brackets.
 
 A control checks an obligation for you only where its status is the `inForce` value for `controls` and its mechanism
 is `ci` or `runtime-alert`. For each such control, read its record and its two sections:
 
-* **`sections.What it checks`**, a string of markdown, names the obligations the control checks. Leave those out.
+* **`sections.What it checks`**, a string of markdown, names the obligations of the rule the control checks. A
+  control can watch one bullet of a rule and leave the rest. Leave out only the obligations it names.
 * **`sections.Coverage and gaps`**, a string of markdown, says where the control stops. Check what it leaves.
 
 Every other control leaves the rule with you. `review-checklist` and `manual` mean a person checks the rule while
@@ -100,22 +101,22 @@ The keyword in bold says what departing from the obligation costs. Compare it wh
 
 ## Cite each finding
 
-**Cite the rule's id, as the view's `Cite as` line gives it.** A rule is addressed by its heading, so the obligation
-has no id of its own. Quote the obligation the change breaks, and cite the rule it sits under.
+**Cite the rule's id, as the view's `Cite as` line gives it.** A rule is addressed by the id its heading opens with,
+so the obligation has no id of its own. Quote the obligation the change breaks, and cite the rule it sits under.
 
 **Link the rule from `rules.jsonl`.** Find the line whose `id` matches the one you cite, and quote its `links.human`.
 Each line is one rule, with these keys:
 
 | Field                | Type                     | What it holds                                                                |
 |----------------------|--------------------------|------------------------------------------------------------------------------|
-| `id`                 | string                   | `<standard-id>.<rule-key>`, the address to cite                              |
-| `title`              | string                   | the heading the obligations sit under                                        |
+| `id`                 | string                   | `<standard-id>.<rule-id>`, as `std-CI.PERMS`, the address to cite            |
+| `title`              | string                   | the heading the obligations sit under, without its id                        |
 | `obligations`        | list of objects, or null | one entry per bullet, each with a `level` and a `text`                       |
 | `covers`             | list of strings, or null | the policy clauses this rule discharges                                      |
 | `seeAlso`            | list of strings, or null | the rules of other standards this one points at                              |
 | `type`               | string                   | `standards`, on every line of this file                                      |
 | `record`             | string                   | the standard the rule belongs to                                             |
-| `part`               | string                   | the rule's key inside that standard                                          |
+| `part`               | string                   | the rule's id inside that standard, as `PERMS`                               |
 | `shortcode`          | string, or absent        | the corpus that published the rule. A rule written here carries no such key  |
 | `status`, `reviewBy` | string                   | how far the standard has settled, and the date it was meant to be read again |
 | `links`              | object or null           | `human`, the link to the rule. `null` where nothing can address it           |
@@ -125,8 +126,8 @@ Each line is one rule, with these keys:
 so. `links` is the other: a line another corpus exported before the key existed has none. Where `links` is `null` or
 absent, say the rule has no link.
 
-**A prefix on a rule's id names the corpus that wrote it.** `eng:std-TEST.every-test-is-hermetic` was published by the
-corpus whose shortcode is `eng`. Look the shortcode up in `sources` in `manifest.json`, and name that corpus in words.
+**A prefix on a rule's id names the corpus that wrote it.** `eng:std-TEST.LEVEL` was published by the corpus whose
+shortcode is `eng`. Look the shortcode up in `sources` in `manifest.json`, and name that corpus in words.
 An inherited rule binds the change as fully as one written here.
 
 ## Say when a standard is unsettled

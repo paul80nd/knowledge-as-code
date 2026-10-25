@@ -23,6 +23,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   take over from several. Each tool it lists names it as `successor`, and `kac validate` reports `reciprocal` where one
   does not. A single id written on the line itself is now a `list` error. `version:` under `export:` in
   `.schema/tools.yaml` moves to 4.
+- **A standard's rule is cited by its id, and a control names the rules it checks.** Each rule heading opens with an id,
+  as `### PERMS: A job declares the permission it needs`, and `kac validate` reports `part-id-format` on one without.
+  The export's `part` is that id and `title` drops it, while `anchor` stays the slug of the whole heading.
+  `verifies` in `controls` takes rule ids, as `std-CI.PERMS`, and a bare standard id is a `ref-resolves` error.
+  `reciprocal` folds a rule id to its standard. `version:` under `export:` in `.schema/standards.yaml` moves to 3.
+- **`kac report coverage` names the rule.** `Covered by` lists the rules whose `Covers` line cites the clause, and
+  `Controls` lists the controls naming one of them. The review view `kac bundle` writes lists each control under the
+  rule it names.
 
 ## 0.39.0 - 2026-10-23
 

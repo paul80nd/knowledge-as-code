@@ -17,7 +17,7 @@ is not in `types` in `manifest.json`, this corpus exports none, so say that and 
 Search `${CLAUDE_PLUGIN_ROOT}/corpus/deviations/` and read every file that hits.
 
 * **Search the policy or standard id in `departs-from`**, as `std-CONFIG`. An entry names one clause inside it, as
-  `std-CONFIG.a-pin-names-an-exact-version`, so the record's id alone finds every clause of it.
+  `std-CONFIG.PIN`, so the record's id alone finds every clause of it.
 * **Search the service id in `applies-to`**, as `svc-kac`, where the question is about one service.
 * **Search the subject** where you know neither, as `SDK` or `package`. The sections are in the author's own words.
 

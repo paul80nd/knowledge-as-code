@@ -17,8 +17,10 @@ type's business, declared under `parts:` in its schema. The declaration names th
 they are rows of a table or headings beneath it. The validator reads them out of the body and checks them.
 
 Two shapes are in use. A policy's obligations are rows of `## Clauses`, each with an id written beside it, cited as
-`pol-VURM.TIMEBOX`, so a clause can be reworded without its address moving. A glossary's terms are headings, addressed
-by the anchor each heading slugs to, so `gls-knowledge-as-code.corpus` and a link to `#corpus` name the same entry.
+`pol-VURM.TIMEBOX`, so a clause can be reworded without its address moving. A standard's rules are headings, each
+opening with its id, so `### PERMS: A job declares the permission it needs` is cited as `std-CI.PERMS` and linked at
+`#perms-a-job-declares-the-permission-it-needs`. A glossary's terms are headings, addressed by the anchor each heading
+slugs to, so `gls-knowledge-as-code.corpus` and a link to `#corpus` name the same entry.
 
 **Everything else is prose**, in the section where it belongs. Ask whether anything has to address the piece: a citation
 that must resolve, a check that must fire. Where nothing does, a table is prose set in columns and a heading is a

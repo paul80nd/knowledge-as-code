@@ -143,13 +143,14 @@ A view is a file `View` renders into the plugin from the export, after the trim.
 
 * **It reads the export inside the plugin, and nothing else.** A fresh bundle of one export writes every view byte for
   byte, so a view is never a copy somebody keeps beside the export.
-* **It reads part lines at the shape its component pins.** `standards@2` fixes the keys of a rule line, so a view reads
+* **It reads part lines at the shape its component pins.** `standards@3` fixes the keys of a rule line, so a view reads
   `title`, `obligations` and `status` by name.
 * **It names an inherited record as the export does.** A consumed corpus's control sits under its shortcode, and its
-  id and `verifies` are read with that shortcode, so a control from `eng` checks `eng:std-DEPLOY`.
-* **It states a standard's status and controls once, in or under the standard's heading.** A rule line repeats its
-  standard's status, so a view reads it from the first rule. The build index puts the status in the heading, to keep
-  the file short. A control is listed under each standard its `verifies` names, or whose rule it names.
+  id and `verifies` are read with that shortcode, so a control from `eng` checks `eng:std-DEPLOY.ONCE`.
+* **It states a standard's status once, in or under the standard's heading.** A rule line repeats its standard's
+  status, so a view reads it from the first rule. The build index puts the status in the heading, to keep the file
+  short. The review view lists a control under each rule its `verifies` names, and under every rule of a standard it
+  names whole.
 * **The review view names the status in force from the manifest.** It reads `inForce` on the standards entry and on
   the controls entry. Where an entry states none, as an export from an older `kac` does, the view says the export does
   not state it. For controls, it then says no control is known to check a rule.

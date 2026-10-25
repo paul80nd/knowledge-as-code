@@ -15,7 +15,7 @@ This page describes the design. It claims no measured advantage over any of the 
 Each option below gives an agent text to read. KaC adds four things to that text:
 
 * **A rule has an id and a level.** Each rule in a standard has an id an agent can cite, such as
-  `std-SECRET.a-secret-comes-from-the-store`. It states its level in bold, such as **MUST**.
+  `std-SECRET.STORE`. It states its level in bold, such as **MUST**.
 * **A record is checked.** `kac validate` checks every record against the schema its type declares. A broken
   reference fails CI.
 * **One standard applies in every repository that takes it.** A team's corpus consumes an organisation's corpus. It
