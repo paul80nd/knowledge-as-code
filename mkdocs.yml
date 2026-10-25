@@ -16,7 +16,7 @@ copyright: MIT licensed.
 # has it.
 strict: true
 
-# Zensical ignores this key and fails a dead anchor anyway. MkDocs reads it, so the site still builds as strictly there.
+# Zensical checks anchors whether or not this is set. MkDocs needs it, so the site still builds as strictly there.
 validation:
   links:
     anchors: warn
@@ -27,8 +27,8 @@ exclude_docs: |
 
 theme:
   name: material
-  # Zensical's default is `modern`. `classic` keeps the look Material for MkDocs gave this site.
-  variant: classic
+  # Zensical's own theme. tol-zensical records its accessibility assessment, and the one shortfall it found.
+  variant: modern
   logo: assets/icon.svg
   favicon: assets/icon.svg
   icon:
@@ -79,9 +79,9 @@ markdown_extensions:
   # A ```mermaid block renders as a diagram. `docs/reference/generation.md` holds the subset every diagram keeps to.
   #
   # The theme fetches https://unpkg.com/mermaid@11/dist/mermaid.min.js at page load, and only for a page
-  # carrying one of these. It is the one thing this site asks of a host other than Pages, the version is
-  # the theme's to choose rather than ours to pin, and a reader who cannot reach unpkg.com reads the
-  # diagram's source instead of seeing the picture. Every such block renders on github.com either way.
+  # carrying one of these. It and the theme's Google Fonts are what this site asks of a host other than Pages.
+  # The version is the theme's to choose, and a reader who cannot reach unpkg.com reads the diagram's source
+  # instead of seeing the picture. Every such block renders on github.com either way.
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

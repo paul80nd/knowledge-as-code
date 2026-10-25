@@ -29,8 +29,7 @@ repository root.
 
 Zensical comes from the team behind Material for MkDocs, and reads the `mkdocs.yml` that MkDocs and Material read. It
 renders the theme's `features:` and `palette:` blocks, builds the search index, and writes a redirect page for each
-entry in `redirect_maps`. The redirect page keeps the anchor. `theme.variant: classic` keeps the look Material gave the
-site.
+entry in `redirect_maps`. The redirect page keeps the anchor. `theme.variant: modern` selects Zensical's own theme.
 
 `strict: true` turns a dead link or a dead anchor into a failed build. A page the navigation does not list passes the
 build, so `NavigationTests` in `kac.tests` covers that case.
@@ -41,14 +40,16 @@ Approved for the 0.0 line, and pinned at 0.0.72 in `docs/requirements.txt`. Zens
 days and makes no promise about stability or about how long it reads `mkdocs.yml`. Each Dependabot pull request meets
 the strict build before it merges.
 
-`mkdocs.yml` still builds the same site under MkDocs 1.6.1 with Material 9.7.7, so leaving Zensical is a change to
-`docs/requirements.txt` and to the build command in two workflows. The review date falls before Material's critical
-fixes end on 2027-05-05.
+`mkdocs.yml` still builds the site under MkDocs 1.6.1 with Material 9.7.7, in Material's look, so leaving Zensical is a
+change to `docs/requirements.txt` and to the build command in two workflows. The review date falls before Material's
+critical fixes end on 2027-05-05.
 
 ## Accessibility
 
-Assessed against [WCAG 2.2 AA] at 0.0.72 with the `classic` variant, by building the site with the pinned version and
-reading the HTML it emits. [std-A11Y] states the rules the assessment checks against.
+Assessed against [WCAG 2.2 AA] at 0.0.72 with the `modern` variant. The site was built with the pinned version, its HTML
+read, and five pages audited with axe-core 4.10.2 in headless Chrome, in both colour schemes. The pages are the home
+page, the CLI reference, the changelog, getting started and the checks reference. [std-A11Y] states the rules the
+assessment checks against.
 
 The theme supplies what a Markdown author cannot. `<html lang="en">` states the language of every page. A "Skip to
 content" link is first in the keyboard tab order. The header logo is an image whose alternative text is the site's
@@ -56,9 +57,14 @@ name, and the navigation and search buttons each carry a visually hidden label. 
 the home page included. Contrast comes from the `default` and `slate` schemes with `indigo` primary, which are the
 theme's own and unchanged. `docs/assets/extra.css` sets two margins and nothing else.
 
-Two things fall short. Nobody has run the site through a screen reader or a contrast checker, so the contrast of the
-two schemes is taken from the theme and not measured here. A Mermaid diagram renders as an SVG that the theme gives no
-text alternative, so the prose beside it is the only way to read what it says.
+Links in prose pass the audit's check that a link does not rely on colour alone. The audit reports one failure on every
+page: the current page's entry in the sidebar, in `#526cfe`, has a contrast of 3.75:1 on the light scheme and 4.21:1
+on the dark, below the 4.5:1 WCAG asks of text. The colour is the theme's `indigo` accent. The four other palettes
+tried, `blue`, `deep-purple`, `teal` and `black`, fail as badly or worse, so the shortfall is left for the theme to
+fix, and `extra.css` overrides no colour.
+
+Two more things fall short. Nobody has run the site through a screen reader. A Mermaid diagram renders as an SVG that
+the theme gives no text alternative, so the prose beside it is the only way to read what it says.
 
 ## Where it is used
 

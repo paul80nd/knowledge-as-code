@@ -36,7 +36,7 @@ separate feature, and this build does not exercise it. Taken from the header com
 
 * **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `docs`, configured by
   `mkdocs.yml` at the root
-* **Platform**: Zensical, with its `classic` theme, pinned in `docs/requirements.txt`
+* **Platform**: Zensical, with its `modern` theme, pinned in `docs/requirements.txt`
 * **Deployed as**: a static site uploaded as a Pages artifact by `publish-docs.yml`
 
 ## Environments
