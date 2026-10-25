@@ -372,7 +372,10 @@ public partial class Doc
         return values;
     }
 
-    /// <summary>For display. A mapping entry reads as its <c>naming</c> key, which the schema chooses.</summary>
+    /// <summary>
+    /// For display. A mapping, as the field's value or as an entry, reads as its <c>naming</c> key, which the schema
+    /// chooses.
+    /// </summary>
     public List<string> FrontEntries(string key, string? naming)
     {
         var values = new List<string>();
@@ -381,9 +384,16 @@ public partial class Doc
         foreach (var kv in Front.Children)
         {
             if (((YamlScalarNode)kv.Key).Value != key) continue;
-            if (kv.Value is not YamlSequenceNode seq) continue;
 
-            foreach (var item in seq.Children)
+            IEnumerable<YamlNode>? items = kv.Value switch
+            {
+                YamlSequenceNode seq => seq.Children,
+                YamlMappingNode map => [map],
+                _ => null
+            };
+            if (items is null) continue;
+
+            foreach (var item in items)
                 switch (item)
                 {
                     case YamlScalarNode { Value: { Length: > 0 } v }: values.Add(v); break;

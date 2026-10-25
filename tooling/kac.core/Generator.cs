@@ -1,5 +1,4 @@
 using System.Text;
-using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
@@ -359,12 +358,7 @@ public static class Generator
         if (d.FrontScalar(col) is { Length: > 0 } scalar) return Gfm.Escape(scalar);
 
         var spec = t.Fields.GetValueOrDefault(col);
-        if (spec is { Type: "object", Entry: [{ } key, ..] })
-            return d.FrontNode(col) is YamlMappingNode map && Yaml.Get(map, key.Name) is YamlScalarNode { Value: { } v }
-                ? Gfm.Escape(v)
-                : "";
-
-        var naming = spec?.Of == "object" && spec.Entry is [{ } first, ..] ? first.Name : null;
+        var naming = spec is { Type: "object" } or { Of: "object" } && spec.Entry is [{ } first, ..] ? first.Name : null;
         return Gfm.Escape(string.Join(", ", d.FrontEntries(col, naming)));
     }
 

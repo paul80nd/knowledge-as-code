@@ -33,19 +33,19 @@ read the files that hit.
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 Both section keys are always present, because this type requires both sections.
 
-| Key                          | Type                     | What it holds                                                     |
-|------------------------------|--------------------------|-------------------------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the process by                                |
-| `fields.title`               | string                   | what the process achieves                                         |
-| `fields.status`              | string                   | `active`, `draft` or `retired`                                    |
-| `fields.applies-to`          | list of strings, or null | the service ids the process concerns                              |
-| `fields.last-rehearsed`      | object, or string        | the last walk-through end to end, as `at` and `by`, or `never`    |
-| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`               |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                                    |
-| `sections.When to use this`  | string of markdown       | the trigger, which says whether the process is yours              |
-| `sections.Prerequisites`     | string of markdown       | the access, tools, prior work and skills the first step needs     |
-| `path`                       | string                   | where the record sits in its own repository                       |
-| `links`                      | object                   | the built link to that record, under `human`                      |
+| Key                          | Type                     | What it holds                                                                                        |
+|------------------------------|--------------------------|------------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the process by                                                                   |
+| `fields.title`               | string                   | what the process achieves                                                                            |
+| `fields.status`              | string                   | `active`, `draft` or `retired`                                                                       |
+| `fields.applies-to`          | list of strings, or null | the service ids the process concerns                                                                 |
+| `fields.last-rehearsed`      | object, or string        | the last walk-through: `at` and `by` are strings, and `method` is always null. Or the string `never` |
+| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`                                                  |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                       |
+| `sections.When to use this`  | string of markdown       | the trigger, which says whether the process is yours                                                 |
+| `sections.Prerequisites`     | string of markdown       | the access, tools, prior work and skills the first step needs                                        |
+| `path`                       | string                   | where the record sits in its own repository                                                          |
+| `links`                      | object                   | the built link to that record, under `human`                                                         |
 
 **Read `When to use this` before you decide.** A title says what a process achieves, and two processes can achieve
 similar things. The trigger says which one was written for your situation.

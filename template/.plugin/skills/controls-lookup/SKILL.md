@@ -44,23 +44,23 @@ read the files that hit.
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key. The
 three section keys are always present, because this type requires all three.
 
-| Key                          | Type                     | What it holds                                       |
-|------------------------------|--------------------------|-----------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the control by                  |
-| `fields.title`               | string                   | what the control checks, in one line                |
-| `fields.status`              | string                   | `active`, `planned` or `retired`                    |
-| `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty |
-| `fields.mechanism`           | string                   | how the check happens, in the five values below     |
-| `fields.frequency`           | string, or null          | how often it runs, in the seven values below        |
-| `fields.last-verified`       | object, string, or null  | the last manual run, as `at` and `by`, or `never`   |
-| `fields.evidence`            | string, or null          | where the proof of a run lives                      |
-| `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`     |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                      |
-| `sections.What it checks`    | string of markdown       | the rules it covers, in the author's own words      |
-| `sections.How it works`      | string of markdown       | what performs the check, in the author's words      |
-| `sections.Coverage and gaps` | string of markdown       | where the control stops, and what nothing watches   |
-| `path`                       | string                   | where the record sits in its own repository         |
-| `links`                      | object                   | the built link to that record, under `human`        |
+| Key                          | Type                     | What it holds                                                                                      |
+|------------------------------|--------------------------|----------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the control by                                                                 |
+| `fields.title`               | string                   | what the control checks, in one line                                                               |
+| `fields.status`              | string                   | `active`, `planned` or `retired`                                                                   |
+| `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty                                                |
+| `fields.mechanism`           | string                   | how the check happens, in the five values below                                                    |
+| `fields.frequency`           | string, or null          | how often it runs, in the seven values below                                                       |
+| `fields.last-verified`       | object, string, or null  | the last manual run: `at` and `by` are strings, and `method` is always null. Or the string `never` |
+| `fields.evidence`            | string, or null          | where the proof of a run lives                                                                     |
+| `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`                                                    |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                     |
+| `sections.What it checks`    | string of markdown       | the rules it covers, in the author's own words                                                     |
+| `sections.How it works`      | string of markdown       | what performs the check, in the author's words                                                     |
+| `sections.Coverage and gaps` | string of markdown       | where the control stops, and what nothing watches                                                  |
+| `path`                       | string                   | where the record sits in its own repository                                                        |
+| `links`                      | object                   | the built link to that record, under `human`                                                       |
 
 `mechanism` takes one of five values:
 

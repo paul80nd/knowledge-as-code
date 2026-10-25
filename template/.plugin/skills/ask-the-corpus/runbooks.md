@@ -27,23 +27,23 @@ Search `${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/` and read every file that hits.
 
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 
-| Key                          | Type                     | What it holds                                                    |
-|------------------------------|--------------------------|------------------------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the runbook by                               |
-| `fields.title`               | string                   | the failure it covers, in one line                               |
-| `fields.status`              | string                   | `active`, `draft` or `retired`                                   |
-| `fields.severity`            | string                   | the severity it is written for, as `sev3`                        |
-| `fields.applies-to`          | list of strings, or null | the service ids it covers                                        |
-| `fields.last-rehearsed`      | object, or string        | the last walk, as `at`, `by` and `method`, or `never`            |
-| `fields.rehearsal-frequency` | string                   | how often it is walked, as `on-change` or `quarterly`            |
-| `fields.requires-tools`      | list of strings, or null | what the reader installs before starting                         |
-| `fields.requires-access`     | list of strings, or null | the permissions the reader needs before starting                 |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                                   |
-| `sections.Symptoms`          | string of markdown       | what a reader sees when this failure is happening                |
-| `sections.Impact`            | string of markdown       | who is affected, and how badly                                   |
-| `trust`                      | null                     | always null for this type, which records no verification         |
-| `path`                       | string                   | where the runbook sits in its own repository                     |
-| `links`                      | object, or null          | the built link to that runbook, under `human`                    |
+| Key                          | Type                     | What it holds                                                                                                         |
+|------------------------------|--------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the runbook by                                                                                    |
+| `fields.title`               | string                   | the failure it covers, in one line                                                                                    |
+| `fields.status`              | string                   | `active`, `draft` or `retired`                                                                                        |
+| `fields.severity`            | string                   | the severity it is written for, as `sev3`                                                                             |
+| `fields.applies-to`          | list of strings, or null | the service ids it covers                                                                                             |
+| `fields.last-rehearsed`      | object, or string        | the last walk: `at`, `by` and `method` are strings, `method` null where the record left it out. Or the string `never` |
+| `fields.rehearsal-frequency` | string                   | how often it is walked, as `on-change` or `quarterly`                                                                 |
+| `fields.requires-tools`      | list of strings, or null | what the reader installs before starting                                                                              |
+| `fields.requires-access`     | list of strings, or null | the permissions the reader needs before starting                                                                      |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                                        |
+| `sections.Symptoms`          | string of markdown       | what a reader sees when this failure is happening                                                                     |
+| `sections.Impact`            | string of markdown       | who is affected, and how badly                                                                                        |
+| `trust`                      | null                     | always null for this type, which records no verification                                                              |
+| `path`                       | string                   | where the runbook sits in its own repository                                                                          |
+| `links`                      | object, or null          | the built link to that runbook, under `human`                                                                         |
 
 `Symptoms` and `Impact` are always present, because the type requires them. A runbook under a shortcode folder was
 written by the corpus with that `shortcode` in `sources` in `manifest.json`. Name that corpus in words.
