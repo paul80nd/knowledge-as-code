@@ -112,13 +112,16 @@ write the issue where they say one belongs. The record itself lands in
 
 **Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
 it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
-sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. An epic is `1`, and its stories count up
-from `2` in delivery order. An issue left off the board is one the developer never sees.
+sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. In a lane with an epic, the epic is `1`
+and its stories count up from `2` in delivery order. An issue left off the board is one the developer never sees.
 
-**Each lane has one epic, and every issue in the lane is a sub-issue of that epic alone.** A finding goes to the lane
-its kind belongs in, under that lane's epic. It joins the lane in flight only where it is worth delivering with that
-lane's stories. An epic then closes when its lane drains, rather than growing with every finding its stories turn up.
-`addSubIssue` takes a GraphQL node id for both issues, and `replaceParent: true` moves an issue from another epic.
+**The board runs by stage, and each stage lane has one epic.** A lane's name starts with its stage: `1` before the
+trial, `2` the trial, `3` the route to v1 and `4` future functionality. The stages run in that order. Every issue in a
+stage lane is a sub-issue of that lane's epic alone, and the epic closes when its lane drains.
+
+**A finding goes to `Intake`.** Triage then moves it into the stage lane it is worth delivering with, or into
+`4 Future functionality`. Neither `Intake` nor `4 Future functionality` has an epic. `addSubIssue` takes a GraphQL node
+id for both issues, and `replaceParent: true` moves an issue from another epic.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
