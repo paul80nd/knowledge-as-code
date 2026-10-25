@@ -36,6 +36,25 @@ public class WorkflowGateTests
         Assert.Equal(declared.Order(StringComparer.Ordinal), gated.Order(StringComparer.Ordinal));
     }
 
+    [Fact]
+    public void The_gate_runs_after_a_job_it_needs_has_failed()
+    {
+        var gate = (YamlMappingNode)Jobs().Children[new YamlScalarNode(Gate)];
+
+        Assert.True(gate.Children.TryGetValue(new YamlScalarNode("if"), out var condition),
+            $"'{Gate}' states no `if:`, so a failed job skips it and GitHub counts the skipped check as passing.");
+        Assert.Equal("always()", Text(condition));
+    }
+
+    [Fact]
+    public void The_gate_reads_the_result_of_every_job_it_needs()
+    {
+        var gate = (YamlMappingNode)Jobs().Children[new YamlScalarNode(Gate)];
+        var steps = (YamlSequenceNode)gate.Children[new YamlScalarNode("steps")];
+
+        Assert.Contains(steps.Children, step => step.ToString().Contains("needs.*.result", StringComparison.Ordinal));
+    }
+
     private static string Text(YamlNode node) =>
         (node as YamlScalarNode)?.Value
         ?? throw new XunitException($"a node in kac.yml holds no text: {node}");
