@@ -1,0 +1,68 @@
+{
+  "summary": {
+    "validated": 4,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 5,
+    "warnings": 2,
+    "infos": 1
+  },
+  "findings": [
+    {
+      "file": "adrs/0001-accepted.md",
+      "line": null,
+      "severity": "info",
+      "check": "unused-definition",
+      "message": "accepted: The definition is kept for the page that will cite it."
+    },
+    {
+      "file": "adrs/0002-stale.md",
+      "line": 9,
+      "severity": "warning",
+      "check": "acceptance-stale",
+      "message": "no 'unused-definition' warning is left on this record for this entry to accept. Remove the entry from 'accepts'."
+    },
+    {
+      "file": "adrs/0003-refused.md",
+      "line": 9,
+      "severity": "error",
+      "check": "acceptance-check",
+      "message": "'acceptance-stale' cannot be accepted. Remove the entry it reports, and then this one."
+    },
+    {
+      "file": "adrs/0003-refused.md",
+      "line": 10,
+      "severity": "error",
+      "check": "acceptance-check",
+      "message": "'h1' reports errors, and 'accepts' takes a warning only. Fix what it reports, and remove the entry."
+    },
+    {
+      "file": "adrs/0003-refused.md",
+      "line": 11,
+      "severity": "error",
+      "check": "acceptance-check",
+      "message": "'import-capped' reports info, and 'accepts' takes a warning only. Remove the entry."
+    },
+    {
+      "file": "adrs/0003-refused.md",
+      "line": 12,
+      "severity": "error",
+      "check": "acceptance-check",
+      "message": "'no-such-check' is not a check `kac validate` reports. `kac checks` lists every check id."
+    },
+    {
+      "file": "adrs/0004-empty-reason.md",
+      "line": null,
+      "severity": "warning",
+      "check": "unused-definition",
+      "message": "link definition '[unused-ref]' is never referenced."
+    },
+    {
+      "file": "adrs/0004-empty-reason.md",
+      "line": 9,
+      "severity": "error",
+      "check": "entry-key",
+      "message": "'accepts' entry 'unused-definition' leaves 'reason' with no value."
+    }
+  ]
+}

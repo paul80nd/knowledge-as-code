@@ -30,9 +30,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `dotnet tool restore` and then `dotnet tool run kac`, so each can take the token `validate` posts with. The GitHub
   starter grants `pull-requests: write` and passes `GITHUB_TOKEN` to the validate step, and the Azure starter passes
   `SYSTEM_ACCESSTOKEN`. The starter's `dependabot.yml` gains a `nuget` entry, which proposes each new `kac`.
+- **A record accepts a warning, with a reason.** `accepts:` is a universal field listing a `check` and a `reason` for
+  each warning a record keeps. `kac validate` reports each accepted warning as info, reading `accepted:` and the reason,
+  so CI neither annotates nor comments on it. An entry naming an error, an info or an unknown check is the error
+  `acceptance-check`, and one matching no warning is the warning `acceptance-stale`. The field never travels in an
+  export.
 
 ### Changed
 
+- **A required key in an entry needs a value.** `kac validate` reports `entry-key` where a record's object entry
+  writes a required key with no value, such as `reason:` in `accepts:` or `resource:` in `sources:`. A template's
+  entries are exempt.
 - **A tool can replace several others.** `replaces` in `tools` takes a list of tool ids, one per line, so one tool can
   take over from several. Each tool it lists names it as `successor`, and `kac validate` reports `reciprocal` where one
   does not. A single id written on the line itself is now a `list` error. `version:` under `export:` in

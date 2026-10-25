@@ -26,7 +26,7 @@ public class DependencyCriticalityTests
     public void The_message_names_the_field_the_target_and_both_grades()
         => Assert.Equal(
             "'depends-on' cites 'svc-b', graded 'important' where this record is 'critical'. Regrade "
-            + "one of the two, or write down what degrades when it is gone.",
+            + "one of the two, or say what degrades when it is gone and accept this warning in `accepts:`.",
             Single(Check(("svc-a", "critical", ["svc-b"]), ("svc-b", "important", []))).Message);
 
     [Fact]

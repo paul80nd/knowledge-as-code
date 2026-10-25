@@ -43,7 +43,8 @@ public sealed class DependencyCriticality : ICorpusRule
 
                 ctx.Warn(doc, Reports,
                     $"'{edge.Name}' cites '{target}', graded '{theirs}' where this record is '{ours}'. "
-                    + "Regrade one of the two, or write down what degrades when it is gone.",
+                    + "Regrade one of the two, or say what degrades when it is gone and accept this warning in "
+                    + "`accepts:`.",
                     Yaml.LineOf(item, doc.FrontStartLine));
             }
         }

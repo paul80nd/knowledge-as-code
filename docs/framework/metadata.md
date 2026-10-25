@@ -83,6 +83,16 @@ One document can belong in either, and what you took from it decides which. Take
 fields, or the rule about superseding, and it belongs to the type's [lineage](lineage.md). Take the content, meaning a
 threshold, a definition, or a list, and it belongs to this record's `sources`.
 
+## Filling `accepts`
+
+`accepts` is a universal optional field. It lists the warnings a record keeps, one entry per check, each with the
+reason. `validate` reports an accepted warning as info, so CI stops raising it. The field stays in the record and never
+travels in an export.
+
+Accept a warning where the record already says why it stands, such as a gap its Operational notes describe. Leave a
+warning standing where it points at work nobody has done, such as a runbook nobody has walked.
+[`validate`](../use/cli/validate.md#the-accepts-field) says which entries it refuses.
+
 ## Naming a type
 
 **A type name is singular** and its folder and page are plural: an *ADR* in `adrs/`, a *standard* in `standards/`. Each

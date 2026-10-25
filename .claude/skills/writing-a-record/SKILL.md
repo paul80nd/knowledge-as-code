@@ -134,6 +134,8 @@ Information about a record lives in the frontmatter, a generated block, or git. 
 * What the type is modelled on is `lineage:` in the schema, and never a record's `sources`.
 * Sort every list alphabetically. Numbers compare as numbers, so `A.8.7` comes before `A.8.29`.
 * A tag is a word a reader searches for. It never repeats another field.
+* Accept a warning on the record, in `accepts:`, with a reason saying why it stands. Never accept one to hide
+  unfinished work.
 
 ## The H1 and the identity line
 

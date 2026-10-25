@@ -598,8 +598,25 @@ checks:
     severity: error
     description: An object entry has the keys its field declares, and every key it declares as required.
     notes: >
-      Two faults under one id: a key the shape does not declare, and a required key the entry omits. The message
-      quotes the entry by its naming key, and falls back to the line number where that key is the one missing.
+      Three faults under one id: a key the shape does not declare, a required key the entry omits, and a required key
+      a record's entry leaves with no value. The message quotes the entry by its naming key, and falls back to the
+      line number where that key is the one missing. A template's entries are exempt from the third, because every
+      value in one is bare by design.
+
+  acceptance-check:
+    severity: error
+    description: An `accepts` entry names a check that reports warnings, and is not `acceptance-stale`.
+    notes: >
+      Three faults under one id: a check id no check reports, a check that reports errors or only info, and
+      `acceptance-stale` itself. Severity is read from this catalogue and from every type's rules, so a check id
+      declared as an error anywhere is refused.
+
+  acceptance-stale:
+    severity: warning
+    description: Each `accepts` entry matches a warning its check reports on the same record.
+    notes: >
+      Runs after every other check, against the warnings still standing. A second entry for one check therefore
+      matches nothing. It is the one warning an `accepts` entry cannot take.
 
   alignment-rollup:
     severity: error

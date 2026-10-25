@@ -217,7 +217,7 @@ rules:
       implies field('monitoring-output') != 'none'
     message: >
       this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live
-      problem raises, or record the gap in `Operational notes` and leave this warning standing.
+      problem raises, or record the gap in `Operational notes` and accept this warning in `accepts:`.
   # `mirrors-section:` cannot ask this: it reconciles ids, and a repository name resolves to no record.
   - id: mirrors-repo-links
     description: Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.

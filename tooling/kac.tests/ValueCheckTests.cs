@@ -29,6 +29,18 @@ public class ValueCheckTests
         => Assert.Equal(["entry-key"], Ids(Run("field: { at: 2026-06-12T09:00:00Z }\n", Event())));
 
     [Fact]
+    public void A_key_an_object_field_requires_and_leaves_bare_is_reported()
+    {
+        var found = Assert.Single(Run("field: { at: 2026-06-12T09:00:00Z, by: }\n", Event()));
+        Assert.Equal("entry-key", found.Check.Value);
+        Assert.Equal("'field' entry '2026-06-12T09:00:00Z' leaves 'by' with no value.", found.Message);
+    }
+
+    [Fact]
+    public void A_key_an_object_field_requires_is_left_bare_in_a_template()
+        => Assert.Empty(Run("field: { at: 2026-06-12T09:00:00Z, by: }\n", Event(), DocKind.Template));
+
+    [Fact]
     public void A_scalar_under_an_object_field_is_reported_as_the_wrong_shape()
         => Assert.Equal(["entry-shape"], Ids(Run("field: today\n", Event())));
 
