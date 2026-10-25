@@ -42,7 +42,4 @@ The indexed field with a work's name. A query matches against it and several oth
 
 **Not:** a title in the catalogue, which is the work itself. See [gls-example-libraries.title].
 
-Owned by [svc-search].
-
 [gls-example-libraries.title]: example-libraries.md#title
-[svc-search]: ../services/search.md
