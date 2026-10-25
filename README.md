@@ -65,10 +65,9 @@ When a record breaks its schema, `kac validate` reports the file, the check and 
 
 ```text
 services/catalogue-web.md
-  warning  [dependency-criticality]  'depends-on' cites 'svc-search', graded 'important' where this record is 'critical'. Regrade one of the two, or write down what degrades when it is gone.  (services/catalogue-web.md:14)
-  error    [link-resolves]           link target 'missing-runbook.md' does not resolve.  (services/catalogue-web.md:79)
+  error  [link-resolves]  link target 'missing-runbook.md' does not resolve.  (services/catalogue-web.md:76)
 
-validated 27 document(s) and 9 template(s), skipped 0 without frontmatter. 1 error(s), 1 warning(s)
+validated 28 document(s) and 9 template(s), skipped 0 without frontmatter. 1 error(s), 0 warning(s)
 ```
 
 ## Get started

@@ -64,10 +64,6 @@ Taken from the application settings the infrastructure declares for the app serv
 * [svc-search] serves the search box and faceted browse, configured as `Urls__Search`.
 * [svc-covers-cdn] serves jacket imagery for result lists and item pages.
 
-**A `critical` service depending on an `important` one.** When [svc-search] is unavailable, the catalogue falls back to
-browse-by-shelf and every item page still renders. A reader loses a feature and keeps the site. The argument for that
-grading is recorded on [svc-search].
-
 ## Data
 
 No database connection is configured for this app service. It reads and writes data through the gateway.

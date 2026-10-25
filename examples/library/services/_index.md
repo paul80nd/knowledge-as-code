@@ -10,6 +10,6 @@
 | svc-lending       | [Lending](lending.md)             | api            | dotnet         | critical    | alert             | live       | human:dev.raman   |
 | svc-notices       | [Notices](notices.md)             | worker         | azure-function | important   | ticket            | live       | human:mira.okonjo |
 | svc-reservations  | [Reservations](reservations.md)   | website        | dotnet         | important   |                   | building   | human:mira.okonjo |
-| svc-search        | [Search](search.md)               | api            | typescript     | important   | ticket            | live       | human:mira.okonjo |
+| svc-search        | [Search](search.md)               | api            | typescript     | critical    | alert             | live       | human:mira.okonjo |
 | svc-shelf-audit   | [Shelf Audit](shelf-audit.md)     | worker         | mixed          | supporting  | none              | deprecated | human:dev.raman   |
 | svc-thumbnailer   | [Thumbnailer](thumbnailer.md)     | api            | dotnet         | critical    | alert             | live       | human:dev.raman   |
