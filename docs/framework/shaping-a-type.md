@@ -448,8 +448,9 @@ taken once governs new work for ever.
 
 `Status` is optional, and says why the tool sits where it does, which `status` and `decided-on` cannot.
 `exit-states-a-reason` asks for it once a tool is `deprecated` or `rejected`, because those are the stances that owe the
-next person an explanation. `replaces` and `successor` are the same move written as ids. `Trial criteria` and
-`Alternatives considered` record how the estate reached the decision, and `decided-in` cites the ADR that argued it.
+next person an explanation. `replaces` and `successor` are the same move written as ids. `replaces` is a list, because
+one tool can take over from several, and each of them names it as `successor`. `Trial criteria` and `Alternatives
+considered` record how the estate reached the decision, and `decided-in` cites the ADR that argued it.
 
 `Accessibility` keeps the assessment of a component that renders a surface, which a published accessibility statement
 is built from. `Where it is used` lists the records that use the tool.

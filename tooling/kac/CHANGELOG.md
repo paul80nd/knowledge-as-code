@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **A tool can replace several others.** `replaces` in `tools` takes a list of tool ids, one per line, so one tool can
+  take over from several. Each tool it lists names it as `successor`, and `kac validate` reports `reciprocal` where one
+  does not. A single id written on the line itself is now a `list` error. `version:` under `export:` in
+  `.schema/tools.yaml` moves to 4.
+
 ## 0.39.0 - 2026-10-23
 
 ### Added

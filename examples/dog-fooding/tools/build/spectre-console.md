@@ -11,7 +11,8 @@ licence: MIT
 licence-declared: MIT
 decided-on: "2026-08-21"
 review-by: "2027-08-21"
-replaces: tol-system-commandline
+replaces:
+  - tol-system-commandline
 owner: human:paul.law
 tags: [ cli, console, terminal ]
 ---

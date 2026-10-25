@@ -10,7 +10,10 @@ licence: MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 AND ISC AND W3C
 licence-declared: MIT
 decided-on: "2026-10-25"
 review-by: "2027-04-25"
-replaces: tol-mkdocs-material
+replaces:
+  - tol-mkdocs
+  - tol-mkdocs-material
+  - tol-mkdocs-redirects
 owner: human:paul.law
 tags: [ documentation, static-site, theme ]
 ---
@@ -85,10 +88,14 @@ under a permissive licence, or offers one as a choice, and none reaches the publ
 ## Related
 
 * [std-A11Y] requires the site it renders, and this entry, to meet [WCAG 2.2 AA].
+* [tol-mkdocs] is the generator it replaces.
 * [tol-mkdocs-material] is the theme it replaces.
+* [tol-mkdocs-redirects] is the plugin it replaces.
 
 [Issue #1058]: https://github.com/paul80nd/knowledge-as-code/issues/1058
 [WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/
 [std-A11Y]: ../../standards/accessibility.md
 [svc-docs-site]: ../../services/docs-site.md
+[tol-mkdocs]: mkdocs.md
 [tol-mkdocs-material]: mkdocs-material.md
+[tol-mkdocs-redirects]: mkdocs-redirects.md
