@@ -52,7 +52,8 @@ public class CommandsTests
         var root = Fixture("import-versions");
         var asked = new List<string>();
 
-        Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null);
+        Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null,
+            comment: null);
 
         Assert.Equal(["feed", "feed", "nowhere"], asked.Select(Path.GetFileName));
     }
@@ -63,10 +64,52 @@ public class CommandsTests
         var root = Fixture("clean");
         var asked = new List<string>();
 
-        var exit = Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null);
+        var exit = Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null,
+            comment: null);
 
         Assert.Equal(0, exit);
         Assert.Empty(asked);
+    }
+
+    [Fact]
+    public void Validate_with_warnings_exits_0_when_the_pull_request_comment_cannot_be_posted()
+    {
+        var root = Fixture("warnings");
+        var sent = new List<HttpCall>();
+        var comment = new PullRequestComment(
+            new PullRequest(CiPlatform.GitHub, "https://api.github.com/repos/o/r", "1", "GITHUB_TOKEN"),
+            call =>
+            {
+                sent.Add(call);
+                return call.Method == "GET"
+                    ? new HttpAnswer(200, "[]", null)
+                    : new HttpAnswer(403, null, "Forbidden");
+            });
+
+        var exit = Commands.Validate(root, json: false, Required.Today, Recording([]),
+            new Annotator(CiPlatform.GitHub, "", ""), comment);
+
+        Assert.Equal(0, exit);
+        Assert.Equal(["GET", "POST"], sent.Select(c => c.Method));
+    }
+
+    [Fact]
+    public void Validate_with_json_posts_no_pull_request_comment()
+    {
+        var root = Fixture("warnings");
+        var sent = new List<HttpCall>();
+        var comment = new PullRequestComment(
+            new PullRequest(CiPlatform.GitHub, "https://api.github.com/repos/o/r", "1", "GITHUB_TOKEN"),
+            call =>
+            {
+                sent.Add(call);
+                return new HttpAnswer(200, "[]", null);
+            });
+
+        Commands.Validate(root, json: true, Required.Today, Recording([]), new Annotator(CiPlatform.GitHub, "", ""),
+            comment);
+
+        Assert.Empty(sent);
     }
 
     private static Registry Recording(List<string> asked) =>

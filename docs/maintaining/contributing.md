@@ -49,14 +49,15 @@ requires `validate`.
 
 | Job                 | What it runs                                                                                            |
 |---------------------|---------------------------------------------------------------------------------------------------------|
-| `corpora`           | `validate`, `generate --check`, `update --check`, `export`, `bundle` and `pack` in each corpus          |
+| `corpora`           | `validate`, `generate --check`, `update --check`, `export` and `pack` in each corpus                    |
 | `tool`              | The template's own checks, the unit, feature and golden layers, and a corpus created by the packed tool |
 | `lint`              | `yamllint --strict`, `actionlint` and `zizmor`                                                          |
 | `docs`              | `zensical build`, which fails on a dead link or a dead anchor                                           |
-| `round-trip`        | `tooling/tests/round-trip.sh` over `library`, `engineering` and `payments`, on Linux and Windows                                  |
+| `round-trip`        | `claude plugin validate` on each corpus's plugin, then `round-trip.sh` on all but `dog-fooding`         |
 | `import-round-trip` | `tooling/tests/import-round-trip.sh`, on Linux and Windows                                              |
 
-A job missing from the `validate` job's `needs:` still runs but blocks nothing. `WorkflowGateTests` fails one.
+`round-trip` runs every corpus on Linux and `payments` on Windows as well. A job missing from the `validate` job's
+`needs:` still runs but blocks nothing. `WorkflowGateTests` fails one.
 
 ## Where to go next
 

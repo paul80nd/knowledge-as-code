@@ -1,6 +1,6 @@
 # The gate on a pull request: kac over each corpus under examples/ and template/, a corpus stood up by the
 # packed tool, each corpus's plugin, and the tool's three test layers. The corpus half mirrors
-# template/azure-pipelines.yml. Read-only permission keeps CI from writing over a file a human edits.
+# template/azure-pipelines.yml. Read-only `contents` keeps CI from writing over a file a human edits.
 
 name: kac
 
@@ -30,6 +30,9 @@ jobs:
           - payments
           - dog-fooding
     runs-on: ubuntu-latest
+    # `validate` posts its findings to the pull request, which needs write access to its comments and nothing more.
+    # A job with it installs nothing at a moving version, so the plugin checks run in `round-trip` below.
+    permissions: {contents: read, pull-requests: write}
     # kac takes the nearest ancestor holding a .corpus.yaml as the corpus, so the working directory selects it.
     defaults:
       run:
@@ -60,7 +63,10 @@ jobs:
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         run: dotnet run --project ../../tooling/kac -- restore
 
+      # The token reaches this step alone, so no other step can write to the pull request.
       - name: Validate frontmatter, links and structure
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: dotnet run --project ../../tooling/kac -- validate
 
       - name: Check generated output is fresh
@@ -72,27 +78,9 @@ jobs:
       - name: Build the export
         run: dotnet run --project ../../tooling/kac -- export
 
-      - name: Assemble the plugin bundle
-        run: dotnet run --project ../../tooling/kac -- bundle
-
       # publish-corpus.yml pushes every corpus, and a pack is refused without a shortcode, so the gate packs each.
       - name: Seal the export into a package
         run: dotnet run --project ../../tooling/kac -- pack
-
-      # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
-      # nothing in dependabot.yml would move an npm pin. std-CI allows it in a job with `contents: read`.
-      - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
-
-      # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding
-      # no component at all passes it. bundled-components.sh closes that: the tree must hold every component
-      # bundle.json kept and none it trimmed, and .claude-plugin/ must hold the manifest and nothing else.
-      - name: Validate the assembled plugin and its marketplace
-        shell: sh
-        run: |
-          claude plugin validate ./.dist/plugin --strict
-          claude plugin validate ./.dist --strict
-          sh ../../tooling/tests/bundled-components.sh .dist/plugin
 
   # Nothing here is per-corpus, so it runs once beside the matrix above.
   tool:
@@ -292,24 +280,26 @@ jobs:
       - name: Build the site
         run: zensical build
 
-  # Installs the bundle and asks each skill what it describes. Both platforms, because development happens on
-  # macOS and the first audience is on Windows. library, engineering and payments each show a different trim;
-  # dog-fooding is left out because it is the same shape as payments.
+  # Each corpus's plugin, assembled, checked against the Claude Code CLI, installed, and asked what each skill
+  # describes. library, engineering and payments each show a different trim. dog-fooding has its plugin checked and
+  # skips the install, because it is the same shape as payments. Read-only, because it installs that CLI at a moving
+  # version.
   #
-  # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
-  # stands on into every link, and a pull_request run checks out a merge commit the raw host does
-  # not serve, so the fetch would fail over the checkout rather than over the template.
+  # Windows runs payments alone. What breaks there is the shell and the paths, and payments also takes the import path.
+  #
+  # The checkout is the pull request's head. The export stamps whatever commit HEAD stands on into every link, and a
+  # pull_request run checks out a merge commit the raw host does not serve, so the fetch would fail over the checkout
+  # rather than over the template.
   round-trip:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-        corpus:
-          - library
-          - engineering
-          - payments
+        include:
+          - {os: ubuntu-latest, corpus: library}
+          - {os: ubuntu-latest, corpus: engineering}
+          - {os: ubuntu-latest, corpus: payments}
+          - {os: ubuntu-latest, corpus: dog-fooding}
+          - {os: windows-latest, corpus: payments}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -326,16 +316,16 @@ jobs:
         with:
           global-json-file: global.json
 
-      # An export refuses where what it consumes is not restored, and this job holds its own checkout.
+      # An export refuses where what it consumes is not restored, and this job has its own checkout.
       - name: Build the package this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
         run: |
           dotnet run --project ../../tooling/kac -- export
           dotnet run --project ../../tooling/kac -- pack
 
       - name: Restore what this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         run: dotnet run --project ../../tooling/kac -- restore
 
       - name: Build the export
@@ -344,11 +334,23 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
-      # Unpinned for the reason the `corpora` job gives.
+      # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
+      # nothing in dependabot.yml would move an npm pin. std-CI allows it in a job with `contents: read`.
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
+      # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding
+      # no component at all passes it. bundled-components.sh closes that: the tree must hold every component
+      # bundle.json kept and none it trimmed, and .claude-plugin/ must hold the manifest and nothing else.
+      - name: Validate the assembled plugin and its marketplace
+        shell: bash
+        run: |
+          claude plugin validate ./.dist/plugin --strict
+          claude plugin validate ./.dist --strict
+          sh ../../tooling/tests/bundled-components.sh .dist/plugin
+
       - name: Install the plugin and ask each skill what it describes
+        if: matrix.corpus != 'dog-fooding'
         shell: bash
         run: sh ../../tooling/tests/round-trip.sh
 

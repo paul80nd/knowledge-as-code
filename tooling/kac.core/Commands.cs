@@ -11,15 +11,33 @@ public static class Commands
     /// Check the corpus and print the findings. <paramref name="today"/> is the day every record is judged
     /// against, and <paramref name="registry"/> is where each import's source is read from. Both come from
     /// the caller so a test can fix the day and answer for the registry without a network.
-    /// <paramref name="annotator"/> is null for a local run, and <c>--json</c> writes no annotation.
+    /// <paramref name="annotator"/> is null for a local run, and <paramref name="comment"/> is null for a run that is
+    /// not for a pull request. <c>--json</c> writes no annotation and posts no comment.
     /// </summary>
     public static int Validate(string corpusRoot, bool json, DateOnly today, Registry registry,
-        Annotator? annotator)
+        Annotator? annotator, PullRequestComment? comment)
     {
         var corpus = Corpus.Load(corpusRoot);
         var findings = Validator.CheckAll(corpus, today, Standings(corpus.Descriptor, registry));
-        return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json,
+        var exit = Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json,
             annotator);
+
+        if (!json && annotator is not null && comment is not null)
+        {
+            var name = annotator.Named(corpus.Descriptor.Name);
+            Comment(comment, name, annotator.Table(name, findings),
+                findings.Any(f => f.Severity is Sev.Error or Sev.Warning));
+        }
+
+        return exit;
+    }
+
+    /// <summary>A comment that could not be posted is reported and leaves the exit code alone.</summary>
+    private static void Comment(PullRequestComment comment, string corpus, string table, bool hasFindings)
+    {
+        if (comment.Post(corpus, table, hasFindings) is not { } said) return;
+        if (said.Ok) Account(said.Message);
+        else Note(said.Message);
     }
 
     /// <summary>
@@ -155,7 +173,7 @@ public static class Commands
         // Generation writes what validation then checks, so it goes first. Staging goes last.
         Generate(dir, check: false);
         var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable,
-            annotator: null);
+            annotator: null, comment: null);
         Stage(dir);
 
         if (validated == 0) return 0;

@@ -104,10 +104,14 @@ internal static class Suite
     }
 
     /// <summary>
-    /// The variables a CI platform declares itself by, which <c>Suite.Run</c> clears so that every scenario is a local
-    /// run wherever the suite runs.
+    /// The variables a CI platform declares itself, its pull request and its token by, which <c>Suite.Run</c> clears so
+    /// that every scenario is a local run wherever the suite runs, and none posts a comment.
     /// </summary>
-    internal static readonly IReadOnlyList<string> CiVariables = ["GITHUB_ACTIONS", "TF_BUILD"];
+    internal static readonly IReadOnlyList<string> CiVariables =
+    [
+        "GITHUB_ACTIONS", "GITHUB_EVENT_PATH", "GITHUB_TOKEN",
+        "TF_BUILD", "SYSTEM_PULLREQUEST_PULLREQUESTID", "SYSTEM_ACCESSTOKEN"
+    ];
 
     internal static (string stdout, string stderr, int exit) Run(string workingDir, string file, params string[] argv)
         => RunUnder(new Dictionary<string, string>(), workingDir, file, argv);

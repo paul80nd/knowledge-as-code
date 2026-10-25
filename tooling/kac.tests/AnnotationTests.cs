@@ -76,6 +76,51 @@ public class AnnotationTests
     public void A_run_no_platform_declares_is_local(string variable, string value)
         => Assert.Null(Annotator.Detect(name => name == variable ? value : null));
 
+    [Fact]
+    public void The_comment_body_is_a_table_of_the_errors_and_warnings_under_their_counts()
+        => Assert.Equal(
+            "### ❌ `kac validate` for example-dogfooding: 1 error, 2 warnings\n"
+            + "\n"
+            + "| Severity | File | Check | Message |\n"
+            + "|----------|------|-------|---------|\n"
+            + "| ❌ error | `examples/dog-fooding/adrs/0001-first.md:1` | `required-field` | missing 'owner'. |\n"
+            + "| ⚠️ warning | `examples/dog-fooding/adrs/0001-first.md:4` | `retire-not-delete` | retire it. |\n"
+            + "| ⚠️ warning | `examples/dog-fooding/services/kac.md` | `critical-service-is-alerted` | "
+            + "emits nothing. |\n",
+            GitHub.Table("example-dogfooding",
+            [
+                Warning("services/kac.md", null, "critical-service-is-alerted", "emits nothing."),
+                Of(Sev.Info, ".corpus.yaml", null, "import-capped", "capped at 1.x."),
+                Warning("adrs/0001-first.md", 4, "retire-not-delete", "retire it."),
+                Of(Sev.Error, "adrs/0001-first.md", 1, "required-field", "missing 'owner'.")
+            ]));
+
+    [Fact]
+    public void A_run_with_warnings_alone_heads_its_comment_body_with_the_warning_icon()
+        => Assert.StartsWith("### ⚠️ `kac validate` for example-dogfooding: 0 errors, 1 warning\n",
+            GitHub.Table("example-dogfooding", [Warning("a.md", 1, "c", "m.")]));
+
+    [Fact]
+    public void A_run_with_no_error_or_warning_has_a_one_line_comment_body()
+        => Assert.Equal(
+            "### ✅ `kac validate` for example-dogfooding: the corpus validated with no errors or warnings\n",
+            GitHub.Table("example-dogfooding",
+                [Of(Sev.Info, ".corpus.yaml", null, "import-capped", "capped at 1.x.")]));
+
+    [Theory]
+    [InlineData("example-dogfooding", "examples/dog-fooding/", "example-dogfooding")]
+    [InlineData(null, "examples/dog-fooding/", "examples/dog-fooding")]
+    [InlineData(null, "", "this corpus")]
+    [InlineData("", "examples/dog-fooding/", "examples/dog-fooding")]
+    public void A_corpus_is_named_by_its_descriptor_then_its_path_then_as_this_corpus(
+        string? declared, string prefix, string name)
+        => Assert.Equal(name, (GitHub with { CorpusPrefix = prefix }).Named(declared));
+
+    [Fact]
+    public void The_comment_body_escapes_a_pipe_and_a_line_break_in_a_cell()
+        => Assert.EndsWith("| `examples/dog-fooding/a\\|b.md:1` | `c` | one \\| two<br>three |\n",
+            GitHub.Table("example-dogfooding", [Warning("a|b.md", 1, "c", "one | two\r\nthree")]));
+
     private static readonly Annotator Azure = new(CiPlatform.AzurePipelines, "examples/dog-fooding/", "");
 
     private static readonly Annotator GitHub = new(CiPlatform.GitHub, "examples/dog-fooding/", "");

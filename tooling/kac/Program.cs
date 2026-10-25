@@ -203,20 +203,51 @@ internal sealed class ValidateCommand : Command<ValidateSettings>
             // answers costs each of its imports this wait before reporting `import-unreachable`.
             using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
 
+            var platform = Annotator.Detect(Environment.GetEnvironmentVariable);
+
             // One UTC day for the whole run, so every record is judged against the same day wherever it runs.
             return Commands.Validate(corpus, settings.Json, DateOnly.FromDateTime(DateTime.UtcNow),
-                Cli.RegistryFor(corpus, client), Annotating(corpus));
+                Cli.RegistryFor(corpus, client), Annotating(platform, corpus), Commenting(platform, client));
         });
 
     /// <summary>
     /// Null for a local run. A folder git cannot place takes an empty prefix, so its paths stay relative to the corpus.
     /// </summary>
-    private static Annotator? Annotating(string corpus)
+    private static Annotator? Annotating(CiPlatform? platform, string corpus)
     {
-        if (Annotator.Detect(Environment.GetEnvironmentVariable) is not { } platform) return null;
+        if (platform is not { } on) return null;
 
         var schemaRoot = Schema.FindRoot(corpus) ?? corpus;
-        return new Annotator(platform, Git.Prefix(corpus) ?? "", Git.Prefix(schemaRoot) ?? "");
+        return new Annotator(on, Git.Prefix(corpus) ?? "", Git.Prefix(schemaRoot) ?? "");
+    }
+
+    /// <summary>
+    /// Null for a run that is not for a pull request. Without a token the comment has nothing to send with, and says
+    /// so when asked to post.
+    /// </summary>
+    private static PullRequestComment? Commenting(CiPlatform? platform, HttpClient client)
+    {
+        if (platform is not { } on) return null;
+
+        var pullRequest = PullRequest.From(on, Environment.GetEnvironmentVariable, Payload);
+        if (pullRequest is null) return null;
+
+        var token = Environment.GetEnvironmentVariable(pullRequest.TokenVariable);
+        return new PullRequestComment(pullRequest,
+            token is { Length: > 0 } ? PullRequestComment.Over(client, on, token) : null);
+    }
+
+    /// <summary>The event payload, or null where it cannot be read, which makes the run no pull request's.</summary>
+    private static string? Payload(string path)
+    {
+        try
+        {
+            return File.Exists(path) ? File.ReadAllText(path) : null;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
     }
 }
 

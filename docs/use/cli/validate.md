@@ -50,16 +50,46 @@ None of the three changes the exit code, and a corpus with no `consumes:` block 
 
 ### Annotations under CI
 
-Under a CI platform, `validate` writes each error and each warning a second time, as an annotation that platform shows.
-The report and the exit code are the same as in a local run.
+Under a CI platform, `validate` also writes each error and each warning as an annotation. The report and the exit code
+are the same as in a local run.
 
-| Platform        | Detected by           | Where the annotation shows                                                   |
+| Platform        | Detected by           | Where an annotation shows                                                    |
 |-----------------|-----------------------|------------------------------------------------------------------------------|
 | GitHub Actions  | `GITHUB_ACTIONS=true` | On the check, and on the line it names under *Files changed* when it changed |
 | Azure Pipelines | `TF_BUILD=True`       | In the run's summary, beside the step that ran `validate`                    |
 
-Each path is relative to the root of the git repository, so a corpus in a subfolder still lands on the right file. An
-info finding writes no annotation, and neither does `--json`.
+A warning annotation leaves an Azure Pipelines step *Succeeded*. Each path is relative to the root of the git
+repository, so a corpus in a subfolder still lands on the right file.
+
+### A pull request comment
+
+On a pull request with an error or a warning, `validate` also posts one comment listing them. The comment is a Markdown
+table with a row per finding, giving the severity, the file and line, the check and the message. Its heading names the
+corpus and gives the counts. The name is `corpus:` from `.corpus.yaml`. Where that is not set, it is the corpus's folder
+in the repository, or "this corpus" for a corpus at the repository's root.
+
+An icon stands beside each severity word and the heading: ❌ for an error, ⚠️ for a warning and ✅ for a clean run. The
+word is always there, so the icon is never the only cue.
+
+A hidden line naming the corpus marks the comment, so each later run updates the same one. Once the findings have gone,
+the comment says the corpus validated with no errors or warnings. A clean pull request with no earlier comment gets
+none, and `validate` never deletes one. Each corpus in a repository keeps a comment of its own.
+
+On Azure Pipelines the comment opens a thread. The thread is active while the corpus has findings. A clean run closes
+it, and a run that finds them again makes it active.
+
+`validate` posts only where the pipeline passes a token to the step and grants it the permission:
+
+| Platform        | Token the step needs                        | Permission it needs                                 |
+|-----------------|---------------------------------------------|-----------------------------------------------------|
+| GitHub Actions  | `GITHUB_TOKEN: ${{ github.token }}`         | `pull-requests: write` on the job                   |
+| Azure Pipelines | `SYSTEM_ACCESSTOKEN: $(System.AccessToken)` | *Contribute to pull requests* for the build service |
+
+Install `kac` at a pinned version in a job with this permission, so no release you did not choose runs with the token.
+Without the token, `validate` prints a note and posts nothing. A pull request from a fork gets a token that cannot write
+to it, so the post fails. Either way the note names the pull request, and the exit code is unchanged.
+
+An info finding appears in neither an annotation nor the comment, and `--json` writes neither.
 
 ## Examples
 
@@ -105,6 +135,17 @@ Under Azure Pipelines the same finding is written as:
 
 ```text
 ##vso[task.logissue type=error;sourcepath=adrs/0001-knowledge-as-code.md;linenumber=1;code=required-field]missing required field 'owner'.
+```
+
+Where that is the run's only finding, the pull request comment on either platform reads:
+
+```markdown
+<!-- kac validate: acme-corpus -->
+### ❌ `kac validate` for acme-corpus: 1 error, 0 warnings
+
+| Severity | File | Check | Message |
+|----------|------|-------|---------|
+| ❌ error | `adrs/0001-knowledge-as-code.md:1` | `required-field` | missing required field 'owner'. |
 ```
 
 ### The findings as JSON
@@ -158,7 +199,8 @@ validated. [Discovery](../discovery.md#the-fallback-walk) says what else changes
 
 **It reaches the network where your corpus consumes another.** Every other check reads your working tree. This one asks
 each source in `consumes:` what it publishes. A source that does not answer within twenty seconds reports
-`import-unreachable`, and the run continues. A corpus with no `consumes:` block opens no connection at all.
+`import-unreachable`, and the run continues. A corpus with no `consumes:` block opens no connection for its checks. A
+pull request comment is the one other connection, and a local run never makes it.
 
 **A quotation of an imported clause is not checked.** `clause-quoted-faithfully` compares a quoted span against the
 clause the same line cites. An export sends a record's ids and its fields, not its wording, so the words of an imported

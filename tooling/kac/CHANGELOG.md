@@ -19,11 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
-- **`kac validate` writes each finding as an annotation under CI.** Where `GITHUB_ACTIONS` is `true`, each error and
-  warning is also written as a `::error` or `::warning` line, which GitHub shows on the line under *Files changed*.
-  Where `TF_BUILD` is `True`, it is a `##vso[task.logissue]` line, which Azure Pipelines shows in the run's summary.
-  Each path is relative to the repository's root. A warning therefore reaches the pull request. An info finding and
-  `--json` write none, and a local run prints what it did before.
+- **`kac validate` reports its findings on the pull request under CI.** Under GitHub Actions each error and warning
+  is also a `::error` or `::warning` annotation, and under Azure Pipelines a `##vso[task.logissue]` line. On a pull
+  request with findings, `validate` posts one comment per corpus listing them, and later runs update it. It posts
+  only where the step has `GITHUB_TOKEN` with `pull-requests: write`, or `SYSTEM_ACCESSTOKEN`, and a failed post
+  leaves the exit code alone. An info finding and `--json` write neither, and a local run is unchanged.
 
 ### Changed
 
