@@ -453,7 +453,7 @@ standards_lookup() {
     || fail "no rule belongs to std-IDEM."
 
   grep -E '"id": *"std-IDEM.KEY"' "$WORK/rules.txt" > "$WORK/hits.txt" \
-    || fail "std-IDEM carries no the-caller-chooses-the-key rule."
+    || fail "std-IDEM carries no KEY rule."
 
   HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
   [ "$HITS" = "1" ] || fail "expected one line for std-IDEM.KEY, found $HITS."
@@ -469,23 +469,26 @@ standards_lookup() {
 
   # `MUST NOT` opens with `MUST`, so a rule holding a prohibition shows the longer level survives the export whole.
   grep -E '"id": *"std-IDEM.WAIT"' "$RULES" \
-    > "$WORK/prohibition.txt" || fail "std-IDEM carries no an-in-flight-repeat-waits-or-is-told-to-wait rule."
+    > "$WORK/prohibition.txt" || fail "std-IDEM carries no WAIT rule."
 
   jqr '.obligations[]? | select(.level == "MUST NOT") | .text' "$WORK/prohibition.txt" | grep -qF '**MUST NOT**' \
     || fail "std-IDEM.WAIT came back with no MUST NOT."
 
   echo "round-trip: a prohibition arrives as MUST NOT, whole rather than shortened to its first word."
 
-  # A rule resolves to its own heading, so a link built from the template lands on the rule and not on the standard.
+  # A rule is cited by the id its heading opens with, and linked at the slug of the whole heading, so a link built from
+  # the template lands on the rule and not on the standard.
   ANCHOR=$(jqr '.anchor' "$WORK/hits.txt")
   PART=$(jqr '.part' "$WORK/hits.txt")
 
-  [ "$ANCHOR" = "$PART" ] || fail "the rule's anchor is '$ANCHOR' and its part is '$PART'."
+  [ "$PART" = "KEY" ] || fail "the rule's part is '$PART', where its heading opens with 'KEY'."
+  [ "$ANCHOR" = "key-the-caller-chooses-the-key" ] \
+    || fail "the rule's anchor is '$ANCHOR', where its heading slugs to 'key-the-caller-chooses-the-key'."
 
-  echo "round-trip: a rule addresses itself, so its anchor is its own key."
+  echo "round-trip: a rule's part is its id, and its anchor is the slug of its whole heading."
 
-  # A heading-sourced type sorts on the heading. The standard writes this pair the other way round, which is what makes
-  # the assertion say something.
+  # A heading-sourced type sorts on the heading's text, without its id. The standard writes this pair the other way
+  # round, and the ids sort the other way too, which is what makes the assertion say something.
   FIRST=$(line_of "$RULES" std-IDEM.WAIT)
   LAST=$(line_of "$RULES" std-IDEM.KEY)
 
@@ -493,12 +496,12 @@ standards_lookup() {
   [ -n "$LAST" ] || fail "std-IDEM.KEY is not in the export."
   [ "$FIRST" -lt "$LAST" ] || fail "the rules of std-IDEM came back out of heading order."
 
-  echo "round-trip: the rules of std-IDEM come back sorted on the heading."
+  echo "round-trip: the rules of std-IDEM come back sorted on the heading's text."
 
   # The link's target is stripped out of the words, so `seeAlso` is where the id survives. `std-RECON` points at a
   # rule of `std-LEDGER`.
   grep -E '"id": *"std-RECON.HOLD"' "$RULES" \
-    > "$WORK/refers.txt" || fail "std-RECON carries no nothing-downstream-reads-an-unreconciled-day rule."
+    > "$WORK/refers.txt" || fail "std-RECON carries no HOLD rule."
 
   SEEALSO=$(jqr '.seeAlso // [] | join(",")' "$WORK/refers.txt")
   [ "$SEEALSO" = "std-LEDGER.NOAMEND" ] \
