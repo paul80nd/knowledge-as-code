@@ -4,9 +4,9 @@
   "shortcode": "dog",
   "contentVersion": "0.85.0",
   "mechanismVersion": 24,
-  "commit": "3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3",
+  "commit": "de9670add3635664cbd011e5e78b8a9067de0474",
   "dirty": false,
-  "generatedAt": "2026-10-25T20:27:31Z",
+  "generatedAt": "2026-10-25T21:00:05Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/de9670add3635664cbd011e5e78b8a9067de0474/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3"
+    "ref": "de9670add3635664cbd011e5e78b8a9067de0474"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -43,10 +43,10 @@
       "contentVersion": "0.42.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/de9670add3635664cbd011e5e78b8a9067de0474/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3"
+        "ref": "de9670add3635664cbd011e5e78b8a9067de0474"
       },
       "reposBase": null,
       "tracker": {
