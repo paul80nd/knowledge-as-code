@@ -88,7 +88,8 @@ is judged under [pol-TRUS] on its terms of use, recorded on its tool record. A l
 - [ ] The dependency scan runs on every build, and its results are visible without opening the tool.
 - [ ] No critical finding is open past 7 days without a recorded deviation.
 - [ ] Every licence in what a build ships is one of the allowed ids, or is in the review tier below. The allowed ids
-  are `MIT`, `Apache-2.0`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `0BSD`, `Zlib`, `PSF-2.0`, `Unlicense` and `CC0-1.0`.
+  are `MIT`, `Apache-2.0`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `0BSD`, `Zlib`, `PSF-2.0`, `Unlicense`, `CC0-1.0`
+  and `W3C`.
 - [ ] Each review-tier licence has an accepted deviation. The review tier is `MPL-2.0`, `LGPL-2.1-only`,
   `LGPL-2.1-or-later`, `LGPL-3.0-only` and `LGPL-3.0-or-later` (dynamically linked), `EPL-2.0`, and a proprietary or
   commercial licence held under a contract.
@@ -108,6 +109,7 @@ advisory can be answered in minutes.
 
 ## Changelog
 
+- 2026-10-25: the W3C Software Notice is an allowed licence.
 - 2026-10-21: the conformance checklist lists licences by SPDX id, in an allowed, a review and a refused tier.
 - 2026-10-18: added the route to depart from a rule.
 

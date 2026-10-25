@@ -5,13 +5,13 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-25T09:44:45Z
+  at: 2026-10-25T10:05:45Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.39.0
 sources:
-  - { resource: example-dogfooding, version: "0.81.0" }
-  - { resource: example-engineering, version: "0.39.0" }
+  - { resource: example-dogfooding, version: "0.82.0" }
+  - { resource: example-engineering, version: "0.40.0" }
 verified:
   - { at: 2026-10-23T19:32:54Z, by: human:paul.law }
 tags: [ coverage, governance ]
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.39.0.
+* `eng`, example-engineering, at 0.40.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it. The `Deviations` column lists a deviation only while its `status` is `active`.

@@ -81,6 +81,7 @@ ISC. An icon put on a page comes under its own set's terms, and CC-BY-4.0 asks f
 
 The theme's JavaScript reaches every published page. Its licence file names clipboard and escape-html under MIT, rxjs
 under Apache-2.0, and focus-visible under the W3C Software Notice. Material's bundle shipped the same four packages.
+Every licence the site ships is one `eng:std-DEPS` allows.
 
 The compiled core bundles 308 Rust components, listed in the CycloneDX file the wheel carries under `sboms/`. Each is
 under a permissive licence, or offers one as a choice, and none reaches the published site.
