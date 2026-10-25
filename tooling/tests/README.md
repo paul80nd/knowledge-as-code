@@ -162,6 +162,17 @@ prints its own tally, so neither reads as coverage of the whole tool. Adding a c
 and a fixture for it. `KAC_UPDATE_GOLDENS=1` skips this gate, because an update skips the runs of a scenario with no
 golden to write.
 
+**Every scenario is a local run.** `Suite.Run` clears each variable in `Suite.CiVariables` from every `kac` process it
+starts: the two that name a CI platform, the two that name a pull request, and the two tokens. A scenario then prints
+the same in CI as on your machine, and none posts a comment. The CI gates set some back with `Suite.RunUnder` and run
+`kac validate` over `corpus-enums`:
+
+* Two assert the annotation line each platform reads.
+* One gives GitHub a pull request event and no token, and asserts the note saying the comment was not posted.
+* One asserts that a run with none of the variables writes no annotation.
+
+No gate posts a comment. `kac.tests/PullRequestCommentTests.cs` asserts each request a token would send.
+
 ## The scenarios
 
 Every reachable check has a fixture, and a full run fails on one that does not. The run prints the tally. Each row

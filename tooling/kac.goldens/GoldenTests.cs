@@ -82,6 +82,57 @@ public class GoldenTests
         Assert.True(checksExit == 0, $"CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");
     }
 
+    [Theory]
+    [InlineData("GITHUB_ACTIONS", "true",
+        "::error file=services/catalogue.md,line=8,title=enum::"
+        + "'platform' value 'azure-function' is not one of: dotnet-api, dotnet-web.")]
+    [InlineData("TF_BUILD", "True",
+        "##vso[task.logissue type=error;sourcepath=services/catalogue.md;linenumber=8;code=enum]"
+        + "'platform' value 'azure-function' is not one of: dotnet-api, dotnet-web.")]
+    public void Validate_under_CI_writes_each_finding_as_the_platform_annotation(
+        string variable, string value, string annotation)
+    {
+        var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string> { [variable] = value });
+
+        Assert.Contains(annotation, printed.Split('\n').Select(l => l.TrimEnd('\r')));
+    }
+
+    /// <summary>
+    /// The pull request is read from the event payload, and the run reaches the comment without a network because no
+    /// token is set. <c>tooling/kac.tests/PullRequestCommentTests.cs</c> asserts each request a token would send.
+    /// </summary>
+    [Fact]
+    public void Validate_under_GitHub_on_a_pull_request_with_no_token_says_the_comment_was_not_posted()
+    {
+        var dir = Directory.CreateTempSubdirectory("kac-tests-event-").FullName;
+        try
+        {
+            var payload = Path.Combine(dir, "event.json");
+            File.WriteAllText(payload, """{ "pull_request": { "number": 7 } }""");
+
+            var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string>
+            {
+                ["GITHUB_ACTIONS"] = "true", ["GITHUB_EVENT_PATH"] = payload, ["GITHUB_REPOSITORY"] = "o/r"
+            });
+
+            Assert.Contains("validate: GITHUB_TOKEN is not set, so the findings were not posted to pull request #7.",
+                printed.Split('\n').Select(l => l.TrimEnd('\r')));
+        }
+        finally
+        {
+            Runner.TryDelete(dir);
+        }
+    }
+
+    [Fact]
+    public void Validate_outside_CI_writes_no_annotation()
+    {
+        var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string>());
+
+        Assert.DoesNotContain(printed.Split('\n'), l => l.StartsWith("::", StringComparison.Ordinal)
+                                                       || l.StartsWith("##vso[", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void Version_and_help_answer_outside_a_corpus_and_a_verb_exits_2()
     {

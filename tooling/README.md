@@ -145,9 +145,11 @@ proves the trim as well as the glossary skill. `example-engineering` adopts glos
 proves that several skills ship over one export and that none names another's file. `example-payments` is the one whose
 rules are headings rather than table rows, so it is where a rule's id and its heading's anchor are proved.
 
-CI runs it over each of those corpora on Linux and Windows, which is why it is a shell script held to the subset Git
-Bash and older macOS bash agree on. `example-dogfooding` is left out: it is the same shape as `example-payments`, so
-running it there would repeat that job rather than add one.
+CI runs it over each of those corpora on Linux, and over `example-payments` on Windows too. What breaks on Windows is
+the shell and the paths, and payments also takes the import path, so one corpus there covers both. That is why it is a
+shell script held to the subset Git Bash and older macOS bash agree on. The same `round-trip` job checks
+`example-dogfooding`'s plugin and skips this script there: it is the same shape as `example-payments`, so running it
+would repeat that cell rather than add one.
 
 ### The import round-trip
 

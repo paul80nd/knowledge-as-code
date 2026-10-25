@@ -37,6 +37,11 @@ public static class Out
     public static void ErrLine(string text) => Err.WriteLine(text);
 
     /// <summary>
+    /// Straight to the writer, for a line a machine parses whole: Spectre would wrap it at the console's width.
+    /// </summary>
+    public static void Raw(string line) => Std.Profile.Out.Writer.WriteLine(line);
+
+    /// <summary>
     /// Every interpolated value needs <c>EscapeMarkup()</c>: the check messages are full of square brackets.
     /// </summary>
     public static void Markup(string markup) => Std.MarkupLine(markup);

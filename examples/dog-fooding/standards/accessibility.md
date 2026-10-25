@@ -66,7 +66,8 @@ _**Covers:** `eng:pol-A11Y.CONFORM`_
 - Output **MUST NOT** separate one column from the next with a box-drawing character or an icon.
 - Every answer a prompt asks for **MUST** also be available as a flag.
 - A run with no terminal **MUST** exit rather than wait for a keystroke.
-- A message a pipeline parses **MUST** go to `--json`, and never through a renderer.
+- A message a pipeline parses **MUST** go to `--json`, or to the CI platform's annotation or pull request comment, and
+  never through a renderer.
 
 _**Covers:** `eng:pol-A11Y.UPFRONT`_
 
@@ -190,6 +191,8 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 
 ## Changelog
 
+- 2026-10-25: a message a pipeline parses may also go to the CI platform's annotation or pull request comment, which
+  `kac validate` writes under CI for the platform to read.
 - 2026-10-25: Zensical builds the site, so the theme whose colour schemes a change should keep is Zensical's.
 - 2026-10-19: a check now fails a pull request that moves an assessed pin without a new assessment, so the rationale
   names the pins as the one part of this standard CI checks.

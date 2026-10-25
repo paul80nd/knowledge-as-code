@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac validate` reports its findings on the pull request under CI.** Under GitHub Actions each error and warning
+  is also a `::error` or `::warning` annotation, and under Azure Pipelines a `##vso[task.logissue]` line. On a pull
+  request with findings, `validate` posts one comment per corpus listing them, and later runs update it. It posts
+  only where the step has `GITHUB_TOKEN` with `pull-requests: write`, or `SYSTEM_ACCESSTOKEN`, and a failed post
+  leaves the exit code alone. An info finding and `--json` write neither, and a local run is unchanged.
+
 ### Changed
 
 - **A tool can replace several others.** `replaces` in `tools` takes a list of tool ids, one per line, so one tool can

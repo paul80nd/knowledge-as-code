@@ -61,7 +61,7 @@ Run `kac generate` on your own machine and commit the result. [CI never commits]
 dotnet tool run kac generate --check
 ```
 
-Give the job read-only permission. [Running it in CI](../ci.md) has the whole workflow.
+Give the job `contents: read`, so it cannot commit. [Running it in CI](../ci.md) has the whole workflow.
 
 ## Known limits
 

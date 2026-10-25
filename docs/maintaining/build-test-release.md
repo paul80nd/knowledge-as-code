@@ -91,8 +91,9 @@ KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --filter-trait "S
 
 ## The round-trip scripts
 
-Two shell scripts test what no layer above can. CI runs both on Linux and Windows. A plugin is a corpus packaged for
-Claude Code.
+Two shell scripts test what no layer above can. CI runs both on Linux and Windows: `import-round-trip.sh` once on each,
+and `round-trip.sh` over three corpora on Linux and over `examples/payments` alone on Windows. A plugin is a corpus
+packaged for Claude Code.
 
 | Script                               | What it proves                                                                         |
 |--------------------------------------|----------------------------------------------------------------------------------------|
@@ -114,8 +115,9 @@ which corpus proves which skill.
 
 ## Check the plugin
 
-Build the plugin and check it the way the `corpora` job does, in the same order. Run this from inside the corpus whose
-plugin your change reaches. It needs `jq` and the Claude Code CLI.
+Build the plugin and check it the way CI does. The commands below cover two jobs: `corpora` exports and packs, and
+`round-trip` exports, bundles and runs `claude plugin validate`. Run this from inside the corpus whose plugin your
+change reaches. It needs `jq` and the Claude Code CLI.
 
 !!! note
     `examples/payments` and `examples/dog-fooding` consume `examples/engineering`. Run `export` and `pack` there, and

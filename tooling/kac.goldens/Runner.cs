@@ -995,6 +995,23 @@ internal static class Runner
         }
     }
 
+    /// <summary>
+    /// What <c>kac validate</c> printed for a scenario's corpus under <paramref name="environment"/>. The temp is
+    /// outside git, so each path in an annotation stays relative to the corpus.
+    /// </summary>
+    internal static string ValidateUnder(string scenario, IReadOnlyDictionary<string, string> environment)
+    {
+        var temp = AssembleTemp(SchemaDir, Path.Combine(FixturesDir, scenario, "corpus"));
+        try
+        {
+            return RunUnder(environment, temp, "dotnet", Kac, "validate").stdout;
+        }
+        finally
+        {
+            TryDelete(temp);
+        }
+    }
+
     private static (int exit, string output) RunGenerate(string kac, string schemaDir, string corpusDir, bool check)
     {
         var temp = AssembleTemp(schemaDir, corpusDir);

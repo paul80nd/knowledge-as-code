@@ -30,8 +30,8 @@ tags: [ imports, restore, versioning ]
     or a folder holding the packages a producer built.``
 * `kac validate` fails in `examples/payments` or `examples/dog-fooding` with `[import-restored]`, and says
   ``.imports/eng/ holds no export. Run `kac restore`.``
-* The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`
-  and `engineering` consume nothing, so they pass.
+* The `corpora` and `round-trip` jobs in `kac.yml` fail at **Restore what this corpus consumes**, for those two corpora
+  only. `library` and `engineering` consume nothing, so they pass.
 * `kac restore` passes on your machine while CI fails. A restore skips a consumer whose `.imports/` already has the
   locked version, so a stale lock passes locally.
 

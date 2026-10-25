@@ -15,7 +15,10 @@ packaging to read.
 | `kac export`           | the corpus can no longer be written out as data                             |
 | `kac bundle`           | that export can no longer be assembled into a plugin                        |
 
-An error fails the build. A warning and an info are printed and leave the exit code alone.
+An error fails the build. A warning and an info are printed and leave the exit code alone. Under GitHub Actions or Azure
+Pipelines, `kac validate` also writes each error and warning as an annotation. Where the pipeline gives it a token that
+can write to the pull request, it posts them there as a comment too.
+[A pull request comment](cli/validate.md#a-pull-request-comment) says what each platform needs.
 [What the checks ask](#what-the-checks-ask) says what they cover.
 
 ## Pin the tool first
@@ -39,7 +42,8 @@ dotnet tool run kac validate
 ## Read-only permission
 
 **CI never commits.** `generate --check` recomputes every generated file, lists the ones that differ, and exits `1`. It
-writes nothing. Give the job read-only permission. Run `kac generate` on your own machine and commit what it writes.
+writes nothing. Give the job `contents: read`, so it cannot commit either. Run `kac generate` on your own machine and
+commit what it writes.
 
 ```text
 generated files are stale. These differ from the schema/frontmatter:

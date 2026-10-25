@@ -60,6 +60,12 @@ public static class Git
         ? sha
         : null;
 
+    /// <summary>
+    /// The path from the repository's root to <paramref name="root"/>, ending in <c>/</c> and empty at the root, or
+    /// null where git could not answer.
+    /// </summary>
+    public static string? Prefix(string root) => Run(root, "rev-parse", "--show-prefix")?.Trim();
+
     /// <summary>Null where git could not answer, which is not the same as clean.</summary>
     public static bool? Dirty(string root) =>
         Run(root, "status", "--porcelain") is { } status ? status.Trim().Length > 0 : null;

@@ -103,7 +103,25 @@ internal static class Suite
         return assembly;
     }
 
+    /// <summary>
+    /// The variables a CI platform declares itself, its pull request and its token by, which <c>Suite.Run</c> clears so
+    /// that every scenario is a local run wherever the suite runs, and none posts a comment.
+    /// </summary>
+    internal static readonly IReadOnlyList<string> CiVariables =
+    [
+        "GITHUB_ACTIONS", "GITHUB_EVENT_PATH", "GITHUB_TOKEN",
+        "TF_BUILD", "SYSTEM_PULLREQUEST_PULLREQUESTID", "SYSTEM_ACCESSTOKEN"
+    ];
+
     internal static (string stdout, string stderr, int exit) Run(string workingDir, string file, params string[] argv)
+        => RunUnder(new Dictionary<string, string>(), workingDir, file, argv);
+
+    /// <summary>
+    /// <see cref="Run"/> with <paramref name="environment"/> set on top, for a case asserting what <c>kac</c> does
+    /// under CI.
+    /// </summary>
+    internal static (string stdout, string stderr, int exit) RunUnder(IReadOnlyDictionary<string, string> environment,
+        string workingDir, string file, params string[] argv)
     {
         var psi = new ProcessStartInfo(file)
         {
@@ -120,8 +138,11 @@ internal static class Suite
 
         // Colour off, so what a scenario captures is the same on every machine. Spectre writes escapes to
         // a redirected stream where the environment declares itself a runner that renders them, and
-        // GITHUB_ACTIONS is one, so a golden matching on text would pass here and fail in CI.
+        // GITHUB_ACTIONS is one, which a case calling RunUnder sets back.
         psi.Environment["NO_COLOR"] = "1";
+
+        foreach (var variable in CiVariables) psi.Environment.Remove(variable);
+        foreach (var (key, value) in environment) psi.Environment[key] = value;
 
         using var p = Process.Start(psi) ?? throw new InvalidOperationException($"could not start {file}.");
         var outTask = p.StandardOutput.ReadToEndAsync();
