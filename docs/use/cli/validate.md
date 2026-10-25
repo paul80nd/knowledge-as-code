@@ -48,6 +48,19 @@ run could not ask. That last one usually wants the token [`restore`](restore.md#
 None of the three changes the exit code, and a corpus with no `consumes:` block reads no source at all.
 [Imports](../imports.md#an-import-that-has-fallen-behind) says why being behind is never an error here.
 
+### Annotations under CI
+
+Under a CI platform, `validate` writes each error and each warning a second time, as an annotation that platform shows.
+The report and the exit code are the same as in a local run.
+
+| Platform        | Detected by           | Where the annotation shows                                                   |
+|-----------------|-----------------------|------------------------------------------------------------------------------|
+| GitHub Actions  | `GITHUB_ACTIONS=true` | On the check, and on the line it names under *Files changed* when it changed |
+| Azure Pipelines | `TF_BUILD=True`       | In the run's summary, beside the step that ran `validate`                    |
+
+Each path is relative to the root of the git repository, so a corpus in a subfolder still lands on the right file. An
+info finding writes no annotation, and neither does `--json`.
+
 ## Examples
 
 ### A clean run
@@ -78,6 +91,21 @@ validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 4 err
 
 The name in brackets is a check id, and [`checks`](checks.md) prints what every one of them proves.
 [Troubleshooting](../troubleshooting.md) covers the findings you meet first.
+
+### A run under GitHub Actions
+
+`validate` prints the same report, then one line per error or warning before the counts. GitHub reads each of these
+lines as an annotation:
+
+```text
+::error file=adrs/0001-knowledge-as-code.md,line=1,title=required-field::missing required field 'owner'.
+```
+
+Under Azure Pipelines the same finding is written as:
+
+```text
+##vso[task.logissue type=error;sourcepath=adrs/0001-knowledge-as-code.md;linenumber=1;code=required-field]missing required field 'owner'.
+```
 
 ### The findings as JSON
 
@@ -135,6 +163,9 @@ each source in `consumes:` what it publishes. A source that does not answer with
 **A quotation of an imported clause is not checked.** `clause-quoted-faithfully` compares a quoted span against the
 clause the same line cites. An export sends a record's ids and its fields, not its wording, so the words of an imported
 clause are not here to compare against and the check passes over the citation.
+
+**GitHub shows ten annotations of each kind per step.** `validate` writes one for every error and warning, in file
+order, and GitHub shows the first ten errors and the first ten warnings. The job log keeps the whole report.
 
 **`immutable-after-accepted` is declared and does not run.** Whether an accepted decision changed is a question about
 a diff, and this command reads a working tree.

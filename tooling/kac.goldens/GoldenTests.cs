@@ -82,6 +82,30 @@ public class GoldenTests
         Assert.True(checksExit == 0, $"CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");
     }
 
+    [Theory]
+    [InlineData("GITHUB_ACTIONS", "true",
+        "::error file=services/catalogue.md,line=8,title=enum::"
+        + "'platform' value 'azure-function' is not one of: dotnet-api, dotnet-web.")]
+    [InlineData("TF_BUILD", "True",
+        "##vso[task.logissue type=error;sourcepath=services/catalogue.md;linenumber=8;code=enum]"
+        + "'platform' value 'azure-function' is not one of: dotnet-api, dotnet-web.")]
+    public void Validate_under_CI_writes_each_finding_as_the_platform_annotation(
+        string variable, string value, string annotation)
+    {
+        var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string> { [variable] = value });
+
+        Assert.Contains(annotation, printed.Split('\n').Select(l => l.TrimEnd('\r')));
+    }
+
+    [Fact]
+    public void Validate_outside_CI_writes_no_annotation()
+    {
+        var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string>());
+
+        Assert.DoesNotContain(printed.Split('\n'), l => l.StartsWith("::", StringComparison.Ordinal)
+                                                       || l.StartsWith("##vso[", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void Version_and_help_answer_outside_a_corpus_and_a_verb_exits_2()
     {

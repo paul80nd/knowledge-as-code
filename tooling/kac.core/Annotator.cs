@@ -1,0 +1,74 @@
+namespace kac.core;
+
+public enum CiPlatform
+{
+    GitHub,
+    AzurePipelines
+}
+
+/// <summary>
+/// Writes a finding as the line a CI platform reads as an annotation. Each prefix is the folder's path from the root of
+/// its git repository, ending in <c>/</c>, and is empty at the root: <c>CorpusPrefix</c> places a file in the corpus,
+/// and <c>SchemaPrefix</c> places one under <c>.schema/</c>.
+/// </summary>
+public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string SchemaPrefix)
+{
+    /// <summary>
+    /// The platform running this process, read through <paramref name="variable"/>, or null for a local run. GitHub
+    /// Actions sets <c>GITHUB_ACTIONS</c> to <c>true</c>, and Azure Pipelines sets <c>TF_BUILD</c> to <c>True</c>.
+    /// </summary>
+    public static CiPlatform? Detect(Func<string, string?> variable)
+    {
+        if (variable("GITHUB_ACTIONS") == "true") return CiPlatform.GitHub;
+        if (string.Equals(variable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase))
+            return CiPlatform.AzurePipelines;
+        return null;
+    }
+
+    /// <summary>Null for an info finding: Azure Pipelines has no third type, so neither platform is sent one.</summary>
+    public string? Line(Finding finding)
+    {
+        var kind = finding.Severity switch
+        {
+            Sev.Error => "error",
+            Sev.Warning => "warning",
+            _ => null
+        };
+        if (kind is null) return null;
+
+        var file = Path(finding.File);
+        var check = finding.Check.Value;
+
+        return Platform switch
+        {
+            CiPlatform.GitHub =>
+                $"::{kind} file={GitHubProperty(file)}"
+                + (finding.Line is { } n ? $",line={n}" : "")
+                + $",title={GitHubProperty(check)}::{GitHubData(finding.Message)}",
+            CiPlatform.AzurePipelines =>
+                $"##vso[task.logissue type={kind};sourcepath={AzureProperty(file)}"
+                + (finding.Line is { } m ? $";linenumber={m}" : "")
+                + $";code={AzureProperty(check)}]{AzureData(finding.Message)}",
+            _ => throw new InvalidOperationException($"no annotation is written for {Platform}.")
+        };
+    }
+
+    private string Path(string file) =>
+        (file.StartsWith(".schema/", StringComparison.Ordinal) ? SchemaPrefix : CorpusPrefix) + file;
+
+    /// <summary>
+    /// The escapes <c>@actions/core</c> writes. The percent sign goes first, or it would escape the escapes.
+    /// </summary>
+    private static string GitHubData(string text) =>
+        text.Replace("%", "%25").Replace("\r", "%0D").Replace("\n", "%0A");
+
+    private static string GitHubProperty(string text) =>
+        GitHubData(text).Replace(":", "%3A").Replace(",", "%2C");
+
+    /// <summary>The escapes <c>azure-pipelines-task-lib</c> writes, percent sign first.</summary>
+    private static string AzureData(string text) =>
+        text.Replace("%", "%AZP25").Replace("\r", "%0D").Replace("\n", "%0A");
+
+    private static string AzureProperty(string text) =>
+        AzureData(text).Replace(";", "%3B").Replace("]", "%5D");
+}

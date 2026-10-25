@@ -15,7 +15,9 @@ packaging to read.
 | `kac export`           | the corpus can no longer be written out as data                             |
 | `kac bundle`           | that export can no longer be assembled into a plugin                        |
 
-An error fails the build. A warning and an info are printed and leave the exit code alone.
+An error fails the build. A warning and an info are printed and leave the exit code alone. Under GitHub Actions or Azure
+Pipelines, `kac validate` also writes each error and warning as an
+[annotation](cli/validate.md#annotations-under-ci), so a warning shows on the pull request.
 [What the checks ask](#what-the-checks-ask) says what they cover.
 
 ## Pin the tool first

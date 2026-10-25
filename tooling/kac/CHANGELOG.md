@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac validate` writes each finding as an annotation under CI.** Where `GITHUB_ACTIONS` is `true`, each error and
+  warning is also written as a `::error` or `::warning` line, which GitHub shows on the line under *Files changed*.
+  Where `TF_BUILD` is `True`, it is a `##vso[task.logissue]` line, which Azure Pipelines shows in the run's summary.
+  Each path is relative to the repository's root. A warning therefore reaches the pull request. An info finding and
+  `--json` write none, and a local run prints what it did before.
+
 ### Changed
 
 - **A tool can replace several others.** `replaces` in `tools` takes a list of tool ids, one per line, so one tool can

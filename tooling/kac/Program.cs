@@ -1,5 +1,5 @@
-// The clock, git and the network are read here and passed down, so a test calls a verb with a fixed day and a
-// registry that answers from memory. `docs/maintaining/architecture.md` says which file answers what.
+// The clock, the environment, git and the network are read here and passed down, so a test calls a verb with a fixed
+// day and a registry that answers from memory. `docs/maintaining/architecture.md` says which file answers what.
 
 using System.ComponentModel;
 using System.Reflection;
@@ -205,8 +205,19 @@ internal sealed class ValidateCommand : Command<ValidateSettings>
 
             // One UTC day for the whole run, so every record is judged against the same day wherever it runs.
             return Commands.Validate(corpus, settings.Json, DateOnly.FromDateTime(DateTime.UtcNow),
-                Cli.RegistryFor(corpus, client));
+                Cli.RegistryFor(corpus, client), Annotating(corpus));
         });
+
+    /// <summary>
+    /// Null for a local run. A folder git cannot place takes an empty prefix, so its paths stay relative to the corpus.
+    /// </summary>
+    private static Annotator? Annotating(string corpus)
+    {
+        if (Annotator.Detect(Environment.GetEnvironmentVariable) is not { } platform) return null;
+
+        var schemaRoot = Schema.FindRoot(corpus) ?? corpus;
+        return new Annotator(platform, Git.Prefix(corpus) ?? "", Git.Prefix(schemaRoot) ?? "");
+    }
 }
 
 internal sealed class GenerateSettings : KacSettings

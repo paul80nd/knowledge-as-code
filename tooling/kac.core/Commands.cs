@@ -11,12 +11,15 @@ public static class Commands
     /// Check the corpus and print the findings. <paramref name="today"/> is the day every record is judged
     /// against, and <paramref name="registry"/> is where each import's source is read from. Both come from
     /// the caller so a test can fix the day and answer for the registry without a network.
+    /// <paramref name="annotator"/> is null for a local run, and <c>--json</c> writes no annotation.
     /// </summary>
-    public static int Validate(string corpusRoot, bool json, DateOnly today, Registry registry)
+    public static int Validate(string corpusRoot, bool json, DateOnly today, Registry registry,
+        Annotator? annotator)
     {
         var corpus = Corpus.Load(corpusRoot);
         var findings = Validator.CheckAll(corpus, today, Standings(corpus.Descriptor, registry));
-        return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
+        return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json,
+            annotator);
     }
 
     /// <summary>
@@ -151,7 +154,8 @@ public static class Commands
 
         // Generation writes what validation then checks, so it goes first. Staging goes last.
         Generate(dir, check: false);
-        var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable);
+        var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable,
+            annotator: null);
         Stage(dir);
 
         if (validated == 0) return 0;
@@ -441,7 +445,8 @@ public static class Commands
             : $"updated [bold]{written.Count}[/] of {plan.Count} generated file(s).");
     }
 
-    private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json)
+    private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json,
+        Annotator? annotator)
     {
         var errors = findings.Count(f => f.Severity == Sev.Error);
         var warnings = findings.Count(f => f.Severity == Sev.Warning);
@@ -483,6 +488,11 @@ public static class Commands
             Out.Write(grid);
             Out.Line();
         }
+
+        if (annotator is not null)
+            foreach (var f in findings.OrderBy(f => f.File).ThenBy(f => f.Line ?? 0))
+                if (annotator.Line(f) is { } annotation)
+                    Out.Raw(annotation);
 
         Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "

@@ -52,7 +52,7 @@ public class CommandsTests
         var root = Fixture("import-versions");
         var asked = new List<string>();
 
-        Commands.Validate(root, json: false, Required.Today, Recording(asked));
+        Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null);
 
         Assert.Equal(["feed", "feed", "nowhere"], asked.Select(Path.GetFileName));
     }
@@ -63,7 +63,7 @@ public class CommandsTests
         var root = Fixture("clean");
         var asked = new List<string>();
 
-        var exit = Commands.Validate(root, json: false, Required.Today, Recording(asked));
+        var exit = Commands.Validate(root, json: false, Required.Today, Recording(asked), annotator: null);
 
         Assert.Equal(0, exit);
         Assert.Empty(asked);

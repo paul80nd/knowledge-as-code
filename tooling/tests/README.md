@@ -162,6 +162,11 @@ prints its own tally, so neither reads as coverage of the whole tool. Adding a c
 and a fixture for it. `KAC_UPDATE_GOLDENS=1` skips this gate, because an update skips the runs of a scenario with no
 golden to write.
 
+**Every scenario is a local run.** `Suite.Run` clears `GITHUB_ACTIONS` and `TF_BUILD` from each `kac` process it
+starts, so a scenario prints the same in CI as on your machine. The annotation gates set one of them back with
+`Suite.RunUnder`. They run `kac validate` over `corpus-enums` and assert the line each platform reads, and they assert
+that a run with neither variable writes no such line.
+
 ## The scenarios
 
 Every reachable check has a fixture, and a full run fails on one that does not. The run prints the tally. Each row

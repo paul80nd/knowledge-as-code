@@ -11,14 +11,14 @@ dotnet run --project tooling/kac -- --help   # build the entrypoint from source 
 
 ## The parts
 
-| Part                                             | What it contains                                                                                    |
-|--------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `tooling/kac/`                                   | `Program.cs`, which declares each verb, parses its options and reads the clock, git and the network |
-| `tooling/kac.core/`                              | Loading a corpus, every check, generation, export, bundling, packing, restore, update and reports   |
-| `.schema/`                                       | One YAML file per type (one kind of record), plus the shared fields, tiers, enums and checks        |
-| `manifest.yaml` and `template/`                  | The files `kac new` sends a new corpus and `kac update` sends an existing one                       |
-| `tooling/kac.tests/` and `tooling/kac.features/` | The unit tests and the Reqnroll behaviour specs                                                     |
-| `tooling/kac.goldens/` and `tooling/tests/`      | The golden suite, its fixtures, and the two round-trip scripts                                      |
+| Part                                             | What it contains                                                                                                     |
+|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| `tooling/kac/`                                   | `Program.cs`, which declares each verb, parses its options and reads the clock, the environment, git and the network |
+| `tooling/kac.core/`                              | Loading a corpus, every check, generation, export, bundling, packing, restore, update and reports                    |
+| `.schema/`                                       | One YAML file per type (one kind of record), plus the shared fields, tiers, enums and checks                         |
+| `manifest.yaml` and `template/`                  | The files `kac new` sends a new corpus and `kac update` sends an existing one                                        |
+| `tooling/kac.tests/` and `tooling/kac.features/` | The unit tests and the Reqnroll behaviour specs                                                                      |
+| `tooling/kac.goldens/` and `tooling/tests/`      | The golden suite, its fixtures, and the two round-trip scripts                                                       |
 
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md) lists every schema
 file and what it declares.
@@ -44,7 +44,8 @@ In this repository, each corpus under `examples/` and `template/` finds the one 
 
 1. `Spectre.Console.Cli` parses the arguments. An option the verb does not declare stops the run with exit code 1.
 2. `Cli.InCorpus` finds the corpus and the schema.
-3. `Program.cs` reads today's date and builds the HTTP client, then calls `Commands.Validate`.
+3. `Program.cs` reads today's date, builds the HTTP client and reads which CI platform is running it. It then calls
+   `Commands.Validate`.
 4. `Corpus.Load` reads `.corpus.yaml`, asks git for the corpus's files, loads the schema and reads `.imports/`.
    [Discovery](../use/discovery.md) then selects the records from that listing and parses each one.
 5. `Validator.CheckAll` checks the schema first, then each record, then the corpus as a whole. It returns a list of
