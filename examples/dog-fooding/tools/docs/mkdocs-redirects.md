@@ -2,13 +2,13 @@
 id: tol-mkdocs-redirects
 type: tool
 tier: descriptive
-status: approved
+status: deprecated
 packages:
   - { purl: pkg:pypi/mkdocs-redirects, versions: 1.2.2 }
 homepage: https://github.com/mkdocs/mkdocs-redirects
 licence: MIT
 licence-declared: MIT
-decided-on: "2026-10-13"
+decided-on: "2026-10-25"
 review-by: "2027-10-13"
 owner: human:paul.law
 tags: [ documentation, redirects ]
@@ -16,7 +16,7 @@ tags: [ documentation, redirects ]
 
 # mkdocs-redirects
 
-`Tool: tol-mkdocs-redirects` `APPROVED`
+`Tool: tol-mkdocs-redirects` `DEPRECATED`
 
 The MkDocs plugin that writes a page at a moved page's old URL, sending the reader on to the page that replaced it.
 
@@ -24,21 +24,16 @@ The MkDocs plugin that writes a page at a moved page's old URL, sending the read
 
 Files under `template/` and `.schema/` cite the documentation site by URL, and every corpus that took the framework
 keeps a copy of them. A page that moves would break each of those links in every such corpus, and no check here reads
-an external URL. The plugin keeps each old URL working.
+an external URL. The plugin kept each old URL working.
 
-`redirect_maps` in `mkdocs.yml` lists each moved page and the page that replaced it. The page it writes keeps the
+`redirect_maps` in `mkdocs.yml` lists each moved page and the page that replaced it. The page it wrote kept the
 anchor. `NavigationTests` in `kac.tests` fails a redirect whose target the nav does not list.
 
 ## Status
 
-The approval stops at 1.2.2, because the ProperDocs project publishes every release from 1.2.3. PyPI names
-`ProperDocs/mkdocs-redirects` as the publisher of 1.2.3, and that release requires `properdocs`, a fork of MkDocs with
-no record here. Release 1.2.3 changes nothing in how a redirect is built. [Issue #1058] decides which toolchain the site
-follows.
-
-## Where it is used
-
-* [svc-docs-site] is built with it.
+[tol-zensical] builds the redirect pages itself, from the same `redirect_maps` key, and keeps the anchor the same way.
+The approval stopped at 1.2.2, because the ProperDocs project publishes every release from 1.2.3, and that release
+requires `properdocs`, a fork of MkDocs.
 
 ## Alternatives considered
 
@@ -52,7 +47,7 @@ of the plugin, so nothing follows for what is published.
 ## Related
 
 * [tol-mkdocs] is the generator it plugs into.
+* [tol-zensical] replaces it.
 
-[Issue #1058]: https://github.com/paul80nd/knowledge-as-code/issues/1058
-[svc-docs-site]: ../../services/docs-site.md
 [tol-mkdocs]: mkdocs.md
+[tol-zensical]: zensical.md

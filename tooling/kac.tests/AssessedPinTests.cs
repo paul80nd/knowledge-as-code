@@ -54,12 +54,14 @@ public partial class AssessedPinTests
     }
 
     /// <summary>
-    /// Null where the record has no assessment or approves no package, so it is not one this guard reads.
+    /// Null where the record has no assessment, approves no package, or is deprecated or rejected, so it is not one
+    /// this guard reads.
     /// </summary>
     internal static IReadOnlyList<string>? Faults(string rel, string text,
         IReadOnlyDictionary<string, IReadOnlyList<Pin>> pins)
     {
         if (Doc.Parse(rel, text, Schema) is not { Front: { } front } doc) return null;
+        if (Yaml.Str(Yaml.Get(front, "status")) is "deprecated" or "rejected") return null;
         if (doc.Sections.FirstOrDefault(s => s.Title == Assessment) is not { } section) return null;
         if (Yaml.Get(front, "packages") is not YamlSequenceNode packages) return null;
 
@@ -151,6 +153,13 @@ public partial class AssessedPinTests
     [Fact]
     public void A_record_with_no_assessment_is_not_read() =>
         Assert.Null(Faults("tools/widget.md", InStep.Replace("## Accessibility", "## Related"), WidgetAt0572));
+
+    [Theory]
+    [InlineData("deprecated")]
+    [InlineData("rejected")]
+    public void A_record_out_of_use_is_not_read(string status) =>
+        Assert.Null(Faults("tools/widget.md", InStep.Replace("id: tol-widget", $"id: tol-widget\nstatus: {status}"),
+            new Dictionary<string, IReadOnlyList<Pin>>()));
 
     [Fact]
     public void A_pin_outside_the_range_is_reported()

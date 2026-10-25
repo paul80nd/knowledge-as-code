@@ -12,10 +12,11 @@ edit_uri: edit/main/docs/
 
 copyright: MIT licensed.
 
-# Strict mode fails a dead link. A page the nav does not list is only reported at INFO, so `NavigationTests` has it.
+# Strict mode fails a dead link or a dead anchor. Nothing reports a page the nav does not list, so `NavigationTests`
+# has it.
 strict: true
 
-# A dead anchor is otherwise INFO, which strict does not promote. This key takes no `error`, so `warn` fails the build.
+# Zensical ignores this key and fails a dead anchor anyway. MkDocs reads it, so the site still builds as strictly there.
 validation:
   links:
     anchors: warn
@@ -26,6 +27,8 @@ exclude_docs: |
 
 theme:
   name: material
+  # Zensical's default is `modern`. `classic` keeps the look Material for MkDocs gave this site.
+  variant: classic
   logo: assets/icon.svg
   favicon: assets/icon.svg
   icon:
@@ -89,7 +92,7 @@ markdown_extensions:
       base_path: ['.']
       check_paths: true
 
-# Declaring `plugins:` drops the default `search`, so it is listed by name.
+# Zensical builds search whether or not it is listed. MkDocs drops its default `search` once `plugins:` is declared.
 plugins:
   - search
   # A moved page, then the page that replaced it. `NavigationTests` fails a target the nav does not list.

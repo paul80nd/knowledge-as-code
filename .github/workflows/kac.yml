@@ -258,7 +258,7 @@ jobs:
       - name: Report that the gate passed
         run: echo "every job passed."
 
-  # A job of its own because `strict:` in mkdocs.yml makes a dead link or an unreachable page fail.
+  # A job of its own because `strict:` in mkdocs.yml makes a dead link or a dead anchor fail.
   docs:
     runs-on: ubuntu-latest
     steps:
@@ -274,11 +274,11 @@ jobs:
           cache: pip
           cache-dependency-path: docs/requirements.txt
 
-      - name: Install MkDocs and the theme
+      - name: Install Zensical
         run: pip install -r docs/requirements.txt
 
       - name: Build the site
-        run: mkdocs build
+        run: zensical build
 
   # Installs the bundle and asks each skill what it describes. Both platforms, because development happens on
   # macOS and the first audience is on Windows. library, engineering and payments each show a different trim;

@@ -2,32 +2,39 @@
 id: tol-mkdocs-material
 type: tool
 tier: descriptive
-status: approved
+status: deprecated
 packages:
   - { purl: pkg:pypi/mkdocs-material, versions: 9.7.x }
 homepage: https://squidfunk.github.io/mkdocs-material/
 licence: MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0
 licence-declared: MIT
-decided-on: "2026-08-24"
+decided-on: "2026-10-25"
 review-by: "2027-08-24"
+successor: tol-zensical
 owner: human:paul.law
 tags: [ documentation, theme ]
 ---
 
 # Material for MkDocs
 
-`Tool: tol-mkdocs-material` `APPROVED`
+`Tool: tol-mkdocs-material` `DEPRECATED`
 
-The theme the documentation site renders with. It supplies the navigation, search and colour-scheme behaviour
+The theme the documentation site rendered with. It supplied the navigation, search and colour-scheme behaviour
 `mkdocs.yml` turns on.
 
 ## What we use it for
 
-The `features:` and `palette:` blocks in `mkdocs.yml` are this theme's. They put each section's index page behind the
+The `features:` and `palette:` blocks in `mkdocs.yml` were written for this theme, and Zensical reads them unchanged.
+They put each section's index page behind the
 section name, and they add an edit pencil to every page. They also let the reader's own light or dark setting choose
 the colour scheme, with a toggle either way.
 
-It is pinned beside MkDocs in `docs/requirements.txt`. A theme release changes the site only when the pin moves.
+It was pinned beside MkDocs in `docs/requirements.txt`, so a theme release changed the site only when the pin moved.
+
+## Status
+
+[tol-zensical] builds the site instead. Material for MkDocs reaches end of life on 2026-11-05, after which it gets no
+maintenance except in exceptional circumstances. Zensical comes from the same team and reads the same `mkdocs.yml`.
 
 ## Accessibility
 
@@ -43,10 +50,6 @@ margins and nothing else.
 Two things fall short. Nobody has run the site through a screen reader or a contrast checker, so the contrast of the
 two schemes is taken from the theme and not measured here. A Mermaid diagram renders as an SVG that the theme gives no
 text alternative, so the prose beside it is the only way to read what it says.
-
-## Where it is used
-
-* [svc-docs-site] is built with it.
 
 ## Alternatives considered
 
@@ -66,8 +69,9 @@ a separate package and nothing here uses it.
 
 * [std-A11Y] requires the site it renders, and this entry, to meet [WCAG 2.2 AA].
 * [tol-mkdocs] is the generator it themes.
+* [tol-zensical] replaces it.
 
 [WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/
 [std-A11Y]: ../../standards/accessibility.md
-[svc-docs-site]: ../../services/docs-site.md
 [tol-mkdocs]: mkdocs.md
+[tol-zensical]: zensical.md

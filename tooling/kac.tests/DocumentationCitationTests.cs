@@ -53,7 +53,7 @@ public partial class DocumentationCitationTests
                 var type = m.Groups["type"].Value;
                 var member = m.Groups["member"].Value;
 
-                // A page or a Gherkin spec is left to `CommentCitationTests` and to `mkdocs build --strict`.
+                // A page or a Gherkin spec is left to `CommentCitationTests` and to `zensical build`.
                 if (Extensions.Contains(member))
                 {
                     if (member is not "cs" || sources.Any(f => Path.GetFileName(f) == $"{type}.cs")) continue;

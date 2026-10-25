@@ -88,7 +88,7 @@ _**Covers:** `eng:pol-PIPE.CONFIG`_
 ```
 ✅ Good
 # in .github/dependabot.yml
-# MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
+# Zensical, pinned in docs/requirements.txt so a release of the site generator changes the site when we take it.
 - package-ecosystem: pip
   directory: /docs
   schedule:
@@ -96,8 +96,7 @@ _**Covers:** `eng:pol-PIPE.CONFIG`_
   cooldown: {default-days: 7}
 
 # in docs/requirements.txt
-mkdocs==1.6.1
-mkdocs-material==9.7.7
+zensical==0.0.72
 
 # in .yamllint
 rules:
@@ -113,8 +112,7 @@ rules:
   directory: /docs
 
 # in docs/requirements.txt
-mkdocs
-mkdocs-material
+zensical
 
 # in .yamllint
 rules:

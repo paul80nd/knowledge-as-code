@@ -24,11 +24,11 @@ The action that installs Python on the runner, for the linters and for the docum
 
 Every step passes `python-version: '3.13'`. Three jobs run it:
 
-| Job                             | What it installs next                                        |
-|---------------------------------|--------------------------------------------------------------|
-| `lint` in `kac.yml`             | yamllint, from `.github/requirements.txt`                    |
-| `docs` in `kac.yml`             | MkDocs, its theme and a plugin, from `docs/requirements.txt` |
-| `publish` in `publish-docs.yml` | the same, before it publishes the site                       |
+| Job                             | What it installs next                     |
+|---------------------------------|-------------------------------------------|
+| `lint` in `kac.yml`             | yamllint, from `.github/requirements.txt` |
+| `docs` in `kac.yml`             | Zensical, from `docs/requirements.txt`    |
+| `publish` in `publish-docs.yml` | the same, before it publishes the site    |
 
 The `docs` and `publish` jobs pass `cache: pip`. The action saves the pip cache when either job ends.
 
@@ -67,10 +67,10 @@ repository publishes.
 ## Related
 
 * [std-CI] requires every action to be pinned to a commit.
-* [tol-mkdocs] is installed on the Python it sets up.
-* [tol-yamllint] is installed on it too.
+* [tol-yamllint] is installed on the Python it sets up.
+* [tol-zensical] is installed on it too.
 
 [std-CI]: ../../standards/workflows.md
 [svc-docs-site]: ../../services/docs-site.md
-[tol-mkdocs]: ../docs/mkdocs.md
 [tol-yamllint]: ../lint/yamllint.md
+[tol-zensical]: ../docs/zensical.md

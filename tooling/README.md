@@ -44,10 +44,10 @@ the parser from wherever they were typed, so neither needs a corpus.
 
 ## The documentation site
 
-Every command has a page at <https://paul80nd.github.io/knowledge-as-code/>, built by MkDocs from [`../docs/`](../docs/)
-and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `../mkdocs.yml` names the pages and the
-order they read in. A dead link fails `mkdocs build --strict`; a page no nav entry reaches is reported at INFO and
-passes, so `NavigationTests` is what catches that.
+Every command has a page at <https://paul80nd.github.io/knowledge-as-code/>, built by Zensical from
+[`../docs/`](../docs/) and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `../mkdocs.yml`
+names the pages and the order they read in. A dead link or a dead anchor fails `zensical build`, because `mkdocs.yml`
+sets `strict`. A page no nav entry reaches passes the build, so `NavigationTests` is what catches that.
 
 The site also carries the framework itself, under `../docs/framework/`: what a type and a tier are, the types that ship,
 what a record carries, how knowledge is contributed, and where the type names came from. A corpus keeps the narrow,

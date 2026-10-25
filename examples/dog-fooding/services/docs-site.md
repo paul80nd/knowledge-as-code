@@ -10,15 +10,15 @@ criticality: important
 monitoring-output: none
 owner: human:paul.law
 facets: [ public ]
-tags: [ github-pages, mkdocs ]
+tags: [ github-pages, zensical ]
 ---
 
 # Documentation site
 
 `Service: svc-docs-site` `LIVE`
 
-The documentation site is the public documentation for `kac` and for the framework around it. MkDocs builds it from
-`docs/`, and GitHub Pages serves it.
+The documentation site is the public documentation for `kac` and for the framework around it. Zensical builds it
+from `docs/`, and GitHub Pages serves it.
 
 ## What it does
 
@@ -36,16 +36,16 @@ separate feature, and this build does not exercise it. Taken from the header com
 
 * **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `docs`, configured by
   `mkdocs.yml` at the root
-* **Platform**: MkDocs with the Material theme, both pinned in `docs/requirements.txt`
+* **Platform**: Zensical, with its `classic` theme, pinned in `docs/requirements.txt`
 * **Deployed as**: a static site uploaded as a Pages artifact by `publish-docs.yml`
 
 ## Environments
 
-| Environment | URL                                             | Notes                                                                  |
-|-------------|-------------------------------------------------|------------------------------------------------------------------------|
-| Development | No published URL                                | `mkdocs serve` from a checkout.                                        |
-| Test        | No published URL                                | The `docs` job in `kac.yml` runs `mkdocs build` on every pull request. |
-| Production  | <https://paul80nd.github.io/knowledge-as-code/> | Published by `publish-docs.yml` on a push to `main`.                   |
+| Environment | URL                                             | Notes                                                                    |
+|-------------|-------------------------------------------------|--------------------------------------------------------------------------|
+| Development | No published URL                                | `zensical serve` from a checkout.                                        |
+| Test        | No published URL                                | The `docs` job in `kac.yml` runs `zensical build` on every pull request. |
+| Production  | <https://paul80nd.github.io/knowledge-as-code/> | Published by `publish-docs.yml` on a push to `main`.                     |
 
 ## Dependencies
 
@@ -53,9 +53,7 @@ None in this catalogue. The site is static HTML. It calls nothing.
 
 The packages that build it are in the tool register:
 
-* [tol-mkdocs]
-* [tol-mkdocs-material]
-* [tol-mkdocs-redirects]
+* [tol-zensical]
 
 The actions that build and publish it are there too:
 
@@ -69,8 +67,8 @@ None of its own. Every page is built from a file in the repository.
 
 ## Operational notes
 
-* **`strict: true` in `mkdocs.yml` turns a dead link into a failed build.** A page the navigation does not list is
-  reported at INFO, which strict mode does not catch. `NavigationTests` in `kac.tests` checks for that instead.
+* **`strict: true` in `mkdocs.yml` turns a dead link or a dead anchor into a failed build.** A page the navigation does
+  not list passes the build, so `NavigationTests` in `kac.tests` checks for that.
 * **The Pages source is set to GitHub Actions in the repository settings**, so nothing pushes a branch. No file in this
   repository stores that setting.
 * **The publish concurrency group cancels a superseded run.** There is one live site, so a newer push cancels a run
@@ -78,7 +76,5 @@ None of its own. Every page is built from a file in the repository.
 
 [tol-checkout]: ../tools/workflows/checkout.md
 [tol-github-pages]: ../tools/workflows/github-pages.md
-[tol-mkdocs]: ../tools/docs/mkdocs.md
-[tol-mkdocs-material]: ../tools/docs/mkdocs-material.md
-[tol-mkdocs-redirects]: ../tools/docs/mkdocs-redirects.md
 [tol-setup-python]: ../tools/workflows/setup-python.md
+[tol-zensical]: ../tools/docs/zensical.md

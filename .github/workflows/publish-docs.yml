@@ -46,12 +46,12 @@ jobs:
           cache: pip
           cache-dependency-path: docs/requirements.txt
 
-      - name: Install MkDocs and the theme
+      - name: Install Zensical
         run: pip install -r docs/requirements.txt
 
-      # `strict:` in mkdocs.yml turns a dead link or an unreachable page into a failure here.
+      # `strict:` in mkdocs.yml turns a dead link or a dead anchor into a failure here.
       - name: Build the site
-        run: mkdocs build
+        run: zensical build
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

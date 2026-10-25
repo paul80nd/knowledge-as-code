@@ -1,6 +1,3 @@
-# Pinned, as the workflow pins its actions to a commit: a theme release should change the site when we take it,
-# not on its own. Dependabot moves these, except mkdocs-redirects.
-mkdocs==1.6.1
-mkdocs-material==9.7.7
-# From 1.2.3 it requires properdocs. tol-mkdocs-redirects says why, and #1058 decides the toolchain.
-mkdocs-redirects==1.2.2
+# Pinned, as the workflow pins its actions to a commit: a release of the site generator should change the site when we
+# take it, not on its own. Dependabot moves it. Zensical reads mkdocs.yml and builds the redirects itself.
+zensical==0.0.72

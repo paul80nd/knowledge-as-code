@@ -73,8 +73,8 @@ block and where the examples' output comes from. It leaves these to you:
 
 ## Links
 
-* Inside `docs/`, link by relative path to the `.md` file. `mkdocs build --strict` fails a dead link. `NavigationTests`
-  fails a page the nav does not list.
+* Inside `docs/`, link by relative path to the `.md` file. `zensical build` fails a dead link. `NavigationTests` fails
+  a page the nav does not list.
 * From a file under `tooling/`, cite a page by path, as `docs/use/cli/export.md`.
 * From the overlay layer (`.schema/`, `knowledge-as-code/`, `.plugin/`), cite the site by URL. Those files reach every
   corpus and `docs/` reaches none.
