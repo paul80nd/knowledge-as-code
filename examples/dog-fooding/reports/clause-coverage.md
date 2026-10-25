@@ -5,7 +5,7 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-25T19:30:00Z
+  at: 2026-10-25T19:31:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.39.0
@@ -13,7 +13,7 @@ sources:
   - { resource: example-dogfooding, version: "0.83.0" }
   - { resource: example-engineering, version: "0.41.0" }
 verified:
-  - { at: 2026-10-25T19:35:00Z, by: human:paul.law }
+  - { at: 2026-10-25T19:31:01Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -297,7 +297,7 @@ where the rule and the practice differ.
 | `DEPREC`  | MUST     |                       | `dev-export-has-no-notice` |                |                | Gap     | No standard says how much notice a consumer of the export gets.                                                          |
 | `NOTICE`  | MUST     | `eng:std-API.VERSION` |                            | `eng:ctl-0005` |                | Covered | The same rule as `VERSION`.                                                                                              |
 | `SECURE`  | MUST     | `eng:std-API.AUTH`    |                            |                |                | Covered | Every endpoint authenticates and validates. Nothing here listens.                                                        |
-| `HOLDS`   | MUST     | `eng:std-API.SPEC`    |                            |                |                | Covered | ctl-0008 reads a published corpus back and compares it.                                                                  |
+| `HOLDS`   | MUST     | `eng:std-API.SPEC`    |                            |                |                | Covered | ctl-0008 reads a published corpus back and compares it, for `std-PLUGIN` and not for this clause.                        |
 | `BREAK`   | MUST NOT | `eng:std-API.VERSION` |                            | `eng:ctl-0005` |                | Covered | A break has a version increment and a notice.                                                                            |
 | `EXPOSE`  | MUST NOT | `eng:std-API.AUTH`    |                            |                |                | Covered | Everything here is public, so no interface hides anything.                                                               |
 | `COMPAT`  | SHOULD   |                       |                            |                |                | Gap     | `std-VERS` moves a stamp where a reader would be wrong. Nothing compares a new export shape with the one a consumer has. |
