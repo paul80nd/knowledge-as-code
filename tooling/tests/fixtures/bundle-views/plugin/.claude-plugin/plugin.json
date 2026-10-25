@@ -27,7 +27,7 @@
           "standards@3"
         ],
         "optional": [
-          "controls@1"
+          "controls@2"
         ],
         "note": "Each standard rule's obligations, and the controls checking it."
       },

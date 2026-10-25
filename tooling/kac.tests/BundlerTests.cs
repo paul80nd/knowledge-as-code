@@ -817,11 +817,11 @@ public class BundlerTests
             plugin:
             [
                 (Bundler.ManifestFile,
-                    Source($$"""{"path":"views/review.md","view":"review","requires":["standards@3"],"optional":["controls@2"]}"""))
+                    Source($$"""{"path":"views/review.md","view":"review","requires":["standards@3"],"optional":["controls@3"]}"""))
             ],
             export: Standards(controls: true)).Problems);
 
-        Assert.Contains("'controls' shape version 2", problem);
+        Assert.Contains("'controls' shape version 3", problem);
     }
 
     [Fact]
@@ -846,7 +846,7 @@ public class BundlerTests
         $$"""{"path":"{{path}}","view":"{{view}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
 
     private static string ReviewView() =>
-        """{"path":"views/review.md","view":"review","requires":["standards@3"],"optional":["controls@1"]}""";
+        """{"path":"views/review.md","view":"review","requires":["standards@3"],"optional":["controls@2"]}""";
 
     private static string Rules() =>
         """
@@ -855,7 +855,7 @@ public class BundlerTests
         """;
 
     /// <summary>
-    /// An export of two standards at shape 3, and of one control at shape 1 where <c>controls</c> is set. A null
+    /// An export of two standards at shape 3, and of one control at shape 2 where <c>controls</c> is set. A null
     /// <c>standardsInForce</c> or <c>controlsInForce</c> leaves the key out of that type's entry.
     /// </summary>
     private static (string, string)[] Standards(
@@ -872,7 +872,7 @@ public class BundlerTests
         if (controls)
         {
             types += $$"""
-                       ,{"type":"controls","shapeVersion":1,"records":1,"parts":0,"dir":"controls"{{controlsStated}}}
+                       ,{"type":"controls","shapeVersion":2,"records":1,"parts":0,"dir":"controls"{{controlsStated}}}
                        """;
         }
 

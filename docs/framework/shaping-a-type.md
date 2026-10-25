@@ -173,7 +173,8 @@ every rule of a standard lists every rule, so a coverage report can say which ru
 to its standard.
 
 **In the export:** the fields and the three required sections travel, `not-enforced` controls included, because
-withholding them would publish a coverage figure this corpus cannot show.
+withholding them would publish a coverage figure this corpus cannot show. `verifies` travels as rule ids, as
+`std-CI.PERMS`, which a reader of the shape before it would have read as standard ids.
 
 ### deviations
 

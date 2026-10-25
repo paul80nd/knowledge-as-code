@@ -27,7 +27,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   as `### PERMS: A job declares the permission it needs`, and `kac validate` reports `part-id-format` on one without.
   The export's `part` is that id and `title` drops it, while `anchor` stays the slug of the whole heading.
   `verifies` in `controls` takes rule ids, as `std-CI.PERMS`, and a bare standard id is a `ref-resolves` error.
-  `reciprocal` folds a rule id to its standard. `version:` under `export:` in `.schema/standards.yaml` moves to 3.
+  `reciprocal` folds a rule id to its standard. `version:` under `export:` moves to 3 in `.schema/standards.yaml` and
+  to 2 in `.schema/controls.yaml`.
 - **`kac report coverage` names the rule.** `Covered by` lists the rules whose `Covers` line cites the clause, and
   `Controls` lists the controls naming one of them. The review view `kac bundle` writes lists each control under the
   rule it names.

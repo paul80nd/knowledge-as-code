@@ -119,7 +119,7 @@ sections:
   optional: [Owner]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by,
            tags]
   sections:

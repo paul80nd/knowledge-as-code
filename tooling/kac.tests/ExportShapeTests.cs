@@ -18,7 +18,7 @@ public class ExportShapeTests
             Context: summary
             Decision: full
             Consequences: full
-        controls@1
+        controls@2
           fields: id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by, tags
           sections:
             What it checks: full
