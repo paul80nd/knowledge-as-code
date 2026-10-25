@@ -6,7 +6,6 @@ status: draft
 severity:
 last-rehearsed:
 rehearsal-frequency:
-rehearsal-method:
 owner:
 tags: [ a, b ]
 ---
@@ -26,13 +25,12 @@ Title this document for the **failure**, not the fix. A reader at 2am searches f
 
 * **`id`**: `rbk-` plus a slug naming the failure, as `rbk-estate-rebuild`. Save the file as `<slug>.md`.
 * **`severity`**: how urgent. The `Impact` section says who is affected.
-* **`last-rehearsed`**: a quoted date. A walk is a drill where you cause the fault and follow the steps, or a
-  read-through against the running system where you cannot. `"never"` is permitted, and it is what you want to know
-  before the incident rather than during it.
+* **`last-rehearsed`**: the last walk end to end, as `{ at: "2026-10-20", by: human:alex.doe, method: tabletop }`.
+  `at` is the day, quoted. `by` is a person as `human:alex.doe`, or an agent with its version. `method` is `live` where
+  you caused the fault, and `tabletop` where you read the steps against the running system. Write `never` where nobody
+  has walked it, which is what you want to know before the incident rather than during it.
 * **`rehearsal-frequency`**: pick `on-change` where a change to the system is what breaks the steps. `staleness-loud`
   warns at 92 days whichever value you pick.
-* **`rehearsal-method`**: `live` where you caused the fault, `tabletop` where you read the steps. Required once
-  `last-rehearsed` states a date.
 * **`requires-tools`**: list every tool the reader installs before starting.
 * **`requires-access`**: list every permission and role the runbook needs. Discovering you lack one mid-incident is its
   own outage. Where a step needs somebody else's approval, name who it is and how to reach them at 2am.

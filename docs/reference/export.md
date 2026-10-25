@@ -17,7 +17,7 @@ tool.
 Three keys select what a record sends:
 
 * **`fields:`** is a plain list. A field travels whole or not at all, and in the shape its type declared: a list as a
-  JSON array, anything else as a string.
+  JSON array, an object as a JSON object, and anything else as a string.
 * **`sections:`** names each section beside a **fidelity**, saying how much of that section travels.
 * **`parts:`** names the keys of one part's line, and the fidelity that entry carries.
 
@@ -368,6 +368,10 @@ the value of every other key, and test for this one key itself.
 **A list field's shape comes from the type.** A field its type declares as a list is a JSON array in every record file
 that has anything under it. Where the type declares its entries as objects, each entry has the keys that declaration
 names, and an entry key containing a list is an array inside it.
+
+**An object field's shape comes from the type.** It is a JSON object with every key the type declares, and a key the
+record left out is null. A word the field's `allow-literal:` admits arrives as that string instead. So a runbook's
+`last-rehearsed` is either an object with `at`, `by` and `method`, or the string `never`.
 
 **Prose arrives unwrapped.** The 120-column wrap is joined, and blank lines stay. A list, heading, quote, table or fence
 arrives exactly as written.

@@ -24,7 +24,7 @@ public partial class FixtureDateTests
         var read = 0;
 
         foreach (var (rel, fields) in Records())
-        foreach (var (line, field, date) in Dates(Path.Combine(Repo.Root, rel), fields))
+        foreach (var (line, field, date) in Dates(File.ReadLines(Path.Combine(Repo.Root, rel)), fields))
         {
             read++;
             var away = (date.ToDateTime(TimeOnly.MinValue) - today).Duration();
@@ -45,24 +45,57 @@ public partial class FixtureDateTests
             + "that golden.");
     }
 
+    [Fact]
+    public void A_dotted_path_is_read_from_an_inline_object_and_from_a_block()
+    {
+        string[] lines =
+        [
+            "---", "last-rehearsed: { at: \"2020-01-01\", by: human:alex.doe }", "last-verified:",
+            "  at: \"2021-02-02\"", "  by: human:alex.doe", "review-by: \"2022-03-03\"", "---"
+        ];
+
+        Assert.Equal(
+            [(2, "last-rehearsed.at", new DateOnly(2020, 1, 1)), (4, "last-verified.at", new DateOnly(2021, 2, 2)),
+                (6, "review-by", new DateOnly(2022, 3, 3))],
+            Dates(lines, new HashSet<string> { "last-rehearsed.at", "last-verified.at", "review-by" }));
+    }
+
     /// <summary>
-    /// The quoted ISO dates under the fields given, with their lines. Anything that is not a date is left to the
+    /// The quoted ISO dates under the fields given, with their lines. A path such as <c>last-rehearsed.at</c> names a
+    /// key of the field, written inline or on an indented line below it. Anything that is not a date is left to the
     /// validator.
     /// </summary>
     private static IEnumerable<(int Line, string Field, DateOnly Date)> Dates(
-        string path, IReadOnlySet<string> fields)
+        IEnumerable<string> lines, IReadOnlySet<string> fields)
     {
         var line = 0;
-        foreach (var text in File.ReadLines(path))
+        string? parent = null;
+        foreach (var text in lines)
         {
             line++;
-            if (DatedField().Match(text) is { Success: true } m
-                && fields.Contains(m.Groups[1].Value)
-                && DateOnly.TryParseExact(m.Groups[2].Value, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out var date))
-                yield return (line, m.Groups[1].Value, date);
+            if (DatedKey().Match(text) is not { Success: true } m) continue;
+
+            var key = m.Groups[2].Value;
+            var indented = m.Groups[1].Value.Length > 0;
+            if (!indented) parent = key;
+
+            var path = indented ? $"{parent}.{key}" : key;
+            if (Day(m.Groups[3].Value) is { } day && fields.Contains(path))
+                yield return (line, path, day);
+
+            if (indented) continue;
+
+            foreach (Match inner in InlineDate().Matches(m.Groups[3].Value))
+                if (Day(inner.Groups[2].Value) is { } nested && fields.Contains($"{key}.{inner.Groups[1].Value}"))
+                    yield return (line, $"{key}.{inner.Groups[1].Value}", nested);
         }
     }
+
+    private static DateOnly? Day(string value) =>
+        DateOnly.TryParseExact(value.Trim().Trim('"'), "yyyy-MM-dd", CultureInfo.InvariantCulture,
+            DateTimeStyles.None, out var date)
+            ? date
+            : null;
 
     private static IEnumerable<(string Rel, IReadOnlySet<string> Fields)> Records()
     {
@@ -94,8 +127,11 @@ public partial class FixtureDateTests
             .SelectMany(expr => FieldNames().Matches(expr).Select(m => m.Groups[1].Value))
             .ToHashSet(StringComparer.Ordinal);
 
-    [GeneratedRegex("""^([a-z0-9-]+):\s*"?(\d{4}-\d{2}-\d{2})"?\s*$""")]
-    private static partial Regex DatedField();
+    [GeneratedRegex("""^( *)([a-z0-9-]+):(.*)$""")]
+    private static partial Regex DatedKey();
+
+    [GeneratedRegex("""([a-z0-9-]+):\s*"?(\d{4}-\d{2}-\d{2})"?""")]
+    private static partial Regex InlineDate();
 
     [GeneratedRegex("""(?:field|days_since)\('([^']+)'\)""")]
     private static partial Regex FieldNames();

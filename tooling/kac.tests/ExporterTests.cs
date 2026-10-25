@@ -646,6 +646,22 @@ public class ExporterTests
     }
 
     [Fact]
+    public void An_object_field_holding_its_literal_travels_as_that_word()
+    {
+        var fields = Fields(LiteralObjectType(), "gls-one", "generated: never");
+
+        Assert.Equal("never", fields.GetProperty("generated").GetString());
+    }
+
+    [Fact]
+    public void An_object_field_holding_a_word_it_does_not_admit_is_null()
+    {
+        var fields = Fields(LiteralObjectType(), "gls-one", "generated: soon");
+
+        Assert.Equal(JsonValueKind.Null, fields.GetProperty("generated").ValueKind);
+    }
+
+    [Fact]
     public void A_type_declaring_no_sections_writes_an_empty_sections_object()
     {
         var text = "---\nid: gls-one\ntier: descriptive\nstatus: draft\nowner: someone\n"
@@ -2105,6 +2121,18 @@ public class ExporterTests
         Entry =
         [
             new FieldSpec { Name = "at", Type = "timestamp" },
+            new FieldSpec { Name = "by", Type = "string" }
+        ]
+    });
+
+    private static TypeSchema LiteralObjectType() => FieldType("generated", new FieldSpec
+    {
+        Name = "generated",
+        Type = "object",
+        AllowLiteral = ["never"],
+        Entry =
+        [
+            new FieldSpec { Name = "at", Type = "date" },
             new FieldSpec { Name = "by", Type = "string" }
         ]
     });

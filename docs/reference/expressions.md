@@ -64,6 +64,18 @@ reports. Guard a rule about a field that may be absent:
 expr: "present('detected-at') and present('occurred-at') implies field('detected-at') >= field('occurred-at')"
 ```
 
+## A key inside an object field
+
+Every fact that reads a field takes a dotted path to one key of an object field, as `'last-rehearsed.at'`:
+
+```yaml
+expr: "field('last-rehearsed') != 'never' and days_since('last-rehearsed.at') <= 92"
+```
+
+A path through a value that is not an object reaches nothing. So on `last-rehearsed: never`,
+`present('last-rehearsed.at')` is false and `field('last-rehearsed')` is `'never'`. On an object,
+`field('last-rehearsed')` is absent, because the object is not a scalar.
+
 ## When an expression is checked
 
 `kac` parses and type-checks each expression before it opens a single record, and anything wrong stops the load and
@@ -77,7 +89,7 @@ These are the whole callable surface.
 
 | Function                         | Returns | Reads                                                                                                                |
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
-| `field('name')`                  | string? | a frontmatter scalar                                                                                                 |
+| `field('name')`                  | string? | a frontmatter scalar, or one key of an object field                                                                  |
 | `present('name')`                | bool    | whether that field has anything, scalar, list or object. False for a bare key and an empty list as for a missing one |
 | `entries('name')`                | int     | how many entries that field carries. `present()` asks whether, this asks how many. Zero where the field is absent    |
 | `field_matches('name', 're')`    | bool    | that scalar against a pattern. False where absent, and the one pattern fact that sees frontmatter                    |

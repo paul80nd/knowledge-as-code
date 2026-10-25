@@ -31,14 +31,14 @@ lineage:
     the last line of `Resolution` does, opening `Confirmed when`. It asks for error handling and a route out wherever
     something goes wrong, so `Diagnosis` and `Resolution` both send the reader to `Escalation`. It asks for a plan for
     telling the people waiting: `Communication`. Google's Disaster Role Playing walks a document against the
-    running system where the fault cannot be caused, which `rehearsal-method` records as `tabletop`
+    running system where the fault cannot be caused, which `last-rehearsed` records as `method: tabletop`
   divergence: >
     Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
     `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both
     on one page, because a reader at 2am opens one document. The workbook and AWS each send a deterministic list of
     commands to automation, and this type stays a document. Google runs Disaster Role Playing and records no date on
-    the document. Asking every runbook for the day of its last walk, and a cadence for the next one, is this
-    framework's own
+    the document. Asking every runbook for the day of its last walk and who walked it, and a cadence for the next
+    one, is this framework's own
 
 collision: >
   The industry does not agree on *runbook* and *playbook*. Google's SRE material says *playbook* for investigating a
@@ -83,29 +83,21 @@ fields:
 
   last-rehearsed:
     required: true
-    type: date
+    type: object
+    shape: run
     allow-literal: [never]
-    description: Quoted. The day somebody last walked the runbook end to end, or `"never"`.
+    description: The last walk end to end, as the day, who walked it and the `method`. Or `never`.
     notes: >
-      A walk is a drill where you cause the fault and follow the steps, or a read-through against the running
-      system where you cannot. Editing the page does not move this date. A runbook showing `"never"` is worth
-      finding before the incident, while there is still time to rehearse it.
+      A walk is a drill where you cause the fault and follow the steps, `method: live`, or a read-through against
+      the running system where you cannot, `method: tabletop`. Editing the page does not move the walk. A runbook
+      showing `never` is worth finding before the incident, while there is still time to rehearse it.
+      `staleness-loud` reads `at` alone, so a tabletop takes the same window as a live walk.
 
   rehearsal-frequency:
     required: true
     type: enum
     values: $enums.rehearsal-frequency
     description: How often, or on what event, to rehearse the runbook.
-
-  rehearsal-method:
-    required: false
-    required-when: 'last-rehearsed != never'
-    type: enum
-    values: [live, tabletop]
-    description: "Which walk the date records: `live` caused the fault, `tabletop` read the steps against the system."
-    notes: >
-      `staleness-loud` does not read this field, so a tabletop takes the same window as a live walk.
-      See <https://paul80nd.github.io/knowledge-as-code/reference/checks/>.
 
   requires-tools:
     required: false
@@ -130,7 +122,7 @@ sections:
   optional: [Afterwards, Related]
 
 export:
-  version: 2
+  version: 3
   fields:
     [id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-tools, requires-access,
      tags]
@@ -180,7 +172,23 @@ rules:
     severity: warning
     # 92 days is the longest quarter, and every frequency takes it.
     expr: >-
-      field('last-rehearsed') != 'never' and days_since('last-rehearsed') <= 92
+      field('last-rehearsed') != 'never' and days_since('last-rehearsed.at') <= 92
     message: >
-      nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set
-      `last-rehearsed` to that day, or read it through where you cannot cause the fault.
+      nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write
+      the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault.
+  - id: walk-method-stated
+    description: A recorded walk states its `method`.
+    severity: error
+    expr: >-
+      present('last-rehearsed.at') implies present('last-rehearsed.method')
+    message: >
+      this walk does not say how it went. Add `method: live` to `last-rehearsed` where you caused the fault, or
+      `method: tabletop` where you read the steps against the running system.
+  - id: walked-by-a-person-or-agent
+    description: A walk states a person or an agent, and never a process.
+    severity: error
+    expr: "entries_match('last-rehearsed', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
+    message: >
+      the `by` in `last-rehearsed` states no person or agent. Write `human:alex.doe` for a person, or
+      `review-agent/2.1.0` for an agent. A fault a process injects with nobody walking the steps is a control,
+      so write it as one.

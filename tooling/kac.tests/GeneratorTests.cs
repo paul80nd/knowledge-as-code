@@ -37,6 +37,38 @@ public class GeneratorTests
         Assert.Contains("| Review by ", page);
     }
 
+    /// <summary>A runbook's <c>last-rehearsed</c>, as an object whose first key is the day.</summary>
+    private static TypeSchema Walked() => new()
+    {
+        Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "last-rehearsed"],
+        Fields = new Dictionary<string, FieldSpec>
+        {
+            ["last-rehearsed"] = new()
+            {
+                Name = "last-rehearsed", Type = "object", AllowLiteral = ["never"],
+                Entry =
+                [
+                    new FieldSpec { Name = "at", Type = "date" },
+                    new FieldSpec { Name = "by", Type = "string" }
+                ]
+            }
+        }
+    };
+
+    [Theory]
+    [InlineData("{ at: \"2026-10-20\", by: human:alex.doe }", "| 2026-10-20 ")]
+    [InlineData("never", "| never ")]
+    public void IndexPage_shows_an_object_field_by_its_first_key(string value, string cell)
+    {
+        var doc = Required.Parsed("runbooks/a.md", $"---\nid: rbk-a\nlast-rehearsed: {value}\n---\n\n# A\n",
+            new Schema());
+
+        var page = Generator.IndexPage(Walked(), [doc]);
+
+        Assert.Contains(cell, page);
+        Assert.DoesNotContain("alex.doe", page);
+    }
+
     [Fact]
     public void IndexPage_heading_drops_the_prefix_when_it_only_repeats_the_label()
     {

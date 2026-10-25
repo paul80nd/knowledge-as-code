@@ -5,7 +5,7 @@ tier: procedural
 status: active
 severity: sev3
 owner: human:alex.doe
-last-rehearsed: "never"
+last-rehearsed: never
 rehearsal-frequency: quarterly
 ---
 

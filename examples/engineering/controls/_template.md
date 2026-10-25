@@ -29,7 +29,9 @@ optional field from [the type page](../controls.md#metadata) where you have a va
 * **`mechanism`**: pick the one that runs today. `not-enforced` is a first-class value and the whole point of the
   coverage report, so do not invent a mechanism to avoid using it. Write the control for an unenforced rule all the
   same, because an unenforced rule you know about is worth more than one you do not.
-* **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
+* **`last-verified`**: the last time somebody ran the check, as `{ at: "2026-10-20", by: human:alex.doe }`, or
+  `never`. Add it where `mechanism` is `manual`. `by` is a person or an agent with its version, because a check a
+  process runs is a `ci` control.
 * **`evidence`**: where the proof lives, such as the build log, the audit note or the dashboard. Someone asking "how do
   you know?" should be able to follow it to an artefact. Add it unless `mechanism` is `not-enforced`.
 * **`review-by`**: the day somebody re-reads this record against the check, quoted. `control-in-date` warns once it

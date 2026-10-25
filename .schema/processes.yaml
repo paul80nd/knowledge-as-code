@@ -36,10 +36,10 @@ lineage:
     QA/G-6 for one who has a basic understanding of the field. EPA QA/G-6 asks a procedure to state that experience.
     `Prerequisites` states it in prose, and no field records it. That reader is as often an agent with no memory of the
     last run. Splitting the procedural layer by reading conditions is this framework's own. EPA QA/G-6 dates a document
-    review, and tests a draft once before release. `last-rehearsed` dates one walk-through, and its frequency repeats
-    it. EPA QA/G-6 also prints a revision number on every page, where git keeps the history. It has a supervisor and a
-    quality assurance officer sign a procedure before use, where `owner` names the person accountable and no field
-    records an approval date.
+    review, and tests a draft once before release. `last-rehearsed` records one walk-through and who made it, and its
+    frequency repeats it. EPA QA/G-6 also prints a revision number on every page, where git keeps the history. It has
+    a supervisor and a quality assurance officer sign a procedure before use, where `owner` names the person
+    accountable and no field records an approval date.
     See [What has no precedent](https://paul80nd.github.io/knowledge-as-code/framework/lineage/#what-has-no-precedent)
 
 collision: >
@@ -74,12 +74,13 @@ fields:
 
   last-rehearsed:
     required: true
-    type: date
+    type: object
+    shape: run
     allow-literal: [never]
-    description: Quoted. The day somebody last followed the process end to end, or `"never"`.
+    description: The last time somebody followed the process end to end, as the day and who. Or `never`.
     notes: >
-      Editing the page does not move this date. Where nobody has followed the process end to end, `"never"` is
-      better than a guess.
+      Editing the page does not move this. Where nobody has followed the process end to end, `never` is better
+      than a guess. A process is followed one way, so `method` stays out.
 
   rehearsal-frequency:
     required: true
@@ -98,7 +99,7 @@ sections:
   optional: [Related]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags]
   sections:
     When to use this: full
@@ -118,11 +119,26 @@ rules:
     # 92 days is the longest quarter, and 366 the longest year.
     expr: >-
       field('last-rehearsed') != 'never'
-      and (field('rehearsal-frequency') == 'quarterly' implies days_since('last-rehearsed') <= 92)
-      and (field('rehearsal-frequency') == 'annual' implies days_since('last-rehearsed') <= 366)
+      and (field('rehearsal-frequency') == 'quarterly' implies days_since('last-rehearsed.at') <= 92)
+      and (field('rehearsal-frequency') == 'annual' implies days_since('last-rehearsed.at') <= 366)
     message: >
-      nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and set
-      `last-rehearsed` to that day, or state a cadence somebody keeps.
+      nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and write the day
+      and who followed it in `last-rehearsed`, or state a cadence somebody keeps.
+  - id: followed-by-a-person-or-agent
+    description: A walk-through states a person or an agent, and never a process.
+    severity: error
+    expr: "entries_match('last-rehearsed', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
+    message: >
+      the `by` in `last-rehearsed` states no person or agent. Write `human:alex.doe` for a person, or
+      `review-agent/2.1.0` for an agent. A procedure a process follows is automation, so put it in the
+      pipeline that runs it.
+  - id: rehearsal-states-no-method
+    description: A walk-through states no `method`, which belongs to a runbook.
+    severity: error
+    expr: "not present('last-rehearsed.method')"
+    message: >
+      `last-rehearsed` states a `method`, which says how a runbook was walked. A process is followed one way,
+      so drop `method`.
   - id: no-hedged-ordering
     description: No step hedged with "typically", "usually" or "normally".
     severity: warning

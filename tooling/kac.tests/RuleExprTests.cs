@@ -281,6 +281,37 @@ public class RuleExprTests
         => Assert.True(Eval($"days_since('last-rehearsed') == {expected}",
             $"id: prc-a\nlast-rehearsed: \"{from}\""));
 
+    private const string Walked =
+        "id: rbk-a\nlast-rehearsed: { at: \"2026-03-15\", by: human:alex.doe }";
+
+    [Fact]
+    public void A_dotted_path_reads_one_key_of_an_object()
+        => Assert.True(Eval("field('last-rehearsed.at') == '2026-03-15'", Walked));
+
+    /// <summary><c>Required.Today</c> is 2026-06-15, so the walk is 92 days before it.</summary>
+    [Fact]
+    public void An_age_is_measured_from_a_dotted_path()
+        => Assert.True(Eval("days_since('last-rehearsed.at') == 92", Walked));
+
+    [Theory]
+    [InlineData("present('last-rehearsed.by')", true)]
+    [InlineData("present('last-rehearsed.method')", false)]
+    [InlineData("entries('last-rehearsed.at') == 1", true)]
+    [InlineData("field_matches('last-rehearsed.by', '^human:')", true)]
+    public void Every_fact_reading_a_field_reads_a_dotted_path(string expr, bool expected)
+        => Assert.Equal(expected, Eval(expr, Walked));
+
+    [Theory]
+    [InlineData("present('last-rehearsed.at')", false)]
+    [InlineData("field('last-rehearsed') == 'never'", true)]
+    [InlineData("days_since('last-rehearsed.at') == 0", true)]
+    public void A_dotted_path_into_a_literal_reads_nothing(string expr, bool expected)
+        => Assert.Equal(expected, Eval(expr, "id: rbk-a\nlast-rehearsed: never"));
+
+    [Fact]
+    public void An_object_is_not_equal_to_a_literal()
+        => Assert.True(Eval("field('last-rehearsed') != 'never'", Walked));
+
     [Fact]
     public void Iso_dates_order_as_text()
         => Assert.True(Eval("field('a') < field('b')", "id: adr-0001\na: \"2026-01-09\"\nb: \"2026-01-10\""));

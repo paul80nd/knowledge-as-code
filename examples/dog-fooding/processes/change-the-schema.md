@@ -3,7 +3,7 @@ id: prc-change-the-schema
 type: process
 tier: procedural
 status: active
-last-rehearsed: "2026-09-20"
+last-rehearsed: { at: "2026-09-20", by: claude-code/opus-5 }
 rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ schema, validation ]

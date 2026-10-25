@@ -23,3 +23,24 @@ shapes:
       actor and the moment, and says nothing about the act itself. `at` leads the entry, so a list of
       these sorts oldest first on its first key. `by` takes any string, because a verification gives a
       person, a process or an agent, and a type that limits the set writes a rule.
+
+  run:
+    entry:
+      at:
+        required: true
+        type: date
+        description: Quoted. The day it happened, as `"2026-10-20"`.
+      by:
+        required: true
+        type: string
+        description: Who did it. A type that limits this to one kind of actor writes a rule.
+      method:
+        required: false
+        type: enum
+        values: [live, tabletop]
+        description: "How the walk went: `live` caused the fault, `tabletop` read the steps against the system."
+    notes: >
+      The last time somebody did something that leaves no log of its own: walked a runbook, followed a process end
+      to end, or ran a check by hand. Git keeps the earlier runs. `at` is a day where `event` takes a moment,
+      because nobody records the minute a walk ended. `method` belongs to a runbook, and a type with one way of
+      doing the thing refuses it with a rule.

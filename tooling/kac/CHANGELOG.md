@@ -40,6 +40,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac report coverage` names the rule.** `Covered by` lists the rules whose `Covers` line cites the clause, and
   `Controls` lists the controls naming one of them. The review view `kac bundle` writes lists each control under the
   rule it names.
+- **A runbook, a process and a manual control say who did it.** `last-rehearsed` and `last-verified` take the last
+  run, as `{ at: "2026-10-20", by: human:alex.doe }`, or `never`. A runbook states `method`, `live` or `tabletop`, in
+  place of `rehearsal-method`, and `kac validate` reports `walk-method-stated` on a walk without one. `by` names a
+  person or an agent, never a process. A rule expression reads one key of an object field by a dotted path, as
+  `days_since('last-rehearsed.at')`. `version:` under `export:` moves to 3 in `.schema/runbooks.yaml` and
+  `.schema/controls.yaml`, and to 2 in `.schema/processes.yaml`.
 
 ## 0.39.0 - 2026-10-23
 

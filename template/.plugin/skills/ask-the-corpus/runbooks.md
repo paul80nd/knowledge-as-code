@@ -10,8 +10,8 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/<shortcode>/<record>.json # one a corpus t
 ```
 
 Each runbook is its own file, and there is no flat file of parts. Of the sections, only `Symptoms` and `Impact` travel.
-The steps, the `Afterwards` and `Related` sections and `rehearsal-method` stay in the corpus that published the
-runbook, because a reader who has found the right runbook fetches it whole. Where `runbooks` is not in `types` in
+The steps and the `Afterwards` and `Related` sections stay in the corpus that published the runbook, because a reader
+who has found the right runbook fetches it whole. Where `runbooks` is not in `types` in
 `manifest.json`, this corpus exports none, so say that and stop.
 
 ## Find the runbook that matches the symptom
@@ -27,23 +27,23 @@ Search `${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/` and read every file that hits.
 
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 
-| Key                          | Type                     | What it holds                                                    |
-|------------------------------|--------------------------|------------------------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the runbook by                               |
-| `fields.title`               | string                   | the failure it covers, in one line                               |
-| `fields.status`              | string                   | `active`, `draft` or `retired`                                   |
-| `fields.severity`            | string                   | the severity it is written for, as `sev3`                        |
-| `fields.applies-to`          | list of strings, or null | the service ids it covers                                        |
-| `fields.last-rehearsed`      | string                   | the day somebody last walked it, as `2026-10-18`, or `never`     |
-| `fields.rehearsal-frequency` | string                   | how often it is walked, as `on-change` or `quarterly`            |
-| `fields.requires-tools`      | list of strings, or null | what the reader installs before starting                         |
-| `fields.requires-access`     | list of strings, or null | the permissions the reader needs before starting                 |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                                   |
-| `sections.Symptoms`          | string of markdown       | what a reader sees when this failure is happening                |
-| `sections.Impact`            | string of markdown       | who is affected, and how badly                                   |
-| `trust`                      | null                     | always null for this type, which records no verification         |
-| `path`                       | string                   | where the runbook sits in its own repository                     |
-| `links`                      | object, or null          | the built link to that runbook, under `human`                    |
+| Key                          | Type                     | What it holds                                                                                                         |
+|------------------------------|--------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the runbook by                                                                                    |
+| `fields.title`               | string                   | the failure it covers, in one line                                                                                    |
+| `fields.status`              | string                   | `active`, `draft` or `retired`                                                                                        |
+| `fields.severity`            | string                   | the severity it is written for, as `sev3`                                                                             |
+| `fields.applies-to`          | list of strings, or null | the service ids it covers                                                                                             |
+| `fields.last-rehearsed`      | object, or string        | the last walk: `at`, `by` and `method` are strings, `method` null where the record left it out. Or the string `never` |
+| `fields.rehearsal-frequency` | string                   | how often it is walked, as `on-change` or `quarterly`                                                                 |
+| `fields.requires-tools`      | list of strings, or null | what the reader installs before starting                                                                              |
+| `fields.requires-access`     | list of strings, or null | the permissions the reader needs before starting                                                                      |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                                        |
+| `sections.Symptoms`          | string of markdown       | what a reader sees when this failure is happening                                                                     |
+| `sections.Impact`            | string of markdown       | who is affected, and how badly                                                                                        |
+| `trust`                      | null                     | always null for this type, which records no verification                                                              |
+| `path`                       | string                   | where the runbook sits in its own repository                                                                          |
+| `links`                      | object, or null          | the built link to that runbook, under `human`                                                                         |
 
 `Symptoms` and `Impact` are always present, because the type requires them. A runbook under a shortcode folder was
 written by the corpus with that `shortcode` in `sources` in `manifest.json`. Name that corpus in words.
@@ -62,9 +62,12 @@ Read the `status` that puts a runbook in force from `inForce`, a string, `null`,
 the key existed has none. Say so, and give `status` as written. Call no runbook in force on the strength of its status.
 `draft` and `retired` still mean what the bullets above say.
 
-**Say when `last-rehearsed` is `never`, or more than 92 days before today.** The steps may no longer work, because
-nobody has walked them against the system in that time. Quote `generatedAt` from `manifest.json` beside any of these,
-and say the record may have moved since.
+**Say when `last-rehearsed` is `never`, or its `at` is more than 92 days before today.** The steps may no longer work,
+because nobody has walked them against the system in that time. Quote `generatedAt` from `manifest.json` beside any of
+these, and say the record may have moved since.
+
+**Give who walked it and how, from `by` and `method`.** A `tabletop` walk read the steps against the system and never
+caused the fault, so a step that only the fault exercises is untried.
 
 ## Fetch the steps and answer from them
 

@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 68,
+    "validated": 72,
     "templates": 18,
     "skipped": 0,
-    "errors": 33,
-    "warnings": 56,
+    "errors": 38,
+    "warnings": 57,
     "infos": 0
   },
   "findings": [
@@ -42,6 +42,20 @@
       "severity": "warning",
       "check": "control-in-date",
       "message": "this control's `review-by` has passed. Check the control still runs the way this record says, then set `review-by` to the next day somebody looks at it."
+    },
+    {
+      "file": "controls/0004-checked-by-a-process.md",
+      "line": 1,
+      "severity": "error",
+      "check": "verified-by-a-person-or-agent",
+      "message": "the `by` in `last-verified` states no person or agent. Write `human:alex.doe` for a person, or `review-agent/2.1.0` for an agent. A check a process runs is a `ci` control, scheduled or not, and states no `last-verified`."
+    },
+    {
+      "file": "controls/0004-checked-by-a-process.md",
+      "line": 1,
+      "severity": "error",
+      "check": "check-states-no-method",
+      "message": "`last-verified` states a `method`, which says how a runbook was walked. A check runs one way, so drop `method`."
     },
     {
       "file": "data/borrower-records.md",
@@ -394,11 +408,25 @@
       "message": "'duration' is 'PT30M', and 'occurred-at' to 'restored-at' is 'PT40M'. Write 'PT40M', or correct whichever of the two moments is wrong."
     },
     {
+      "file": "processes/followed-by-a-process.md",
+      "line": 1,
+      "severity": "error",
+      "check": "followed-by-a-person-or-agent",
+      "message": "the `by` in `last-rehearsed` states no person or agent. Write `human:alex.doe` for a person, or `review-agent/2.1.0` for an agent. A procedure a process follows is automation, so put it in the pipeline that runs it."
+    },
+    {
+      "file": "processes/rehearsal-states-a-method.md",
+      "line": 1,
+      "severity": "error",
+      "check": "rehearsal-states-no-method",
+      "message": "`last-rehearsed` states a `method`, which says how a runbook was walked. A process is followed one way, so drop `method`."
+    },
+    {
       "file": "processes/rotate-a-signing-key.md",
       "line": 1,
       "severity": "warning",
       "check": "staleness",
-      "message": "nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and set `last-rehearsed` to that day, or state a cadence somebody keeps."
+      "message": "nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and write the day and who followed it in `last-rehearsed`, or state a cadence somebody keeps."
     },
     {
       "file": "processes/rotate-a-signing-key.md",
@@ -447,14 +475,14 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/diagnosis-branch-goes-nowhere.md",
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/diagnosis-branch-goes-nowhere.md",
@@ -482,28 +510,14 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
-    },
-    {
-      "file": "runbooks/rehearsal-method-not-stated.md",
-      "line": 1,
-      "severity": "error",
-      "check": "required-field",
-      "message": "missing required field 'rehearsal-method' (required when last-rehearsed != never)."
-    },
-    {
-      "file": "runbooks/rehearsal-method-not-stated.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/rehearsed-outside-the-window.md",
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/resolution-with-no-outcome.md",
@@ -517,7 +531,7 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/resolution-with-no-way-out.md",
@@ -531,7 +545,35 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/walk-method-not-stated.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/walk-method-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "walk-method-stated",
+      "message": "this walk does not say how it went. Add `method: live` to `last-rehearsed` where you caused the fault, or `method: tabletop` where you read the steps against the running system."
+    },
+    {
+      "file": "runbooks/walked-by-a-process.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and write the day and who walked it in `last-rehearsed`, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/walked-by-a-process.md",
+      "line": 1,
+      "severity": "error",
+      "check": "walked-by-a-person-or-agent",
+      "message": "the `by` in `last-rehearsed` states no person or agent. Write `human:alex.doe` for a person, or `review-agent/2.1.0` for an agent. A fault a process injects with nobody walking the steps is a control, so write it as one."
     },
     {
       "file": "services/catalogue.md",

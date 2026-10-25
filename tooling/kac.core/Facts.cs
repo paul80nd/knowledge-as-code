@@ -14,9 +14,10 @@ public sealed class Facts(Doc doc, DateOnly today)
 {
     /// <summary>
     /// Null where the document does not carry the key, or carries it bare. A field the type derives answers with what
-    /// it derived.
+    /// it derived. A <c>path</c> may name one key of an object field, as <c>last-rehearsed.at</c>.
     /// </summary>
-    public string? Field(string name) => doc.FrontScalar(name);
+    public string? Field(string path) =>
+        path.Contains('.', StringComparison.Ordinal) ? (Node(path) as YamlScalarNode)?.Value : doc.FrontScalar(path);
 
     /// <summary>
     /// Asks either shape a field may be written in, so <c>present('derived-from')</c> is true of a scalar or a list. A
@@ -29,7 +30,7 @@ public sealed class Facts(Doc doc, DateOnly today)
     /// and for a value <c>required-field</c> reads as absent, an unquoted placeholder included. A rule that must stay
     /// quiet on an absent field guards with <c>present()</c> first.
     /// </summary>
-    public int Entries(string name) => doc.FrontNode(name) switch
+    public int Entries(string name) => Node(name) switch
     {
         null => 0,
         YamlSequenceNode seq => seq.Children.Count,
@@ -68,7 +69,7 @@ public sealed class Facts(Doc doc, DateOnly today)
 
     /// <summary>False for an absent field. Whether it ought to be there is <c>required-field</c>'s question.</summary>
     public bool FieldMatches(string name, string pattern) =>
-        doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
+        Field(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
 
     /// <summary>
     /// A pattern asked of one key in every object the field holds. True where the field or the key is absent, so a
@@ -91,16 +92,27 @@ public sealed class Facts(Doc doc, DateOnly today)
                                        || seen.Add(v));
     }
 
-    private IEnumerable<YamlMappingNode> Objects(string field)
-    {
-        if (doc.Front is null) return [];
-
-        return Yaml.Get(doc.Front, field) switch
+    private IEnumerable<YamlMappingNode> Objects(string field) =>
+        Node(field) switch
         {
             YamlMappingNode map => [map],
             YamlSequenceNode seq => seq.Children.OfType<YamlMappingNode>(),
             _ => []
         };
+
+    /// <summary>
+    /// A field, or a key inside it where the path is dotted. <c>meta/type.schema.json</c> gives a field name no dot,
+    /// so the first segment is the field. A path through anything but a mapping reaches nothing, so
+    /// <c>last-rehearsed.at</c> on <c>last-rehearsed: never</c> is absent.
+    /// </summary>
+    private YamlNode? Node(string path)
+    {
+        var keys = path.Split('.');
+        var node = doc.FrontNode(keys[0]);
+        foreach (var key in keys.Skip(1))
+            node = node is YamlMappingNode map ? Yaml.Get(map, key) : null;
+
+        return node;
     }
 
     /// <summary>False where the document has no such section.</summary>
