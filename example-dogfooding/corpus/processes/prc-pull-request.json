@@ -12,7 +12,11 @@
       "svc-kac",
       "svc-marketplace"
     ],
-    "last-rehearsed": "2026-09-20",
+    "last-rehearsed": {
+      "at": "2026-09-20",
+      "by": "claude-code/opus-5",
+      "method": null
+    },
     "rehearsal-frequency": "per-release",
     "tags": [
       "contributing",
@@ -20,10 +24,10 @@
     ]
   },
   "sections": {
-    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only way in. Where a build broke, read a [runbook](https://github.com/paul80nd/knowledge-as-code/blob/52227eefa389dfd0421b6c4c74b8ccbc140825ec/examples/dog-fooding/runbooks.md).",
+    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only way in. Where a build broke, read a [runbook](https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/dog-fooding/runbooks.md).",
     "Prerequisites": "* A branch off `main`, with the change committed to it.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --` from the repository root, and as\n  `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`. Both build the tool on this\n  branch.\n* Judging what a version move means, which steps 4 and 5 need.\n* Writing a commit message, which step 10 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/52227eefa389dfd0421b6c4c74b8ccbc140825ec/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/dog-fooding/processes/pull-request.md"
   }
 }

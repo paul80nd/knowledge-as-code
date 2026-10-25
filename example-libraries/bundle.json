@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.26.1",
+  "version": "0.27.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.26.1",
+    "contentVersion": "0.27.0",
     "types": [
       "adrs",
       "data",
@@ -57,7 +57,7 @@
     {
       "path": "skills/controls-lookup",
       "requires": [
-        "controls@2"
+        "controls@3"
       ],
       "reason": "the export carries no controls"
     },
@@ -78,7 +78,7 @@
     {
       "path": "skills/process-lookup",
       "requires": [
-        "processes@1"
+        "processes@2"
       ],
       "reason": "the export carries no processes"
     },

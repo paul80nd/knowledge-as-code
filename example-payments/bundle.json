@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.37.0",
+  "version": "0.38.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.37.0",
+    "contentVersion": "0.38.0",
     "types": [
       "fixes",
       "nfrs",
@@ -52,7 +52,7 @@
     {
       "path": "skills/controls-lookup",
       "requires": [
-        "controls@2"
+        "controls@3"
       ],
       "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
     },
@@ -110,7 +110,7 @@
     {
       "path": "skills/process-lookup",
       "requires": [
-        "processes@1"
+        "processes@2"
       ],
       "reason": "the export carries no processes"
     }

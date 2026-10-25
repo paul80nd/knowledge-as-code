@@ -8,7 +8,11 @@
     "status": "active",
     "severity": "sev3",
     "applies-to": null,
-    "last-rehearsed": "2026-10-18",
+    "last-rehearsed": {
+      "at": "2026-10-18",
+      "by": "claude-code/opus-5.5",
+      "method": "tabletop"
+    },
     "rehearsal-frequency": "on-change",
     "requires-tools": [
       "A .NET 10 SDK",
@@ -28,6 +32,6 @@
     "Impact": "Nothing in production. `examples/payments` and `examples/dog-fooding` cannot validate, so the `corpora` job fails and nothing merges."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/52227eefa389dfd0421b6c4c74b8ccbc140825ec/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
   }
 }

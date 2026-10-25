@@ -9,7 +9,11 @@
     "applies-to": [
       "svc-kac"
     ],
-    "last-rehearsed": "2026-09-20",
+    "last-rehearsed": {
+      "at": "2026-09-20",
+      "by": "claude-code/opus-5",
+      "method": null
+    },
     "rehearsal-frequency": "on-change",
     "tags": [
       "checks",
@@ -21,6 +25,6 @@
     "Prerequisites": "* `docs/maintaining/checks.md`, which states the test for expression against class and the two rule interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.\n* The fact table in `docs/reference/expressions.md`, which lists what an expression can already read.\n* Writing C# and its unit tests, which steps 2 to 4 need.\n* Reading a failing Reqnroll scenario, which step 13 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/52227eefa389dfd0421b6c4c74b8ccbc140825ec/examples/dog-fooding/processes/change-the-tool.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3bbd3f52cad957fc89d2a230a7ecd346e6caa8d3/examples/dog-fooding/processes/change-the-tool.md"
   }
 }

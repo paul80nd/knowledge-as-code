@@ -33,19 +33,19 @@ read the files that hit.
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 Both section keys are always present, because this type requires both sections.
 
-| Key                          | Type                     | What it holds                                                     |
-|------------------------------|--------------------------|-------------------------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the process by                                |
-| `fields.title`               | string                   | what the process achieves                                         |
-| `fields.status`              | string                   | `active`, `draft` or `retired`                                    |
-| `fields.applies-to`          | list of strings, or null | the service ids the process concerns                              |
-| `fields.last-rehearsed`      | string                   | the day somebody last followed it end to end, or `never`          |
-| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`               |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                                    |
-| `sections.When to use this`  | string of markdown       | the trigger, which says whether the process is yours              |
-| `sections.Prerequisites`     | string of markdown       | the access, tools, prior work and skills the first step needs     |
-| `path`                       | string                   | where the record sits in its own repository                       |
-| `links`                      | object                   | the built link to that record, under `human`                      |
+| Key                          | Type                     | What it holds                                                                                        |
+|------------------------------|--------------------------|------------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the process by                                                                   |
+| `fields.title`               | string                   | what the process achieves                                                                            |
+| `fields.status`              | string                   | `active`, `draft` or `retired`                                                                       |
+| `fields.applies-to`          | list of strings, or null | the service ids the process concerns                                                                 |
+| `fields.last-rehearsed`      | object, or string        | the last walk-through: `at` and `by` are strings, and `method` is always null. Or the string `never` |
+| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`                                                  |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                       |
+| `sections.When to use this`  | string of markdown       | the trigger, which says whether the process is yours                                                 |
+| `sections.Prerequisites`     | string of markdown       | the access, tools, prior work and skills the first step needs                                        |
+| `path`                       | string                   | where the record sits in its own repository                                                          |
+| `links`                      | object                   | the built link to that record, under `human`                                                         |
 
 **Read `When to use this` before you decide.** A title says what a process achieves, and two processes can achieve
 similar things. The trigger says which one was written for your situation.
@@ -88,9 +88,10 @@ Read the `status` that puts a process in force from `inForce`, a string, `null`,
 * **`status: retired`**: the process was stood down. Find what replaced it, and quote that.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`last-rehearsed: never`**: nobody has followed this end to end, so the first person to run it is testing it.
-* **`last-rehearsed` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
-* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed`, and
-  say nothing here answers that.
+* **`last-rehearsed.at` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
+* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed.at`,
+  and say nothing here answers that.
+* **`last-rehearsed.by`**: who followed it last, and the one to ask where a step reads wrong.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
 the key existed has none. Say so, and give `status` as written. Call no process in force on the strength of its status.

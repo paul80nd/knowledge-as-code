@@ -44,29 +44,29 @@ read the files that hit.
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key. The
 three section keys are always present, because this type requires all three.
 
-| Key                          | Type                     | What it holds                                       |
-|------------------------------|--------------------------|-----------------------------------------------------|
-| `fields.id`                  | string                   | the address to cite the control by                  |
-| `fields.title`               | string                   | what the control checks, in one line                |
-| `fields.status`              | string                   | `active`, `planned` or `retired`                    |
-| `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty |
-| `fields.mechanism`           | string                   | how the check happens, in the five values below     |
-| `fields.frequency`           | string, or null          | how often it runs, in the seven values below        |
-| `fields.last-verified`       | string, or null          | the day a manual check last ran, or `never`         |
-| `fields.evidence`            | string, or null          | where the proof of a run lives                      |
-| `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`     |
-| `fields.tags`                | list of strings, or null | the word a reader arrives with                      |
-| `sections.What it checks`    | string of markdown       | the rules it covers, in the author's own words      |
-| `sections.How it works`      | string of markdown       | what performs the check, in the author's words      |
-| `sections.Coverage and gaps` | string of markdown       | where the control stops, and what nothing watches   |
-| `path`                       | string                   | where the record sits in its own repository         |
-| `links`                      | object                   | the built link to that record, under `human`        |
+| Key                          | Type                     | What it holds                                                                                      |
+|------------------------------|--------------------------|----------------------------------------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the control by                                                                 |
+| `fields.title`               | string                   | what the control checks, in one line                                                               |
+| `fields.status`              | string                   | `active`, `planned` or `retired`                                                                   |
+| `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty                                                |
+| `fields.mechanism`           | string                   | how the check happens, in the five values below                                                    |
+| `fields.frequency`           | string, or null          | how often it runs, in the seven values below                                                       |
+| `fields.last-verified`       | object, string, or null  | the last manual run: `at` and `by` are strings, and `method` is always null. Or the string `never` |
+| `fields.evidence`            | string, or null          | where the proof of a run lives                                                                     |
+| `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`                                                    |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                     |
+| `sections.What it checks`    | string of markdown       | the rules it covers, in the author's own words                                                     |
+| `sections.How it works`      | string of markdown       | what performs the check, in the author's words                                                     |
+| `sections.Coverage and gaps` | string of markdown       | where the control stops, and what nothing watches                                                  |
+| `path`                       | string                   | where the record sits in its own repository                                                        |
+| `links`                      | object                   | the built link to that record, under `human`                                                       |
 
 `mechanism` takes one of five values:
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
 * **`review-checklist`.** A person checks it while reviewing a change.
-* **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says when they last did.
+* **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says who last did and when.
 * **`runtime-alert`.** A running system reports it.
 * **`not-enforced`.** The rule is written, and nothing checks it. The author recorded that gap, so report it as the
   honest state it is.
@@ -74,8 +74,9 @@ three section keys are always present, because this type requires all three.
 `frequency` takes one of seven values: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
 `annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
 
-**Give `last-verified` beside any answer from a `manual` control.** It is set on that mechanism alone, because no log
-records a manual run, and a date long past or `never` is a check that may not have run.
+**Give `last-verified` beside any answer from a `manual` control**: who ran the check, from `by`, and the day, from
+`at`. It is set on that mechanism alone, because no log records a manual run, and a day long past or `never` is a
+check that may not have run.
 
 **Read `Coverage and gaps` before you say a rule is covered.** A control that runs may still miss the half of the rule
 the question is about, and this section is where the author says so.

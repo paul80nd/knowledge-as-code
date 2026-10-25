@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.84.0",
+  "version": "0.85.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.84.0",
+    "contentVersion": "0.85.0",
     "types": [
       "controls",
       "deviations",
@@ -53,7 +53,7 @@
     {
       "path": "skills/controls-lookup",
       "requires": [
-        "controls@2"
+        "controls@3"
       ],
       "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
     },
@@ -74,7 +74,7 @@
     {
       "path": "skills/process-lookup",
       "requires": [
-        "processes@1"
+        "processes@2"
       ],
       "note": "Reads a process from corpus/processes/ and hands the steps to corpus-retrieval, because a process export carries the trigger and not the order."
     },

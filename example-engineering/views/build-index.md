@@ -1,6 +1,6 @@
 # Rules the standards of example-engineering state
 
-example-engineering 0.41.0 states 42 rules for code in this repository, under the 13 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-engineering 0.42.0 states 42 rules for code in this repository, under the 13 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
