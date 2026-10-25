@@ -42,8 +42,9 @@ If the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to 
 ## Start a corpus
 
 `kac new` turns the folder you are standing in into a **corpus**: one repository of knowledge records kept in git. It
-takes the framework from the knowledge-as-code repository, writes the files that framework says a corpus receives, and
-writes the two no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
+takes the framework from the knowledge-as-code repository, and writes the files that framework says a corpus receives.
+It also writes the files no template can supply: `.corpus.yaml`, which names your corpus, `.config/dotnet-tools.json`,
+which pins this `kac`, and a `README.md` to rewrite.
 
 ```bash
 mkdir my-corpus && cd my-corpus

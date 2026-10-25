@@ -23,9 +23,12 @@ kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path
 ## What it does
 
 `new` turns the folder you are standing in into a corpus (one repository of knowledge records kept in git). It fetches
-the framework from a template repository at a ref, writes the files that template says a corpus receives, and writes the
-two a template cannot supply: `.corpus.yaml`, which states your corpus's name, and a `README.md` to rewrite where
-template sends none of its own.
+the framework from a template repository at a ref, and writes the files that template says a corpus receives. It also
+writes the files a template cannot supply:
+
+* `.corpus.yaml`, which states your corpus's name.
+* `.config/dotnet-tools.json`, which pins the version of `kac` running `new`.
+* `README.md`, for you to rewrite, where the template sends none of its own.
 
 It asks what the corpus is called, which types it adopts, where it publishes and what builds it. Each question has a
 default. Whichever types you adopt, the corpus it writes validates before the command finishes.
@@ -129,6 +132,7 @@ writes reads as a diff of its own. A folder that is not yet a repository gets `g
 about your repository, and `new` asks none of them.
 
 **It does not install the tool.** A `kac` already on the machine runs `new`, and `new` fetches only the rest of the
-framework. The two halves are versioned apart from the moment a corpus is created.
+framework. It pins that `kac` in `.config/dotnet-tools.json`, which the CI starter restores with `dotnet tool restore`.
+The two halves are versioned apart from the moment a corpus is created.
 
 [`update`](update.md) is what takes a newer framework into the corpus this created.

@@ -23,21 +23,49 @@ can write to the pull request, it posts them there as a comment too.
 
 ## Pin the tool first
 
-Run the version the corpus was written against. Put `kac` in a tool manifest and commit it. Do this once, on your own
-machine:
+Run the version the corpus was written against. CI restores `kac` from the tool manifest the corpus commits, so every
+machine runs the same version:
+
+```bash
+dotnet tool restore             # the kac that .config/dotnet-tools.json pins
+dotnet tool run kac validate
+```
+
+[`kac new`](cli/new.md) writes `.config/dotnet-tools.json` at the version of the `kac` that ran it:
+
+```json
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "knowledgeascode.tool": {
+      "version": "0.39.0",
+      "commands": [
+        "kac"
+      ],
+      "rollForward": false
+    }
+  }
+}
+```
+
+A corpus without one writes it once, on your own machine, and commits it:
 
 ```bash
 dotnet new tool-manifest
 dotnet tool install KnowledgeAsCode.Tool
 ```
 
-That writes `.config/dotnet-tools.json` with the version in it. CI restores from that file, so every machine runs the
-same `kac`.
+`dotnet tool update KnowledgeAsCode.Tool` moves the pin. On GitHub, Dependabot's `nuget` ecosystem reads the manifest
+and proposes each new `kac` as a pull request.
 
-```bash
-dotnet tool restore
-dotnet tool run kac validate
-```
+## Posting the findings to the pull request
+
+`kac validate` posts its findings to the pull request as a comment where the step has a token that can write to it.
+Give the token only to the step running `validate`, and only once `kac` is pinned, so a job with a write permission runs
+no release you did not choose. The examples below pass it, and so do the starter pipelines `kac new` writes.
+[A pull request comment](cli/validate.md#a-pull-request-comment) lists the token and the permission each platform
+needs.
 
 ## Read-only permission
 
@@ -74,6 +102,10 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    # Lets `kac validate` post its findings to the pull request.
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -88,15 +120,18 @@ jobs:
 
       - name: Validate frontmatter, links and structure
         run: dotnet tool run kac validate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check generated output is fresh
         run: dotnet tool run kac generate --check
 ```
 
-Each action is pinned to a commit, because a tag can be moved to other code. A `.github/dependabot.yml` that tracks
-`github-actions` moves each pin and the version comment beside it. The `.github/dependabot.yml` that `kac new` writes
-proposes a release only once it is seven days old, so a compromised release has time to be withdrawn. The checkout
-sets `persist-credentials: false`, so no later step can push with the job's token.
+Each action is pinned to a commit, because a tag can be moved to other code. The `.github/dependabot.yml` that
+`kac new` writes moves each pin and the version comment beside it, under `github-actions`. Under `nuget` it moves the
+`kac` version that `.config/dotnet-tools.json` pins. It proposes a release only once it is seven days old, so a
+compromised release has time to be withdrawn. The checkout sets `persist-credentials: false`, so no later step can push
+with the job's token.
 
 ## Azure Pipelines
 
@@ -121,8 +156,11 @@ steps:
   - script: dotnet tool restore
     displayName: Install the pinned kac
 
+  # Posting the findings needs the build service to have Contribute to pull requests.
   - script: dotnet tool run kac validate
     displayName: Validate frontmatter, links and structure
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
   - script: dotnet tool run kac generate --check
     displayName: Check generated output is fresh

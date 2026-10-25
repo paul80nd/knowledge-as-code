@@ -32,8 +32,8 @@ nothing.** Git is the review step, so run it on a clean tree and read the diff.
 [Layers](../layers.md) says how each file is decided. `update` is not a merge tool. Where the result is wrong,
 run `git checkout` on the file, or add a `skip:` entry saying the corpus owns it.
 
-`update` moves the framework's files. `dotnet tool update KnowledgeAsCode.Tool` moves `kac` itself. The two halves move
-independently.
+`update` moves the framework's files. `dotnet tool update KnowledgeAsCode.Tool` moves `kac` itself, in the
+`.config/dotnet-tools.json` the corpus keeps. `update` never writes that file. The two halves move independently.
 
 ## Examples
 

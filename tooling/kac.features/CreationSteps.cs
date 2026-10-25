@@ -120,6 +120,21 @@ public sealed class CreationSteps(Workspace ws)
     public void WhenICreateACorpusThereWithAKacOlderThanTheTemplateNeeds()
         => ws.Exit = Creation.Create(_folder, tool: Creation.TooOld);
 
+    [When(@"I create a corpus there with kac ""(.*)""")]
+    public void WhenICreateACorpusThereWithKac(string tool) => ws.Exit = Creation.Create(_folder, tool: tool);
+
+    /// <summary>Committed, so the update meets a clean tree as it would after Dependabot's pull request merged.</summary>
+    [When(@"the corpus moves its tool manifest to kac ""(.*)""")]
+    public void WhenTheCorpusMovesItsToolManifestToKac(string version)
+    {
+        var manifest = At(".config/dotnet-tools.json");
+        var held = File.ReadAllText(manifest);
+        Assert.Contains("\"version\": \"0.99.0\"", held);
+        File.WriteAllText(manifest, held.Replace("\"version\": \"0.99.0\"", $"\"version\": \"{version}\"",
+            StringComparison.Ordinal));
+        Commit();
+    }
+
     [When(@"I create a corpus there named ""(.*)""")]
     public void WhenICreateACorpusThereNamed(string name) => ws.Exit = Creation.Create(_folder, name: name);
 

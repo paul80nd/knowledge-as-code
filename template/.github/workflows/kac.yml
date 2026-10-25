@@ -1,12 +1,13 @@
 # CI for this corpus, on GitHub Actions.
 #
 # Runs the validator, the freshness check and the two packaging commands on every pull request into
-# main. It writes nothing back: `generate --check` reports staleness and names the command you run
-# locally, and the export and the bundle land in an untracked `.dist/` the runner throws away.
-# Publishing what was built is a separate act, and no step here does it.
+# main. It writes back one thing: the comment `kac validate` posts on a pull request with findings.
+# `generate --check` reports staleness and names the command you run locally, and the export and the
+# bundle land in an untracked `.dist/` the runner throws away. Publishing what was built is a separate
+# act, and no step here does it.
 #
-# Each action is pinned to a commit, because a tag can be moved to other code. `.github/dependabot.yml`
-# moves each pin and the version comment beside it.
+# Each action is pinned to a commit, because a tag can be moved to other code, and `kac` is pinned in
+# `.config/dotnet-tools.json`. `.github/dependabot.yml` moves each of them.
 #
 # The Azure Pipelines twin sits at `azure-pipelines.yml`. Keep whichever one your corpus runs on and
 # delete the other.
@@ -25,6 +26,10 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    # `kac validate` posts its findings to the pull request as a comment, and needs this to write one.
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,24 +40,25 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Installed globally, so this runs whichever version nuget.org holds on the day. Pin it instead
-      # by committing a tool manifest (`dotnet new tool-manifest && dotnet tool install
-      # KnowledgeAsCode.Tool`) and swapping this step for `dotnet tool restore`. Then every machine and
-      # every build runs the version the corpus was written against.
-      - name: Install kac
-        run: dotnet tool install --global KnowledgeAsCode.Tool
+      # Installs the version `.config/dotnet-tools.json` pins, so a job holding a write token runs no
+      # release you did not choose. `.github/dependabot.yml` proposes each new one as a pull request.
+      - name: Install the pinned kac
+        run: dotnet tool restore
 
       # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
+      # Only this step gets the token, because only it posts.
       - name: Validate frontmatter, links and structure
-        run: kac validate
+        run: dotnet tool run kac validate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check generated output is fresh
-        run: kac generate --check
+        run: dotnet tool run kac generate --check
 
       # Proves the corpus still exports, and that the plugin still assembles from what it wrote. Delete
       # both steps if this corpus publishes neither.
       - name: Build the export
-        run: kac export
+        run: dotnet tool run kac export
 
       - name: Assemble the plugin bundle
-        run: kac bundle
+        run: dotnet tool run kac bundle

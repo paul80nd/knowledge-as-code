@@ -153,7 +153,7 @@ public static class Commands
         if (Asking.OrDefault(asker, "Create it?") is Consent.Withheld) return Cancelled("new");
 
         var plan = kac.core.New.Plan(take.Files(), take.Manifest, answers, upstream,
-            kac.core.New.DeclinesTypes(take.Schema, answers.Types));
+            kac.core.New.DeclinesTypes(take.Schema, answers.Types), toolVersion);
         if (plan.Faults.Unsound) return StopUnsound("new", request.From, plan.Faults);
 
         var declined = SeedLinks.Declined(take.Schema, answers.Types);

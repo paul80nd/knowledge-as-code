@@ -33,9 +33,9 @@ public class NewTests
     private static IReadOnlySet<string> Set(params string[] files) => files.ToHashSet(StringComparer.Ordinal);
 
     private static NewPlan Plan(IEnumerable<string> files, NewAnswers? answers = null,
-        Func<string, bool>? declines = null) =>
+        Func<string, bool>? declines = null, string tool = "0.39.0") =>
         New.Plan(files.ToHashSet(StringComparer.Ordinal), Sample(), answers ?? Answers(), Taken(),
-            declines ?? (_ => false));
+            declines ?? (_ => false), tool);
 
     private static string? Landing(NewPlan plan, string from) =>
         plan.Copied.FirstOrDefault(f => f.From == from)?.To;
@@ -81,7 +81,7 @@ public class NewTests
     public void A_file_no_rule_places_is_named_and_the_template_is_unsound()
     {
         var manifest = new Manifest { Rules = [new ManifestRule([".schema/**"], Manifest.Overlay)] };
-        var plan = New.Plan(Set("template/CLAUDE.md"), manifest, Answers(), Taken(), _ => false);
+        var plan = New.Plan(Set("template/CLAUDE.md"), manifest, Answers(), Taken(), _ => false, "0.39.0");
 
         Assert.Equal(["template/CLAUDE.md"], plan.Faults.Unclassified);
         Assert.True(plan.Faults.Unsound);
@@ -144,7 +144,7 @@ public class NewTests
         {
             Rules = [new ManifestRule(["template/Jenkinsfile"], Manifest.Seed, "", "jenkins")]
         };
-        var plan = New.Plan(Set("template/Jenkinsfile"), manifest, Answers(), Taken(), _ => false);
+        var plan = New.Plan(Set("template/Jenkinsfile"), manifest, Answers(), Taken(), _ => false, "0.39.0");
 
         Assert.Equal(["jenkins"], plan.Faults.UnknownCi);
         Assert.Empty(plan.Copied);
@@ -163,7 +163,8 @@ public class NewTests
             ]
         };
 
-        var plan = New.Plan(Set("template/a.yml", "template/b.yml"), manifest, Answers(), Taken(), _ => false);
+        var plan = New.Plan(Set("template/a.yml", "template/b.yml"), manifest, Answers(), Taken(), _ => false,
+            "0.39.0");
 
         Assert.Equal(["alpha", "zulu"], plan.Faults.UnknownCi);
     }
@@ -184,17 +185,42 @@ public class NewTests
     public void A_readme_the_template_sends_is_kept_instead()
     {
         var manifest = new Manifest { Rules = [new ManifestRule(["template/**"], Manifest.Seed, "")] };
-        var plan = New.Plan(Set("template/README.md"), manifest, Answers(), Taken(), _ => false);
+        var plan = New.Plan(Set("template/README.md"), manifest, Answers(), Taken(), _ => false, "0.39.0");
 
         Assert.Equal(["README.md"], plan.Copied.Select(f => f.To));
-        Assert.Equal([".corpus.yaml"], plan.Composed.Select(f => f.Path));
+        Assert.Equal([".corpus.yaml", ".config/dotnet-tools.json"], plan.Composed.Select(f => f.Path));
     }
 
     [Fact]
     public void Paths_names_everything_the_creation_writes()
     {
         var plan = Plan(["template/CLAUDE.md", ".schema/adrs.yaml"]);
-        Assert.Equal([".corpus.yaml", ".schema/adrs.yaml", "CLAUDE.md", "README.md"], plan.Paths);
+        Assert.Equal([".config/dotnet-tools.json", ".corpus.yaml", ".schema/adrs.yaml", "CLAUDE.md", "README.md"],
+            plan.Paths);
+    }
+
+    [Fact]
+    public void The_tool_manifest_pins_the_release_of_the_kac_running_new()
+    {
+        var manifest = Plan([], tool: "0.39.0+5fa039b0").Composed.Single(f => f.Path == ".config/dotnet-tools.json");
+
+        using var json = System.Text.Json.JsonDocument.Parse(manifest.Content);
+        var kac = json.RootElement.GetProperty("tools").GetProperty("knowledgeascode.tool");
+        Assert.Equal(1, json.RootElement.GetProperty("version").GetInt32());
+        Assert.True(json.RootElement.GetProperty("isRoot").GetBoolean());
+        Assert.Equal("0.39.0", kac.GetProperty("version").GetString());
+        Assert.Equal(["kac"], kac.GetProperty("commands").EnumerateArray().Select(c => c.GetString()));
+    }
+
+    [Fact]
+    public void The_tool_manifest_is_composed_and_never_copied()
+    {
+        var manifest = new Manifest { Rules = [new ManifestRule(["template/**"], Manifest.Seed, "")] };
+        var plan = New.Plan(Set("template/.config/dotnet-tools.json"), manifest, Answers(), Taken(), _ => false,
+            "0.39.0");
+
+        Assert.Empty(plan.Copied);
+        Assert.Contains(".config/dotnet-tools.json", plan.Composed.Select(f => f.Path));
     }
 
     [Fact]

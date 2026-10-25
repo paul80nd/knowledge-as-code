@@ -9,9 +9,10 @@ takes the framework from. A **layer** says who owns a file, and what a differenc
 
 ## The two halves
 
-`kac` itself comes from nuget.org, and `dotnet tool update KnowledgeAsCode.Tool` moves it. Everything else comes from
-the template `.corpus.yaml` points at, and `update` moves that. The template's manifest states the oldest tool that can
-read it in `minimum-tool`, and an older tool stops there.
+`kac` itself comes from nuget.org. The corpus pins its version in `.config/dotnet-tools.json`, and
+`dotnet tool update KnowledgeAsCode.Tool` moves that pin. Everything else comes from the template `.corpus.yaml` points
+at, and `update` moves that. The template's manifest states the oldest tool that can read it in `minimum-tool`, and an
+older tool stops there.
 
 ## One file, one layer
 
@@ -62,10 +63,13 @@ shared file, left under the corpus's `.plugin/`, as one the template sends nothi
 A manifest rule may declare `ci:`, naming the system its files serve, and `new` writes the matching starter alone. An
 update leaves a starter the corpus does not have where it is. A corpus that wants one copies it across by hand.
 
-## Three files no template can send
+## Files no template can send
 
 **`.corpus.yaml` is composed, never copied.** `new` builds the file from the answers it was given and stamps it with
 the [`upstream:`](corpus-descriptor.md#upstream) block, which `update` reads later. `shortcode:` always arrives bare.
+
+**`.config/dotnet-tools.json` pins the `kac` that ran `new`.** It is a .NET tool manifest, and `dotnet tool restore`
+installs the version it states. It belongs to the corpus, so `update` never compares it, writes it or reports it.
 
 **`README.md` is written, because the template's own is withheld.** It gives the corpus's name, what it contains, and
 how to run the tool against it. It arrives with the markers for the block it may contain, and it is the one page a

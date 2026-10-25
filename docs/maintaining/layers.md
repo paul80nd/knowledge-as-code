@@ -10,16 +10,19 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 
 ### `new`
 
-* It writes the files the template's manifest sends, and composes `.corpus.yaml` and `README.md` itself.
-  [Three files no template can send](../use/layers.md#three-files-no-template-can-send)
+* It writes the files the template's manifest sends, and composes `.corpus.yaml`, `.config/dotnet-tools.json` and
+  `README.md` itself.
+  [Files no template can send](../use/layers.md#files-no-template-can-send)
 * It runs `git init` in a folder that is not a repository, and keeps a file the folder already holds.
   [`new`](../use/cli/new.md#known-limits)
 * It writes a corpus that validates, whichever types it adopts. [`new`](../use/cli/new.md#what-it-does)
 * It removes the links to the types the corpus declined, and keeps the links between the types it adopted.
   [`new`](../use/cli/new.md#what-it-does)
 * It writes the CI starter for the system named, and no other. [CI starters](../use/layers.md#ci-starters)
+* It pins the release of the `kac` running it in `.config/dotnet-tools.json`.
+  [Files no template can send](../use/layers.md#files-no-template-can-send)
 * It writes `.plugin/hooks/breadcrumb` with its execute bit.
-  [Three files no template can send](../use/layers.md#three-files-no-template-can-send)
+  [Files no template can send](../use/layers.md#files-no-template-can-send)
 
 ### `update`
 
@@ -72,6 +75,8 @@ Each refusal exits `1` and writes nothing.
 
 * A corpus `new` has just created is in step: a full update changes nothing. [Layers](../use/layers.md)
 * A seed file belongs to the corpus once written. [Seed files](../use/layers.md#seed-files)
+* `update` leaves `.config/dotnet-tools.json` as the corpus wrote it.
+  [Files no template can send](../use/layers.md#files-no-template-can-send)
 * A file missing from the template is never deleted. [Deletions](../use/layers.md#deletions)
 
 ## Specified by
@@ -86,6 +91,8 @@ Each refusal exits `1` and writes nothing.
 * A template that cannot be read is refused
 * A template needing a newer kac is refused
 * A new corpus is given a descriptor and a README of its own
+* A new corpus pins the kac that created it
+* An update leaves the tool manifest to the corpus
 * A corpus built by GitHub is sent the GitHub starter alone
 * Each hook script arrives with its execute bit
 * A corpus that declined types is sent no link it cannot follow

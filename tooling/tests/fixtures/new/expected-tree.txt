@@ -2,6 +2,7 @@
 .claude/skills/technical-writing/SKILL.md
 .claude/skills/writing-a-record/SKILL.md
 .claude/skills/writing-a-report/SKILL.md
+.config/dotnet-tools.json
 .corpus.yaml
 .editorconfig
 .gitattributes
