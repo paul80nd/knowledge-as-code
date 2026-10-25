@@ -28,8 +28,8 @@ Name the file for the context, in kebab case.
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.
 
-**A glossary every corpus shares names a type and cites no record.** A record citation is this corpus's, and a corpus
-that took the file has none. Leave it out of an entry meant to travel upstream.
+**A glossary every corpus shares names a type and cites no record.** A record cited here exists only in this corpus.
+Leave the citation out of an entry meant to travel upstream.
 
 **The term.** Write it as an H3, singular and in its canonical casing, in alphabetical position. The anchor is the
 term's identifier, and a term has no numeric id.

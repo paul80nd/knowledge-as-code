@@ -31,8 +31,8 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
 reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
-**A glossary every corpus shares names a type and cites no record.** An owning service and a record citation are this
-corpus's, and a corpus that took the file has neither. Leave both out of an entry meant to travel upstream.
+**A glossary every corpus shares names a type and cites no record.** A record cited here exists only in this corpus.
+Leave the citation out of an entry meant to travel upstream.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
