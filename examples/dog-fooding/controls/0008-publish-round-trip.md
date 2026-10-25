@@ -31,15 +31,16 @@ A corpus that validates can still export a package nobody can install.
 
 ## How it works
 
-Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora. `bundle` fails on a
-directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then
-`claude plugin validate --strict` runs over the assembled plugin and over its marketplace.
+Three jobs share the work. `corpora` runs `export` and `pack` in each of the four corpora. `round-trip` runs `export`
+and `bundle` in each, on Ubuntu, and in `payments` on Windows too. `bundle` fails on a directory under `skills/` or
+`hooks/` that no component in `metadata.components` claims. Then `claude plugin validate --strict` runs over the
+assembled plugin and over its marketplace.
 `tooling/tests/bundled-components.sh` follows it. It fails a component `bundle.json` kept that is missing from the
 tree, or one it trimmed that is present. A component is a skill or hook directory, or a view's file. It also fails
 where `.claude-plugin/` contains anything but `plugin.json`.
 
-`round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`. It runs
-`bundled-components.sh` over the installed copy, then asks each skill in it the questions that skill describes. Where
+In every cell but `dog-fooding`, `round-trip` then installs the plugin. It runs `bundled-components.sh` over the
+installed copy, then asks each skill in it the questions that skill describes. Where
 the build index ships, it checks that the build-index hook pushes at most 10,000 characters, and runs the installed
 script twice for one session to check that it prints once. It logs how long a later call takes on a small input and on
 a 200 KB one, and fails on neither.
@@ -53,7 +54,8 @@ and that `raise-finding`, the one standalone skill, survived. No job installs th
 
 ## Coverage and gaps
 
-`dog-fooding` is left out of `round-trip`, because it is the same shape as `payments`.
+`round-trip` checks the `dog-fooding` plugin and installs none, because it is the same shape as `payments`. On Windows
+it runs `payments` alone, which takes the shell, the paths and the import path together.
 
 `round-trip` reads one sentence of each skill. It greps `SKILL.md` for the parts file the component requires, and
 fails a skill that names another type's. Nothing else `std-PLUGIN` asks of the wording is checked here. Two of its

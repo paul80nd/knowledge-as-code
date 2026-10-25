@@ -43,7 +43,7 @@ A reader installs from it with `/plugin marketplace add paul80nd/knowledge-as-co
 | Environment | URL                                                              | Notes                                                                                                                |
 |-------------|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | Development | No published URL                                                 | `kac bundle` writes a marketplace under a corpus's own `.dist/`, added with `claude plugin marketplace add ./.dist`. |
-| Test        | No published URL                                                 | The `corpora` job in `kac.yml` runs `claude plugin validate` on each bundle and its marketplace.                     |
+| Test        | No published URL                                                 | The `round-trip` job in `kac.yml` runs `claude plugin validate` on each bundle and its marketplace.                  |
 | Production  | <https://github.com/paul80nd/knowledge-as-code/tree/marketplace> | Published by `publish-plugin.yml` on a push to `main`.                                                               |
 
 ## Dependencies
