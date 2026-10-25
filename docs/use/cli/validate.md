@@ -86,8 +86,11 @@ it, and a run that finds them again makes it active.
 | Azure Pipelines | `SYSTEM_ACCESSTOKEN: $(System.AccessToken)` | *Contribute to pull requests* for the build service |
 
 Install `kac` at a pinned version in a job with this permission, so no release you did not choose runs with the token.
-Without the token, `validate` prints a note and posts nothing. A pull request from a fork gets a token that cannot write
-to it, so the post fails. Either way the note names the pull request, and the exit code is unchanged.
+The starter pipelines [`new`](new.md) writes restore `kac` from `.config/dotnet-tools.json`, and pass the token.
+
+Without the token, a run with findings prints a note and posts nothing, and a clean run prints nothing. A pull request
+from a fork gets a token that cannot write to it, so the post fails. Either way the note names the pull request, and the
+exit code is unchanged.
 
 An info finding appears in neither an annotation nor the comment, and `--json` writes neither.
 

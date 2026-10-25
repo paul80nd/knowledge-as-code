@@ -78,6 +78,15 @@ public static class New
     private const string DescriptorFile = ".corpus.yaml";
     private const string ReadmeFile = "README.md";
 
+    /// <summary>Where <c>dotnet tool restore</c> looks, which the starter pipelines run.</summary>
+    private const string ToolManifestFile = ".config/dotnet-tools.json";
+
+    /// <summary>
+    /// Lower case, as <c>dotnet tool install</c> writes it. <c>docs/maintaining/forking.md</c> lists it among the
+    /// places a fork renames.
+    /// </summary>
+    private const string ToolPackage = "knowledgeascode.tool";
+
     /// <summary>Moved by hand afterwards, so the tool supplies a first number and never a later one.</summary>
     private const string FirstContentVersion = "0.1.0";
 
@@ -132,10 +141,11 @@ public static class New
 
     /// <summary>
     /// <c>declines</c> answers whether a destination belongs to a type the corpus did not adopt. <c>DeclinesTypes</c>
-    /// builds one from the template's schema.
+    /// builds one from the template's schema. <c>toolVersion</c> is the version of the <c>kac</c> running, which the
+    /// tool manifest pins.
     /// </summary>
     public static NewPlan Plan(IReadOnlySet<string> templateFiles, Manifest manifest, NewAnswers answers,
-        Upstream upstream, Func<string, bool> declines)
+        Upstream upstream, Func<string, bool> declines, string toolVersion)
     {
         var copied = new List<PlannedFile>();
         var declinedTypes = new List<string>();
@@ -176,13 +186,16 @@ public static class New
                 }
             }
 
-            // The composed descriptor always wins over one the template sends.
-            if (placement.Path == DescriptorFile) continue;
+            // The composed descriptor and tool manifest always win over one the template sends.
+            if (placement.Path is DescriptorFile or ToolManifestFile) continue;
 
             copied.Add(new PlannedFile(from, placement.Path, placement.Layer));
         }
 
-        var composed = new List<ComposedFile> { new(DescriptorFile, Descriptor(answers, upstream)) };
+        var composed = new List<ComposedFile>
+        {
+            new(DescriptorFile, Descriptor(answers, upstream)), new(ToolManifestFile, ToolManifest(toolVersion))
+        };
 
         // A `README.md` the template sends wins over the composed one.
         if (copied.All(f => f.To != ReadmeFile))
@@ -326,6 +339,28 @@ public static class New
 
         return sb.ToString();
     }
+
+    /// <summary>
+    /// The shape <c>dotnet new tool-manifest</c> and <c>dotnet tool install</c> write together. Build metadata is
+    /// dropped, so <c>0.39.0+5fa039b0</c> pins <c>0.39.0</c>.
+    /// </summary>
+    private static string ToolManifest(string toolVersion) =>
+        $$"""
+          {
+            "version": 1,
+            "isRoot": true,
+            "tools": {
+              "{{ToolPackage}}": {
+                "version": "{{toolVersion.Split('+')[0]}}",
+                "commands": [
+                  "kac"
+                ],
+                "rollForward": false
+              }
+            }
+          }
+
+          """;
 
     /// <summary>
     /// Carries the markers for every block <c>README.md</c> is declared to hold. A README without them would decline

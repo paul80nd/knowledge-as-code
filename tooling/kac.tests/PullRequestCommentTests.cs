@@ -230,6 +230,14 @@ public class PullRequestCommentTests
     }
 
     [Fact]
+    public void No_token_on_a_clean_run_says_nothing()
+    {
+        var said = new PullRequestComment(GitHubPr, send: null).Post("example-dogfooding", Clean, hasFindings: false);
+
+        Assert.Null(said);
+    }
+
+    [Fact]
     public void Azure_Pipelines_with_findings_and_no_earlier_thread_creates_one()
     {
         var fake = new FakeApi(("GET", "/threads?api-version=7.1", 200, """{ "value": [] }"""),

@@ -97,12 +97,28 @@ public class GoldenTests
         Assert.Contains(annotation, printed.Split('\n').Select(l => l.TrimEnd('\r')));
     }
 
+    [Fact]
+    public void Validate_under_GitHub_on_a_pull_request_with_no_token_says_the_comment_was_not_posted()
+    {
+        var printed = ValidateOnPullRequestWithNoToken("corpus-enums");
+
+        Assert.Contains("validate: GITHUB_TOKEN is not set, so the findings were not posted to pull request #7.",
+            printed.Split('\n').Select(l => l.TrimEnd('\r')));
+    }
+
+    [Fact]
+    public void Validate_under_GitHub_on_a_pull_request_with_no_token_and_no_findings_says_nothing_of_the_token()
+    {
+        var printed = ValidateOnPullRequestWithNoToken("clean");
+
+        Assert.DoesNotContain("GITHUB_TOKEN", printed, StringComparison.Ordinal);
+    }
+
     /// <summary>
     /// The pull request is read from the event payload, and the run reaches the comment without a network because no
     /// token is set. <c>tooling/kac.tests/PullRequestCommentTests.cs</c> asserts each request a token would send.
     /// </summary>
-    [Fact]
-    public void Validate_under_GitHub_on_a_pull_request_with_no_token_says_the_comment_was_not_posted()
+    private static string ValidateOnPullRequestWithNoToken(string scenario)
     {
         var dir = Directory.CreateTempSubdirectory("kac-tests-event-").FullName;
         try
@@ -110,13 +126,10 @@ public class GoldenTests
             var payload = Path.Combine(dir, "event.json");
             File.WriteAllText(payload, """{ "pull_request": { "number": 7 } }""");
 
-            var printed = Runner.ValidateUnder("corpus-enums", new Dictionary<string, string>
+            return Runner.ValidateUnder(scenario, new Dictionary<string, string>
             {
                 ["GITHUB_ACTIONS"] = "true", ["GITHUB_EVENT_PATH"] = payload, ["GITHUB_REPOSITORY"] = "o/r"
             });
-
-            Assert.Contains("validate: GITHUB_TOKEN is not set, so the findings were not posted to pull request #7.",
-                printed.Split('\n').Select(l => l.TrimEnd('\r')));
         }
         finally
         {

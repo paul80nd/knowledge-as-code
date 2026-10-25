@@ -187,8 +187,9 @@ rules:
     layer: seed
     ci: github
     note: >
-      Dependabot's configuration, which moves the commits the GitHub Actions starter pins its actions to.
-      It serves that starter alone, so it arrives where the starter does.
+      Dependabot's configuration, which moves the commits the GitHub Actions starter pins its actions to,
+      and the `kac` version `.config/dotnet-tools.json` pins. It serves that starter alone, so it arrives
+      where the starter does.
 
   - path: "template/*.md"
     to: ""

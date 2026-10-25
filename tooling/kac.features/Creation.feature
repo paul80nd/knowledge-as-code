@@ -53,6 +53,19 @@ Scenario: A new corpus is given a descriptor and a README of its own
   And ".corpus.yaml" in the new corpus says "corpus: field-notes"
   And "README.md" in the new corpus says "# field-notes"
 
+Scenario: A new corpus pins the kac that created it
+  Given a git repository
+  When I create a corpus there with kac "0.99.0+5fa039b0"
+  Then it succeeds
+  And ".config/dotnet-tools.json" in the new corpus says ""version": "0.99.0""
+
+Scenario: An update leaves the tool manifest to the corpus
+  Given a git repository
+  When I create a corpus there with kac "0.99.0"
+  And the corpus moves its tool manifest to kac "1.2.3"
+  Then a full update finds it in step
+  And ".config/dotnet-tools.json" in the new corpus says ""version": "1.2.3""
+
 Scenario: A corpus built by GitHub is sent the GitHub starter alone
   Given a git repository
   When I create a corpus there built by "github"

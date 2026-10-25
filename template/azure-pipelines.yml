@@ -1,9 +1,10 @@
 # CI for this corpus, on Azure Pipelines.
 #
 # Runs the validator, the freshness check and the two packaging commands on every pull request into
-# main. It writes nothing back: `generate --check` reports staleness and names the command you run
-# locally, and the export and the bundle land in an untracked `.dist/` the agent throws away.
-# Publishing what was built is a separate act, and no step here does it.
+# main. It writes back one thing: the comment `kac validate` posts on a pull request with findings.
+# `generate --check` reports staleness and names the command you run locally, and the export and the
+# bundle land in an untracked `.dist/` the agent throws away. Publishing what was built is a separate
+# act, and no step here does it.
 #
 # Wiring PR validation, which is the part that catches people out: this is an Azure Repos repository,
 # where the `pr:` trigger below is ignored. Add this pipeline as a required build validation on main:
@@ -11,9 +12,18 @@
 #   main -> Build Validation -> + -> select this pipeline -> Required.
 # The `pr:` block is kept for intent, and works as written if the repository is mirrored to GitHub.
 #
-# `UseDotNet@2` runs the newest release of major 2 your organisation has installed. To pin one, write
-# its full version after the `@`, as `UseDotNet@2.<minor>.<patch>`, copied from the task's log. Your
-# organisation must have that version. Dependabot does not read Azure tasks, so you move it by hand.
+# Posting the findings to the pull request needs one more console setting: give the project's build
+# service *Contribute to pull requests* on this repository, under Project settings -> Repositories ->
+# <your-repo> -> Security.
+#
+# Dependabot reads none of the pins below, so you move each by hand:
+# * `kac` is pinned in `.config/dotnet-tools.json`, at the version `kac new` wrote. Move it with
+#   `dotnet tool update KnowledgeAsCode.Tool`, and commit the file.
+# * The .NET SDK is pinned at 10.0.402, because the validate step has the access token. Move it to a
+#   release listed at https://dotnet.microsoft.com/download/dotnet/10.0.
+# * `UseDotNet@2` runs the newest release of major 2 your organisation has installed. To pin one, write
+#   its full version after the `@`, as `UseDotNet@2.<minor>.<patch>`, copied from the task's log. Your
+#   organisation must have that version.
 
 trigger: none # no CI on branch pushes; PR validation is via branch policy
 
@@ -34,30 +44,32 @@ steps:
     displayName: Install the .NET 10 SDK
     inputs:
       packageType: sdk
-      version: 10.0.x
+      version: 10.0.402
 
-  # Installed globally, so this runs whichever version nuget.org holds on the day. Pin it instead by
-  # committing a tool manifest (`dotnet new tool-manifest && dotnet tool install KnowledgeAsCode.Tool`)
-  # and swapping this step for `dotnet tool restore`. Then every machine and every build runs the
-  # version the corpus was written against.
-  - script: dotnet tool install --global KnowledgeAsCode.Tool
-    displayName: Install kac
-
-  # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-  - script: kac validate
-    displayName: Validate frontmatter, links and structure
+  # Installs the version `.config/dotnet-tools.json` pins, so a step with the access token runs no
+  # release you did not choose.
+  - script: dotnet tool restore
+    displayName: Install the pinned kac
     workingDirectory: $(Build.SourcesDirectory)
 
-  - script: kac generate --check
+  # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
+  # Only this step gets the token, because only it posts.
+  - script: dotnet tool run kac validate
+    displayName: Validate frontmatter, links and structure
+    workingDirectory: $(Build.SourcesDirectory)
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+  - script: dotnet tool run kac generate --check
     displayName: Check generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)
 
   # Proves the corpus still exports, and that the plugin still assembles from what it wrote. Delete
   # both steps if this corpus publishes neither.
-  - script: kac export
+  - script: dotnet tool run kac export
     displayName: Build the export
     workingDirectory: $(Build.SourcesDirectory)
 
-  - script: kac bundle
+  - script: dotnet tool run kac bundle
     displayName: Assemble the plugin bundle
     workingDirectory: $(Build.SourcesDirectory)

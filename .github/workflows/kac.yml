@@ -187,6 +187,14 @@ jobs:
           "$SOURCES/.dist/tools/kac" validate
           "$SOURCES/.dist/tools/kac" generate --check
 
+          # The starter restores from the manifest `new` wrote. Read from the pack alone, so nuget.org cannot answer.
+          printf '%s\n' '<configuration><packageSources><clear />' \
+            "<add key=\"pack\" value=\"$SOURCES/.dist/pack\" />" \
+            '</packageSources></configuration>' > "$TEMP_ROOT/nuget.config"
+          dotnet tool restore --configfile "$TEMP_ROOT/nuget.config"
+          test "$(dotnet tool run kac --version)" = "$("$SOURCES/.dist/tools/kac" --version)"
+          dotnet tool run kac validate
+
   lint:
     runs-on: ubuntu-latest
     steps:

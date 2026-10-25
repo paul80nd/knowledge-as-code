@@ -87,14 +87,17 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
 {
     /// <summary>
     /// Updates the corpus's earlier comment to <paramref name="summary"/>, or posts one where
-    /// <paramref name="hasFindings"/>. Null where a clean run found no earlier comment, so nothing was written.
+    /// <paramref name="hasFindings"/>. Null where nothing was written: a clean run found no earlier comment, or had no
+    /// token to look with.
     /// </summary>
     public Commented? Post(string corpus, string summary, bool hasFindings)
     {
         var at = $"pull request #{pullRequest.Number}";
         if (send is null)
-            return new Commented(false, $"validate: {pullRequest.TokenVariable} is not set, so the findings were not "
-                                        + $"posted to {at}.");
+            return hasFindings
+                ? new Commented(false, $"validate: {pullRequest.TokenVariable} is not set, so the findings were not "
+                                       + $"posted to {at}.")
+                : null;
 
         var marker = $"<!-- kac validate: {corpus} -->";
         var body = marker + "\n" + summary;
