@@ -13,8 +13,8 @@
     "last-rehearsed": "2026-09-15",
     "rehearsal-frequency": "per-release",
     "tags": [
-      "mkdocs",
-      "nuget"
+      "nuget",
+      "zensical"
     ]
   },
   "sections": {
@@ -22,6 +22,6 @@
     "Prerequisites": "* `technical-writing` and `writing-the-docs`, loaded in that order.\n* The source for every fact the page states, so each one can be checked.\n* The .NET SDK, where you touched the package page.\n* Reading a page as a newcomer would, which step 1 needs.\n* Judging prose against a style guide, which step 5 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/processes/write-public-docs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/processes/write-public-docs.md"
   }
 }

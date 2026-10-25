@@ -1,21 +1,21 @@
 {
   "type": "reports",
   "path": "reports/clause-coverage.md",
-  "trust": "human-reviewed",
+  "trust": "unverified",
   "fields": {
     "id": "rpt-clause-coverage",
     "title": "Clause coverage",
     "status": "active",
     "generated": {
-      "at": "2026-10-23T19:32:54Z",
+      "at": "2026-10-25T09:44:45Z",
       "by": "claude-code/opus-5.5",
       "report": "coverage",
-      "tool": "kac/0.38.0"
+      "tool": "kac/0.39.0"
     },
     "sources": [
       {
         "resource": "example-dogfooding",
-        "version": "0.79.0"
+        "version": "0.80.0"
       },
       {
         "resource": "example-engineering",
@@ -35,6 +35,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/reports/clause-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/reports/clause-coverage.md"
   }
 }

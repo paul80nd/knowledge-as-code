@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/standards/workflows.md#the-gate-runs-on-every-pull-request-into-main) says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
+    "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/standards/workflows.md#the-gate-runs-on-every-pull-request-into-main) says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
     "How it works": "`kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and `import-round-trip`. The job itself runs one `echo`. GitHub reports `validate` once every job in that list has passed, so the branch rule requires one check name.\n\nThree of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)` and three more. A branch rule naming the matrix would wait for a check that never arrives.",
-    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/controls/0002-workflow-gate-tests.md) checks the other half: whether `validate` still needs every job."
+    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/controls/0002-workflow-gate-tests.md) checks the other half: whether `validate` still needs every job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/controls/0001-merge-gate.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/controls/0001-merge-gate.md"
   }
 }

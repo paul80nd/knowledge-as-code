@@ -29,9 +29,9 @@
   "sections": {
     "What we use it for": "`kac.core` references it. It parses four kinds of file, and a reader meets one of them: the frontmatter of a record. The `frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.",
     "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
-    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/services/kac.md) uses it."
+    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/services/kac.md) uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/tools/build/yamldotnet.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/tools/build/yamldotnet.md"
   }
 }

@@ -30,10 +30,10 @@
     ]
   },
   "sections": {
-    "Summary": "This standard covers two surfaces: the documentation site MkDocs builds from `docs/`, and the `kac` command line. [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/) governs the site. On it a Markdown author owns heading order, link text, table structure and image alternatives, and Material for MkDocs owns contrast, focus and keyboard reach. WCAG is written for content a browser renders, so it does not apply to a terminal. `kac` follows rules stated in the terms a terminal has: colour repeats what the words already say, and every answer a prompt asks for is also a flag. Both components are pinned, and each has an assessment in its tool record stating what was checked and what falls short.",
+    "Summary": "This standard covers two surfaces: the documentation site Zensical builds from `docs/`, and the `kac` command line. [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/) governs the site. On it a Markdown author owns heading order, link text, table structure and image alternatives, and Zensical's theme owns contrast, focus and keyboard reach. WCAG is written for content a browser renders, so it does not apply to a terminal. `kac` follows rules stated in the terms a terminal has: colour repeats what the words already say, and every answer a prompt asks for is also a flag. Both components are pinned, and each has an assessment in its tool record stating what was checked and what falls short.",
     "Conformance checklist": "- [ ] The page opens on one H1, and every heading below it descends one level at a time.\n- [ ] Every link says where it goes without the sentence around it.\n- [ ] Every table has a header row and contains data.\n- [ ] Every image has alternative text, and every diagram has a text equivalent stating the same information.\n- [ ] No instruction on the page depends on a colour, a shape or a position.\n- [ ] A new `kac` message says in words what its colour says.\n- [ ] A new `kac` prompt has a flag that supplies its answer.\n- [ ] A pin that moved has an assessment against the version it moved to.\n- [ ] A shortfall this change introduced has a deviation, an owner and a review date."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/dog-fooding/standards/accessibility.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/dog-fooding/standards/accessibility.md"
   }
 }

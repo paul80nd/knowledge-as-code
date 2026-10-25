@@ -68,7 +68,7 @@ Cite as `std-A11Y.kac-carries-no-meaning-in-colour-alone`.
 
 Cite as `std-A11Y.the-theme-owns-contrast-focus-and-keyboard-reach`.
 
-- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that its colours meet [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
+- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Zensical ships, unless the change shows that its colours meet [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 - `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
 - `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that what it sets meets [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 - The site **MUST NOT** include a template override or a script that changes the theme's keyboard behaviour.
@@ -747,7 +747,7 @@ Cite as `eng:std-DEPLOY.production-changes-through-the-pipeline-alone`.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -909,7 +909,7 @@ Cite as `eng:std-NETTST.the-framework-and-the-project-layout`.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -951,7 +951,7 @@ Cite as `eng:std-OBS.somebody-acts-on-every-alert`.
 Cite as `eng:std-OBS.telemetry-carries-no-personal-data`.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/c2ced56e10d10784b810828b7b29098b0723712d/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.nowhere-else-holds-a-secret](https://github.com/paul80nd/knowledge-as-code/blob/297de4eed28ec0ed420ceb18c1b890124924676e/examples/engineering/standards/common/secret-handling.md#nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
