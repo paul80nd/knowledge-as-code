@@ -10,6 +10,7 @@ licence: MIT
 licence-declared: MIT
 decided-on: "2026-10-25"
 review-by: "2027-10-13"
+successor: tol-zensical
 owner: human:paul.law
 tags: [ documentation, redirects ]
 ---

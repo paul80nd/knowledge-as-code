@@ -10,6 +10,7 @@ licence: BSD-2-Clause
 licence-declared: BSD-2-Clause
 decided-on: "2026-10-25"
 review-by: "2027-08-24"
+successor: tol-zensical
 owner: human:paul.law
 tags: [ documentation, static-site ]
 ---

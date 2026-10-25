@@ -39,7 +39,7 @@ optional field from [the type page](../tools.md#metadata) where you have a value
 * **`decided-on`**: the day the current `status` was decided.
 * **`review-by`**: the day somebody checks this entry is still right. `review-in-date` warns once it has passed.
 * **`decided-in`**: an ADR, where one exists. Where the choice was contested and no ADR exists, write one.
-* **`replaces`**: the older tool this takes over from, so the deprecation path is visible.
+* **`replaces`**: the older tools this takes over from, one id per line, so the deprecation path is visible.
 * **`successor`**: what replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
   and CI enforces both ends.
 

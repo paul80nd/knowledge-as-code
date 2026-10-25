@@ -140,10 +140,12 @@ fields:
 
   replaces:
     required: false
-    type: id
+    type: list
+    of: id
     ref: tools
     reciprocal: successor
-    description: The tool id this supersedes.
+    description: The tool ids this supersedes, one per line.
+    notes: A list, because one tool can take over from several. Each of them names this one as its `successor`.
 
   successor:
     required: false
@@ -163,7 +165,7 @@ sections:
     a standard in the corpus asks for one.
 
 export:
-  version: 3
+  version: 4
   fields: [id, title, status, category, packages, homepage, licence, licence-declared, decided-on, review-by,
            decided-in, replaces, successor, tags]
   sections:

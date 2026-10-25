@@ -58,7 +58,7 @@ when a team proposes a tool.
 | `decided-on` *     | date                                       | Quoted. The day the current status was decided.                                                                |
 | `review-by` *      | date                                       | Quoted. The day by which somebody checks this entry is still right.                                            |
 | `decided-in`       | id                                         | The ADR id recording the decision to adopt this tool.                                                          |
-| `replaces`         | id                                         | The tool id this supersedes.                                                                                   |
+| `replaces`         | list                                       | The tool ids this supersedes, one per line.                                                                    |
 | `successor`        | id                                         | The tool id that replaces this one.                                                                            |
 
 \* Field is required  

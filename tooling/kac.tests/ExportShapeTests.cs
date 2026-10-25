@@ -167,7 +167,7 @@ public class ExportShapeTests
             path: record.path
             anchor: part.anchor
             links: part.links
-        tools@3
+        tools@4
           fields: id, title, status, category, packages, homepage, licence, licence-declared, decided-on, review-by, decided-in, replaces, successor, tags
           sections:
             What we use it for: full
