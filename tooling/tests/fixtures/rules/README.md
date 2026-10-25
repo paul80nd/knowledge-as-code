@@ -17,9 +17,11 @@ Some records need another record to trip their rule, and those are the findings 
 * `decision-cites-descriptive` takes an ADR linking a service from `Context`, which passes, and from `Decision`, which
   does not.
 
-A finding beside the one a record is for is there because the rule cannot be reached without it. Each runbook states a
-rehearsal date far enough past to trip `staleness-loud`, and the pair on `rehearsal-method` pins both sides of its
-`required-when`. An NFR writing `target` as an em dash reports `bare-key` and `required-field` together.
+A finding beside the one a record is for is there because the rule cannot be reached without it. Each runbook states
+`never` or a walk far enough past to trip `staleness-loud`, and the pair on `walk-method-stated` pins both sides of it.
+`ctl-0004` names a process as `by` and states a `method`, so it trips `verified-by-a-person-or-agent` and
+`check-states-no-method` together. An NFR writing `target` as an em dash reports `bare-key` and `required-field`
+together.
 
 `.corpus.yaml` states a name and a content version for `report-stale` to compare against, a `repos-base` for
 `mirrors-repo-links` to resolve against, and the `platform` and `component-type` ranges the services use. A rule

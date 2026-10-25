@@ -25,8 +25,13 @@ reader holding a copy elsewhere cannot ask that person anything. Every type that
 steps as parts, the pieces of a record a reader can cite on their own. A step lifted out of its sequence is one a reader
 can act on alone, and acting on it alone is how an incident gets worse.
 
-**`last-rehearsed` and `rehearsal-frequency` go together.** A date says nothing about staleness without the cadence you
+**`last-rehearsed` and `rehearsal-frequency` go together.** A walk says nothing about staleness without the cadence you
 read it against, so the two travel as a pair.
+
+**`last-rehearsed` records who walked a procedure, and when.** Its value is the last walk, as
+`{ at: "2026-10-20", by: human:alex.doe }`, or `never`. Git keeps the earlier walks. `by` names a person or an agent
+and never a process, because a procedure a process follows is automation. Only a runbook adds `method`, because only a
+runbook can be walked without causing what it is for.
 
 **A type page states its level of detail and cadence in prose.** The section says what one step, rule or part
 contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a finding,
@@ -162,8 +167,9 @@ and counted. `mechanism` and `frequency` are the keys an agent filters on.
 Three more fields date and place the check:
 
 * `evidence` says where the proof lives.
-* `last-verified` says when a manual check last ran, so a check that happened reads apart from one that was only
-  planned.
+* `last-verified` says who last ran a manual check and when, so a check that happened reads apart from one that was
+  only planned. `verified-by-a-person-or-agent` refuses a process as `by`, because a check a process runs is a `ci`
+  control. `check-states-no-method` refuses a `method`.
 * `review-by` says when somebody reads the record against the check it describes, which is a different question from how
   often that check runs.
 
@@ -530,7 +536,10 @@ Five sections are required, in the order a reader uses them: `When to use this`,
 
 No field records the skills. `Prerequisites` states them in prose, and nothing checks that a process names them.
 
-**In the export:** `When to use this`, `Prerequisites` and the rehearsal dates travel. The steps stay behind, and so
+`followed-by-a-person-or-agent` refuses a process as the `by` of `last-rehearsed`, and `rehearsal-states-no-method`
+refuses a `method`.
+
+**In the export:** `When to use this`, `Prerequisites` and the last walk-through travel. The steps stay behind, and so
 does `requires-access`, because `Prerequisites` already states the access in prose.
 
 ### runbooks
@@ -546,10 +555,13 @@ so one page both finds the cause and resolves it. The desired outcome is the las
 `Confirmed when`, so the reader reads it where they stop.
 
 `requires-tools` and `requires-access` decide whether a reader may start at all. `severity` is what an agent sorts on
-where several runbooks match. `rehearsal-method` says which kind of walk the last rehearsal was.
+where several runbooks match. `last-rehearsed` says who walked the runbook last, when, and with which `method`: `live`
+caused the fault, and `tabletop` read the steps against the system. `walk-method-stated` asks for the `method` of a
+recorded walk. `walked-by-a-person-or-agent` refuses a process as `by`, because a fault a process injects with nobody
+walking the steps is a control.
 
-**In the export:** `Symptoms`, `Impact`, the tools, the access, the severity and the rehearsal dates travel. The steps
-and `rehearsal-method` stay behind, because a reader who has found the right runbook fetches it whole.
+**In the export:** `Symptoms`, `Impact`, the tools, the access, the severity and the last walk travel, its `method`
+included. The steps stay behind, because a reader who has found the right runbook fetches it whole.
 
 ## The framework register
 

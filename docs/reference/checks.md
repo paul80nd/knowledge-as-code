@@ -59,7 +59,7 @@ A rule that counts words, links or days sets a ratio, a ceiling or a window. Thr
 | `staleness-loud`          | 92 days for a runbook, whatever its `rehearsal-frequency`                               |
 
 `staleness` measures `quarterly` and `annual` alone. `on-change` and `per-release` state an event, so a process using
-either is reported only where `last-rehearsed` is `never`. `staleness-loud` does not read `rehearsal-method`, so a
+either is reported only where `last-rehearsed` is `never`. `staleness-loud` reads `last-rehearsed.at` alone, so a
 tabletop walk earns the same 92 days as a live one.
 
 A rule that matches text keeps its pattern in `.schema/`. Most such rules read the document *as written*, so a

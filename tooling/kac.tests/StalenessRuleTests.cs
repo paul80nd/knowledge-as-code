@@ -60,11 +60,15 @@ public class StalenessRuleTests
     {
         var doc = Required.Parsed("processes/a-slug.md",
             $"---\nid: prc-a-slug\nrehearsal-frequency: {frequency}\n"
-            + $"last-rehearsed:{(lastRehearsed is null ? "" : $" {lastRehearsed}")}\n"
+            + $"last-rehearsed:{(lastRehearsed is null ? "" : $" {Walk(lastRehearsed)}")}\n"
             + "---\n\n# A title\n\nSome prose.", new Schema());
 
         return RuleExpr.Eval(Expression(), new Facts(doc, Required.Today));
     }
+
+    /// <summary>A quoted day is written as a walk on that day, and anything else as it stands.</summary>
+    private static string Walk(string value) =>
+        value is ['"', >= '0' and <= '9', ..] ? $"{{ at: {value}, by: human:alex.doe }}" : value;
 
     private static Expr Expression()
     {

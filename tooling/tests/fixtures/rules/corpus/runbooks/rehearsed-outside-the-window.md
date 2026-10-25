@@ -5,9 +5,8 @@ tier: procedural
 status: active
 severity: sev2
 owner: human:alex.doe
-last-rehearsed: "2020-01-01"
+last-rehearsed: { at: "2020-01-01", by: human:alex.doe, method: tabletop }
 rehearsal-frequency: quarterly
-rehearsal-method: tabletop
 ---
 
 # Cache node runs out of memory
@@ -22,9 +21,9 @@ Eviction rate climbs and read latency doubles.
 
 Reads that miss the cache reach the database and take longer.
 
-`rehearsal-method` is stated, so `required-field` is silent here and reports against the runbook beside this one.
-That pair is what pins both sides of the condition. `staleness-loud` still reports the date, because a method
-says which walk happened and not when.
+`method` is stated, so `walk-method-stated` is silent here and reports against the runbook beside this one. That
+pair is what pins both sides of the rule. `staleness-loud` still reports the date, because a method says which walk
+happened and not when.
 
 ## Immediate actions
 

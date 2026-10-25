@@ -5,7 +5,7 @@ tier: procedural
 status: active
 severity: sev2
 owner: human:alex.doe
-last-rehearsed: "never"
+last-rehearsed: never
 rehearsal-frequency: quarterly
 ---
 
@@ -18,7 +18,7 @@ rehearsal-frequency: quarterly
 Every section this type requires is present, so `required-section` is satisfied. What is wrong is the
 order: the reader meets the fix before the symptom.
 
-`last-rehearsed` states the literal `"never"` that its schema admits, so `date-format` stays silent on it. What
+`last-rehearsed` states the literal `never` that its schema admits, so `entry-shape` stays silent on it. What
 reports it is `staleness-loud`, which is the `never` arm of that rule.
 
 ## Symptoms

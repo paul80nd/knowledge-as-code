@@ -47,14 +47,14 @@ arrive rarely.
 
 <!-- BEGIN GENERATED: schema-processes -->
 
-| Field                   | Value                                          | Notes                                                                         |
-|-------------------------|------------------------------------------------|-------------------------------------------------------------------------------|
-| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†             | `active` `draft` `retired`                     | Whether the process is current, drafted, or stood down. In force at `active`. |
-| `applies-to`            | list                                           | Service ids this process concerns.                                            |
-| `last-rehearsed` *      | date                                           | Quoted. The day somebody last followed the process end to end, or `"never"`.  |
-| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the process.                         |
-| `requires-access`       | list                                           | The systems or roles the reader needs before step 1.                          |
+| Field                   | Value                                          | Notes                                                                                   |
+|-------------------------|------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.            |
+| `status` *†             | `active` `draft` `retired`                     | Whether the process is current, drafted, or stood down. In force at `active`.           |
+| `applies-to`            | list                                           | Service ids this process concerns.                                                      |
+| `last-rehearsed` *      | object                                         | The last time somebody followed the process end to end, as the day and who. Or `never`. |
+| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the process.                                   |
+| `requires-access`       | list                                           | The systems or roles the reader needs before step 1.                                    |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  
@@ -74,10 +74,13 @@ under each section states how to write that section.
 CI runs the [universal checks](knowledge-as-code/metadata.md#universal-checks) on every record, and the checks below on
 this type's records.
 
-| Check                | Level   | What it verifies                                                                                      |
-|----------------------|---------|-------------------------------------------------------------------------------------------------------|
-| `ref-resolves`       | error   | An id in a field that references another document names one that exists, of the type the field names. |
-| `staleness`          | warning | A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.                     |
-| `no-hedged-ordering` | warning | No step hedged with "typically", "usually" or "normally".                                             |
+| Check                           | Level   | What it verifies                                                                                      |
+|---------------------------------|---------|-------------------------------------------------------------------------------------------------------|
+| `entry-shape / entry-key`       | error   | An object field, and each entry of an object list, carries the keys the field declares and no others. |
+| `ref-resolves`                  | error   | An id in a field that references another document names one that exists, of the type the field names. |
+| `staleness`                     | warning | A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.                     |
+| `followed-by-a-person-or-agent` | error   | A walk-through states a person or an agent, and never a process.                                      |
+| `rehearsal-states-no-method`    | error   | A walk-through states no `method`, which belongs to a runbook.                                        |
+| `no-hedged-ordering`            | warning | No step hedged with "typically", "usually" or "normally".                                             |
 
 <!-- END GENERATED: checks-processes -->

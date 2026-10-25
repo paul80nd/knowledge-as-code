@@ -5,9 +5,8 @@ tier: procedural
 status: active
 applies-to: [ svc-kac ]
 severity: sev3
-last-rehearsed: "2026-10-18"
+last-rehearsed: { at: "2026-10-18", by: claude-code/opus-5.5, method: tabletop }
 rehearsal-frequency: on-change
-rehearsal-method: tabletop
 requires-tools:
   - A .NET 10 SDK
   - A checkout of this repository

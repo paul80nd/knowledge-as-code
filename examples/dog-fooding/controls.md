@@ -44,7 +44,7 @@ verifies and leaves their wording to the record that states them. The code of th
 runs it.
 
 A control changes when the check or the pipeline running it changes. A manual control also changes each time somebody
-runs it, because `last-verified` records the day. New controls arrive when a rule gains a check.
+runs it, because `last-verified` records the day and who ran it. New controls arrive when a rule gains a check.
 
 ## A control or a skill
 
@@ -63,7 +63,7 @@ and helps only when a session loads it and acts on it. A check fails a broken ru
 | `verifies` *    | list                                                                      | The rules this control checks, as `std-CI.PERMS`.                                                           |
 | `mechanism` *   | `ci` `review-checklist` `manual` `runtime-alert` `not-enforced`           | How the check runs, or `not-enforced` where nothing checks the rule.                                        |
 | `frequency`     | `continuous` `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual` | How often it runs, or `continuous` where the check never stops. Required when `mechanism != not-enforced`.  |
-| `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.            |
+| `last-verified` | object                                                                    | The last time somebody ran this check, as the day and who. Or `never`. Required when `mechanism == manual`. |
 | `evidence`      | string                                                                    | Where the proof lives: the build log, the audit note, or the dashboard.                                     |
 | `applies-to`    | list                                                                      | Service ids, or `all`.                                                                                      |
 | `review-by` *   | date                                                                      | Quoted. The day somebody checks this control still describes what runs.                                     |
@@ -86,13 +86,16 @@ under each section states how to write that section.
 CI runs the [universal checks](knowledge-as-code/metadata.md#universal-checks) on every record, and the checks below on
 this type's records.
 
-| Check                      | Level   | What it verifies                                                                                      |
-|----------------------------|---------|-------------------------------------------------------------------------------------------------------|
-| `clause-quoted-faithfully` | error   | A span quoted beside a clause citation is still in the clause it cites.                               |
-| `ref-resolves`             | error   | An id in a field that references another document names one that exists, of the type the field names. |
-| `reciprocal`               | error   | A reciprocal field and its counterpart agree in both directions.                                      |
-| `mechanism-has-evidence`   | warning | A running control says where its evidence can be found.                                               |
-| `control-in-date`          | warning | A control names a review date that has not passed.                                                    |
+| Check                           | Level   | What it verifies                                                                                      |
+|---------------------------------|---------|-------------------------------------------------------------------------------------------------------|
+| `entry-shape / entry-key`       | error   | An object field, and each entry of an object list, carries the keys the field declares and no others. |
+| `clause-quoted-faithfully`      | error   | A span quoted beside a clause citation is still in the clause it cites.                               |
+| `ref-resolves`                  | error   | An id in a field that references another document names one that exists, of the type the field names. |
+| `reciprocal`                    | error   | A reciprocal field and its counterpart agree in both directions.                                      |
+| `mechanism-has-evidence`        | warning | A running control says where its evidence can be found.                                               |
+| `control-in-date`               | warning | A control names a review date that has not passed.                                                    |
+| `verified-by-a-person-or-agent` | error   | A check run by hand states a person or an agent, and never a process.                                 |
+| `check-states-no-method`        | error   | A check states no `method`, which belongs to a runbook.                                               |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

@@ -10,8 +10,8 @@ generated:
   report: coverage
   tool: kac/0.39.0
 sources:
-  - { resource: example-dogfooding, version: "0.84.0" }
-  - { resource: example-engineering, version: "0.41.0" }
+  - { resource: example-dogfooding, version: "0.85.0" }
+  - { resource: example-engineering, version: "0.42.0" }
 verified:
   - { at: 2026-10-25T19:31:01Z, by: human:paul.law }
 tags: [ coverage, governance ]
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.41.0.
+* `eng`, example-engineering, at 0.42.0.
 
 No column here says a clause is verified. `Controls` lists each control naming a rule in `Covered by`, and a control may
 check one obligation of that rule and leave the rest. The `Deviations` column lists a deviation only while its `status`

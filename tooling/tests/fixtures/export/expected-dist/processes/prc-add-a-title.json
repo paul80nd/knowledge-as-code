@@ -7,7 +7,11 @@
     "title": "Add a title to the catalogue",
     "status": "active",
     "applies-to": null,
-    "last-rehearsed": "2029-06-01",
+    "last-rehearsed": {
+      "at": "2029-06-01",
+      "by": "human:alex.doe",
+      "method": null
+    },
     "rehearsal-frequency": "quarterly",
     "tags": [
       "cataloguing"

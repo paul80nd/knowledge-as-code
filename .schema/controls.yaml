@@ -19,14 +19,16 @@ lineage:
     800-53A ties a determination statement to the control item it tests, so a result traces back to the requirement.
     `verifies` is that tie, and `What it checks` quotes the rule. 800-53A puts the method, the expected evidence and
     the objects assessed beside the statement: here, `mechanism`, `evidence` and `applies-to`.
-    [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment `at-frequency`, which `frequency` states
+    [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment `at-frequency`, which `frequency` states. OSCAL
+    names who collected an observation in `origin-actor`, which `last-verified` states as `by` for a manual check
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
     internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own: a control may exist
     to record that nothing checks the rule. The corpus keeps the plan and never the result, where OSCAL has an
-    assessment-results model. `verifies` binds both ways, where 800-53A traces one. Nothing names an assessor, because
-    the mechanism is usually code. Rigour is prose in `Coverage and gaps`, where 800-53A grades depth and coverage and
-    the [CIS Controls Assessment Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
+    assessment-results model. `verifies` binds both ways, where 800-53A traces one. Only a manual check names who ran
+    it, in `last-verified`, because the mechanism is usually code. Rigour is prose in `Coverage and gaps`, where
+    800-53A grades depth and coverage and the
+    [CIS Controls Assessment Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
 collision: >
   In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
   27002 and ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or
@@ -85,12 +87,13 @@ fields:
   last-verified:
     required: false
     required-when: 'mechanism == manual'
-    type: date
+    type: object
+    shape: run
     allow-literal: [never]
-    description: Quoted. The day somebody last ran this check, or `"never"`.
+    description: The last time somebody ran this check, as the day and who. Or `never`.
     notes: >
       An automated check leaves a run in its own logs. A periodic human check leaves nothing unless somebody
-      writes the day here.
+      writes the day and their name here. A check runs one way, so `method` stays out.
 
   evidence:
     required: false
@@ -119,7 +122,7 @@ sections:
   optional: [Owner]
 
 export:
-  version: 2
+  version: 3
   fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by,
            tags]
   sections:
@@ -149,6 +152,21 @@ rules:
     message: >
       this control's `review-by` has passed. Check the control still runs the way this record says,
       then set `review-by` to the next day somebody looks at it.
+  - id: verified-by-a-person-or-agent
+    description: A check run by hand states a person or an agent, and never a process.
+    severity: error
+    expr: "entries_match('last-verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
+    message: >
+      the `by` in `last-verified` states no person or agent. Write `human:alex.doe` for a person, or
+      `review-agent/2.1.0` for an agent. A check a process runs is a `ci` control, scheduled or not, and
+      states no `last-verified`.
+  - id: check-states-no-method
+    description: A check states no `method`, which belongs to a runbook.
+    severity: error
+    expr: "not present('last-verified.method')"
+    message: >
+      `last-verified` states a `method`, which says how a runbook was walked. A check runs one way, so drop
+      `method`.
   - id: clause-quoted-faithfully
     description: >
       A quoted span beside a clause citation is still in the clause it cites.

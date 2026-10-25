@@ -51,7 +51,7 @@ the plugin tree may already use.
 | `view`        | What it lists, under each standard's id, title and status                       | Its component reads                           |
 |---------------|---------------------------------------------------------------------------------|-----------------------------------------------|
 | `build-index` | each rule by title                                                              | `standards@3`                                 |
-| `review`      | each rule's obligations, and the controls checking it, with their mechanism     | `standards@3`, and `controls@2` where present |
+| `review`      | each rule's obligations, and the controls checking it, with their mechanism     | `standards@3`, and `controls@3` where present |
 
 A view is trimmed like any other component. A type under `optional` is read where the export has it, and its absence
 trims nothing, so a corpus with no controls still gets the review view. The build index opens on how many rules the

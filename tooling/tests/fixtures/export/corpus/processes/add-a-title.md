@@ -3,7 +3,7 @@ id: prc-add-a-title
 type: process
 tier: procedural
 status: active
-last-rehearsed: "2029-06-01"
+last-rehearsed: { at: "2029-06-01", by: human:alex.doe }
 rehearsal-frequency: quarterly
 requires-access:
   - The cataloguing role in the library management system

@@ -17,7 +17,7 @@ Its structure lets the reader find their branch without reading the whole docume
 At 2am nobody reconstructs a recovery sequence from first principles, and the person who knows it is asleep. A runbook
 is the difference between a twenty-minute incident and a two-hour one.
 
-Writing one also exposes the step nobody has tried. A disaster-recovery runbook carrying `last-rehearsed: "never"` says
+Writing one also exposes the step nobody has tried. A disaster-recovery runbook carrying `last-rehearsed: never` says
 the recovery has never been run, while there is still time to run it.
 
 ## Scope
@@ -46,17 +46,16 @@ postmortem's actions.
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                   | Value                                          | Notes                                                                                                                                        |
-|-------------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.                                                                 |
-| `status` *†             | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down. In force at `active`.                                                                |
-| `applies-to`            | list                                           | Service ids this runbook covers.                                                                                                             |
-| `severity` *            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                                                                                    |
-| `last-rehearsed` *      | date                                           | Quoted. The day somebody last walked the runbook end to end, or `"never"`.                                                                   |
-| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                                                                                        |
-| `rehearsal-method`      | `live` `tabletop`                              | Which walk the date records: `live` caused the fault, `tabletop` read the steps against the system. Required when `last-rehearsed != never`. |
-| `requires-tools`        | list                                           | The tools the reader needs installed before starting.                                                                                        |
-| `requires-access`       | list                                           | The permissions or roles the reader needs before starting.                                                                                   |
+| Field                   | Value                                          | Notes                                                                             |
+|-------------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
+| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.      |
+| `status` *†             | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down. In force at `active`.     |
+| `applies-to`            | list                                           | Service ids this runbook covers.                                                  |
+| `severity` *            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                         |
+| `last-rehearsed` *      | object                                         | The last walk end to end, as the day, who walked it and the `method`. Or `never`. |
+| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                             |
+| `requires-tools`        | list                                           | The tools the reader needs installed before starting.                             |
+| `requires-access`       | list                                           | The permissions or roles the reader needs before starting.                        |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  
@@ -78,11 +77,14 @@ this type's records.
 
 | Check                                          | Level   | What it verifies                                                                                      |
 |------------------------------------------------|---------|-------------------------------------------------------------------------------------------------------|
+| `entry-shape / entry-key`                      | error   | An object field, and each entry of an object list, carries the keys the field declares and no others. |
 | `ref-resolves`                                 | error   | An id in a field that references another document names one that exists, of the type the field names. |
 | `diagnosis-dead-end / diagnosis-no-escalation` | error   | Every diagnosis branch routes to a section or falls through, and one branch reaches `Escalation`.     |
 | `symptoms-first`                               | error   | Symptoms is the first section after the H1.                                                           |
 | `outcome-stated`                               | error   | Resolution contains a line opening `Confirmed when`.                                                  |
 | `failure-route-stated`                         | error   | Resolution links to Escalation for a reader whose step did not work.                                  |
 | `staleness-loud`                               | warning | A runbook nobody has walked, or one walked more than 92 days ago.                                     |
+| `walk-method-stated`                           | error   | A recorded walk states its `method`.                                                                  |
+| `walked-by-a-person-or-agent`                  | error   | A walk states a person or an agent, and never a process.                                              |
 
 <!-- END GENERATED: checks-runbooks -->

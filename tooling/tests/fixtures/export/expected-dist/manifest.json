@@ -73,7 +73,7 @@
     },
     {
       "type": "processes",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 1,
       "parts": 0,
       "dir": "processes",

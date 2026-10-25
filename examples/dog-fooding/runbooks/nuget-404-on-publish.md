@@ -5,7 +5,7 @@ tier: procedural
 status: active
 applies-to: [ svc-kac ]
 severity: sev3
-last-rehearsed: "never"
+last-rehearsed: never
 rehearsal-frequency: per-release
 requires-tools:
   - "`curl` and `jq`"

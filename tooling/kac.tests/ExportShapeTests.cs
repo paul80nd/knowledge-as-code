@@ -18,7 +18,7 @@ public class ExportShapeTests
             Context: summary
             Decision: full
             Consequences: full
-        controls@2
+        controls@3
           fields: id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by, tags
           sections:
             What it checks: full
@@ -129,14 +129,14 @@ public class ExportShapeTests
             What went well: full
             What went wrong: full
             Where we got lucky: full
-        processes@1
+        processes@2
           fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
           sections:
             When to use this: full
             Prerequisites: full
         reports@2
           fields: id, title, status, generated, sources, verified, tags
-        runbooks@2
+        runbooks@3
           fields: id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-tools, requires-access, tags
           sections:
             Symptoms: full
