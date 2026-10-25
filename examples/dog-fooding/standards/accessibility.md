@@ -20,9 +20,9 @@ tags: [ accessibility, cli, documentation, wcag ]
 
 ## Summary
 
-This standard covers two surfaces: the documentation site MkDocs builds from `docs/`, and the `kac` command line.
+This standard covers two surfaces: the documentation site Zensical builds from `docs/`, and the `kac` command line.
 [WCAG 2.2 AA] governs the site. On it a Markdown author owns heading order, link text, table structure and image
-alternatives, and Material for MkDocs owns contrast, focus and keyboard reach. WCAG is written for content a browser
+alternatives, and Zensical's theme owns contrast, focus and keyboard reach. WCAG is written for content a browser
 renders, so it does not apply to a terminal. `kac` follows rules stated in the terms a terminal has:
 colour repeats what the words already say, and every answer a prompt asks for is also a flag. Both components are
 pinned, and each has an assessment in its tool record stating what was checked and what falls short.
@@ -47,8 +47,8 @@ _**Covers:** `eng:pol-A11Y.CONFORM`, `eng:pol-A11Y.UPFRONT`_
 
 ### The theme owns contrast, focus and keyboard reach
 
-- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that
-  its colours meet [WCAG 2.2 AA].
+- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Zensical ships, unless the change shows that its colours
+  meet [WCAG 2.2 AA].
 - `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
 - `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that
   what it sets meets [WCAG 2.2 AA].
@@ -157,7 +157,7 @@ apply to two surfaces: the documentation site and the command line. The two surf
 its own rules.
 
 **The site divides between the author and the theme.** A Markdown page contributes headings, links, tables, images and
-words. Everything a browser needs beyond that comes from Material for MkDocs: the contrast of the two schemes, the
+words. Everything a browser needs beyond that comes from Zensical's theme: the contrast of the two schemes, the
 focus outline, the skip link and the keyboard order of the navigation. An author cannot fix what the theme gets wrong,
 and the theme cannot fix a heading that jumps from H2 to H4. One set of rules over both would leave each reviewer
 guessing which half applied to them.
@@ -173,7 +173,7 @@ it.
 
 **Nothing in CI checks any of this, except the pins.** [ctl-0014] fails a pull request where an assessed component's
 pin leaves the range its tool record approves, or where the assessment names no version at that pin. The `docs` job
-runs `mkdocs build`, and `strict: true` checks links inside the site. No check reads the output for contrast, heading
+runs `zensical build`, and `strict: true` checks links inside the site. No check reads the output for contrast, heading
 order, link text or keyboard reach. No test reads a `kac` message for a colour standing alone. Every other rule above
 is a reviewer's, which is what the conformance checklist is for. [ctl-0012] records what goes unchecked.
 
@@ -185,11 +185,12 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 
 - **Normative.** [WCAG 2.2 AA] sets what a page on the documentation site is measured against. Nobody can apply the
   first rule above without it.
-- **Informative.** [Material for MkDocs] documents the `palette:` and `features:` keys the second rule constrains in
+- **Informative.** [Zensical's setup pages] document the `palette:` and `features:` keys the second rule constrains in
   `mkdocs.yml`.
 
 ## Changelog
 
+- 2026-10-25: Zensical builds the site, so the theme whose colour schemes a change should keep is Zensical's.
 - 2026-10-19: a check now fails a pull request that moves an assessed pin without a new assessment, so the rationale
   names the pins as the one part of this standard CI checks.
 - 2026-10-18: a diagram has a text equivalent, which should be the prose after it. The theme's colour schemes and an
@@ -202,7 +203,7 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
 say why in the change.
 
-[Material for MkDocs]: https://squidfunk.github.io/mkdocs-material/setup/
 [WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/
+[Zensical's setup pages]: https://zensical.org/docs/setup/colors/
 [ctl-0012]: ../controls/0012-accessibility-unchecked.md
 [ctl-0014]: ../controls/0014-assessed-pin-tests.md

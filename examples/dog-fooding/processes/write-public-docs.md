@@ -7,7 +7,7 @@ applies-to: [ svc-docs-site, svc-kac ]
 last-rehearsed: "2026-09-15"
 rehearsal-frequency: per-release
 owner: human:paul.law
-tags: [ mkdocs, nuget ]
+tags: [ nuget, zensical ]
 ---
 
 # Write the public documentation
@@ -42,8 +42,8 @@ reader has installed nothing and has nobody here to ask. That is the whole diffe
 6. Answer [std-A11Y]'s conformance checklist against every page you changed.
 7. Pack the package where you touched the package page. `dotnet pack tooling/kac/kac.csproj` proves it still renders as
    the readme nuget.org receives.
-8. Run `mkdocs build --strict` where you touched the site. A dead link fails it. `NavigationTests` catches a page the
-   nav does not list.
+8. Run `zensical build` where you touched the site. A dead link or a dead anchor fails it. `NavigationTests` catches a
+   page the nav does not list.
 9. Run [prc-pull-request].
 
 ## Verification

@@ -5,12 +5,12 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-23T19:32:54Z
+  at: 2026-10-25T09:44:45Z
   by: claude-code/opus-5.5
   report: coverage
-  tool: kac/0.38.0
+  tool: kac/0.39.0
 sources:
-  - { resource: example-dogfooding, version: "0.79.0" }
+  - { resource: example-dogfooding, version: "0.80.0" }
   - { resource: example-engineering, version: "0.39.0" }
 verified:
   - { at: 2026-10-23T19:32:54Z, by: human:paul.law }
@@ -91,7 +91,7 @@ where the rule and the practice differ.
 |-----------|----------|------------|------------|------------------------|-----------------------|--------------|--------------------------------------------------------------------------------------------------------|
 | `UPFRONT` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | `std-A11Y` states what each surface needs before a page is written.                                    |
 | `CONFORM` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | WCAG 2.2 AA is the measure, and a reviewer applies it. No check does.                                  |
-| `VENDOR`  | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | `tol-mkdocs-material` and `tol-spectre-console` each have an assessment.                               |
+| `VENDOR`  | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | `tol-zensical` and `tol-spectre-console` each have an assessment.                                      |
 | `RECORD`  | MUST     |            |            |                        | `eng:pol-DEVI.RECORD` | Gap          | Both third-party components have an assessment in `tools/`, and no standard requires one.              |
 | `PUBLISH` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | A statement is required where a law or a contract asks. Neither asks for these two surfaces.           |
 | `CURRENT` | MUST     |            |            |                        |                       | Out of scope | `PUBLISH` records that no law or contract asks for a statement here, so there is none to keep current. |

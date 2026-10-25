@@ -25,7 +25,7 @@ its own.
 
 ## What we use it for
 
-The `publish` job of `publish-docs.yml` runs them in order, after `mkdocs build`:
+The `publish` job of `publish-docs.yml` runs them in order, after `zensical build`:
 
 | Action                          | What it does here                                                                |
 |---------------------------------|----------------------------------------------------------------------------------|
@@ -88,8 +88,8 @@ built pages and no part of the actions, so nothing follows for it.
 ## Related
 
 * [std-CI] requires every action to be pinned to a commit.
-* [tol-mkdocs] builds the site these actions publish.
+* [tol-zensical] builds the site these actions publish.
 
 [std-CI]: ../../standards/workflows.md
 [svc-docs-site]: ../../services/docs-site.md
-[tol-mkdocs]: ../docs/mkdocs.md
+[tol-zensical]: ../docs/zensical.md

@@ -63,7 +63,7 @@ updates:
       - dependency-name: '*'
         update-types: [version-update:semver-major]
 
-  # MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
+  # Zensical, pinned in docs/requirements.txt so a release of the site generator changes the site when we take it.
   - package-ecosystem: pip
     directory: /docs
     schedule:
@@ -71,10 +71,6 @@ updates:
     cooldown: {default-days: 7}
     commit-message:
       prefix: docs
-    # From 1.2.3, mkdocs-redirects requires properdocs. tol-mkdocs-redirects says why, and #1058 decides the toolchain.
-    ignore:
-      - dependency-name: mkdocs-redirects
-        versions: [">= 1.2.3"]
 
   # yamllint and zizmor, pinned in .github/requirements.txt, so a linter release changes what the gate
   # rejects when the pin moves. actionlint runs in the same job and is a Go binary with no manifest,

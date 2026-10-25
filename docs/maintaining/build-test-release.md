@@ -144,7 +144,7 @@ sh ../../tooling/tests/bundled-components.sh .dist/plugin
 
 ```sh
 pip install -r docs/requirements.txt
-mkdocs build              # fails on a dead link, because mkdocs.yml sets strict
+zensical build            # fails on a dead link or anchor, because mkdocs.yml sets strict
 yamllint --strict .       # every YAML file
 actionlint                # every workflow
 zizmor .github template/.github   # every workflow and dependabot.yml, for insecure patterns

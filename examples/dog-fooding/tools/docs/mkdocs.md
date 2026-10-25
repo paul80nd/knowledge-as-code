@@ -2,13 +2,13 @@
 id: tol-mkdocs
 type: tool
 tier: descriptive
-status: approved
+status: deprecated
 packages:
   - { purl: pkg:pypi/mkdocs, versions: 1.6.x }
 homepage: https://www.mkdocs.org/
 licence: BSD-2-Clause
 licence-declared: BSD-2-Clause
-decided-on: "2026-08-24"
+decided-on: "2026-10-25"
 review-by: "2027-08-24"
 owner: human:paul.law
 tags: [ documentation, static-site ]
@@ -16,22 +16,24 @@ tags: [ documentation, static-site ]
 
 # MkDocs
 
-`Tool: tol-mkdocs` `APPROVED`
+`Tool: tol-mkdocs` `DEPRECATED`
 
-The static site generator that builds the documentation site from `docs/`, configured by `mkdocs.yml` at the
+The static site generator that built the documentation site from `docs/`, configured by `mkdocs.yml` at the
 repository root.
 
 ## What we use it for
 
-The site documents `kac`, and MkDocs is here because it is what tool documentation uses. The site is not a corpus, so
+The site documents `kac`, and MkDocs was chosen because it is what tool documentation uses. The site is not a corpus, so
 `publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.
 
-`strict: true` in `mkdocs.yml` turns a dead link into a failed build. MkDocs reports a page the navigation does not
-list at INFO only, so `NavigationTests` in `kac.tests` covers that case instead.
+Under MkDocs, `strict: true` in `mkdocs.yml` turned a dead link into a failed build. MkDocs reported a page the
+navigation does not list at INFO only, so `NavigationTests` in `kac.tests` covers that case.
 
-## Where it is used
+## Status
 
-* [svc-docs-site] is built with it.
+[tol-zensical] builds the site instead, from the same `mkdocs.yml`. The theme this generator rendered with reaches end
+of life on 2026-11-05, and MkDocs 2.0 drops the plugin system. `mkdocs.yml` still builds the same site under 1.6.1, so
+returning to this generator is a change to `docs/requirements.txt` and to the build command.
 
 ## Alternatives considered
 
@@ -46,7 +48,8 @@ redistribution of the generator, so nothing follows for what is published.
 
 * [tol-mkdocs-material] is the theme it renders with.
 * [tol-mkdocs-redirects] keeps the URL of a moved page working.
+* [tol-zensical] replaces it.
 
-[svc-docs-site]: ../../services/docs-site.md
 [tol-mkdocs-material]: mkdocs-material.md
 [tol-mkdocs-redirects]: mkdocs-redirects.md
+[tol-zensical]: zensical.md

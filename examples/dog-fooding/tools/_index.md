@@ -15,11 +15,12 @@
 
 ## Docs
 
-| ID                   | Title                                          | Status   | Review by  | Licence                                      |
-|----------------------|------------------------------------------------|----------|------------|----------------------------------------------|
-| tol-mkdocs           | [MkDocs](docs/mkdocs.md)                       | approved | 2027-08-24 | BSD-2-Clause                                 |
-| tol-mkdocs-material  | [Material for MkDocs](docs/mkdocs-material.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 |
-| tol-mkdocs-redirects | [mkdocs-redirects](docs/mkdocs-redirects.md)   | approved | 2027-10-13 | MIT                                          |
+| ID                   | Title                                          | Status     | Review by  | Licence                                                      |
+|----------------------|------------------------------------------------|------------|------------|--------------------------------------------------------------|
+| tol-mkdocs           | [MkDocs](docs/mkdocs.md)                       | deprecated | 2027-08-24 | BSD-2-Clause                                                 |
+| tol-mkdocs-material  | [Material for MkDocs](docs/mkdocs-material.md) | deprecated | 2027-08-24 | MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0                 |
+| tol-mkdocs-redirects | [mkdocs-redirects](docs/mkdocs-redirects.md)   | deprecated | 2027-10-13 | MIT                                                          |
+| tol-zensical         | [Zensical](docs/zensical.md)                   | approved   | 2027-04-25 | MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 AND ISC AND W3C |
 
 ## Lint
 

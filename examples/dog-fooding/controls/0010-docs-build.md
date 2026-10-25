@@ -11,7 +11,7 @@ applies-to:
   - all
 review-by: "2027-09-22"
 owner: human:paul.law
-tags: [ documentation, mkdocs ]
+tags: [ documentation, zensical ]
 ---
 
 # The documentation site builds with no dead link
@@ -27,12 +27,12 @@ CI builds the site the way `publish-docs.yml` builds it, before it publishes.
 
 ## How it works
 
-The `docs` job installs what `docs/requirements.txt` pins and runs `mkdocs build`. `mkdocs.yml` sets `strict: true`,
-so a dead link or an unreachable page exits non-zero.
+The `docs` job installs what `docs/requirements.txt` pins and runs `zensical build`. `mkdocs.yml` sets `strict: true`,
+so a dead link or a dead anchor exits non-zero.
 
 `NavigationTests` in `tooling/kac.tests` fails three faults the build lets through:
 
-* a page under `docs/` that `mkdocs.yml` does not list, which the build reports at INFO and exits 0 on
+* a page under `docs/` that `mkdocs.yml` does not list, which the build passes without a word
 * a nav listing the CLI reference pages in an order the parser does not declare, which the build says nothing about
 * a redirect in `redirect_maps` whose target the nav does not list
 

@@ -1,5 +1,5 @@
-// `mkdocs build --strict` mentions an unlisted page at INFO and exits 0, and says nothing at all about
-// order. Both faults are silent there, so `mkdocs.yml` is read against `docs/` here instead.
+// `zensical build` passes an unlisted page without a word, and says nothing at all about order. Both
+// faults are silent there, so `mkdocs.yml` is read against `docs/` here instead.
 
 using System.Text.RegularExpressions;
 
