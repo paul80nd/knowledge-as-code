@@ -23,7 +23,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   is also a `::error` or `::warning` annotation, and under Azure Pipelines a `##vso[task.logissue]` line. On a pull
   request with findings, `validate` posts one comment per corpus listing them, and later runs update it. It posts
   only where the step has `GITHUB_TOKEN` with `pull-requests: write`, or `SYSTEM_ACCESSTOKEN`, and a failed post
-  leaves the exit code alone. An info finding and `--json` write neither, and a local run is unchanged.
+  leaves the exit code alone. Without the token, a run with findings prints a note and a clean run prints nothing. An
+  info finding and `--json` write neither, and a local run is unchanged.
+- **`kac new` pins itself in `.config/dotnet-tools.json`.** The tool manifest names the release of the `kac` that ran
+  `new`, and `kac update` never compares, writes or reports it. Both starter pipelines run `dotnet tool restore` and
+  then `dotnet tool run kac`, so each can hold the token `validate` posts with. The GitHub starter grants
+  `pull-requests: write` and passes `GITHUB_TOKEN` to the validate step, and the Azure starter passes
+  `SYSTEM_ACCESSTOKEN`. The starter's `dependabot.yml` gains a `nuget` entry, which proposes each new `kac`.
 
 ### Changed
 
