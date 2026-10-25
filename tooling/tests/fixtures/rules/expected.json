@@ -587,7 +587,7 @@
       "line": 11,
       "severity": "warning",
       "check": "dependency-criticality",
-      "message": "'depends-on' cites 'svc-notifications', graded 'important' where this record is 'critical'. Regrade one of the two, or write down what degrades when it is gone."
+      "message": "'depends-on' cites 'svc-notifications', graded 'important' where this record is 'critical'. Regrade one of the two, or say what degrades when it is gone and accept this warning in `accepts:`."
     },
     {
       "file": "services/repo-links-adrift.md",
@@ -608,7 +608,7 @@
       "line": 1,
       "severity": "warning",
       "check": "critical-service-is-alerted",
-      "message": "this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live problem raises, or record the gap in `Operational notes` and leave this warning standing."
+      "message": "this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live problem raises, or record the gap in `Operational notes` and accept this warning in `accepts:`."
     },
     {
       "file": "standards/common/changelog-appended.md",

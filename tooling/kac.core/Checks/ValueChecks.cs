@@ -240,6 +240,14 @@ public static class ValueChecks
                 continue;
             }
 
+            // A template's entries are bare by design, so only a record's are asked.
+            if (kind == DocKind.Record && inner.Required && IsBareKey(value))
+            {
+                report.Err(new CheckId("entry-key"),
+                    $"'{name}' entry {Names(map, spec)} leaves '{key}' with no value.", at);
+                continue;
+            }
+
             Check($"{name}.{key}", value, at, inner, kind, frontStart, report);
         }
 

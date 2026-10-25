@@ -25,6 +25,7 @@ Carried by every document in the taxonomy.
 | `owner` *  | string                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
 | `sources`  | list                                             | Where this record's content came from, one entry per source.                  |
 | `tags`     | list                                             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `accepts`  | list                                             | The warnings this record keeps, each with the reason it keeps it.             |
 
 \* Field is required
 
@@ -32,7 +33,9 @@ Carried by every document in the taxonomy.
 
 `id` is the anchor for every cross-reference. Each type sets its own `status` values, and lists its own fields on its
 own page. Two fields answer neighbouring questions: `sources` says where one record's content came from, and
-[lineage](lineage.md) says what the whole type is modelled on.
+[lineage](lineage.md) says what the whole type is modelled on. `accepts` lists the warnings a record keeps, each with
+its reason, and `validate` reports each one as info. See
+<https://paul80nd.github.io/knowledge-as-code/use/cli/validate/#the-accepts-field>.
 
 ## Universal checks
 
@@ -53,6 +56,8 @@ checks.
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `acceptance-check`          | error   | An `accepts` entry names a check that reports warnings, and is not `acceptance-stale`.                          |
+| `acceptance-stale`          | warning | Each `accepts` entry matches a warning its check reports on the same record.                                    |
 | `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |

@@ -38,6 +38,8 @@ full statement of each one.
   [Which check reports a fault](../reference/checks.md#which-check-reports-a-fault)
 * It warns, without failing, on an unused link definition, a list out of order, a Y-statement outside its bounds and
   a value below its floor. [A run that finds faults](../use/cli/validate.md#a-run-that-finds-faults)
+* It reports a warning a record names in `accepts:` as info, with the reason, and warns on an entry matching no
+  warning on its record. [The `accepts` field](../use/cli/validate.md#the-accepts-field)
 * `kac checks` lists each check with its severity and what it proves, read from the corpus's own `.schema/`, a type
   the corpus declares itself included. [`checks`](../use/cli/checks.md#what-it-does)
 * `kac checks` lists a C# rule under the check it emits, and leaves out a rule with no severity.
@@ -49,6 +51,8 @@ full statement of each one.
 * `kac checks` exits `1` where the checks table on a type page disagrees with the catalogue: a check with no row, a
   row for a check kept off the page, or a row for a check the schema does not declare.
   [`checks`](../use/cli/checks.md#known-limits)
+* `validate` refuses an `accepts:` entry naming `acceptance-stale`, a check that reports errors or only info, or an id
+  no check reports. [The `accepts` field](../use/cli/validate.md#the-accepts-field)
 
 ## Specified by
 
@@ -138,6 +142,14 @@ full statement of each one.
 * A value below its field's floor is reported against each record carrying it
 * The corpus as a whole warns eight times and errors not at all
 
+[`Accepts.feature`][Accepts.feature]:
+
+* An accepted warning is reported as info, with its reason
+* An entry matching no warning on its record is stale
+* A stale entry accepts the warning once its record raises it again
+* An entry naming anything but a check that warns is refused
+* An entry with no reason, or a blank one, accepts nothing
+
 [`Checks.feature`][Checks.feature]:
 
 * The catalogue lists each check with the severity it reports at and what it proves
@@ -166,6 +178,7 @@ full statement of each one.
 
 [Checks](../reference/checks.md) says where each check comes from, and how to add one.
 
+[Accepts.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Accepts.feature
 [Checks.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Checks.feature
 [Clean.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Clean.feature
 [Graph.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Graph.feature

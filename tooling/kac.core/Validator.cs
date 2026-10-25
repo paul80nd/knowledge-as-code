@@ -86,6 +86,9 @@ public static class Validator
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
 
+        // Last, so an entry in `accepts:` sees every warning its record will carry.
+        Acceptances.Apply(corpus.Docs, CheckCatalogue.For(schema), findings);
+
         return findings;
     }
 

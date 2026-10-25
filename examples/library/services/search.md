@@ -6,8 +6,8 @@ status: live
 component-type: api
 repos: [ search ]
 platform: typescript
-criticality: important
-monitoring-output: ticket
+criticality: critical
+monitoring-output: alert
 interfaces:
   - type: openapi
     contract: https://git.example.com/example-libraries/search/blob/main/contract/openapi.yaml
@@ -70,10 +70,8 @@ index is rebuilt, and no other service reads it.
   `lending.stock_moved`. Each has its own subscription, named `search`.
 * **Rebuild.** A full rebuild takes around forty minutes. The pipeline runs it on request, so a rebuild is a deliberate
   act with someone watching it.
-* **Criticality**: `important`. When it stops, the catalogue falls back to browse-by-shelf and every item page still
-  renders. A reader loses search and keeps the site. That is the argument for `important` over `critical`, and it is
-  why [svc-catalogue-web] is graded above one of its own dependencies.
+* **Criticality**: `critical`. A borrower finds an item by searching for it. When search stops, the catalogue falls
+  back to browse-by-shelf, and a borrower looking for one title cannot find it.
 
 [svc-catalogue-api]: catalogue-api.md
-[svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md

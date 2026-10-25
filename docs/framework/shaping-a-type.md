@@ -320,7 +320,8 @@ message read off a bus, or a build that never calls the service it builds. So `d
 **`criticality` is ranked, and the graph is where the ranking is read.** `critical` sits above `important`, which sits
 above `supporting`. `ordered: true` on the enum in `.schema/_enums.yaml` declares that the first value listed is the
 most significant. `dependency-criticality` then warns where a service outranks a service its `depends-on` cites. The
-edge is often a degradation the estate accepts, and the warning asks the record to say so.
+edge is often a degradation the estate accepts. The record then says what degrades, and keeps the warning in
+`accepts:`.
 
 `data-stores` lists the data records this service keeps, and `Data` says in prose what it does with each.
 `component-type` and `platform` draw their range from the corpus. An estate lists its own deployables and the runtimes a

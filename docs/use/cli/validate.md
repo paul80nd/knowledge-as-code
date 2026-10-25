@@ -48,6 +48,25 @@ run could not ask. That last one usually wants the token [`restore`](restore.md#
 None of the three changes the exit code, and a corpus with no `consumes:` block reads no source at all.
 [Imports](../imports.md#an-import-that-has-fallen-behind) says why being behind is never an error here.
 
+### The `accepts` field
+
+A record keeps a warning it has weighed by naming the check in its own `accepts:` field, with the reason:
+
+```yaml
+accepts:
+  - check: critical-service-is-alerted
+    reason: "`kac` is a command-line tool and emits nothing at run time. Operational notes records the gap."
+```
+
+`validate` then reports every warning that check raises on that record as an **info**, reading `accepted:` and the
+reason. An info finding takes no annotation and no pull request comment, so CI stops raising it. A local run and
+`--json` still show it.
+
+An entry takes a warning only. An entry naming a check that reports errors, a check that reports only info, or an id
+that [`checks`](checks.md) does not list is the error `acceptance-check`. An entry that matches no warning on its record
+is the warning `acceptance-stale`, which asks you to remove the entry. Accept a warning where the record says why it
+stands, and never to hide unfinished work.
+
 ### Annotations under CI
 
 Under a CI platform, `validate` also writes each error and each warning as an annotation. The report and the exit code
