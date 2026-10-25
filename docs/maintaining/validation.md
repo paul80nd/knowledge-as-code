@@ -148,7 +148,7 @@ full statement of each one.
 * An entry matching no warning on its record is stale
 * A stale entry accepts the warning once its record raises it again
 * An entry naming anything but a check that warns is refused
-* An entry with no reason accepts nothing
+* An entry with no reason, or a blank one, accepts nothing
 
 [`Checks.feature`][Checks.feature]:
 

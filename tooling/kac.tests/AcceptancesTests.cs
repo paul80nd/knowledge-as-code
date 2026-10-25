@@ -164,7 +164,10 @@ public class AcceptancesTests
 
     private static Doc Record(string front)
     {
-        var type = new TypeSchema { Key = "services", Folder = "services", Label = "Service", LabelPlural = "Services" };
+        var type = new TypeSchema
+        {
+            Key = "services", Folder = "services", Label = "Service", LabelPlural = "Services"
+        };
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };
         var doc = Doc.Parse(Rel, $"---\nid: svc-kac\ntype: service\n{front}\n---\n\n# kac\n", schema);
         Assert.NotNull(doc);

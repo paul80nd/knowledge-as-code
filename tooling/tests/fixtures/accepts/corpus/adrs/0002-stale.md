@@ -28,9 +28,9 @@ Keep exactly one valid ADR in this fixture and assert that `kac validate` report
 
 ## Alternatives Considered
 
-* **Point the tests at the live corpus** — rejected: it drifts as real ADRs are added, so the baseline would not be
+* **Point the tests at the live corpus**. Rejected: it drifts as real ADRs are added, so the baseline would not be
   stable and updates would be noisy.
-* **Have no clean baseline at all** — rejected: false positives in the rules would then go undetected until they broke
+* **Have no clean baseline at all**. Rejected: false positives in the rules would then go undetected until they broke
   real authoring.
 
 ## Consequences

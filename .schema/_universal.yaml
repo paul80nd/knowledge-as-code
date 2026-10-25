@@ -91,6 +91,7 @@ fields:
       reason:
         required: true
         type: string
+        pattern: '\S'
         description: Why the record keeps the warning, as a sentence.
     description: The warnings this record keeps, each with the reason it keeps it.
     notes: >

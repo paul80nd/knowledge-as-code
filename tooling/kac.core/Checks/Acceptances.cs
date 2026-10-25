@@ -14,9 +14,9 @@ public static class Acceptances
     public static readonly CheckId Refused = new("acceptance-check");
 
     /// <summary>
-    /// Rewrites <paramref name="findings"/> in place, so it runs after every other pass has reported. Each entry turns
-    /// the warnings its check reported on its record into info. An entry missing its check or its reason is skipped,
-    /// because <c>entry-key</c> has reported it.
+    /// Rewrites <paramref name="findings"/> in place: each entry turns the warnings its check reported on its record
+    /// into info. An entry missing its check or its reason is skipped, because <c>entry-key</c> or
+    /// <c>field-pattern</c> has reported it.
     /// </summary>
     public static void Apply(IReadOnlyList<Doc> docs, IReadOnlyList<CheckDef> catalogue, List<Finding> findings)
     {
@@ -29,11 +29,13 @@ public static class Acceptances
 
             foreach (var entry in entries.Children)
             {
-                if (Yaml.Get(entry, "check") is not YamlScalarNode { Value: { Length: > 0 } check }) continue;
-                if (Yaml.Get(entry, "reason") is not YamlScalarNode { Value: { Length: > 0 } reason }) continue;
+                if (Yaml.Get(entry, "check") is not YamlScalarNode { Value: { Length: > 0 } named }) continue;
+                if (Yaml.Get(entry, "reason") is not YamlScalarNode { Value: { } reason }
+                    || string.IsNullOrWhiteSpace(reason)) continue;
+                var check = new CheckId(named);
                 var line = Yaml.LineOf(entry, doc.FrontStartLine);
 
-                if (Refusal(new CheckId(check), severities) is { } refusal)
+                if (Refusal(check, severities) is { } refusal)
                 {
                     report.Err(Refused, refusal, line);
                     continue;
@@ -44,22 +46,22 @@ public static class Acceptances
                 for (var i = 0; i < findings.Count; i++)
                 {
                     var f = findings[i];
-                    if (f.File != doc.Rel || f.Severity != Sev.Warning || f.Check.Value != check) continue;
+                    if (f.File != doc.Rel || f.Severity != Sev.Warning || f.Check != check) continue;
                     findings[i] = f with { Severity = Sev.Info, Message = $"accepted: {reason}" };
                     matched++;
                 }
 
                 if (matched == 0)
                     report.Warn(Stale,
-                        $"no '{check}' warning is left on this record for this entry to accept. "
+                        $"no '{named}' warning is left on this record for this entry to accept. "
                         + $"Remove the entry from '{Field}'.", line);
             }
         }
     }
 
     /// <summary>
-    /// Null for a check the catalogue declares as a warning and nowhere as an error. <c>acceptance-stale</c> is refused:
-    /// an entry accepting it would keep every stale entry on the record quiet.
+    /// Null for a check the catalogue declares as a warning and nowhere as an error. <c>acceptance-stale</c> is
+    /// refused: an entry accepting it would keep every stale entry on the record quiet.
     /// </summary>
     private static string? Refusal(CheckId check, ILookup<CheckId, Sev> severities)
     {

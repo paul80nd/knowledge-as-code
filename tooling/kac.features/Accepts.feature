@@ -33,9 +33,10 @@ Scenario: An entry naming anything but a check that warns is refused
     | error    | 11   | acceptance-check | 'import-capped' reports info, and 'accepts' takes a warning only. Remove the entry.                  |
     | error    | 12   | acceptance-check | 'no-such-check' is not a check `kac validate` reports. `kac checks` lists every check id.            |
 
-Scenario: An entry with no reason accepts nothing
+Scenario: An entry with no reason, or a blank one, accepts nothing
   When I validate the corpus
   Then the findings for "adrs/0004-empty-reason.md" are exactly:
     | severity | line | check             | message                                                            |
     | warning  |      | unused-definition | link definition '[unused-ref]' is never referenced.                |
     | error    | 9    | entry-key         | 'accepts' entry 'unused-definition' leaves 'reason' with no value. |
+    | error    | 10   | field-pattern     | 'accepts.reason' value '  ' does not match \S.                     |

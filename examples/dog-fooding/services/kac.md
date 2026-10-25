@@ -65,10 +65,9 @@ under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in 
 
 * **`facets` is left out because a downloaded command has no inbound surface.** An exposure facet describes the surface
   a service is called on. Nothing calls `kac`: it runs on the machine that installed it.
-* **`monitoring-output` is `none`, and the record accepts the warning that follows.** `kac` is a command-line tool
-  and emits nothing at run time. Nothing watches nuget.org either, so a broken package reaches a person only when
-  somebody installs it and says so. `critical-service-is-alerted` has no way to clear, so `accepts:` keeps it, with
-  that reason, and `validate` reports it as info.
+* **`monitoring-output` is `none`, and the record accepts the warning that follows.** Nothing watches nuget.org, so a
+  broken package reaches a person only when somebody installs it and says so. `critical-service-is-alerted` has no way
+  to clear.
 * **A published version cannot be replaced. A correction takes a higher version.** `publish-tool.yml` reads `<Version>`
   in `kac.csproj` and publishes where nuget.org does not already have that version, so the version moves by hand before
   the merge.

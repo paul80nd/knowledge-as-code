@@ -3,7 +3,7 @@
     "validated": 4,
     "templates": 1,
     "skipped": 0,
-    "errors": 5,
+    "errors": 6,
     "warnings": 2,
     "infos": 1
   },
@@ -63,6 +63,13 @@
       "severity": "error",
       "check": "entry-key",
       "message": "'accepts' entry 'unused-definition' leaves 'reason' with no value."
+    },
+    {
+      "file": "adrs/0004-empty-reason.md",
+      "line": 10,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'accepts.reason' value '  ' does not match \\S."
     }
   ]
 }
