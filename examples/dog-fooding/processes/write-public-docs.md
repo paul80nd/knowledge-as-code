@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 applies-to: [ svc-docs-site, svc-kac ]
-last-rehearsed: "2026-09-15"
+last-rehearsed: { at: "2026-09-15", by: claude-code/opus-5 }
 rehearsal-frequency: per-release
 owner: human:paul.law
 tags: [ nuget, zensical ]
