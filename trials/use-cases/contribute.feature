@@ -35,3 +35,12 @@ Feature: Contribute. A session writing back sends what it learned by the route i
     When the session meets the term
     Then in at least 2 of 3 runs the session drafts a finding whose looks-like is glossary
     And the reply says the meaning it used is unconfirmed
+
+  @proposed @check:validate @type:standards @trial:capture/fault-log
+  Scenario: A change that breaks the corpus fails before it merges
+    No baseline: the capture trial has taken no reading yet.
+    Given a corpus whose pull requests run kac validate
+    And a change that cites an id the corpus does not hold, drops a rule another record cites, or passes a review date
+    When the pull request runs its checks
+    Then over the fault log's 14 days, kac validate reports at least one fault before it merges
+    And for each fault, the log says whether a tool that tolerates a broken reference would have let it through

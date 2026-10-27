@@ -32,3 +32,12 @@ Feature: Assure. The corpus owner finds what is uncovered, unchecked and due
     And a task asking which accepted departures come up for review first
     When the session answers
     Then in at least 2 of 3 runs the reply cites every deviation due on the earliest date, and gives that date
+
+  @proposed @check:restore @type:policies @trial:imports/new-producer-version
+  Scenario: A new version of a consumed corpus says what it broke
+    No baseline: no trial measures it yet.
+    Given a team corpus whose standards cite clauses of a corpus it consumes
+    And a new version of that corpus, which drops or renames a clause one of those standards cites
+    When the corpus owner restores the new version and validates
+    Then kac validate reports each citation the new version broke, and no other finding
+    And it reports them before the team's next change merges
