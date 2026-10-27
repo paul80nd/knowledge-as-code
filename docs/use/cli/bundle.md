@@ -112,10 +112,15 @@ standards, so the build-index hook ships with no `hooks/build-index.json` and pr
 ### An install
 
 ```bash
-claude plugin marketplace add ./.dist
+claude plugin marketplace add ./.dist                       # register the marketplace bundle wrote
+claude plugin install example-libraries@example-libraries   # install the plugin from it
 ```
 
-Both directories are untracked, so nothing here needs a branch or a credential.
+`.dist/` and the plugin inside it are untracked, so nothing here needs a branch or a credential.
+
+The install takes `<plugin>@<marketplace>`. `bundle` names both after `corpus` in `.corpus.yaml`, so write your
+corpus's name on each side of the `@`. [The names an install uses](../installing-a-plugin.md#the-names-an-install-uses)
+says where each name comes from.
 
 ### The components that shipped
 

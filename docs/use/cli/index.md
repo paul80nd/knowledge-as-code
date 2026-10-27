@@ -94,7 +94,7 @@ everywhere.
 release and the commit it was built from:
 
 ```text
-0.25.0+037426e8e60b7756f6883f307334a3368b80779d
+0.41.0+c1c9621bc64317da9642f942d804d7dd22e41644
 ```
 
 ## Exit codes
