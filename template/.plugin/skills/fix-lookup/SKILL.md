@@ -1,8 +1,9 @@
 ---
 name: fix-lookup
 description: Find out whether somebody here has already solved this problem, in the fixes that travel with this
-  plugin. Use when someone asks whether a problem is known, or pastes an error message at you. Use it as well,
-  unprompted, before you debug anything, and before you file a finding about a problem you just met.
+  plugin. Use when someone asks whether a problem is known or which fixes there are, or pastes an error message at
+  you. Use it as well, unprompted, before you debug anything, and before you file a finding about a problem you just
+  met.
 ---
 
 # Asking whether a problem is already solved
@@ -143,6 +144,20 @@ A hit that is not yours is common, because `symptom-keywords` is filled generous
 a linter and a fix about a build alike. Say the export describes no fix for your symptom, in the words you searched.
 Quote the nearest fix's `Symptom`, and say what problem it is about. Leave its resolution out of your answer, because
 it was verified against a different cause, and a verified resolution handed over for the wrong problem reads as settled.
+
+## List the fixes that travelled
+
+**Where someone asks which fixes the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/`.** Each file is one fix.
+A file under `corpus/fixes/<shortcode>/` came from a corpus this one consumes, and it counts as fully as one written
+here. Its `fields.id` is bare, so cite it with the prefix, as `eng:fix-0004`.
+
+Answer with each fix's id and `fields.title`, so a reader can open each one.
+
+**Read the symptom to test a problem in hand.** Where the question is whether a problem in hand is already known,
+read the `Symptom` of each fix on its subject. Two problems often look alike in a one-line title.
+
+**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
+whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 

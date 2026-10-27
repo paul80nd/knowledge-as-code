@@ -78,7 +78,7 @@
         "requires": [
           "standards@3"
         ],
-        "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+        "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
       },
       {
         "path": "skills/standards-review",

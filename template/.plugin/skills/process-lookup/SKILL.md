@@ -1,8 +1,8 @@
 ---
 name: process-lookup
 description: Find the procedure for a planned task, in the processes that travel with this plugin. Use when someone
-  asks how a task is carried out here. Use it as well, unprompted, before you carry out a planned task somebody here
-  may already have written down.
+  asks how a task is carried out here, or which processes there are. Use it as well, unprompted, before you carry out
+  a planned task somebody here may already have written down.
 ---
 
 # Finding the process for a task
@@ -98,6 +98,21 @@ the key existed has none. Say so, and give `status` as written. Call no process 
 `draft` and `retired` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
+
+## List the processes that travelled
+
+**Where someone asks which processes the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`.** Each file is
+one process. A file under `corpus/processes/<shortcode>/` came from a corpus this one consumes, and it counts as fully
+as one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:prc-release`.
+
+Answer with each process's id and `fields.title`, so a reader can open each one.
+
+**Read the trigger to test a task in hand.** Where the question is whether a task in hand already has a process,
+read the `When to use this` of each process on its subject. Two processes can achieve similar things from different
+triggers.
+
+**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
+whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 
