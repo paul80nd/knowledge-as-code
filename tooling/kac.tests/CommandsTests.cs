@@ -72,6 +72,17 @@ public class CommandsTests
     }
 
     [Fact]
+    public void Validate_since_a_ref_git_cannot_resolve_exits_1_on_a_corpus_that_is_otherwise_clean()
+    {
+        var root = Fixture("clean");
+
+        Assert.Equal(0, Commands.Validate(root, json: false, Required.Today, Recording([]), annotator: null,
+            comment: null));
+        Assert.Equal(1, Commands.Validate(root, json: false, Required.Today, Recording([]), annotator: null,
+            comment: null, since: "origin/main"));
+    }
+
+    [Fact]
     public void Validate_with_warnings_exits_0_when_the_pull_request_comment_cannot_be_posted()
     {
         var root = Fixture("warnings");

@@ -35,6 +35,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   so CI neither annotates nor comments on it. An entry naming an error, an info or an unknown check is the error
   `acceptance-check`, and one matching no warning is the warning `acceptance-stale`. The field never travels in an
   export.
+- **`kac validate --since <ref>` compares each record with its state at that revision.** Records pair by `id`, so a
+  moved file still compares. `immutable-after-accepted` and `immutable-after-published` are errors on a change in
+  substance to a decided ADR or a published postmortem. A reflow, a link target, a typo or a move of `status`,
+  `superseded-by`, `review-by` or `accepts` passes. `retire-not-delete` warns on a record deleted while in force. A ref
+  git cannot resolve exits 1. Without the flag, one line names the checks skipped. Both starter pipelines fetch the
+  full history and pass `--since` on a pull request.
 
 ### Changed
 
@@ -60,6 +66,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   person or an agent, never a process. A rule expression reads one key of an object field by a dotted path, as
   `days_since('last-rehearsed.at')`. `version:` under `export:` moves to 3 in `.schema/runbooks.yaml` and
   `.schema/controls.yaml`, and to 2 in `.schema/processes.yaml`.
+
+### Removed
+
+- **`changelog-begins-at-active` and `changelog-on-material-change` leave the `standards` schema.** Neither ran, and
+  a standard's type page no longer lists them as declared and not yet enforced.
 
 ## 0.39.0 - 2026-10-23
 

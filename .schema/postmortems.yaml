@@ -10,8 +10,8 @@ lifecycle: immutable
 summary: What happened during an incident (timeline, impact, root cause, contributing factors, actions).
 goes-here: An account of an incident and what caused it
 detail: >
-  Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a
-  postmortem records the outcome.
+  Blameless, and fixed once published, so what was learnt later goes in a new postmortem. An ADR
+  records the intention, and a postmortem records the outcome.
 
 lineage:
   prior-art: >
@@ -47,7 +47,7 @@ fields:
     type: enum
     values: [draft, published]
     in-force: published
-    description: '`published` is the account the estate stands behind, corrected in place wherever it is wrong.'
+    description: '`published` is the account the estate stands behind, changed after that only to fix a typo or a link.'
 
   occurred-at:
     required: true
@@ -144,7 +144,8 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      A published account changes only to correct what it misstates or to fix its prose.
+      Once `published`, the account changes only by a typo fixed, a link corrected, a reflow or an `accepts` entry.
+    severity: error
   - id: detected-not-before-occurred
     description: '`detected-at` is at or after `occurred-at`.'
     severity: error

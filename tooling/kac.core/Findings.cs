@@ -57,7 +57,8 @@ public static class CheckCatalogue
     public static IReadOnlyList<CheckId> EmittedByRules() =>
     [
         .. DocumentRules.All.SelectMany(r => r.Emits),
-        .. CorpusRules.All.SelectMany(r => r.Emits)
+        .. CorpusRules.All.SelectMany(r => r.Emits),
+        .. HistoryRules.All.SelectMany(r => r.Emits)
     ];
 
     /// <summary>

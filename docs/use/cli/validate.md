@@ -3,13 +3,14 @@
 <!-- BEGIN GENERATED: usage-validate -->
 
 ```text
-kac validate [--json] [--no-color]
+kac validate [--json] [--no-color] [--since <REF>]
 ```
 
-| Option       | What it does                                                |
-|--------------|-------------------------------------------------------------|
-| `--json`     | Emit the summary and findings as JSON.                      |
-| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+| Option          | What it does                                                                   |
+|-----------------|--------------------------------------------------------------------------------|
+| `--json`        | Emit the summary and findings as JSON.                                         |
+| `--no-color`    | Turn colour off. NO_COLOR in the environment does the same.                    |
+| `--since <REF>` | Also compare each record with its state at this revision, such as origin/main. |
 
 <!-- END GENERATED: usage-validate -->
 
@@ -67,6 +68,39 @@ that [`checks`](checks.md) does not list is the error `acceptance-check`. An ent
 is the warning `acceptance-stale`, which asks you to remove the entry. Accept a warning where the record says why it
 stands, and never to hide unfinished work.
 
+### Comparing with a base revision
+
+```bash
+kac validate --since origin/main
+```
+
+`--since` also compares each record with its state at the revision you name. `validate` reads that revision and your
+working tree, and no history between them. It pairs the two copies of a record by `id`, so a file you moved is still
+compared.
+
+| Check                       | Level   | What it reports                                                        |
+|-----------------------------|---------|------------------------------------------------------------------------|
+| `immutable-after-accepted`  | error   | a change in substance to an ADR that was `accepted` or `rejected`      |
+| `immutable-after-published` | error   | a change in substance to a postmortem that was `published`             |
+| `retire-not-delete`         | warning | a record deleted while its status was the value its type puts in force |
+
+A change in substance is anything except these:
+
+* **Layout.** A reflow passes, and so does a table realigned around a longer cell.
+* **A link target.** The words a reader sees must stay the same. An autolink, as `<https://example.com>`, may change
+  whole.
+* **A typo.** Each changed word is within two edits of the word it replaced, and the section keeps its word count.
+* **`status`, `superseded-by`, `review-by` and `accepts`.** Any other frontmatter field that moves is a change in
+  substance.
+
+`validate` compares the body one `##` section at a time. A section added, removed or renamed is a change in substance.
+
+A record deleted as a draft, or after it was retired or superseded, reports nothing. Something outside the corpus may
+still cite an in-force record's id, so retire it through its `status`.
+
+Without `--since`, `validate` prints one line naming the checks it skipped. A ref git cannot resolve exits `1` and names
+the ref. That includes a shallow clone lacking it, and a tree outside git.
+
 ### Annotations under CI
 
 Under a CI platform, `validate` also writes each error and each warning as an annotation. The report and the exit code
@@ -121,10 +155,11 @@ An info finding appears in neither an annotation nor the comment, and `--json` w
 kac validate
 ```
 
-`validate` prints the counts and exits `0`:
+`validate` prints the counts, names the checks it skipped without `--since`, and exits `0`:
 
 ```text
 validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
 ### A run that finds faults
@@ -139,6 +174,7 @@ adrs/0001-knowledge-as-code.md
   error  [identity-id]     identity line id 'adr-0001' does not match the document's id 'adr-1'.  (adrs/0001-knowledge-as-code.md:12)
 
 validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 4 error(s), 0 warning(s)
+validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
 The name in brackets is a check id, and [`checks`](checks.md) prints what every one of them proves.
@@ -231,7 +267,11 @@ clause are not here to compare against and the check passes over the citation.
 **GitHub shows ten annotations of each kind per step.** `validate` writes one for every error and warning, in file
 order, and GitHub shows the first ten errors and the first ten warnings. The job log keeps the whole report.
 
-**`immutable-after-accepted` is declared and does not run.** Whether an accepted decision changed is a question about
-a diff, and this command reads a working tree.
+**`--since` reads two revisions and walks no history.** It compares the working tree with the tip of the ref, not with
+where your branch left it. A record changed on `main` since your branch began reads as a change your branch made. A
+GitHub pull request checks out the merge commit, so CI compares only what the pull request changes.
+
+**Nothing catches a reused id.** A record retired, then deleted later, leaves its id free, and `validate` passes a new
+record that takes it.
 
 [`generate`](generate.md) writes the blocks this command checks a file still has.

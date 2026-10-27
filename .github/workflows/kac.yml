@@ -42,6 +42,8 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # `validate --since` reads the base branch, which a shallow clone lacks.
+          fetch-depth: 0
           # The checkout keeps no copy of the job's token, so no later step can push with it.
           persist-credentials: false
 
@@ -64,10 +66,12 @@ jobs:
         run: dotnet run --project ../../tooling/kac -- restore
 
       # The token reaches this step alone, so no other step can write to the pull request.
+      # `--since` compares each record with the branch this pull request targets.
       - name: Validate frontmatter, links and structure
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: dotnet run --project ../../tooling/kac -- validate
+          BASE_REF: ${{ github.base_ref }}
+        run: dotnet run --project ../../tooling/kac -- validate --since "origin/$BASE_REF"
 
       - name: Check generated output is fresh
         run: dotnet run --project ../../tooling/kac -- generate --check

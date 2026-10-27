@@ -26,7 +26,11 @@ internal static class Runner
             switch (mode)
             {
                 case "validate":
-                    RunValidateScenario(outcome, name, scenario, corpusDir);
+                    RunValidateScenario(outcome, name, scenario, RunValidate(Kac, SchemaDir, corpusDir));
+                    break;
+                case "validate-since":
+                    RunValidateScenario(outcome, name, scenario,
+                        RunValidateSince(Kac, SchemaDir, Path.Combine(scenario, "base"), corpusDir));
                     break;
                 case "generate":
                     RunGenerateScenario(outcome, name, scenario, mustBeStale: false);
@@ -154,10 +158,11 @@ internal static class Runner
         return string.Join('\n', kept);
     }
 
-    private static void RunValidateScenario(Outcome outcome, string name, string scenario, string corpusDir)
+    private static void RunValidateScenario(Outcome outcome, string name, string scenario,
+        (string Json, int Exit) run)
     {
         var expectedPath = Path.Combine(scenario, "expected.json");
-        var (actualJson, actualExit) = RunValidate(Kac, SchemaDir, corpusDir);
+        var (actualJson, actualExit) = run;
         var actual = ParseFindings(actualJson);
         foreach (var f in actual.Findings) CoveredChecks.TryAdd(f.Check, 0);
 
@@ -984,6 +989,39 @@ internal static class Runner
         try
         {
             var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "validate", "--json");
+            var json = FromFirstBrace(stdout)
+                ?? throw new InvalidOperationException(
+                    $"kac produced no JSON (exit {exit}).\n{Indent(stderr)}\n{Indent(stdout)}");
+            return (json, exit);
+        }
+        finally
+        {
+            TryDelete(temp);
+        }
+    }
+
+    /// <summary>
+    /// <c>validate --since HEAD</c>, where <c>HEAD</c> commits <paramref name="baseDir"/> and the working tree holds
+    /// <paramref name="corpusDir"/> in its place. The repository is the temp root, so paths stay corpus-relative.
+    /// </summary>
+    private static (string json, int exit) RunValidateSince(string kac, string schemaDir, string baseDir,
+        string corpusDir)
+    {
+        var temp = AssembleTemp(schemaDir, baseDir);
+        try
+        {
+            Run(temp, "git", "init", "-q");
+            Commit(temp, "base");
+
+            foreach (var dir in Directory.EnumerateDirectories(temp))
+                if (Path.GetFileName(dir) is not (".git" or ".schema"))
+                    Directory.Delete(dir, recursive: true);
+            foreach (var file in Directory.EnumerateFiles(temp))
+                if (Path.GetFileName(file) is not ".corpus.yaml")
+                    File.Delete(file);
+            CopyTree(corpusDir, temp);
+
+            var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "validate", "--json", "--since", "HEAD");
             var json = FromFirstBrace(stdout)
                 ?? throw new InvalidOperationException(
                     $"kac produced no JSON (exit {exit}).\n{Indent(stderr)}\n{Indent(stdout)}");

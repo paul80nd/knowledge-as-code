@@ -33,6 +33,10 @@ read it against, so the two travel as a pair.
 and never a process, because a procedure a process follows is automation. Only a runbook adds `method`, because only a
 runbook can be walked without causing what it is for.
 
+**A record in force is retired, never deleted.** Something outside the corpus may still cite its id. Under
+`validate --since`, `retire-not-delete` warns where a record whose `status` was its type's `in-force:` value at that
+revision has gone. A draft, or a record already retired or superseded, deletes with no finding.
+
 **A type page states its level of detail and cadence in prose.** The section says what one step, rule or part
 contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a finding,
 so no field declares it and no rule reads it.
@@ -61,14 +65,19 @@ a service or a glossary, changes as the estate does. An ADR is not rewritten onc
 warns where a link in `Decision` or `Consequences` lands on a record of a descriptive type. A link in any other section
 passes. The section stands in for why the link is there, so the check is a warning.
 
+**A decided ADR is never edited in place.** Under `validate --since`, `immutable-after-accepted` compares each ADR
+that was `accepted` or `rejected` at that revision with its state now. It may move `status`, `superseded-by`,
+`review-by` and `accepts`, fix a typo, reflow a line or correct a link target. Anything more is an error, because a
+standard citing the ADR in `derived-from` relies on the words it was decided with.
+
 **In the export:** `Decision` and `Consequences` travel whole and `Context` as its opening paragraph, while
 `Alternatives Considered` and `deciders` stay behind.
 
 ### postmortems
 
 A postmortem records what happened during one incident, so that the estate, and anybody facing the same failure, can
-learn from it. Once published, it is corrected in place wherever a fact in it is wrong, because a fair account
-is worth more than an unchanged one.
+learn from it. Once published, it changes only to fix a typo or a link, so a reader citing it reads the account the
+estate stood behind. What was learnt later goes in a new postmortem.
 
 The sections follow the order a reader asks their questions in:
 
@@ -95,6 +104,11 @@ anybody notices.
 `duration` restates the span those moments already fix, so that an index can show it without computing one.
 `duration-matches-the-moments` fails a value the moments refuse, and its message gives the value to write. `prompted`
 lists the ADRs, runbooks, non-functional requirements (NFRs), fixes and standards the incident caused.
+
+**A published postmortem is never rewritten.** Under `validate --since`, `immutable-after-published` compares each
+postmortem that was `published` at that revision with its state now. It may move `status`, `review-by` and `accepts`,
+fix a typo, reflow a line or correct a link target. Anything more is an error, for the reason a decided ADR's is: a
+reader citing the account relies on the words it was published with.
 
 **In the export:** the three moments, `duration` and `prompted` travel with every section except `Timeline`, `Actions`
 and `Related`, because `Timeline` and `Actions` name clocks and a tracker a reader elsewhere cannot open.

@@ -33,16 +33,29 @@ the class would.
 
 ## Writing a rule class
 
-A rule class is one file under `tooling/kac.core/Rules/`, its own unit tests, and a line in `DocumentRules.All` or
-`CorpusRules.All`. Which interface it takes follows from what it reads:
+A rule class is one file under `tooling/kac.core/Rules/`, its own unit tests, and a line in `DocumentRules.All`,
+`CorpusRules.All` or `HistoryRules.All`. Which interface it takes follows from what it reads:
 
-| Interface       | Given                                                            | Runs from                    | Reports                                       |
-|-----------------|------------------------------------------------------------------|------------------------------|-----------------------------------------------|
-| `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
-| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
+| Interface       | Given                                                                     | Runs from                    | Reports                                       |
+|-----------------|---------------------------------------------------------------------------|------------------------------|-----------------------------------------------|
+| `IDocumentRule` | one document, through a `RuleContext`                                     | `Validator.CheckRules`       | against that document                         |
+| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext`          | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
+| `IHistoryRule`  | one record at two revisions, paired by id, through a `HistoryRuleContext` | `Validator.CheckHistory`     | against the record where it is now            |
 
 Take the narrower one wherever it will do. A rule handed every record to judge one document reads as though it needs
-them all. A rule needing git history fits neither interface.
+them all.
+
+### A rule that compares two revisions
+
+An `IHistoryRule` runs only under `validate --since`. `Baseline.Read` reads each file that differs between that
+revision and the working tree, through the same `Corpus.Load` the working tree takes, so both copies of a record are
+parsed alike. Any other file is the same at both, and pairs with itself. `Validator.CheckHistory` pairs the two
+copies by `id`, and hands a rule only a record whose text differs. `Substance.Changes` lists the parts of a record that
+changed in substance, which is the question both immutability rules ask. A rule on a type's parts compares
+`Before.Parts` with `After.Parts`.
+
+`retire-not-delete` is no rule class. It reads only a type's `in-force:` value, so `Validator.CheckHistory` reports it
+for every type.
 
 ## Rule ids and check ids
 

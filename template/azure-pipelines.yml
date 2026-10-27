@@ -40,6 +40,10 @@ variables:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 steps:
+  # `validate --since` reads the branch a pull request targets, which a shallow clone lacks.
+  - checkout: self
+    fetchDepth: 0
+
   - task: UseDotNet@2
     displayName: Install the .NET 10 SDK
     inputs:
@@ -53,8 +57,12 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)
 
   # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-  # Only this step gets the token, because only it posts.
-  - script: dotnet tool run kac validate
+  # Only this step gets the token, because only it posts. On a pull request, `--since` compares each
+  # record with the branch it targets. The target branch is set on a pull request alone, as
+  # refs/heads/main, and the comparison wants origin/main.
+  - script: |
+      target="${SYSTEM_PULLREQUEST_TARGETBRANCH#refs/heads/}"
+      dotnet tool run kac validate ${target:+--since "origin/$target"}
     displayName: Validate frontmatter, links and structure
     workingDirectory: $(Build.SourcesDirectory)
     env:

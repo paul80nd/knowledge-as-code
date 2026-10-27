@@ -239,13 +239,6 @@ rules:
   - id: rules-have-controls
     description: >
       Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.
-  - id: changelog-begins-at-active
-    description: Changelog entries are material changes only, and begin when status becomes `active`.
-    # Material means a rule added, removed or changed in effect. Git covers wording, examples, link
-    # fixes and typos.
-  - id: changelog-on-material-change
-    description: >
-      A change to the Rules section of an `active` standard needs a changelog entry in the same commit.
   - id: changelog-newest-first
     description: A standard's changelog entries run newest first, with the most recent change at the top.
     severity: warning

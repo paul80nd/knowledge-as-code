@@ -7,10 +7,11 @@ public static class Validator
     /// <summary>
     /// The whole of <c>validate</c>, so no caller runs a subset and believes it ran the lot. <c>today</c> is the day a
     /// rule written against <c>today()</c> judges by (see <c>docs/reference/expressions.md</c>). A null
-    /// <c>standings</c> reports no import's freshness, rather than every import as current.
+    /// <c>standings</c> reports no import's freshness, rather than every import as current. A null <c>since</c> runs no
+    /// history rule.
     /// </summary>
     public static List<Finding> CheckAll(
-        LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
+        LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null, Baseline? since = null)
     {
         var (schema, tree) = (corpus.Schema, corpus.Tree);
         var findings = new List<Finding>();
@@ -85,6 +86,7 @@ public static class Validator
         CheckCorpusEnums(schema, corpus.Docs, templates, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
+        if (since is not null) CheckHistory(schema, corpus.Docs, since, findings);
 
         // Last, so an entry in `accepts:` sees every warning its record will carry.
         Acceptances.Apply(corpus.Docs, CheckCatalogue.For(schema), findings);
@@ -814,6 +816,48 @@ public static class Validator
 
         void Report(Sev severity, Doc at, CheckId check, string message, int? line)
             => f.Add(new Finding(at.Rel, line, severity, check, message));
+    }
+
+    /// <summary>
+    /// Pairs each record at <paramref name="since"/> with the record holding its id now, wherever its file went. A
+    /// record whose id has gone is reported where its status then was its type's <c>in-force:</c> value. A record
+    /// still here is handed to each history rule its type declares, where its text changed.
+    /// </summary>
+    public static void CheckHistory(Schema schema, IReadOnlyList<Doc> docs, Baseline since, List<Finding> f)
+    {
+        var now = new Dictionary<string, Doc>(StringComparer.Ordinal);
+        foreach (var d in docs)
+            if (d.FrontScalar("id") is { Length: > 0 } id)
+                now.TryAdd(id, d);
+
+        // A record still at its path whose id cannot be read is one `frontmatter-parses` or `required-field` reports.
+        var unread = docs.Where(d => d.FrontScalar("id") is not { Length: > 0 }).Select(d => d.Rel)
+            .ToHashSet(StringComparer.Ordinal);
+
+        foreach (var before in since.Docs)
+        {
+            if (before.Type is not { } t || before.FrontScalar("id") is not { Length: > 0 } id) continue;
+
+            if (!now.TryGetValue(id, out var after))
+            {
+                if (unread.Contains(before.Rel)) continue;
+
+                var status = before.FrontScalar("status");
+                if (status is not null && status == schema.EffectiveField(t, "status")?.InForce)
+                    f.Add(new Finding(before.Rel, null, Sev.Warning, HistoryRules.RetireNotDelete,
+                        $"{id} was `{status}` at {since.Ref}, and no record here has that id now. Something "
+                        + $"outside the corpus may still cite {id}, so restore the record and retire it through "
+                        + "its `status`."));
+                continue;
+            }
+
+            if (after.Text == before.Text) continue;
+
+            foreach (var rule in t.Rules)
+                if (HistoryRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
+                    implementation.Check(new HistoryRuleContext(before, after, t, rule, since.Ref,
+                        new Report(after.Rel, f)));
+        }
     }
 
     /// <summary>

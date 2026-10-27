@@ -157,6 +157,16 @@ public static class ChecksTable
         ("entry-requirement", [new("entry-requirement")],
             "No bold BCP 14 keyword states a requirement inside a glossary entry.",
             t => t.Rules.Any(r => r.Id == new RuleId("entries-state-no-requirement"))),
+        ("immutable-after-accepted", [new("immutable-after-accepted")],
+            "With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link, its status or "
+            + "`accepts`.",
+            null),
+        ("immutable-after-published", [new("immutable-after-published")],
+            "With `--since`, a published postmortem has changed by no more than a typo, a link, its status or "
+            + "`accepts`.",
+            null),
+        ("retire-not-delete", [HistoryRules.RetireNotDelete],
+            "With `--since`, no record in force at that revision has been deleted.", null),
         ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",
             t => t.Rules.Any(r => r.Id == new RuleId("changelog-newest-first"))),
         ("diagnosis-dead-end / diagnosis-no-escalation",
@@ -182,6 +192,7 @@ public static class ChecksTable
     private static readonly IReadOnlyDictionary<CheckId, RuleId> RuleByCheck =
         DocumentRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId)))
             .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
+            .Concat(HistoryRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
             .ToDictionary(x => x.Check, x => x.RuleId);
 
     private static readonly List<string> Headers = ["Check", "Level", "What it verifies"];
@@ -244,7 +255,8 @@ public static class ChecksTable
         var intended = t.Rules
             .Where(r => r.Compiled is null
                         && !DocumentRules.ByRuleId.ContainsKey(r.Id)
-                        && !CorpusRules.ByRuleId.ContainsKey(r.Id))
+                        && !CorpusRules.ByRuleId.ContainsKey(r.Id)
+                        && !HistoryRules.ByRuleId.ContainsKey(r.Id))
             .ToList();
         if (intended.Count == 0) return "";
 

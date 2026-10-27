@@ -12,15 +12,29 @@ public static class Commands
     /// against, and <paramref name="registry"/> is where each import's source is read from. Both come from
     /// the caller so a test can fix the day and answer for the registry without a network.
     /// <paramref name="annotator"/> is null for a local run, and <paramref name="comment"/> is null for a run that is
-    /// not for a pull request. <c>--json</c> writes no annotation and posts no comment.
+    /// not for a pull request. <c>--json</c> writes no annotation and posts no comment. A null <paramref name="since"/>
+    /// runs no history rule, and says which it skipped.
     /// </summary>
     public static int Validate(string corpusRoot, bool json, DateOnly today, Registry registry,
-        Annotator? annotator, PullRequestComment? comment)
+        Annotator? annotator, PullRequestComment? comment, string? since = null)
     {
         var corpus = Corpus.Load(corpusRoot);
-        var findings = Validator.CheckAll(corpus, today, Standings(corpus.Descriptor, registry));
+
+        Baseline? baseline = null;
+        if (since is not null)
+        {
+            var (read, problem) = Baseline.Read(corpusRoot, since, corpus.Schema, corpus.Descriptor);
+            if (problem is not null) return Fail(problem);
+            baseline = read;
+        }
+
+        var findings = Validator.CheckAll(corpus, today, Standings(corpus.Descriptor, registry), baseline);
         var exit = Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json,
             annotator);
+
+        if (!json && baseline is null && HistoryRules.Skipped(corpus.Schema, corpus.Adopted) is { Count: > 0 } skipped)
+            Account($"validate: skipped {Series(skipped)}, which compare each record with an earlier revision. "
+                    + "Name one with `--since <ref>` to run them.");
 
         if (!json && annotator is not null && comment is not null)
         {
@@ -31,6 +45,9 @@ public static class Commands
 
         return exit;
     }
+
+    private static string Series(IReadOnlyList<string> items) =>
+        items.Count == 1 ? items[0] : string.Join(", ", items.Take(items.Count - 1)) + " and " + items[^1];
 
     /// <summary>A comment that could not be posted is reported and leaves the exit code alone.</summary>
     private static void Comment(PullRequestComment comment, string corpus, string table, bool hasFindings)

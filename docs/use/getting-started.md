@@ -96,10 +96,12 @@ kac validate            # frontmatter, links, structure, clauses and the graph
 kac generate            # rewrite the indexes and the tables inside the markers
 ```
 
-A clean `validate` prints the counts and exits `0`:
+A clean `validate` prints the counts and exits `0`. Its second line names the checks that compare each record with an
+earlier revision, which run only when you name one with `--since`:
 
 ```text
 validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
 A `generate` with nothing to do says so:

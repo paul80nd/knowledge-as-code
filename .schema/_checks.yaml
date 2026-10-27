@@ -715,6 +715,30 @@ checks:
       else is passed over, which is how a template placeholder and a nested bullet stay out of it. The
       message states the entry that moved and the line it moves to.
 
+  immutable-after-accepted:
+    severity: error
+    description: >
+      With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link, its status or `accepts`.
+    notes: >
+      Runs only where `validate --since` names a revision, and compares each ADR with its state there. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#adrs>.
+
+  immutable-after-published:
+    severity: error
+    description: >
+      With `--since`, a published postmortem has changed by no more than a typo, a link, its status or `accepts`.
+    notes: >
+      Runs only where `validate --since` names a revision, and compares each postmortem with its state there. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems>.
+
+  retire-not-delete:
+    severity: warning
+    description: With `--since`, no record in force at that revision has been deleted.
+    notes: >
+      A record is in force where its status at the revision was its type's `in-force:` value. The record is found
+      by its id, so a moved file passes. A draft, or a record already retired or superseded, deletes freely. See
+      <https://paul80nd.github.io/knowledge-as-code/use/cli/validate/#comparing-with-a-base-revision>.
+
   diagnosis-dead-end:
     severity: error
     description: Every branch of a runbook's diagnosis routes to a section or falls through to the next question.

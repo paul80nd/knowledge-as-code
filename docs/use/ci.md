@@ -82,8 +82,13 @@ run:  kac generate
 ## Checking out with git
 
 Check out with git, not a tarball. `kac` lists a corpus with `git ls-files`, so `.gitignore` and the other exclude files
-count. A working tree with no `.git/` falls back to a directory walk, which obeys none of them. Every standard checkout
-action is fine. A downloaded archive is not.
+count. A working tree with no `.git/` falls back to a directory walk, which obeys none of them.
+
+Check out the full history as well. On a pull request, `kac validate --since` compares each record with the branch the
+pull request targets, and a shallow clone has no copy of that branch. Set `fetch-depth: 0` in GitHub Actions and
+`fetchDepth: 0` in Azure Pipelines, as both examples below do. A push to `main` has no base branch, so it passes no
+`--since`. [Comparing with a base revision](cli/validate.md#comparing-with-a-base-revision) says what the comparison
+checks.
 
 ## GitHub Actions
 
@@ -109,6 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -118,10 +124,12 @@ jobs:
       - name: Install the pinned kac
         run: dotnet tool restore
 
+      # Compares each record with the branch the pull request targets.
       - name: Validate frontmatter, links and structure
-        run: dotnet tool run kac validate
+        run: dotnet tool run kac validate --since "origin/$BASE_REF"
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.base_ref }}
 
       - name: Check generated output is fresh
         run: dotnet tool run kac generate --check
@@ -150,6 +158,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  - checkout: self
+    fetchDepth: 0
+
   - task: UseDotNet@2
     displayName: Install .NET 10 SDK
     inputs:
@@ -159,8 +170,11 @@ steps:
   - script: dotnet tool restore
     displayName: Install the pinned kac
 
-  # Posting the findings needs the build service to have Contribute to pull requests.
-  - script: dotnet tool run kac validate
+  # Posting the findings needs the build service to have Contribute to pull requests. The target branch
+  # is set on a pull request alone, as refs/heads/main, and the comparison wants origin/main.
+  - script: |
+      target="${SYSTEM_PULLREQUEST_TARGETBRANCH#refs/heads/}"
+      dotnet tool run kac validate ${target:+--since "origin/$target"}
     displayName: Validate frontmatter, links and structure
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)

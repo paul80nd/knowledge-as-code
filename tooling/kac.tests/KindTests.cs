@@ -8,7 +8,7 @@ public partial class KindTests
     private static readonly string[] ReadTheRepositoryToExerciseTheTool =
     [
         "Repo.cs", "CliReference.cs", "SkillReference.cs", "Diff.cs", "ManifestTests.cs", "NewTests.cs",
-        "UpdateTests.cs", "CommandsTests.cs",
+        "UpdateTests.cs", "CommandsTests.cs", "HistoryTests.cs", "BaselineTests.cs",
     ];
 
     [GeneratedRegex(@"\bRepo\.Root\b")]
