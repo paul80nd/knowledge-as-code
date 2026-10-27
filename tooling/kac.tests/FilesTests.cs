@@ -24,6 +24,29 @@ public class FilesTests
         Assert.False(Directory.Exists(root));
     }
 
+    /// <summary>Windows needs a privilege to create a symbolic link, so the case runs where one is free.</summary>
+    [Fact]
+    public void DeleteTree_leaves_the_read_only_target_of_a_link_inside_the_tree_read_only()
+    {
+        Assert.SkipWhen(OperatingSystem.IsWindows(), "creating a symbolic link needs a privilege on Windows.");
+        var outside = Directory.CreateTempSubdirectory("kac-files-outside-").FullName;
+        var target = Path.Combine(outside, "key");
+        File.WriteAllText(target, "");
+        File.SetAttributes(target, FileAttributes.ReadOnly);
+
+        var root = Directory.CreateTempSubdirectory("kac-files-").FullName;
+        var locked = Path.Combine(root, "locked");
+        Directory.CreateDirectory(locked);
+        File.CreateSymbolicLink(Path.Combine(locked, "key"), target);
+        File.SetAttributes(locked, File.GetAttributes(locked) | FileAttributes.ReadOnly);
+
+        Files.DeleteTree(root);
+
+        Assert.False(Directory.Exists(root));
+        Assert.True(File.GetAttributes(target).HasFlag(FileAttributes.ReadOnly));
+        Files.DeleteTree(outside);
+    }
+
     [Fact]
     public void DeleteTree_of_a_folder_that_is_not_there_does_nothing()
         => Files.DeleteTree(Path.Combine(Path.GetTempPath(), "kac-files-" + Guid.NewGuid().ToString("n")));

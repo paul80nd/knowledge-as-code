@@ -149,8 +149,8 @@ public class TemplateSourceTests : IDisposable
     }
 
     /// <summary>
-    /// Git marks what it writes under <c>.git/objects</c> read-only. A read-only folder stands in for that here, because
-    /// Unix deletes a read-only file and refuses to empty a read-only folder.
+    /// Git marks what it writes under <c>.git/objects</c> read-only. A read-only folder stands in for that here,
+    /// because Unix deletes a read-only file and refuses to empty a read-only folder.
     /// </summary>
     [Fact]
     public void A_clone_holding_read_only_git_objects_is_still_removed()

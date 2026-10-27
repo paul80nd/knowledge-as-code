@@ -109,6 +109,8 @@ internal static class Runner
                 problems.Add("the file --out wrote is not what the same report printed");
             if (!written.EndsWith("\n", StringComparison.Ordinal) || written.EndsWith("\n\n", StringComparison.Ordinal))
                 problems.Add("the file does not end on one newline, as every other record here does");
+            if (written.Contains('\r', StringComparison.Ordinal))
+                problems.Add("the file ends a line with a carriage return, so it differs from the Linux build");
             if (!written.Contains("| `WRITTEN` | MUST | `std-COVER.NAMED` |", StringComparison.Ordinal))
                 problems.Add("the covered clause did not reach the file");
 
@@ -1168,22 +1170,30 @@ internal static class Runner
     }
 
     /// <summary>
-    /// Clears each read-only flag first, as <c>Files.DeleteTree</c> in <c>kac.core</c> does, so a <c>.git</c> folder
-    /// deletes on Windows. This project does not reference <c>kac.core</c>, so the loop is its own.
+    /// A refused delete clears each read-only flag bar a link's and tries again, as <c>Files.DeleteTree</c> in
+    /// <c>kac.core</c> does, so a <c>.git</c> folder deletes on Windows. This project does not reference
+    /// <c>kac.core</c>, so the loop is its own.
     /// </summary>
     internal static void TryDelete(string dir)
     {
+        if (!Directory.Exists(dir)) return;
+
         try
         {
-            if (!Directory.Exists(dir)) return;
+            Directory.Delete(dir, recursive: true);
+            return;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+        }
 
+        try
+        {
+            var root = new DirectoryInfo(dir);
             var everything = new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0 };
-            foreach (var entry in Directory.EnumerateFileSystemEntries(dir, "*", everything).Prepend(dir))
-            {
-                var attributes = File.GetAttributes(entry);
-                if (attributes.HasFlag(FileAttributes.ReadOnly))
-                    File.SetAttributes(entry, attributes & ~FileAttributes.ReadOnly);
-            }
+            foreach (var entry in root.EnumerateFileSystemInfos("*", everything).Prepend(root))
+                if (entry.LinkTarget is null && entry.Attributes.HasFlag(FileAttributes.ReadOnly))
+                    entry.Attributes &= ~FileAttributes.ReadOnly;
 
             Directory.Delete(dir, recursive: true);
         }
