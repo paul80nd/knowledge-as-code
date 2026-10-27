@@ -15,7 +15,7 @@
     "sources": [
       {
         "resource": "example-engineering",
-        "version": "0.42.1"
+        "version": "0.42.2"
       }
     ],
     "verified": [
@@ -31,6 +31,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/engineering/reports/framework-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/engineering/reports/framework-coverage.md"
   }
 }

@@ -18,8 +18,8 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it con
 
 Use that path exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-Writing the body needs nothing installed. Filing it needs whichever client already signs in to the platform. Where
-that client is missing, print the body, because the body is the valuable part.
+Writing the body needs nothing installed. Filing it runs `gh` on GitHub or `az` on Azure DevOps. Where neither can run,
+print the whole body, because the body is the valuable part.
 
 The sections below run in order. Each one decides whether the next is needed.
 
@@ -212,10 +212,11 @@ into it. Say in your reply that the item landed in the project's default area, a
 A `target` of `none` names a corpus with no backlog this export can address. Print the whole body, name the corpus it
 belongs to, and ask whoever is with you where it goes.
 
-### Where no client is here
+### Where neither `gh` nor `az` can run
 
-Print the whole body, name the repository it belongs on, and say that you could not file it. Ask whoever is with you
-to paste it, because a finding read out to somebody still reaches the people who can act on it.
+This covers a client that is not installed, and a session that cannot run a command at all. Print the whole body, name
+the repository it belongs on, and say that you could not file it. Ask whoever is with you to paste it, because a
+finding read out to somebody still reaches the people who can act on it.
 
 ## Say what you did
 

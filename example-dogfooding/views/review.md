@@ -361,21 +361,6 @@ Controls: none.
 - Where the body cannot be fetched, a router **MUST NOT** state a limit of the report.
 - A router **MUST** send a session whose change leaves a record describing something no longer true to `raise-finding`, naming that record.
 
-### A skill assumes only that the session can read a file
-
-Cite as `std-PLUGIN.READS`.
-
-Controls: none.
-
-- A skill **MUST** leave the choice of search tool to the session.
-- A skill **MUST** name the file or the directory containing the answer.
-- A skill reviewing a change **MUST** name the change as everything that differs from a fixed point.
-- A skill reviewing a change **MUST** leave the choice of how to read that change to the session.
-- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond what the session uses to read a change under review.
-- A skill reading an export **MUST NOT** require a network call to answer from it.
-- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the change under review.
-- Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
-
 ### A skill names the type of every field it describes
 
 Cite as `std-PLUGIN.TYPES`.
@@ -388,6 +373,23 @@ Controls: `ctl-0008` Every corpus publishes, installs and is read back (`ci`, ac
 - A skill **MUST NOT** describe a string of markdown as a list.
 - Every field description **MUST** agree with a line of a real export.
 - A skill **MUST** name the parts file of the type its component declares, and no other type's.
+
+### A skill reading an export only reads files, and one that calls gh or az says what it does without them
+
+Cite as `std-PLUGIN.READS`.
+
+Controls: none.
+
+- A skill **MUST** leave the choice of search tool to the session.
+- A skill **MUST** name the file or the directory containing the answer.
+- A skill reviewing a change **MUST** name the change as everything that differs from a fixed point.
+- A skill reviewing a change **MUST** leave the choice of how to read that change to the session.
+- A skill reading an export **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond what the session uses to read a change under review.
+- A skill reading an export **MUST NOT** require a network call to answer from it.
+- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the change under review.
+- Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
+- A skill that files an issue or fetches a record's published source **MAY** run `gh` or `az` to make that call, even where it also reads an export.
+- A skill that files an issue or fetches a record's published source **MUST** say what it hands the reader where neither `gh` nor `az` can run.
 
 ### A skill reads a rule's keyword as what departing from it costs
 
@@ -839,7 +841,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1021,7 +1023,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1069,7 +1071,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
