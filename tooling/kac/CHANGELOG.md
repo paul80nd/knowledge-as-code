@@ -79,9 +79,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
-- **`kac export`, `kac bundle` and `kac validate --json` write the same bytes on Windows as on Linux.** Indented JSON
-  ended its lines with CRLF on Windows, and mixed CRLF with LF where a final newline was added. Each line now ends
-  with LF on every platform.
+- **`kac export`, `kac bundle`, `kac report --out` and `kac validate --json` write the same bytes on Windows as on
+  Linux.** Indented JSON and the body of a report ended their lines with CRLF on Windows, mixed with the LF written
+  around them. Each line now ends with LF on every platform.
 - **A path `kac` reports uses `/` on Windows.** `kac report --out reports\clause-coverage.md` printed the backslashes
   and lost the grey folder prefix. Every `wrote` line, and each refusal of `report --out`, now prints `/`.
 - **`kac new` and `kac update` delete their template clone on Windows.** Git marks the files under `.git/objects`
