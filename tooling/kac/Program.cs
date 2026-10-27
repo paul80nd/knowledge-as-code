@@ -109,7 +109,7 @@ internal static class Cli
 
     /// <summary>The caller owns the client, because the timeout is the caller's to choose.</summary>
     public static Registry RegistryFor(string corpusRoot, HttpClient client) =>
-        new(Registry.Over(client), Registry.OnDisk(corpusRoot));
+        new(Registry.Over(client, Environment.GetEnvironmentVariable), Registry.OnDisk(corpusRoot));
 }
 
 internal class KacSettings : CommandSettings

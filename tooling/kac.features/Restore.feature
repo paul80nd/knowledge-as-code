@@ -97,6 +97,14 @@ Scenario: A restore sends the registry token to an https source
   Then it succeeds
   And "lib" was restored at "2.3.4"
 
+Scenario: A restore sends a registry user and token as Basic auth
+  Given the export fixture corpus
+  And the producer is packed for restore at "2.3.4"
+  And the corpus restores "example-libraries" as "lib" at "^2.3.0" from "https://feed.example/v3/index.json"
+  When I restore from a private feed with the registry user "me" and token "s3cret"
+  Then it succeeds
+  And "lib" was restored at "2.3.4"
+
 Scenario: A restore sends no registry token over plain HTTP
   Given the export fixture corpus
   And the producer is packed for restore at "2.3.4"

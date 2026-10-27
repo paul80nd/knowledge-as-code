@@ -26,10 +26,16 @@ public sealed record FolderFeed(Func<string, IReadOnlyList<string>?> Names, Func
 public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 {
     /// <summary>
-    /// The environment variable naming the bearer token. A token belongs in the environment, because a flag lands in
+    /// The environment variable naming the registry token. A token belongs in the environment, because a flag lands in
     /// shell history and CI logs.
     /// </summary>
     public const string TokenVariable = "KAC_REGISTRY_TOKEN";
+
+    /// <summary>
+    /// The environment variable naming the user a token is sent with. Where it is set, the token travels as Basic
+    /// auth, the form Azure Artifacts requires of a personal access token.
+    /// </summary>
+    public const string UserVariable = "KAC_REGISTRY_USER";
 
     /// <summary>
     /// What the service index calls the resource this reads. Matched as a prefix, because a feed may serve several
@@ -99,7 +105,8 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     public static string Absent(string source) =>
         IsFeed(source)
             ? "That registry holds no version of it at all, or holds them behind a token this run did "
-              + $"not have. Set {TokenVariable} where the feed is private."
+              + $"not have. Set {TokenVariable} where the feed is private, and {UserVariable} as well where "
+              + "the token is a personal access token."
             : "That folder holds no package for it. Run `kac export` and then `kac pack` in the "
               + "producing corpus.";
 
@@ -186,21 +193,22 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     }
 
     /// <summary>
-    /// How a fetch is actually performed. Tests hand <c>Registry</c> a function of their own. The token is read from
-    /// the environment here, the only place it is used, and travels to every <c>https://</c> source and to none over
-    /// plain HTTP. <c>docs/use/cli/restore.md</c> says so where somebody sets the variable.
+    /// How a fetch is actually performed. Tests hand <c>Registry</c> a function of their own. The token and the user
+    /// are read from <paramref name="variable"/> once, here, the only place they are used. The token travels to every
+    /// <c>https://</c> source and to none over plain HTTP. <c>docs/use/cli/restore.md</c> says so where somebody sets
+    /// the variables.
     /// </summary>
-    public static Func<string, Fetched> Over(HttpClient client)
+    public static Func<string, Fetched> Over(HttpClient client, Func<string, string?> variable)
     {
-        var token = Environment.GetEnvironmentVariable(TokenVariable);
+        var authorization = Authorization(variable(TokenVariable), variable(UserVariable));
 
         return url =>
         {
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
-                if (token is { Length: > 0 } && request.RequestUri?.Scheme == Uri.UriSchemeHttps)
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (authorization is not null && request.RequestUri?.Scheme == Uri.UriSchemeHttps)
+                    request.Headers.Authorization = authorization;
 
                 using var response = client.Send(request);
                 using var body = response.Content.ReadAsStream();
@@ -223,6 +231,19 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     }
 
     /// <summary>
+    /// The header a token travels in: Basic with the user where one is set, Bearer where none is, and null where there
+    /// is no token.
+    /// </summary>
+    private static AuthenticationHeaderValue? Authorization(string? token, string? user)
+    {
+        if (token is not { Length: > 0 }) return null;
+        if (user is not { Length: > 0 }) return new AuthenticationHeaderValue("Bearer", token);
+
+        var pair = Encoding.UTF8.GetBytes($"{user}:{token}");
+        return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(pair));
+    }
+
+    /// <summary>
     /// How a folder is actually read. A relative <c>source:</c> resolves against the corpus root, as
     /// <c>upstream.url</c> does, and an absolute path is taken as it stands.
     /// </summary>
@@ -239,7 +260,8 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 
     private static string Unauthorised(int status) =>
         status is 401 or 403 or 404
-            ? $". A private feed needs a token in {TokenVariable}"
+            ? $". A private feed needs a token in {TokenVariable}, and a personal access token needs a user "
+              + $"name in {UserVariable} as well"
             : "";
 
     private static string Lower(string value) => value.ToLowerInvariant();

@@ -100,26 +100,22 @@ public sealed class RestoreSteps(Workspace ws)
     public void WhenIRestore() => ws.Run(root => Commands.Restore(root, Registry));
 
     /// <summary>
-    /// Through <c>Registry.Over</c>, which reads the token as it is called. The feed is served in memory under either
-    /// scheme, and answers only a request carrying the token.
+    /// Through <c>Registry.Over</c>, with an environment naming the token alone. The feed is served in memory under
+    /// either scheme, and answers only a request carrying the token as a bearer token.
     /// </summary>
     [When(@"I restore from a private feed with the registry token ""(.*)""")]
     public void WhenIRestoreFromAPrivateFeedWithTheRegistryToken(string token)
-    {
-        var before = Environment.GetEnvironmentVariable(Registry.TokenVariable);
-        Func<string, Fetched> get;
-        Environment.SetEnvironmentVariable(Registry.TokenVariable, token);
-        try
-        {
-            get = Registry.Over(new HttpClient(new PrivateFeed(ws.PathOf(Feed), token)));
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable(Registry.TokenVariable, before);
-        }
+        => RestoreFromAPrivateFeed($"Bearer {token}", (Registry.TokenVariable, token));
 
-        ws.Run(root => Commands.Restore(root, new Registry(get, Registry.OnDisk(root))));
-    }
+    /// <summary>
+    /// Through <c>Registry.Over</c>, with an environment naming the user and the token. The feed answers only a
+    /// request carrying both as Basic auth.
+    /// </summary>
+    [When(@"I restore from a private feed with the registry user ""(.*)"" and token ""(.*)""")]
+    public void WhenIRestoreFromAPrivateFeedWithTheRegistryUserAndToken(string user, string token)
+        => RestoreFromAPrivateFeed(
+            $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user}:{token}"))}",
+            (Registry.UserVariable, user), (Registry.TokenVariable, token));
 
     [Then(@"the restore locks the producer at ""(.*)""")]
     public void ThenTheRestoreLocksTheProducerAt(string version)
@@ -138,15 +134,23 @@ public sealed class RestoreSteps(Workspace ws)
                                  + $"    version: \"{range}\"\n    source: {source}\n");
     }
 
+    private void RestoreFromAPrivateFeed(string authorization, params (string Name, string Value)[] env)
+    {
+        var get = Registry.Over(new HttpClient(new PrivateFeed(ws.PathOf(Feed), authorization)),
+            name => env.FirstOrDefault(e => e.Name == name).Value);
+
+        ws.Run(root => Commands.Restore(root, new Registry(get, Registry.OnDisk(root))));
+    }
+
     /// <summary>
-    /// A registry serving the packages in <c>feed/</c> at any host and scheme, refusing every request whose bearer
-    /// token is not the one it was given.
+    /// A registry serving the packages in <c>feed/</c> at any host and scheme, refusing every request whose
+    /// <c>Authorization</c> header is not the one it was given.
     /// </summary>
-    private sealed class PrivateFeed(string folder, string token) : HttpMessageHandler
+    private sealed class PrivateFeed(string folder, string authorization) : HttpMessageHandler
     {
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request.Headers.Authorization is not { Scheme: "Bearer" } auth || auth.Parameter != token)
+            if (request.Headers.Authorization?.ToString() != authorization)
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
             var uri = request.RequestUri ?? throw new InvalidOperationException("a request with no address");
