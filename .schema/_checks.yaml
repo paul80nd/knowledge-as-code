@@ -731,6 +731,22 @@ checks:
       Runs only where `validate --since` names a revision, and compares each postmortem with its state there. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems>.
 
+  clause-id-kept:
+    severity: error
+    description: With `--since`, a policy active at that revision keeps the id of every clause it had there.
+    notes: >
+      Runs only where `validate --since` names a revision. A clause added or reworded passes, and so does a new
+      title. A policy that was not active there changes freely. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#policies>.
+
+  rule-id-kept:
+    severity: error
+    description: With `--since`, a standard active at that revision keeps the id of every rule it had there.
+    notes: >
+      Runs only where `validate --since` names a revision. A rule added or reworded passes, and so does a new title.
+      A standard that was not active there changes freely. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#standards>.
+
   retire-not-delete:
     severity: warning
     description: With `--since`, no record in force at that revision has been deleted.

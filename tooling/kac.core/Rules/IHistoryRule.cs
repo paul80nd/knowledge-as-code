@@ -23,5 +23,6 @@ public interface IHistoryRule
 /// </summary>
 /// <param name="Before">The record at <paramref name="Since"/>, read with the schema of the working tree.</param>
 /// <param name="Since">The revision as the caller spelled it, for a message to name.</param>
+/// <param name="InForce">The type's <c>in-force:</c> value, read through the universal layer. Null where it names none.</param>
 public sealed record HistoryRuleContext(
-    Doc Before, Doc After, TypeSchema Type, RuleSpec Spec, string Since, Report Report);
+    Doc Before, Doc After, TypeSchema Type, RuleSpec Spec, string Since, string? InForce, Report Report);

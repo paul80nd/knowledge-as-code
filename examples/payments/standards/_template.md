@@ -71,8 +71,10 @@ Rules section with none.
 **Rule ids.** Open each heading with its id, a colon and a space: `### ROTATE: Every secret rotates`. The id matches
 `[A-Z][A-Z0-9]{1,6}`, is unique within the standard, and is immutable once the standard is active. A control's
 `verifies` and any other record cite the rule as `std-{{MNEM}}.{{ID}}`, and a link lands on the slug of the whole
-heading, as `#rotate-every-secret-rotates`. `part-id-format` reports a heading with no id. Draw the id from the heading,
-so a reader meeting `std-SECRET.ROTATE` in a CI failure can guess the rule.
+heading, as `#rotate-every-secret-rotates`. `part-id-format` reports a heading with no id. Under `validate --since`,
+`rule-id-kept` fails a change that removes or renames a rule id in an active standard. Reword a rule in place, and write
+a new standard that supersedes this one where a rule has to go. Draw the id from the heading, so a reader meeting
+`std-SECRET.ROTATE` in a CI failure can guess the rule.
 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.

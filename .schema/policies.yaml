@@ -149,6 +149,10 @@ index:
   sort: id
 
 rules:
+  - id: clause-id-kept
+    description: Once status is `active`, every clause id stays, so a citation written against it still resolves.
+    severity: error
+
   - id: alignment-rollup
     description: >
       `aligns-with` lists every binding reference the `Alignment` column cites, and no others.

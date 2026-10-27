@@ -88,6 +88,115 @@ public class HistoryTests
     public void A_record_deleted_while_out_of_force_reports_nothing(string status)
         => Assert.Empty(Run([Adr("adrs/0001-git.md", status, "We keep records in git.")], []));
 
+    [Fact]
+    public void A_clause_removed_from_an_active_policy_fails_naming_the_clause()
+    {
+        var finding = Assert.Single(Run(
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))],
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"))]));
+
+        Assert.Equal(new CheckId("clause-id-kept"), finding.Check);
+        Assert.Equal(Sev.Error, finding.Severity);
+        Assert.Equal("policies/vurm-records.md", finding.File);
+        Assert.Equal(
+            "this policy was `active` at origin/main, and its clause `LOCAL` is gone. A citation of pol-VURM.LOCAL "
+            + "may outlive it, so restore the clause, or retire pol-VURM and write the change in a new policy.",
+            finding.Message);
+        Assert.Equal(11, finding.Line);
+    }
+
+    [Fact]
+    public void A_clause_renamed_in_an_active_policy_fails_naming_the_old_id()
+        => Assert.Contains("its clause `LOCAL` is gone", Assert.Single(Run(
+            [Policy("active", "Keep records in git", ("LOCAL", "link nothing"))],
+            [Policy("active", "Keep records in git", ("NOLINK", "link nothing"))])).Message);
+
+    [Fact]
+    public void Each_clause_removed_is_reported_on_its_own()
+        => Assert.Equal(2, Run(
+            [Policy("active", "Keep records in git", ("CLEAN", "keep this free"), ("LOCAL", "link nothing"),
+                ("SHORT", "stay short"))],
+            [Policy("active", "Keep records in git", ("CLEAN", "keep this free"))]).Count);
+
+    [Fact]
+    public void A_clause_added_to_an_active_policy_passes()
+        => Assert.Empty(Run(
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"))],
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))]));
+
+    [Fact]
+    public void A_clause_reworded_and_a_policy_retitled_pass()
+        => Assert.Empty(Run(
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"))],
+            [Policy("active", "Keep every record in git", ("CLEAN", "keep this record clear of every finding"))]));
+
+    [Fact]
+    public void A_draft_policy_made_active_with_a_clause_removed_passes()
+        => Assert.Empty(Run(
+            [Policy("draft", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))],
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"))]));
+
+    [Fact]
+    public void A_retired_policy_loses_a_clause_freely()
+        => Assert.Empty(Run(
+            [Policy("retired", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))],
+            [Policy("retired", "Keep records in git", ("CLEAN", "stay clean"))]));
+
+    [Fact]
+    public void A_policy_retired_in_the_same_change_that_drops_a_clause_fails()
+        => Assert.Single(Run(
+            [Policy("active", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))],
+            [Policy("retired", "Keep records in git", ("CLEAN", "stay clean"))]));
+
+    [Fact]
+    public void A_rule_removed_from_an_active_standard_fails_naming_the_rule()
+    {
+        var finding = Assert.Single(Run(
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"))]));
+
+        Assert.Equal(new CheckId("rule-id-kept"), finding.Check);
+        Assert.Equal("standards/testing.md", finding.File);
+        Assert.Equal(
+            "this standard was `active` at origin/main, and its rule `FAST` is gone. A citation of std-TEST.FAST "
+            + "may outlive it, so restore the rule, or write the change in a new standard that names std-TEST in "
+            + "`supersedes`.",
+            finding.Message);
+    }
+
+    [Fact]
+    public void A_rule_whose_id_no_longer_parses_is_left_to_the_format_check()
+        => Assert.Empty(Run(
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("Fast", "Tests run fast"))]));
+
+    [Fact]
+    public void A_rule_renamed_in_an_active_standard_fails_naming_the_old_id()
+        => Assert.Contains("its rule `FAST` is gone", Assert.Single(Run(
+            [Standard("active", "Testing", ("FAST", "Tests run fast"))],
+            [Standard("active", "Testing", ("QUICK", "Tests run fast"))])).Message);
+
+    [Fact]
+    public void A_rule_added_reworded_or_retitled_in_an_active_standard_passes()
+        => Assert.Empty(Run(
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"))],
+            [Standard("active", "Testing everywhere", ("CLEAN", "A clean record reports no finding at all"),
+                ("FAST", "Tests run fast"))]));
+
+    [Fact]
+    public void A_draft_standard_made_active_with_a_rule_removed_passes()
+        => Assert.Empty(Run(
+            [Standard("draft", "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"))]));
+
+    [Theory]
+    [InlineData("deprecated")]
+    [InlineData("superseded")]
+    public void A_standard_out_of_force_loses_a_rule_freely(string status)
+        => Assert.Empty(Run(
+            [Standard(status, "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
+            [Standard(status, "Testing", ("CLEAN", "A clean record reports nothing"))]));
+
     private static List<Finding> Run(IReadOnlyList<Doc> before, IReadOnlyList<Doc> after)
     {
         var found = new List<Finding>();
@@ -126,4 +235,40 @@ public class HistoryTests
 
         {summary}
         """, Schema);
+
+    private static Doc Policy(string status, string title, params (string Id, string Clause)[] clauses)
+        => Required.Parsed("policies/vurm-records.md", $"""
+            ---
+            id: pol-VURM
+            type: policy
+            status: {status}
+            ---
+
+            # {title}
+
+            `Policy: pol-VURM` `{status.ToUpperInvariant()}`
+
+            ## Clauses
+
+            | Id | Clause | Alignment |
+            |----|--------|-----------|
+            {string.Join("\n", clauses.Select(c => $"| `{c.Id}` | **MUST** {c.Clause} | |"))}
+            """, Schema);
+
+    private static Doc Standard(string status, string title, params (string Id, string Heading)[] rules)
+        => Required.Parsed("standards/testing.md", $"""
+            ---
+            id: std-TEST
+            type: standard
+            status: {status}
+            ---
+
+            # {title}
+
+            `Standard: std-TEST` `{status.ToUpperInvariant()}`
+
+            ## Rules
+
+            {string.Join("\n\n", rules.Select(r => $"### {r.Id}: {r.Heading}\n\n- A test **MUST** pass."))}
+            """, Schema);
 }

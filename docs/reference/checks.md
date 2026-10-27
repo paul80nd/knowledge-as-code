@@ -95,9 +95,14 @@ One fault is reported once, by whichever check owns it:
 
 ## Known limits
 
-**Some checks run only under `validate --since`.** `immutable-after-accepted`, `immutable-after-published` and
-`retire-not-delete` compare a record with its state at an earlier revision, so a run that names none skips them.
-[Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision) says what each reports.
+**Some checks run only under `validate --since`.** `immutable-after-accepted`, `immutable-after-published`,
+`clause-id-kept`, `rule-id-kept` and `retire-not-delete` compare a record with its state at an earlier revision, so a
+run that names none skips them. [Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision)
+says what each reports.
+
+**A clause or a rule can change its meaning and keep its id.** `clause-id-kept` and `rule-id-kept` read the id alone,
+so a reworded part passes whatever the new words commit to. A citation of the id then reaches an obligation its author
+never read.
 
 **Changing the id of a rejected ADR raises no finding.** A record is paired across the two revisions by its id, so a
 new id reads as one record deleted and another added. `retire-not-delete` warns only where the deleted record's status

@@ -102,6 +102,11 @@ from the keyword a rule takes to the closing line. This section adds what the te
 **Give every MUST and MUST NOT rule a control**, even one whose mechanism is `not-enforced`. An honest gap is more
 useful than a silent one.
 
+**Keep every rule id once the standard is active.** A control's `verifies` and any other record cite a rule by its id,
+and a citation outlives the edit that removes the rule. Under `validate --since`, `rule-id-kept` fails a change that
+removes or renames a rule id in an active standard. Where a rule has to go, write a new standard that supersedes this
+one.
+
 **A baseline is not a posture.** [Frameworks](frameworks.md) records the standing we take against a framework this
 corpus cites, and it is the only page recording one. A baseline is the document a standard's own rules defer to. Where
 the two look alike, ask whether it would still be true after replacing the entire technology estate. A PCI DSS posture
@@ -125,6 +130,7 @@ this type's records.
 | `mirrors-citations`         | error   | A field that mirrors a label reconciles with the citations the labelled lines gather.                       |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.       |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                            |
+| `rule-id-kept`              | error   | With `--since`, a standard active at that revision keeps the id of every rule it had there.                 |
 | `changelog-order`           | warning | A standard's changelog entries read newest first.                                                           |
 | `provenance-required`       | error   | A standard cites an ADR in `derived-from`, a policy clause in `implements`, or both.                        |
 | `standard-in-date`          | warning | A standard names a review date that has not passed.                                                         |

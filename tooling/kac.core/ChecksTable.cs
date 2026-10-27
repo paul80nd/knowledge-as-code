@@ -165,6 +165,10 @@ public static class ChecksTable
             "With `--since`, a published postmortem has changed by no more than a typo, a link, its status or "
             + "`accepts`.",
             null),
+        ("clause-id-kept", [new("clause-id-kept")],
+            "With `--since`, a policy active at that revision keeps the id of every clause it had there.", null),
+        ("rule-id-kept", [new("rule-id-kept")],
+            "With `--since`, a standard active at that revision keeps the id of every rule it had there.", null),
         ("retire-not-delete", [HistoryRules.RetireNotDelete],
             "With `--since`, no record in force at that revision has been deleted.", null),
         ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",

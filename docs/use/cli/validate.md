@@ -82,7 +82,12 @@ compared.
 |-----------------------------|---------|------------------------------------------------------------------------|
 | `immutable-after-accepted`  | error   | a change in substance to an ADR that was `accepted` or `rejected`      |
 | `immutable-after-published` | error   | a change in substance to a postmortem that was `published`             |
+| `clause-id-kept`            | error   | a clause id gone from a policy that was `active`                       |
+| `rule-id-kept`              | error   | a rule id gone from a standard that was `active`                       |
 | `retire-not-delete`         | warning | a record deleted while its status was the value its type puts in force |
+
+`clause-id-kept` and `rule-id-kept` read the id alone. A part reworded, a part added or a new title passes. A record
+that was not `active` at the revision changes freely, and that includes a draft made `active` in the same change.
 
 A change in substance is anything except these:
 
