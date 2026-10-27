@@ -136,10 +136,8 @@ this type's records.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                              |
-|--------------------------------|---------------------------------------------------------------------------------------------------|
-| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.  |
-| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.              |
-| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit. |
+| Rule                  | What it would verify                                                                             |
+|-----------------------|--------------------------------------------------------------------------------------------------|
+| `rules-have-controls` | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none. |
 
 <!-- END GENERATED: checks-standards -->
