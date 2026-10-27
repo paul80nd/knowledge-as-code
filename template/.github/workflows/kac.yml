@@ -37,6 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # `validate --since` reads the branch a pull request targets, which a shallow clone lacks.
+          fetch-depth: 0
           # The checkout keeps no copy of the job's token, so no later step can push with it.
           persist-credentials: false
 
@@ -50,11 +52,13 @@ jobs:
         run: dotnet tool restore
 
       # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-      # Only this step gets the token, because only it posts.
+      # Only this step gets the token, because only it posts. On a pull request, `--since` compares each
+      # record with the branch it targets. A push to main has no base, and passes no `--since`.
       - name: Validate frontmatter, links and structure
-        run: dotnet tool run kac validate
+        run: dotnet tool run kac validate ${BASE_REF:+--since "origin/$BASE_REF"}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.base_ref }}
 
       - name: Check generated output is fresh
         run: dotnet tool run kac generate --check
