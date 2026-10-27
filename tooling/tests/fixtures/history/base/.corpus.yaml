@@ -1,0 +1,4 @@
+# The ranges the schema leaves to the corpus, stated so that the one service reports nothing.
+enums:
+  component-type: [api]
+  platform: [dotnet-web]

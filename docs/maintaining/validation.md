@@ -40,6 +40,9 @@ full statement of each one.
   a value below its floor. [A run that finds faults](../use/cli/validate.md#a-run-that-finds-faults)
 * It reports a warning a record names in `accepts:` as info, with the reason, and warns on an entry matching no
   warning on its record. [The `accepts` field](../use/cli/validate.md#the-accepts-field)
+* With `--since`, it compares each record with its state at that revision, paired by id. It fails a change in
+  substance to a decided ADR or a published postmortem, and warns on a record deleted while in force.
+  [Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision)
 * `kac checks` lists each check with its severity and what it proves, read from the corpus's own `.schema/`, a type
   the corpus declares itself included. [`checks`](../use/cli/checks.md#what-it-does)
 * `kac checks` lists a C# rule under the check it emits, and leaves out a rule with no severity.
@@ -53,6 +56,8 @@ full statement of each one.
   [`checks`](../use/cli/checks.md#known-limits)
 * `validate` refuses an `accepts:` entry naming `acceptance-stale`, a check that reports errors or only info, or an id
   no check reports. [The `accepts` field](../use/cli/validate.md#the-accepts-field)
+* `validate --since` exits `1` where git cannot resolve the ref, and names it.
+  [Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision)
 
 ## Specified by
 
@@ -169,6 +174,8 @@ full statement of each one.
   [#247](https://github.com/paul80nd/knowledge-as-code/issues/247)
 * Most rules a type declares for itself, and core checks such as `key-order`, are tripped by a golden fixture and named
   in no scenario. `kac checks` lists them, and the golden suite's coverage gate fails a check no fixture trips.
+* The checks `--since` runs. The `history` fixture trips each of them, `HistoryTests` and `SubstanceTests` pin what a
+  change in substance is, and `CommandsTests` pins the exit code for a ref git cannot resolve.
 * `validate` exiting `1` exactly when it finds an error. The scenarios call the validator and not the command, so the
   golden suite is where the exit code is asserted.
 * How `validate` groups its findings, and the shape of `--json`. Both are printed only.

@@ -503,7 +503,8 @@ public static class SchemaChecks
 
         if (rule.Compiled is not null
             || DocumentRules.ByRuleId.ContainsKey(rule.Id)
-            || CorpusRules.ByRuleId.ContainsKey(rule.Id)) return;
+            || CorpusRules.ByRuleId.ContainsKey(rule.Id)
+            || HistoryRules.ByRuleId.ContainsKey(rule.Id)) return;
 
         if (rule.Severity is { } severity)
             Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares 'severity: "
@@ -523,6 +524,7 @@ public static class SchemaChecks
         IReadOnlyList<string>? reads = rule.Compiled is not null ? []
             : DocumentRules.ByRuleId.TryGetValue(rule.Id, out document) ? document.Reads
             : CorpusRules.ByRuleId.TryGetValue(rule.Id, out var corpus) ? corpus.Reads
+            : HistoryRules.ByRuleId.ContainsKey(rule.Id) ? []
             : null;
         if (reads is null) return;
 

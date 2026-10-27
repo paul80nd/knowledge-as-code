@@ -47,17 +47,17 @@ says needs one.
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field           | Value                | Notes                                                                                                                  |
-|-----------------|----------------------|------------------------------------------------------------------------------------------------------------------------|
-| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                           |
-| `status` *†     | `draft` `published`  | `published` is the account the estate stands behind, corrected in place wherever it is wrong. In force at `published`. |
-| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                                       |
-| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                            |
-| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`.          |
-| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`.          |
-| `severity` *    | `sev1` `sev2` `sev3` | The highest severity the incident reached, on the corpus's severity scale.                                             |
-| `affected` *    | list                 | Service and offering ids the incident affected.                                                                        |
-| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                                    |
+| Field           | Value                | Notes                                                                                                                          |
+|-----------------|----------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                                   |
+| `status` *†     | `draft` `published`  | `published` is the account the estate stands behind, changed after that only to fix a typo or a link. In force at `published`. |
+| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                                               |
+| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                                    |
+| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`.                  |
+| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`.                  |
+| `severity` *    | `sev1` `sev2` `sev3` | The highest severity the incident reached, on the corpus's severity scale.                                                     |
+| `affected` *    | list                 | Service and offering ids the incident affected.                                                                                |
+| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                                            |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  
@@ -82,14 +82,14 @@ this type's records.
 | `timestamp-format`             | error | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                      |
 | `ref-resolves`                 | error | An id in a field that references another document names one that exists, of the type the field names. |
 | `duration-matches-the-moments` | error | `duration` is the span from `occurred-at` to `restored-at`.                                           |
+| `immutable-after-published`    | error | With `--since`, a published postmortem has changed by no more than a typo, a link or its status.      |
 | `detected-not-before-occurred` | error | `detected-at` is at or after `occurred-at`.                                                           |
 | `restored-not-before-occurred` | error | `restored-at` is at or after `occurred-at`.                                                           |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                               |
-|-----------------------------|------------------------------------------------------------------------------------|
-| `immutable-after-published` | A published account changes only to correct what it misstates or to fix its prose. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                       |
+| Rule                    | What it would verify                                         |
+|-------------------------|--------------------------------------------------------------|
+| `recurring-root-causes` | Scheduled. Reports root causes recurring across postmortems. |
 
 <!-- END GENERATED: checks-postmortems -->

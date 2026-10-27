@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "validated": 5,
+    "templates": 3,
+    "skipped": 0,
+    "errors": 2,
+    "warnings": 1,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": "adrs/0001-rewritten.md",
+      "line": 22,
+      "severity": "error",
+      "check": "immutable-after-accepted",
+      "message": "this ADR was accepted at HEAD, and has changed by more than a typo since: `## Decision`. A decided ADR changes only by a new ADR that supersedes it. Restore the text, and write the new decision in an ADR naming adr-0001 in `supersedes`."
+    },
+    {
+      "file": "adrs/0003-deleted.md",
+      "line": null,
+      "severity": "warning",
+      "check": "retire-not-delete",
+      "message": "adr-0003 was `accepted` at HEAD, and no record here has that id now. Something outside the corpus may still cite adr-0003, so restore the record and retire it through its `status`."
+    },
+    {
+      "file": "postmortems/0001-catalogue-dark.md",
+      "line": 35,
+      "severity": "error",
+      "check": "immutable-after-published",
+      "message": "this postmortem was published at HEAD, and has changed by more than a typo since: `## Root cause`. A published account changes only by a typo fixed, a link corrected or a reflow. Restore the text, and write what was learnt since in a new postmortem that links to pmt-0001."
+    }
+  ]
+}

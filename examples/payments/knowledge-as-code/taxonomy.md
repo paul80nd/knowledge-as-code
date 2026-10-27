@@ -43,8 +43,8 @@ decision is a new record that supersedes it. A decided record states the constra
 record for background, and never as the authority behind a constraint.
 
 **[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
-factors, actions). Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a
-postmortem records the outcome.
+factors, actions). Blameless, and fixed once published, so what was learnt later goes in a new postmortem. An ADR
+records the intention, and a postmortem records the outcome.
 
 ### Normative: living, owned, reviewed
 

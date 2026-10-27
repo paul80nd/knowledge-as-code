@@ -31,6 +31,7 @@
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A link label is the id of the record it leads to, written as that record carries it.                            |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `retire-not-delete`         | warning | With `--since`, no record in force at that revision has been deleted.                                           |
 
 <!-- END GENERATED: checks-universal -->
 

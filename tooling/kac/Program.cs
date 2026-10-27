@@ -192,6 +192,10 @@ internal sealed class ValidateSettings : KacSettings
     [CommandOption("--json")]
     [Description("Emit the summary and findings as JSON.")]
     public bool Json { get; init; }
+
+    [CommandOption("--since <REF>")]
+    [Description("Also compare each record with its state at this revision, such as origin/main.")]
+    public string? Since { get; init; }
 }
 
 internal sealed class ValidateCommand : Command<ValidateSettings>
@@ -207,7 +211,8 @@ internal sealed class ValidateCommand : Command<ValidateSettings>
 
             // One UTC day for the whole run, so every record is judged against the same day wherever it runs.
             return Commands.Validate(corpus, settings.Json, DateOnly.FromDateTime(DateTime.UtcNow),
-                Cli.RegistryFor(corpus, client), Annotating(platform, corpus), Commenting(platform, client));
+                Cli.RegistryFor(corpus, client), Annotating(platform, corpus), Commenting(platform, client),
+                settings.Since);
         });
 
     /// <summary>

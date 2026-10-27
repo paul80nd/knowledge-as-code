@@ -95,5 +95,6 @@ One fault is reported once, by whichever check owns it:
 
 ## Known limits
 
-**`immutable-after-accepted` is declared and does not run.** It asks that an accepted document's decision changes only
-by supersession, which needs git history the validator does not read. It belongs in a CI step that can read a diff.
+**Some checks run only under `validate --since`.** `immutable-after-accepted`, `immutable-after-published` and
+`retire-not-delete` compare a record with its state at an earlier revision, so a run that names none skips them.
+[Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision) says what each reports.

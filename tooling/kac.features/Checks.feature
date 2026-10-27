@@ -29,7 +29,7 @@ Scenario: A rule implemented in C# is listed under the check it emits
 Scenario: A rule with no severity is not in the catalogue
   Given the clean fixture corpus
   When I list the checks
-  Then the catalogue does not list "immutable-after-accepted"
+  Then the catalogue does not list "rules-have-controls"
 
 Scenario: The catalogue opens no record and reports no fault in one
   Given the broken-values fixture corpus

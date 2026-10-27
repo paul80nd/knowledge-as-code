@@ -82,11 +82,6 @@ this type's records.
 | `y-statement`                | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.       |
 | `alternatives-verdict`       | warning | Each Alternatives Considered bullet states a verdict.                                                 |
 | `decision-cites-descriptive` | warning | No link in Decision or Consequences lands on a record of a descriptive type.                          |
-
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule                       | What it would verify                                                                                                |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------|
-| `immutable-after-accepted` | Once status is `accepted` or `rejected`, the decision changes only by a superseding ADR, never by an edit in place. |
+| `immutable-after-accepted`   | error   | With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link or its status. |
 
 <!-- END GENERATED: checks-adrs -->
