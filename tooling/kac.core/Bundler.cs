@@ -521,12 +521,13 @@ public static class Bundler
 
     /// <summary>
     /// How the plugin manifest is written back out. Stated here rather than borrowed from <c>KacJson</c>, because this
-    /// is a DOM write rather than a serialized record. Two rules matter: a person reads the file, and an em dash in a
-    /// corpus's own description reaches them as itself.
+    /// is a DOM write rather than a serialized record. Three rules matter: a person reads the file, an em dash in a
+    /// corpus's own description reaches them as itself, and every platform writes the same bytes.
     /// </summary>
     private static readonly JsonSerializerOptions Indented = new()
     {
         WriteIndented = true,
+        NewLine = "\n",
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 

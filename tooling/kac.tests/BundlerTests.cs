@@ -541,6 +541,17 @@ public class BundlerTests
     }
 
     [Fact]
+    public void Every_JSON_file_the_bundle_writes_ends_its_lines_with_a_bare_line_feed()
+    {
+        var written = Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest()]).Files
+            .Where(f => f.Path.EndsWith(".json", StringComparison.Ordinal))
+            .ToList();
+
+        Assert.Contains(written, f => f.Path == Dist.MarketplaceRel);
+        Assert.All(written, f => Assert.DoesNotContain('\r', Encoding.UTF8.GetString(f.Content)));
+    }
+
+    [Fact]
     public void A_build_index_lists_every_rule_by_title_under_its_standard_and_status()
     {
         var index = Text(Plan(
