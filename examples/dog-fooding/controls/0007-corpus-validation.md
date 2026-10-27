@@ -30,8 +30,9 @@ Every pull request checks each corpus in this repository against `.schema/`.
 ## How it works
 
 The `corpora` job runs `kac validate` and then `kac generate --check` in each of `examples/library`,
-`examples/engineering`, `examples/payments` and `examples/dog-fooding`. The `tool` job runs the same pair in
-`template/`, and again in a corpus `kac new` created from the packed tool.
+`examples/engineering`, `examples/payments` and `examples/dog-fooding`. Its `validate` passes `--since` with the branch
+the pull request targets, so it also compares each record with its state there. The `tool` job runs the same pair in
+`template/`, without `--since`, and again in a corpus `kac new` created from the packed tool.
 
 Each matrix cell is a fresh runner with its own checkout, and each corpus declares a different `types:`. Running all
 of them proves the framework works for a corpus that adopted a subset. `payments` and `dog-fooding` pack `engineering`
