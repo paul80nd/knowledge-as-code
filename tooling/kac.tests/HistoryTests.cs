@@ -100,8 +100,9 @@ public class HistoryTests
         Assert.Equal("policies/vurm-records.md", finding.File);
         Assert.Equal(
             "this policy was `active` at origin/main, and its clause `LOCAL` is gone. A citation of pol-VURM.LOCAL "
-            + "may outlive it, so restore the clause, and write the change in a new policy that supersedes pol-VURM.",
+            + "may outlive it, so restore the clause, or retire pol-VURM and write the change in a new policy.",
             finding.Message);
+        Assert.Equal(11, finding.Line);
     }
 
     [Fact]
@@ -158,9 +159,16 @@ public class HistoryTests
         Assert.Equal("standards/testing.md", finding.File);
         Assert.Equal(
             "this standard was `active` at origin/main, and its rule `FAST` is gone. A citation of std-TEST.FAST "
-            + "may outlive it, so restore the rule, and write the change in a new standard that supersedes std-TEST.",
+            + "may outlive it, so restore the rule, or write the change in a new standard that names std-TEST in "
+            + "`supersedes`.",
             finding.Message);
     }
+
+    [Fact]
+    public void A_rule_whose_id_no_longer_parses_is_left_to_the_format_check()
+        => Assert.Empty(Run(
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
+            [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("Fast", "Tests run fast"))]));
 
     [Fact]
     public void A_rule_renamed_in_an_active_standard_fails_naming_the_old_id()

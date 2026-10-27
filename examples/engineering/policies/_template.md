@@ -23,7 +23,8 @@ optional field from [the type page](../policies.md#metadata) where you have a va
 * **`id`**: `pol-` plus a four-character mnemonic for the policy's concept. Start it with the same letter as the slug,
   so the folder still reads alphabetically. Upper-case here and lower-case in the filename, so `pol-VURM` sits in
   `vurm-vulnerability-remediation.md`. **Immutable once the policy is active.** A change of meaning is a new policy and
-  a retirement of this one. A reassigned mnemonic still resolves, so every citation of it says something untrue.
+  a retirement of this one. A reassigned mnemonic still resolves, so no check fires and every citation of it says
+  something untrue.
 * **Where you save it**: the folder below `policies/` becomes the policy's category, which is the broad area
   the commitment belongs to. That is a different question from the topics `tags` records. If two folders fit, pick
   the one a reader looking for this policy would try first. A policy saved straight into `policies/` has no category.

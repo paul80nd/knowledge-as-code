@@ -853,9 +853,10 @@ public static class Validator
 
             if (after.Text == before.Text) continue;
 
+            var inForce = schema.EffectiveField(t, "status")?.InForce;
             foreach (var rule in t.Rules)
                 if (HistoryRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                    implementation.Check(new HistoryRuleContext(before, after, t, rule, since.Ref,
+                    implementation.Check(new HistoryRuleContext(before, after, t, rule, since.Ref, inForce,
                         new Report(after.Rel, f)));
         }
     }
