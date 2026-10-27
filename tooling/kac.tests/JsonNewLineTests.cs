@@ -19,11 +19,11 @@ public partial class JsonNewLineTests
             var indented = Indented().Count(text);
             var lineFeeds = LineFeed().Count(text);
             if (indented > lineFeeds)
-                found.Add($"{Path.GetRelativePath(Repo.Root, file)}: {indented} WriteIndented, {lineFeeds} NewLine");
+                found.Add($"{Path.GetRelativePath(Repo.Root, file)}: {indented} indented, {lineFeeds} NewLine");
         }
 
         Assert.True(found.Count == 0,
-            "Each WriteIndented needs a NewLine = \"\\n\" beside it, so the bytes match on every platform:\n  "
+            "Each indented JSON setting needs a NewLine = \"\\n\" beside it, so the bytes match on every platform:\n  "
             + string.Join("\n  ", found));
     }
 
@@ -34,7 +34,11 @@ public partial class JsonNewLineTests
             .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
                         && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"));
 
-    [GeneratedRegex(@"\bWriteIndented\s*=")]
+    /// <summary>
+    /// <c>WriteIndented</c> on <c>JsonSerializerOptions</c>, and <c>Indented</c> on <c>JsonWriterOptions</c>. A field
+    /// named <c>Indented</c> and assigned a <c>new</c> object is neither.
+    /// </summary>
+    [GeneratedRegex(@"\b(Write)?Indented\s*=(?!\s*new\b)")]
     private static partial Regex Indented();
 
     [GeneratedRegex(@"\bNewLine\s*=\s*""\\n""")]
