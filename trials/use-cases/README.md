@@ -6,7 +6,8 @@ Gherkin `.feature` file per moment, and every scenario names the trial case that
 
 Whoever decides what #940 builds next reads them, and so does whoever writes a trial case for one.
 [Design intent](https://paul80nd.github.io/knowledge-as-code/framework/intent/) states the moments, and what an agent
-does with each type.
+does with each type. [The landscape review](landscape-review.md) says which of these use cases the trial should test,
+and which common problem none of them covers.
 
 ## What a scenario states
 
@@ -18,12 +19,14 @@ trial case passes at the threshold its `Then` states.
   case has none.
 * **The pass threshold** is in the `Then`, such as "in at least 2 of 3 runs".
 
-Every scenario has four tags, the first through the feature it sits in:
+Every scenario has four tags, the first through the feature it sits in. A scenario that tests the tool takes `@check`
+in place of `@intent`, because no agent uses a type in it:
 
 | Tag                     | Value                                                                                 |
 |-------------------------|---------------------------------------------------------------------------------------|
 | `@moment:<moment>`      | the moment: `design`, `build`, `review`, `operate`, `contribute`, `assure` or `learn` |
 | `@intent:<intent>`      | what an agent does with the type: `follow`, `flow`, `nudge`, `respect` or `inform`    |
+| `@check:<command>`      | the `kac` command whose check the scenario tests, such as `validate` or `restore`     |
 | `@type:<type>`          | the type whose records the scenario reads, as `.schema/` names it                     |
 | `@trial:<trial>/<case>` | the trial and the case that measures it. A plugin trial case also names its corpus.   |
 
@@ -37,8 +40,8 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     7 |
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     5 |
-| [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     3 |
-| [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     3 |
+| [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         4 |                     3 |
+| [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         4 |                     3 |
 | [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     3 |
 
 `grep -c '^  Scenario:' trials/use-cases/*.feature` reports the scenarios in each file.
@@ -80,7 +83,8 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A new reader learns how a part of the estate works from its explanation                   | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
 | A new reader learns what the estate offers, and what is not live yet                      | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
 
-No scenario is `@proposed`.
+Two scenarios are `@proposed`, and both test the tool: **a change that breaks the corpus fails before it merges**, and
+**a new version of a consumed corpus says what it broke**. [The landscape review](landscape-review.md) says why.
 
 ## The types
 
@@ -126,4 +130,5 @@ the condition is in the Intent column.
 2. State the baseline from a run file, or say there is no run yet and tag it `@proposed`.
 3. Put the pass threshold in the `Then`. Grade what the reader produced: a file, a command, a drafted request, or the
    answer it was asked for.
-4. Add a row for it to the types table above, and to the table of existing cases when its case has run.
+4. Add a row for it to the types table above, unless it takes `@check`. Add it to the table of existing cases when its
+   case has run.
