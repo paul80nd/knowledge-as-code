@@ -37,9 +37,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `controls-lookup` entry of your `plugin.json`.
 - **Both starter pipelines run `kac restore` before `validate`.** A new corpus can declare `consumes:` with no edit
   to its pipeline. Where `consumes:` is empty, the step prints that there is nothing to restore and succeeds. The
-  GitHub starter grants `packages: read` and passes `github.token` to the step as `KAC_REGISTRY_TOKEN`. The Azure
-  starter passes `$(System.AccessToken)`. Each header comment names the feed permission a package from another
-  repository or project needs.
+  GitHub starter grants `packages: read` and passes `github.token` as `KAC_REGISTRY_TOKEN` to the restore and
+  validate steps, so `validate` checks each lock against the feed. The Azure starter passes `$(System.AccessToken)`.
+  Each header comment names the feed permission a package from another repository or project needs.
 
 ## 0.40.0 - 2026-10-27
 

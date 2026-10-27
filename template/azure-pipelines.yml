@@ -72,9 +72,9 @@ steps:
       KAC_REGISTRY_TOKEN: $(System.AccessToken)
 
   # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-  # Only this step and the restore step get the token. This one posts with it, and the restore step
-  # reads a private feed with it. On a pull request, `--since` compares each record with the branch it
-  # targets. The target branch is set on a pull
+  # Only this step and the restore step get the token. This one posts with it, and both read a private
+  # feed with it: `validate` asks the feed whether each lock in `consumes:` is current. On a pull
+  # request, `--since` compares each record with the branch it targets. The target branch is set on a pull
   # request alone, as refs/heads/main, and the comparison wants origin/main.
   - script: |
       target="${SYSTEM_PULLREQUEST_TARGETBRANCH#refs/heads/}"
@@ -83,6 +83,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      KAC_REGISTRY_TOKEN: $(System.AccessToken)
 
   - script: dotnet tool run kac generate --check
     displayName: Check generated output is fresh

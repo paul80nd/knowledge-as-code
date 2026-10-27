@@ -38,8 +38,8 @@ jobs:
       contents: read
       # `kac validate` posts its findings to the pull request as a comment, and needs this to write one.
       pull-requests: write
-      # With the restore step's token, this lets `kac restore` read a private GitHub Packages feed. A
-      # corpus consuming nothing, or only public feeds, can delete it and that token.
+      # With `KAC_REGISTRY_TOKEN` on the restore and validate steps, this lets `kac` read a private
+      # GitHub Packages feed. A corpus consuming nothing, or only public feeds, can delete all three.
       packages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -67,13 +67,15 @@ jobs:
           KAC_REGISTRY_TOKEN: ${{ github.token }}
 
       # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-      # Only this step and the restore step get the token. This one posts with it, and the restore step
-      # reads a private feed with it. On a pull request, `--since` compares each record with the branch
-      # it targets. A push to main has no base, and passes no `--since`.
+      # Only this step and the restore step get the token. This one posts with it, and both read a
+      # private feed with it: `validate` asks the feed whether each lock in `consumes:` is current. On a
+      # pull request, `--since` compares each record with the branch it targets. A push to main has no
+      # base, and passes no `--since`.
       - name: Validate frontmatter, links and structure
         run: dotnet tool run kac validate ${BASE_REF:+--since "origin/$BASE_REF"}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          KAC_REGISTRY_TOKEN: ${{ github.token }}
           BASE_REF: ${{ github.base_ref }}
 
       - name: Check generated output is fresh

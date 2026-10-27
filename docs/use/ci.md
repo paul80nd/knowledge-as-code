@@ -203,13 +203,15 @@ dotnet tool run kac restore     # each consumed corpus, into .imports/<shortcode
 
 `.imports/` is not committed, so run [`restore`](cli/restore.md) as the first step of the job.
 
-A private feed needs a token, which `restore` reads from `KAC_REGISTRY_TOKEN`. Set it on the restore step alone.
+A private feed needs a token, which `kac` reads from `KAC_REGISTRY_TOKEN`. Set it on the restore step and on the
+validate step, because `validate` asks the feed whether each lock in `consumes:` is current. Without the token,
+`validate` reports `import-unreachable` and leaves the lock unchecked.
 
 * **GitHub Actions.** Pass `${{ github.token }}`, and give the job `packages: read`. The token reads a GitHub
   Packages package linked to this repository. For a package linked to another repository, add this repository to the
   package's settings, in Manage Actions access, with the Read role.
-* **Azure Pipelines.** Map `$(System.AccessToken)` onto the step, because a script sees the token only where its step
-  maps it. The token belongs to the project's build service, which reads an Azure Artifacts feed in the same
+* **Azure Pipelines.** Map `$(System.AccessToken)` onto each step, because a script sees the token only where its
+  step maps it. The token belongs to the project's build service, which reads an Azure Artifacts feed in the same
   project. For a feed in another project, add that identity to the feed as a Feed Reader, under the feed's
   permissions.
 
