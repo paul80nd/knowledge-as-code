@@ -21,14 +21,7 @@ public sealed class CreationSteps(Workspace ws)
     [AfterScenario]
     public void Clean()
     {
-        if (_root.Length == 0 || !Directory.Exists(_root)) return;
-        try
-        {
-            Directory.Delete(_root, recursive: true);
-        }
-        catch (IOException)
-        {
-        }
+        if (_root.Length > 0) Harness.Delete(_root);
     }
 
     [Given("an empty folder")]

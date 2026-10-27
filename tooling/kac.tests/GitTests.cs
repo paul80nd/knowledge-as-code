@@ -19,7 +19,7 @@ public class GitTests
         }
         finally
         {
-            dir.Delete(recursive: true);
+            Files.DeleteTree(dir.FullName);
         }
     }
 }

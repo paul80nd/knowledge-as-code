@@ -30,7 +30,7 @@ public class GitFilesTests
         }
         finally
         {
-            dir.Delete(recursive: true);
+            Files.DeleteTree(dir.FullName);
         }
     }
 
@@ -59,7 +59,7 @@ public class GitFilesTests
         }
         finally
         {
-            dir.Delete(recursive: true);
+            Files.DeleteTree(dir.FullName);
         }
     }
 }

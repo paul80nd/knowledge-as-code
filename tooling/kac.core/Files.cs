@@ -21,4 +21,23 @@ public static class Files
         File.Copy(source, target, overwrite: true);
         if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(target, File.GetUnixFileMode(source));
     }
+
+    /// <summary>
+    /// Deletes a folder and everything under it, and does nothing where the folder is missing. Git marks the files under
+    /// <c>.git/objects</c> read-only and Windows refuses to delete one, so every read-only flag is cleared first.
+    /// </summary>
+    public static void DeleteTree(string path)
+    {
+        if (!Directory.Exists(path)) return;
+
+        var everything = new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0 };
+        foreach (var entry in Directory.EnumerateFileSystemEntries(path, "*", everything).Prepend(path))
+        {
+            var attributes = File.GetAttributes(entry);
+            if (attributes.HasFlag(FileAttributes.ReadOnly))
+                File.SetAttributes(entry, attributes & ~FileAttributes.ReadOnly);
+        }
+
+        Directory.Delete(path, recursive: true);
+    }
 }

@@ -1167,9 +1167,26 @@ internal static class Runner
             File.Copy(file, Path.Combine(dst, Path.GetRelativePath(src, file)), overwrite: true);
     }
 
+    /// <summary>
+    /// Clears each read-only flag first, as <c>Files.DeleteTree</c> in <c>kac.core</c> does, so a <c>.git</c> folder
+    /// deletes on Windows. This project does not reference <c>kac.core</c>, so the loop is its own.
+    /// </summary>
     internal static void TryDelete(string dir)
     {
-        try { if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true); }
+        try
+        {
+            if (!Directory.Exists(dir)) return;
+
+            var everything = new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0 };
+            foreach (var entry in Directory.EnumerateFileSystemEntries(dir, "*", everything).Prepend(dir))
+            {
+                var attributes = File.GetAttributes(entry);
+                if (attributes.HasFlag(FileAttributes.ReadOnly))
+                    File.SetAttributes(entry, attributes & ~FileAttributes.ReadOnly);
+            }
+
+            Directory.Delete(dir, recursive: true);
+        }
         // A file still open leaves the tree under the system temp directory, which the machine clears.
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {

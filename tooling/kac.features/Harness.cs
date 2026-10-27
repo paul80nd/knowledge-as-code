@@ -49,7 +49,7 @@ public static class Harness
 
     public static void Delete(string folder)
     {
-        try { Directory.Delete(folder, recursive: true); }
+        try { Files.DeleteTree(folder); }
         // A file still open leaves the tree for the machine to clear.
         // Failing here would report cleanup as a corpus fault.
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or DirectoryNotFoundException)
