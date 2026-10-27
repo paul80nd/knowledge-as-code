@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-CI.GATE](https://github.com/paul80nd/knowledge-as-code/blob/01c2db7153b064d26441c61b1aa8dd22e4dac7f7/examples/dog-fooding/standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main) says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.BLOCK` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
+    "What it checks": "* [std-CI.GATE](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/dog-fooding/standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main) says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.BLOCK` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
     "How it works": "`kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and `import-round-trip`. The branch rule requires that one check name. The job runs after the others whatever they report, because its `if:` is `always()`. Its one step reads each job's result and fails unless every one is `success`.\n\nWithout `always()`, a failed job would skip `validate`. GitHub counts a skipped required check as passing, so the merge would not wait.\n\nThree of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)` and three more. A branch rule naming the matrix would wait for a check that never arrives.",
-    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002](https://github.com/paul80nd/knowledge-as-code/blob/01c2db7153b064d26441c61b1aa8dd22e4dac7f7/examples/dog-fooding/controls/0002-workflow-gate-tests.md) checks the other half: whether `validate` still needs every job."
+    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/dog-fooding/controls/0002-workflow-gate-tests.md) checks the other half: whether `validate` still needs every job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/01c2db7153b064d26441c61b1aa8dd22e4dac7f7/examples/dog-fooding/controls/0001-merge-gate.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/dog-fooding/controls/0001-merge-gate.md"
   }
 }
