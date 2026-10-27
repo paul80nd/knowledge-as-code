@@ -1,10 +1,10 @@
 # CI for this corpus, on GitHub Actions.
 #
-# Runs the validator, the freshness check and the two packaging commands on every pull request into
-# main. It writes back one thing: the comment `kac validate` posts on a pull request with findings.
-# `generate --check` reports staleness and names the command you run locally, and the export and the
-# bundle land in an untracked `.dist/` the runner throws away. Publishing what was built is a separate
-# act, and no step here does it.
+# Restores the corpora this one consumes, then runs the validator, the freshness check and the two
+# packaging commands on every pull request into main. It writes back one thing: the comment
+# `kac validate` posts on a pull request with findings. `generate --check` reports staleness and names
+# the command you run locally, and the export and the bundle land in an untracked `.dist/` the runner
+# throws away. Publishing what was built is a separate act, and no step here does it.
 #
 # Each action is pinned to a commit, because a tag can be moved to other code, and `kac` is pinned in
 # `.config/dotnet-tools.json`. `.github/dependabot.yml` moves each of them.
@@ -12,6 +12,10 @@
 # The .NET SDK is pinned at 10.0.402, because the validate job has a write token. Dependabot does not
 # read `dotnet-version`, so you move it by hand to a release listed at
 # https://dotnet.microsoft.com/download/dotnet/10.0.
+#
+# Restoring a GitHub Packages package linked to another repository needs one console setting: add this
+# repository to the package's settings -> Manage Actions access, with the Read role. A package linked
+# to this repository needs nothing.
 #
 # The Azure Pipelines twin sits at `azure-pipelines.yml`. Keep whichever one your corpus runs on and
 # delete the other.
@@ -30,10 +34,13 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    # `kac validate` posts its findings to the pull request as a comment, and needs this to write one.
     permissions:
       contents: read
+      # `kac validate` posts its findings to the pull request as a comment, and needs this to write one.
       pull-requests: write
+      # With `KAC_REGISTRY_TOKEN` on the restore and validate steps, this lets `kac` read a private
+      # GitHub Packages feed. A corpus consuming nothing, or only public feeds, can delete all three.
+      packages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -51,13 +58,24 @@ jobs:
       - name: Install the pinned kac
         run: dotnet tool restore
 
+      # Fetches each corpus `consumes:` declares into `.imports/`, which `validate` reads, and does
+      # nothing where `consumes:` is empty. A folder `source:` must exist on the runner, because no step
+      # here builds it.
+      - name: Restore the corpora this one consumes
+        run: dotnet tool run kac restore
+        env:
+          KAC_REGISTRY_TOKEN: ${{ github.token }}
+
       # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-      # Only this step gets the token, because only it posts. On a pull request, `--since` compares each
-      # record with the branch it targets. A push to main has no base, and passes no `--since`.
+      # Only this step and the restore step get the token. This one posts with it, and both read a
+      # private feed with it: `validate` asks the feed whether each lock in `consumes:` is current. On a
+      # pull request, `--since` compares each record with the branch it targets. A push to main has no
+      # base, and passes no `--since`.
       - name: Validate frontmatter, links and structure
         run: dotnet tool run kac validate ${BASE_REF:+--since "origin/$BASE_REF"}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          KAC_REGISTRY_TOKEN: ${{ github.token }}
           BASE_REF: ${{ github.base_ref }}
 
       - name: Check generated output is fresh
