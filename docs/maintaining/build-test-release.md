@@ -45,7 +45,7 @@ Run one `kac` at a time. Two runs build the same project at once and contend ove
 
 ## The three test layers
 
-Each layer proves something the others cannot. CI runs all three on every pull request.
+Each layer proves something the others cannot. CI runs all three on every pull request, on Linux and on Windows.
 
 | Layer   | Run                                          | What it proves                                                                                                           |
 |---------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|

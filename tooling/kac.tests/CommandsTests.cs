@@ -47,6 +47,10 @@ public class CommandsTests
     }
 
     [Fact]
+    public void A_path_written_with_backslashes_is_reported_with_forward_slashes_and_its_folder_in_grey()
+        => Assert.Equal("[grey]wrote reports/[/]clause-coverage.md", Commands.Wrote(@"reports\clause-coverage.md"));
+
+    [Fact]
     public void Validate_asks_the_registry_it_is_given_about_each_locked_import()
     {
         var root = Fixture("import-versions");

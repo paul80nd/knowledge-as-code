@@ -13,7 +13,7 @@ public sealed class BaselineTests : IDisposable
 
     public void Dispose()
     {
-        try { Directory.Delete(_repo, recursive: true); }
+        try { Files.DeleteTree(_repo); }
         // A file still open leaves the tree under the system temp directory, which the machine clears.
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {

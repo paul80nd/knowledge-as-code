@@ -9,7 +9,7 @@ public class TemplateSourceTests : IDisposable
 {
     private readonly DirectoryInfo _temp = Directory.CreateTempSubdirectory("kac-template-");
 
-    public void Dispose() => _temp.Delete(recursive: true);
+    public void Dispose() => Files.DeleteTree(_temp.FullName);
 
     private string Dir(string name)
     {
@@ -146,6 +146,25 @@ public class TemplateSourceTests : IDisposable
         source.Dispose();
 
         Assert.False(Directory.Exists(clone));
+    }
+
+    /// <summary>
+    /// Git marks what it writes under <c>.git/objects</c> read-only. A read-only folder stands in for that here,
+    /// because Unix deletes a read-only file and refuses to empty a read-only folder.
+    /// </summary>
+    [Fact]
+    public void A_clone_holding_read_only_git_objects_is_still_removed()
+    {
+        var origin = Dir("origin");
+        Write(origin, "manifest.yaml");
+        Assert.SkipUnless(GitCli.Repository(origin), GitCli.Unavailable);
+
+        var source = TemplateSource.Read("new", Url(origin), null, null, _temp.FullName, prompt: false).Fetched();
+        var objects = Path.Combine(source.Root, ".git", "objects");
+        File.SetAttributes(objects, File.GetAttributes(objects) | FileAttributes.ReadOnly);
+        source.Dispose();
+
+        Assert.False(Directory.Exists(source.Root));
     }
 
     [Fact]

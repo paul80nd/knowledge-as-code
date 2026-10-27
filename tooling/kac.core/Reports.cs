@@ -30,7 +30,8 @@ public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSourc
 /// </summary>
 public sealed record ReportPlan(string Name, string Title, string Frontmatter, string Body)
 {
-    public string Text => $"---\n{Frontmatter}---\n\n# {Title}\n\n{Body}";
+    /// <summary>Every line ends with a line feed, although the body is built with <c>AppendLine</c>.</summary>
+    public string Text => $"---\n{Frontmatter}---\n\n# {Title}\n\n{Body}".ReplaceLineEndings("\n");
 }
 
 /// <summary>

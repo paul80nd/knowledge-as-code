@@ -158,6 +158,7 @@ public record MarketplacePlugin(string Name, string Description, string Source);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,
+    NewLine = "\n",
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.Never)]
 [JsonSerializable(typeof(ValidateReport))]
@@ -187,6 +188,7 @@ public partial class KacJson : JsonSerializerContext
     private static JsonSerializerOptions Escaped(bool indented) => new(Default.Options)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        WriteIndented = indented
+        WriteIndented = indented,
+        NewLine = "\n"
     };
 }

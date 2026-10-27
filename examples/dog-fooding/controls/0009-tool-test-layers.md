@@ -6,7 +6,7 @@ status: active
 verifies: [ eng:std-GATES.BUILD, eng:std-TEST.LEVEL, std-PLUGIN.FROZEN ]
 mechanism: ci
 frequency: per-pr
-evidence: The `tool` job's log on the pull request, under its three test steps.
+evidence: The logs of `tool (ubuntu-latest)` and `tool (windows-latest)` on the pull request, under their test steps.
 applies-to:
   - all
 review-by: "2027-09-22"
@@ -33,7 +33,7 @@ Each layer asserts something different about the same corpus.
 
 ## How it works
 
-The `tool` job runs three commands:
+The `tool` job runs three commands, once on `ubuntu-latest` and once on `windows-latest`:
 
 * `dotnet test --project tooling/kac.tests` for the unit layer.
 * `dotnet test --project tooling/kac.features` for the Reqnroll behaviour specs.

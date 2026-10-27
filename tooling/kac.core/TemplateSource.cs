@@ -30,7 +30,7 @@ public sealed class TemplateSource : IDisposable
     {
         try
         {
-            Directory.Delete(dir, recursive: true);
+            kac.core.Files.DeleteTree(dir);
         }
         catch (IOException)
         {

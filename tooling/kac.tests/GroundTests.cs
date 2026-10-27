@@ -6,7 +6,7 @@ public class GroundTests : IDisposable
 {
     private readonly DirectoryInfo _temp = Directory.CreateTempSubdirectory("kac-ground-");
 
-    public void Dispose() => _temp.Delete(recursive: true);
+    public void Dispose() => Files.DeleteTree(_temp.FullName);
 
     private string Dir(string name)
     {

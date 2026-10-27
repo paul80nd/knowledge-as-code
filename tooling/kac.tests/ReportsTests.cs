@@ -9,6 +9,10 @@ public class ReportsTests
         => Assert.Null(Reports.Plan("invented", Corpus(), [], Stamp));
 
     [Fact]
+    public void A_report_ends_every_line_with_a_line_feed_whatever_its_body_was_built_with()
+        => Assert.Equal("---\nx: 1\n---\n\n# T\n\na\nb\n", new ReportPlan("n", "T", "x: 1\n", "a\r\nb\r\n").Text);
+
+    [Fact]
     public void A_clause_a_standard_implements_reads_covered()
         => Assert.Contains("| `STORE` | MUST | `std-SEC` |  |  |  | covered | |", Coverage());
 
