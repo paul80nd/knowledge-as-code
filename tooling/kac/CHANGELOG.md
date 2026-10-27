@@ -77,6 +77,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`changelog-begins-at-active` and `changelog-on-material-change` leave the `standards` schema.** Neither ran, and
   a standard's type page no longer lists them as declared and not yet enforced.
 
+### Fixed
+
+- **`kac export`, `kac bundle` and `kac validate --json` write the same bytes on Windows as on Linux.** Indented JSON
+  ended its lines with CRLF on Windows, and mixed CRLF with LF where a final newline was added. Each line now ends
+  with LF on every platform.
+- **A path `kac` reports uses `/` on Windows.** `kac report --out reports\clause-coverage.md` printed the backslashes
+  and lost the grey folder prefix. Every `wrote` line, and each refusal of `report --out`, now prints `/`.
+- **`kac new` and `kac update` delete their template clone on Windows.** Git marks the files under `.git/objects`
+  read-only, and Windows refused to delete them, so each run left its clone in the temp folder.
+
 ## 0.39.0 - 2026-10-23
 
 ### Added
