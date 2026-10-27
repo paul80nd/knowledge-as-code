@@ -260,7 +260,7 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 
     private static string Unauthorised(int status) =>
         status is 401 or 403 or 404
-            ? $". A private feed needs a token in {TokenVariable}, and a personal access token needs any user "
+            ? $". A private feed needs a token in {TokenVariable}, and a personal access token needs a user "
               + $"name in {UserVariable} as well"
             : "";
 
