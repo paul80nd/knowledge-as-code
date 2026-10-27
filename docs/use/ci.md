@@ -92,25 +92,27 @@ checks.
 
 ## GitHub Actions
 
+This is the `.github/workflows/kac.yml` that `kac new --ci github` writes, with most of its comments cut:
+
 ```yaml
 name: kac
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
+  push:
+    branches: [main]
 
-# Nothing here writes back to the repository.
 permissions:
   contents: read
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    # Lets `kac validate` post its findings to the pull request.
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write    # lets `kac validate` post its findings
+      packages: read          # lets `kac` read a private GitHub Packages feed
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -124,15 +126,28 @@ jobs:
       - name: Install the pinned kac
         run: dotnet tool restore
 
-      # Compares each record with the branch the pull request targets.
+      - name: Restore the corpora this one consumes
+        run: dotnet tool run kac restore
+        env:
+          KAC_REGISTRY_TOKEN: ${{ github.token }}
+
+      # On a pull request, compares each record with the branch it targets.
       - name: Validate frontmatter, links and structure
-        run: dotnet tool run kac validate --since "origin/$BASE_REF"
+        run: dotnet tool run kac validate ${BASE_REF:+--since "origin/$BASE_REF"}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          KAC_REGISTRY_TOKEN: ${{ github.token }}
           BASE_REF: ${{ github.base_ref }}
 
       - name: Check generated output is fresh
         run: dotnet tool run kac generate --check
+
+      # Delete both steps if this corpus publishes no plugin.
+      - name: Build the export
+        run: dotnet tool run kac export
+
+      - name: Assemble the plugin bundle
+        run: dotnet tool run kac bundle
 ```
 
 Each action is pinned to a commit, because a tag can be moved to other code. The `.github/dependabot.yml` that
@@ -141,13 +156,15 @@ Each action is pinned to a commit, because a tag can be moved to other code. The
 compromised release has time to be withdrawn. The checkout sets `persist-credentials: false`, so no later step can push
 with the job's token.
 
-The SDK is pinned to one release, because the job has a write permission. Dependabot does not read `dotnet-version`, so
-move it by hand.
+The SDK is pinned to one release, because the job has a write permission. Any .NET 10 SDK runs `kac`, so the pin picks
+a release and sets no minimum. Dependabot does not read `dotnet-version`, so move it by hand.
 
 ## Azure Pipelines
 
+This is the `azure-pipelines.yml` that `kac new --ci azure-devops` writes, with most of its comments cut:
+
 ```yaml
-trigger: none      # PR validation comes from an Azure Repos branch policy
+trigger: none # no CI on branch pushes; PR validation is via branch policy
 
 pr:
   branches:
@@ -157,18 +174,29 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
 steps:
   - checkout: self
     fetchDepth: 0
 
   - task: UseDotNet@2
-    displayName: Install .NET 10 SDK
+    displayName: Install the .NET 10 SDK
     inputs:
       packageType: sdk
       version: 10.0.402
 
   - script: dotnet tool restore
     displayName: Install the pinned kac
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: dotnet tool run kac restore
+    displayName: Restore the corpora this one consumes
+    workingDirectory: $(Build.SourcesDirectory)
+    env:
+      KAC_REGISTRY_TOKEN: $(System.AccessToken)
 
   # Posting the findings needs the build service to have Contribute to pull requests. The target branch
   # is set on a pull request alone, as refs/heads/main, and the comparison wants origin/main.
@@ -176,11 +204,23 @@ steps:
       target="${SYSTEM_PULLREQUEST_TARGETBRANCH#refs/heads/}"
       dotnet tool run kac validate ${target:+--since "origin/$target"}
     displayName: Validate frontmatter, links and structure
+    workingDirectory: $(Build.SourcesDirectory)
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      KAC_REGISTRY_TOKEN: $(System.AccessToken)
 
   - script: dotnet tool run kac generate --check
     displayName: Check generated output is fresh
+    workingDirectory: $(Build.SourcesDirectory)
+
+  # Delete both steps if this corpus publishes no plugin.
+  - script: dotnet tool run kac export
+    displayName: Build the export
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: dotnet tool run kac bundle
+    displayName: Assemble the plugin bundle
+    workingDirectory: $(Build.SourcesDirectory)
 ```
 
 !!! warning "Azure Repos ignores the `pr:` trigger in this file"
@@ -241,6 +281,9 @@ npm install -g @anthropic-ai/claude-code
 claude plugin validate ./.dist/plugin --strict
 claude plugin validate ./.dist --strict
 ```
+
+[Installing a corpus plugin](installing-a-plugin.md) says how a reader installs the plugin from the marketplace you
+publish.
 
 ## Publishing the corpus as a package
 

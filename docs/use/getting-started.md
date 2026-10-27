@@ -2,21 +2,27 @@
 
 ## Before you start
 
-`kac` is a dotnet tool, so it needs the **.NET 10 SDK**. Check what you have:
+`kac` is a dotnet tool, so it needs a **.NET 10 SDK**. Any release of it runs `kac`. Check what you have:
 
 ```bash
 dotnet --list-sdks
 ```
 
-You want a line opening `10.`:
+You want a line opening `10.`, whatever follows it:
 
 ```text
-10.0.300 [/usr/local/share/dotnet/sdk]
+10.0.113 [/usr/lib/dotnet/sdk]
 ```
 
-If there is none, install it from
+If there is none, install one from
 [dotnet.microsoft.com/download/dotnet/10.0](https://dotnet.microsoft.com/download/dotnet/10.0). An older SDK beside it
-is fine, and nothing here removes one.
+is fine. On Linux, [Install .NET on Linux](https://learn.microsoft.com/dotnet/core/install/linux) says which package
+feed has the SDK for your distribution. Ubuntu 24.04 has it in Ubuntu's own feed, which also serves Arm:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y dotnet-sdk-10.0
+```
 
 You also need **git**. `kac` lists a corpus with `git ls-files`, so a corpus outside version control is read a narrower
 way. [Discovery](discovery.md) says what changes.
@@ -33,7 +39,7 @@ kac --version
 `--version` prints the release and the commit it was built from:
 
 ```text
-0.25.0+037426e8e60b7756f6883f307334a3368b80779d
+0.41.0+c1c9621bc64317da9642f942d804d7dd22e41644
 ```
 
 If the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to your `PATH` and open a new shell.
@@ -60,7 +66,9 @@ The folder does not have to be a repository yet. `new` offers to run `git init` 
 running `generate`, then `validate`, then `git add -A`:
 
 ```text
-new: wrote 120 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
+new: did not write .github/dependabot.yml, .github/workflows/kac.yml, azure-pipelines.yml: this corpus is built by none.
+new: wrote 120 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
+wrote README.md
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
@@ -68,6 +76,16 @@ new: staged. `git status` shows everything this wrote, and the first commit is y
 ```
 
 The first commit is yours to make, once you have read what is staged.
+
+!!! note "Tell git who you are before the first commit"
+
+    On a machine where git has never committed, `git commit` stops with `Author identity unknown`. Set your name and
+    email once:
+
+    ```bash
+    git config --global user.name "Your Name"
+    git config --global user.email "you@example.com"
+    ```
 
 ```bash
 git commit -m "Start a corpus"
@@ -114,8 +132,12 @@ generated files already up to date; nothing written.
 Anything else is a finding naming the file, the check and the line. [Troubleshooting](troubleshooting.md) covers the
 ones you meet first.
 
-Two more commands write your corpus out for an agent to read: `kac export` and `kac bundle`.
-[Building the plugin](ci.md#building-the-plugin) is where those belong once a record of yours passes.
+Two more commands write your corpus out for an agent to read: `kac export` and `kac bundle`. Together they build a
+plugin, which is your corpus packaged for Claude Code.
+
+* [Installing the plugin you built](cli/bundle.md#an-install) takes it into Claude Code on your own machine.
+* [Building the plugin](ci.md#building-the-plugin) runs both commands in CI once a record of yours passes.
+* [Installing a corpus plugin](installing-a-plugin.md) says how your readers install it and take each new version.
 
 Every command takes the same few options, and each answers with one of three exit codes.
 [The CLI reference](cli/index.md) covers both, and gives a page to every command.

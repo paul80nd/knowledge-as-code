@@ -93,7 +93,7 @@ missing answer exits rather than waiting, because a hung pipeline is worse than 
 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
-new: wrote 121 file(s) for my-corpus, taken from /path/to/template.
+new: wrote 122 file(s) for my-corpus, taken from /path/to/template.
 wrote README.md
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
@@ -102,13 +102,16 @@ new: staged. `git status` shows everything this wrote, and the first commit is y
 ```
 
 Take the framework from a URL rather than a folder and the second line adds the commit it resolved, as
-`…knowledge-as-code at 3b812bb.`
+`…knowledge-as-code at c1c9621.`
 
 `new` stops short of committing. Read what is staged, then:
 
 ```bash
 git commit -m "Start a corpus"
 ```
+
+On a machine where git has never committed, this stops with `Author identity unknown`.
+[Start a corpus](../getting-started.md#start-a-corpus) gives the two `git config` lines that set your name and email.
 
 ### A corpus with no network
 
