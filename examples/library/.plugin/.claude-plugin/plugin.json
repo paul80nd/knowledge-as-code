@@ -44,7 +44,10 @@
         "requires": [
           "controls@3"
         ],
-        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+        "optional": [
+          "reports@2"
+        ],
+        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit. Where someone asks what nothing covers across the corpus, it reads corpus/reports/ through ask-the-corpus/reports.md."
       },
       {
         "path": "skills/fix-lookup",

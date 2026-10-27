@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **`controls-lookup` declares the reports it reads.** It answers a question about the whole corpus from a report, so
+  its `plugin.json` entry lists `reports@2` under `optional`. Where the export includes reports at another shape,
+  `kac bundle` refuses the plugin until the entry names that shape. Add `"optional": ["reports@2"]` to the
+  `controls-lookup` entry of your `plugin.json`.
+
 ## 0.40.0 - 2026-10-27
 
 ### Added
