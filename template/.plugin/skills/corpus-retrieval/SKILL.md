@@ -13,6 +13,9 @@ than what the summary suggests. Every type reads the same way.
 **The skill that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came from a
 parts file.
 
+Fetching runs `gh` on GitHub or `az` on Azure DevOps. Where neither can run, ask whoever is with you for the section
+you need.
+
 ## Take the publishing block of the corpus that wrote it
 
 `manifest.json` has a `publishing` block per corpus. A record or a line with a `shortcode` is published by the entry in
@@ -62,11 +65,12 @@ az devops invoke --area git --resource items --accept-media-type text/plain --or
 The [Git Items API](https://learn.microsoft.com/en-us/rest/api/azure/devops/git/items) names the parameters that
 address a path at a ref. `--accept-media-type text/plain` makes the response the file, and not a description of it.
 
-### Where nothing here reaches it
+### Where neither `gh` nor `az` fetches it
 
-Say that you found the record and cannot read it, name the platform, and quote the human link. Ask whoever is with you
-to paste the section you need. Answer only from what the record says, because a reader cannot tell a guess about its
-steps from the corpus.
+This covers a client that is not installed, one the repository refuses, and a session that cannot run a command at
+all. Say that you found the record and cannot read it, name the platform, and quote the human link. Ask whoever is
+with you to paste the section you need. Answer only from what the record says, because a reader cannot tell a guess
+about its steps from the corpus.
 
 ## Check what you got
 

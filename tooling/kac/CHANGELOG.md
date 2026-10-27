@@ -17,6 +17,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Changed
+
+- **`corpus-retrieval`, `raise-finding` and `request-deviation` say what they hand you without `gh` or `az`.** Each
+  names the client it runs at the top, and its fallback section lists the cases that section covers: a client that is
+  not installed, and a session that cannot run a command. `raise-finding` and `request-deviation` print the whole body
+  for you to file by hand, and `corpus-retrieval` asks you for the section it needs.
+
 ### Fixed
 
 - **`controls-lookup` declares the reports it reads.** It answers a question about the whole corpus from a report, so
