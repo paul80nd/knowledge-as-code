@@ -328,7 +328,7 @@ Controls: none.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's commit, or the name of the corpus the finding was filed from.
 - The upstream body **MUST** state the version of the framework the session ran.
 
-### A hook runs in a POSIX shell, and pushes a view once a session
+### A hook runs in a POSIX shell, and pushes a view once to each agent
 
 Cite as `std-PLUGIN.HOOK`.
 
@@ -338,7 +338,8 @@ Controls: none.
 - A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
 - What a hook prints **MUST** be rendered by `kac bundle`, so the hook computes nothing about the export.
 - A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`, or under the temporary directory where that is unset.
-- A hook pushing a view **MUST** push it at most once a session.
+- A hook pushing a view **MUST** push it at most once to each agent between compactions, the main session and each subagent alike.
+- A hook pushing a view **MUST** push it again to each agent after a compaction, because the summary can drop it.
 - What a hook pushes **MUST** be at most 10,000 characters, because Claude Code shows a session only the first 2,000 of a longer one.
 - Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
 - What a hook pushes **SHOULD** state facts, because Claude Code passes it to the session as context.
@@ -841,7 +842,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1023,7 +1024,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1071,7 +1072,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 

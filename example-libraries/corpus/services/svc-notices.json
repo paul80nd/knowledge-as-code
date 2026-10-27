@@ -30,10 +30,10 @@
   "sections": {
     "What it does": "Sends templated emails to a borrower on behalf of the library. It runs on a schedule and reacts to events. Timers sweep for loans falling due and for loans already overdue. Three bus topics deliver the events that need an immediate message.\n\nThe message bodies are templates stored with the mail provider, selected by event type. Changing the wording is a provider change and needs no deployment. The trade is deliberate: the people accountable for the wording can change it without a developer, and the wording is outside version control.",
     "Where it lives": "* **Repository**: [`notices`](https://git.example.com/example-libraries/notices), at `src/Notices.FunctionApp`\n* **Platform**: Azure Functions, .NET isolated worker\n* **Deployed as**: Function App `func-notices-<env>`",
-    "Dependencies": "None. It consumes from the bus and calls the mail provider, [itg-mail-delivery](https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/library/integrations/mail-delivery.md). The library does not deploy that provider, so it is an integration.",
+    "Dependencies": "None. It consumes from the bus and calls the mail provider, [itg-mail-delivery](https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/library/integrations/mail-delivery.md). The library does not deploy that provider, so it is an integration.",
     "Data": "* A table recording what has been sent to whom, so a borrower is not reminded twice for the same loan.\n* A blob container storing message bodies too large for the bus.\n\nBoth are in the shared storage account."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/library/services/notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/library/services/notices.md"
   }
 }

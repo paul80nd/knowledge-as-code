@@ -9,6 +9,15 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/breadcrumb"
           }
         ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/build-index reset"
+          }
+        ]
       }
     ],
     "PreToolUse": [

@@ -30,6 +30,6 @@
     "Scope": "Everything in this repository: the tool, the schema, the four corpora, the site and the workflows."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fe35fe0328bc31845c3237dcff77ae3e47661e0f/examples/dog-fooding/deviations/one-maintainer.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b559480e9fc59ea8a218340da7a26bbcaf1a92ec/examples/dog-fooding/deviations/one-maintainer.md"
   }
 }
