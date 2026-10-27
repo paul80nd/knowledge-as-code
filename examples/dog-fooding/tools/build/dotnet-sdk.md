@@ -56,9 +56,9 @@ Microsoft's [Windows licence information] names the files that are not:
 * The [.NET Library License] covers `coreclr.dll` and `Microsoft.DiaSymReader.Native.*.dll`, among others.
 * The [Windows SDK License] covers `D3DCompiler_47_cor3.dll`, which the WPF runtime uses.
 
-The `round-trip` and `import-round-trip` jobs in `kac.yml` install the SDK on `windows-latest`, so `licence` includes
-both. Neither has an SPDX identifier, so each is a `LicenseRef-`. The Windows zip of SDK 10.0.402 contains every file
-the page names, and its root `LICENSE.txt` is the .NET Library License.
+The `tool`, `round-trip` and `import-round-trip` jobs in `kac.yml` install the SDK on `windows-latest`, so `licence`
+includes both. Neither has an SPDX identifier, so each is a `LicenseRef-`. The Windows zip of SDK 10.0.402 contains
+every file the page names, and its root `LICENSE.txt` is the .NET Library License.
 
 The SDK also puts a `ThirdPartyNotices.txt` of 56 notices beside its `LICENSE.txt`, and the file is the same on Windows
 and macOS. Every notice is permissive or a public-domain dedication, and `licence` lists each one SPDX has an identifier

@@ -33,7 +33,7 @@ Each layer asserts something different about the same corpus.
 
 ## How it works
 
-The `tool` job runs three commands:
+The `tool` job runs three commands, once on `ubuntu-latest` and once on `windows-latest`:
 
 * `dotnet test --project tooling/kac.tests` for the unit layer.
 * `dotnet test --project tooling/kac.features` for the Reqnroll behaviour specs.
