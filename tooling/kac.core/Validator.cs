@@ -830,12 +830,18 @@ public static class Validator
             if (d.FrontScalar("id") is { Length: > 0 } id)
                 now.TryAdd(id, d);
 
+        // A record still at its path whose id cannot be read is one `frontmatter-parses` or `required-field` reports.
+        var unread = docs.Where(d => d.FrontScalar("id") is not { Length: > 0 }).Select(d => d.Rel)
+            .ToHashSet(StringComparer.Ordinal);
+
         foreach (var before in since.Docs)
         {
             if (before.Type is not { } t || before.FrontScalar("id") is not { Length: > 0 } id) continue;
 
             if (!now.TryGetValue(id, out var after))
             {
+                if (unread.Contains(before.Rel)) continue;
+
                 var status = before.FrontScalar("status");
                 if (status is not null && status == schema.EffectiveField(t, "status")?.InForce)
                     f.Add(new Finding(before.Rel, null, Sev.Warning, HistoryRules.RetireNotDelete,

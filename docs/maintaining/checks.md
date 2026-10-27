@@ -47,10 +47,11 @@ them all.
 
 ### A rule that compares two revisions
 
-An `IHistoryRule` runs only under `validate --since`. `Baseline.Read` reads the corpus at that revision through
-the same `Corpus.Load` the working tree takes, so both copies of a record are parsed alike. `Validator.CheckHistory`
-pairs them by `id`, and hands a rule only a record whose text differs. `Substance.Changes` lists the parts of a record
-that changed in substance, which is the question both immutability rules ask. A rule on a type's parts compares
+An `IHistoryRule` runs only under `validate --since`. `Baseline.Read` reads each file that differs between that
+revision and the working tree, through the same `Corpus.Load` the working tree takes, so both copies of a record are
+parsed alike. Any other file is the same at both, and pairs with itself. `Validator.CheckHistory` pairs the two
+copies by `id`, and hands a rule only a record whose text differs. `Substance.Changes` lists the parts of a record that
+changed in substance, which is the question both immutability rules ask. A rule on a type's parts compares
 `Before.Parts` with `After.Parts`.
 
 `retire-not-delete` is no rule class. It reads only a type's `in-force:` value, so `Validator.CheckHistory` reports it

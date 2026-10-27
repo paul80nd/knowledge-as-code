@@ -86,8 +86,9 @@ compared.
 
 A change in substance is anything except these:
 
-* **Whitespace.** A reflow passes.
-* **A link target.** The words a reader sees must stay the same.
+* **Layout.** A reflow passes, and so does a table realigned around a longer cell.
+* **A link target.** The words a reader sees must stay the same. An autolink, as `<https://example.com>`, may change
+  whole.
 * **A typo.** Each changed word is within two edits of the word it replaced, and the section keeps its word count.
 * **`status`, `superseded-by` and `review-by`.** Any other frontmatter field that moves is a change in substance.
 

@@ -36,21 +36,20 @@ public static class Substance
                 FirstSection(after))))
             changes.Add(new Change(Opening, Math.Max(after.H1Line, 1)));
 
-        var was = before.Sections.Select(s => s.Title).ToList();
-        var now = after.Sections.Select(s => s.Title).ToList();
+        var was = Keyed(before);
+        var now = Keyed(after);
 
-        foreach (var gone in before.Sections.Where(s => !now.Contains(s.Title, StringComparer.Ordinal)))
-            changes.Add(new Change($"`## {gone.Title}` removed", Math.Max(after.H1Line, 1)));
+        foreach (var key in was.Keys.Where(k => !now.ContainsKey(k)))
+            changes.Add(new Change($"`## {key.Title}` removed", Math.Max(after.H1Line, 1)));
 
-        foreach (var section in after.Sections)
+        foreach (var (key, section) in now)
         {
-            if (!was.Contains(section.Title, StringComparer.Ordinal))
+            if (!was.TryGetValue(key, out var then))
             {
                 changes.Add(new Change($"`## {section.Title}` added", section.Line));
                 continue;
             }
 
-            var then = before.Sections.First(s => s.Title == section.Title);
             if (!Close(Words(before, then.BodyStart, then.BodyEnd), Words(after, section.BodyStart, section.BodyEnd)))
                 changes.Add(new Change($"`## {section.Title}`", section.Line));
         }
@@ -96,6 +95,17 @@ public static class Substance
         _ => false
     };
 
+    /// <summary>
+    /// Each section under its title and how many earlier sections share it, so two sections titled alike pair in order.
+    /// </summary>
+    private static Dictionary<(string Title, int Nth), Section> Keyed(Doc d)
+    {
+        var keyed = new Dictionary<(string Title, int Nth), Section>();
+        foreach (var section in d.Sections)
+            keyed[(section.Title, keyed.Keys.Count(k => k.Title == section.Title))] = section;
+        return keyed;
+    }
+
     private static int FirstSection(Doc d) =>
         d.Ast.Descendants<HeadingBlock>().FirstOrDefault(h => h.Level == 2)?.Span.Start ?? d.Text.Length;
 
@@ -107,8 +117,8 @@ public static class Substance
         && before.Zip(after).All(p => p.First == p.Second || Edits(p.First, p.Second) <= TypoEdits);
 
     /// <summary>
-    /// The words between two offsets, with whitespace folded and every link reduced to its text. The identity line is
-    /// left out, because <c>identity-status</c> already holds it to <c>status</c>.
+    /// The words between two offsets, whitespace folded, each link reduced to its text and each autolink to nothing.
+    /// The identity line is left out, and <c>identity-status</c> checks it against <c>status</c>.
     /// </summary>
     private static List<string> Words(Doc d, int start, int end)
     {
@@ -124,7 +134,12 @@ public static class Substance
 
         if (end > at) kept.Append(d.Text, at, end - at);
 
-        return [.. kept.ToString().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)];
+        // A table's pipes and delimiter row are layout, which an editor realigns around a longer cell.
+        return
+        [
+            .. kept.ToString().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
+                .Where(word => word.Any(c => c is not ('|' or '-' or ':')))
+        ];
     }
 
     /// <summary>The spans a reader never reads as prose: link markup, link definitions and the identity line.</summary>
@@ -132,11 +147,12 @@ public static class Substance
     {
         foreach (var span in d.DefinitionSpans) yield return span;
 
+        foreach (var autolink in d.Ast.Descendants<AutolinkInline>())
+            yield return (autolink.Span.Start, autolink.Span.End + 1);
+
         foreach (var link in d.Ast.Descendants<LinkInline>())
         {
-            if (link.IsAutoLink) continue;
-
-            if (link.FirstChild is not { } first || link.LastChild is not { } last)
+            if (link.IsAutoLink || link.FirstChild is not { } first || link.LastChild is not { } last)
             {
                 yield return (link.Span.Start, link.Span.End + 1);
                 continue;

@@ -107,5 +107,26 @@ public class SubstanceTests
             Substance.Changes(Adr(Before), Adr(Before.Replace("## Consequences", "## Outcomes")))
                 .Select(c => c.Part));
 
+    [Fact]
+    public void A_table_realigned_around_a_longer_link_target_is_no_change()
+        => Assert.Empty(Substance.Changes(
+            Adr(Before + "\n\n| When | What |\n|------|------|\n| 9:00 | [down](a.md) |\n"),
+            Adr(Before + "\n\n| When | What                      |\n|------|---------------------------|\n"
+                + "| 9:00 | [down](runbooks/outage.md) |\n")));
+
+    [Fact]
+    public void A_corrected_autolink_is_no_change()
+        => Assert.Empty(Substance.Changes(Adr(Before.Replace("a reviewer.", "a reviewer. <https://old.example/spec>")),
+            Adr(Before.Replace("a reviewer.", "a reviewer. <https://new.example/spec/v2>"))));
+
+    [Fact]
+    public void Sections_sharing_a_title_pair_in_order_and_one_deleted_is_a_change()
+    {
+        var two = Before + "\n\n## Notes\n\nThe first note.\n\n## Notes\n\nThe second note.\n";
+        Assert.Empty(Substance.Changes(Adr(two), Adr(two)));
+        Assert.Equal("`## Notes` removed", Assert.Single(Substance.Changes(Adr(two),
+            Adr(Before + "\n\n## Notes\n\nThe first note.\n"))).Part);
+    }
+
     private static Doc Adr(string text) => Required.Parsed("adrs/0001-keep-records-in-git.md", text, new Schema());
 }

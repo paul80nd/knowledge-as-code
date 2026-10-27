@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 
 namespace kac.core;
 
@@ -26,6 +27,9 @@ public static class Git
                 WorkingDirectory = root,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
+                // A corpus is UTF-8 and so are the paths git prints. Windows would otherwise decode with its code page.
+                StandardOutputEncoding = new UTF8Encoding(false),
+                StandardErrorEncoding = new UTF8Encoding(false),
                 UseShellExecute = false
             };
             if (environment is not null)

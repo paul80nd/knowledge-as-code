@@ -76,6 +76,11 @@ public class HistoryTests
         Assert.Contains("adr-0001", finding.Message);
     }
 
+    [Fact]
+    public void A_record_whose_frontmatter_no_longer_parses_is_not_reported_as_deleted()
+        => Assert.Empty(Run([Adr("adrs/0001-git.md", "accepted", "We keep records in git.")],
+            [Required.Parsed("adrs/0001-git.md", "---\nid: [adr-0001\n---\n\n# Keep records in git\n", Schema)]));
+
     [Theory]
     [InlineData("proposed")]
     [InlineData("superseded")]
