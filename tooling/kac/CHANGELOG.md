@@ -40,6 +40,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   GitHub starter grants `packages: read` and passes `github.token` as `KAC_REGISTRY_TOKEN` to the restore and
   validate steps, so `validate` checks each lock against the feed. The Azure starter passes `$(System.AccessToken)`.
   Each header comment names the feed permission a package from another repository or project needs.
+- **The template's build-index hook prints the build index to each subagent, and again after a compaction.** It
+  printed once for each session id, so a subagent never received it, and a compaction kept the id and silenced it.
+  The hook now keeps a marker for each agent, named `<session_id>.<agent_id>` for a subagent. A new `SessionStart`
+  entry matching `compact` runs it with `reset`, which deletes the session's markers, so each agent's next tool call
+  prints it again.
 
 ## 0.40.0 - 2026-10-27
 

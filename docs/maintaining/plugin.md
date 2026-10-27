@@ -110,9 +110,10 @@ each runs at the first session.
 
 ## The build-index hook
 
-A `PreToolUse` hook on every tool prints the build index once a session, at the session's first tool call. Claude
-Code passes a `PreToolUse` hook's `additionalContext` to the session beside that tool's result, so the session never
-reads it before the call runs. The matcher decides only how early the index arrives. Matching every tool delivers it
+A `PreToolUse` hook on every tool prints the build index once to each agent in a session: the main session, and each
+subagent it starts. It prints at that agent's first tool call, and again after a compaction. Claude Code passes a
+`PreToolUse` hook's `additionalContext` to the agent beside that tool's result, so the agent never reads it before the
+call runs. The matcher decides only how early the index arrives. Matching every tool delivers it
 with the first result, whether the session starts with `Read`, `Bash` or the Windows `PowerShell` tool. A session whose
 first call is an edit has the index once that edit returns.
 
@@ -120,12 +121,19 @@ first call is an edit has the index once that edit returns.
   `additionalContext` is the build index as `View` rendered it. The script prints that file and parses nothing.
 * **It travels with the hook directory and the build index.** `bundle` writes the file only where both survived the
   trim. Without it the script prints nothing, so a corpus with no standards ships a silent script.
-* **It fires once a session.** The script cuts `session_id` out of its input. A JSON string escapes every quote inside
-  it, so the key with bare quotes is the only match. It then makes a directory named after the session under
-  `${CLAUDE_PLUGIN_DATA}/build-index/`. `mkdir` succeeds for one caller only, so two parallel calls print once.
+* **It fires once to each agent.** The script cuts `session_id` and `agent_id` out of its input. A JSON string
+  escapes every quote inside it, so a key with bare quotes is the only match. Claude Code sends `agent_id` for a
+  subagent's call alone. The script then makes a marker directory under `${CLAUDE_PLUGIN_DATA}/build-index/`, named
+  `<session_id>` for the main session and `<session_id>.<agent_id>` for a subagent. `mkdir` succeeds for one caller
+  only, so two parallel calls print once.
+* **An id it cannot trust counts as absent.** An id containing anything outside letters, digits, `_` and `-` is
+  dropped. With no session id the script prints at every call. With no agent id it uses the session's marker.
+* **A compaction resets the session's markers.** A `SessionStart` entry matching `compact` runs the script with
+  `reset`. It deletes `<session_id>` and every `<session_id>.*`, and prints nothing. Each agent's next call prints the
+  build index again. A compaction keeps the session id, so the old markers would otherwise silence the hook.
 * **A call after the first starts one `cat` and nothing else.** Every tool call runs the script. It reads its input
-  with `cat`, finds the session id with shell built-ins, and exits when the session's directory exists. Only a first
-  call runs `mkdir`, `find` and a second `cat`.
+  with `cat`, finds both ids with shell built-ins, and exits when the agent's marker exists. Only a first call runs
+  `mkdir`, `find` and a second `cat`.
 * **It prunes its own markers.** Each first call deletes marker directories older than 7 days.
 * **Over 10,000 characters it points instead.** Claude Code passes a hook's context to the session up to that length,
   and over it shows a file path and the first 2,000 characters. `bundle` measures the whole build index and, where it
@@ -238,7 +246,9 @@ type trim.
 * A view whose types the export lacks is trimmed, and written nowhere
 * A view reads an optional type only where the export carries it
 * The build-index hook prints the build index where the hook and the index both ship
-* The build-index hook prints the build index once a session
+* The build-index hook prints the build index once to the main session
+* The build-index hook prints the build index once to each subagent
+* A compaction resets the build-index hook in its own session alone
 * The build-index hook prints nothing where no build index ships
 * A bundle with no export is refused
 * A bundle with no plugin tree is refused
@@ -262,8 +272,9 @@ type trim.
 * A skill reading the parts file of the type it requires. `bundle` never reads a component's files, and
   `tooling/tests/round-trip.sh` checks it over the installed copy.
 * The `.cmd` half of the breadcrumb hook running on Windows. A scenario runs on the machine that runs the suite.
-* The build-index hook firing once a session. A scenario reads what `bundle` wrote and runs no script, so
-  `tooling/tests/round-trip.sh` runs the installed script twice.
+* Claude Code sending `agent_id` to a subagent's hook, and firing `SessionStart` with `compact`. A scenario runs the
+  script on the input Claude Code documents, and cannot start Claude Code. `tooling/tests/round-trip.sh` runs the
+  installed script twice for one session.
 * The warning over the build-index hook's cap. A scenario cannot read the output, so `BundlerTests` asserts it.
 * What the run prints: each trim, the closing count, the install hint and every refusal's reason. A scenario cannot
   read the output.

@@ -117,7 +117,7 @@
         "optional": [
           "standards"
         ],
-        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up. A PreToolUse hook printing the build index once a session, at its first tool call, where views/build-index.md survived. Both travel with the glossary, so a corpus exporting standards and no glossary ships neither."
+        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up. A PreToolUse hook printing the build index at the first tool call of the main session and of each subagent, and again after a compaction, where views/build-index.md survived. Both travel with the glossary, so a corpus exporting standards and no glossary ships neither."
       }
     ]
   }

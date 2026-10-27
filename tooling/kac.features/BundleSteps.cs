@@ -141,30 +141,29 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
     [When("I bundle")]
     public void WhenIBundle() => ws.Run(Commands.Bundle);
 
-    /// <summary>
-    /// Ignored on Windows, which puts no <c>sh</c> on the path. The <c>round-trip</c> job in <c>kac.yml</c> runs the
-    /// hook there under Git Bash.
-    /// </summary>
-    [When(@"the build-index hook runs twice in session ""(.*)""")]
-    public void WhenTheBuildIndexHookRunsTwiceInSession(string session)
+    [When(@"the build-index hook runs in session ""([^""]*)""")]
+    public void WhenTheBuildIndexHookRunsInSession(string session) => RunHookOnPosix(
+        $"{{\"session_id\":\"{session}\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"Bash\"}}\n");
+
+    /// <summary>As Claude Code calls it for a subagent, adding <c>agent_id</c> and <c>agent_type</c>.</summary>
+    [When(@"the build-index hook runs in session ""([^""]*)"" for agent ""([^""]*)""")]
+    public void WhenTheBuildIndexHookRunsInSessionForAgent(string session, string agent) => RunHookOnPosix(
+        $"{{\"session_id\":\"{session}\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"Read\"," +
+        $"\"agent_id\":\"{agent}\",\"agent_type\":\"general-purpose\"}}\n");
+
+    /// <summary>As the <c>SessionStart</c> entry matching <c>compact</c> calls it.</summary>
+    [When(@"the build-index hook resets session ""([^""]*)""")]
+    public void WhenTheBuildIndexHookResetsSession(string session) => RunHookOnPosix(
+        $"{{\"session_id\":\"{session}\",\"hook_event_name\":\"SessionStart\",\"source\":\"compact\"}}\n", "reset");
+
+    /// <summary>Lists <c>index</c> or <c>nothing</c> for each run, in the order they ran.</summary>
+    [Then(@"the build-index hook printed ""([^""]*)""")]
+    public void ThenTheBuildIndexHookPrinted(string outputs)
     {
-        if (OperatingSystem.IsWindows())
-        {
-            runtime.TestIgnore("Windows puts no sh on the path.");
-            return;
-        }
-
-        var input = $"{{\"session_id\":\"{session}\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"Bash\"}}\n";
-        _hookRuns.Add(RunHook(input));
-        _hookRuns.Add(RunHook(input));
+        var index = ws.Read($"{Dist.Plugin}/{BuildIndexHook.RenderedFile}");
+        var printed = _hookRuns.Select(run => run == index ? "index" : run == "" ? "nothing" : run);
+        Assert.Equal(outputs, string.Join(", ", printed));
     }
-
-    [Then("the first run printed the build index")]
-    public void ThenTheFirstRunPrintedTheBuildIndex()
-        => Assert.Equal(ws.Read($"{Dist.Plugin}/{BuildIndexHook.RenderedFile}"), _hookRuns[0]);
-
-    [Then("the second run printed nothing")]
-    public void ThenTheSecondRunPrintedNothing() => Assert.Equal("", _hookRuns[1]);
 
     [Then(@"the bundle includes ""(.*)""")]
     public void ThenTheBundleIncludes(string path) => Assert.Contains(path, Paths("included"));
@@ -204,8 +203,23 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
             $"{path} is not executable");
     }
 
+    /// <summary>
+    /// Ignored on Windows, which puts no <c>sh</c> on the path. The <c>round-trip</c> job in <c>kac.yml</c> runs the
+    /// hook there under Git Bash.
+    /// </summary>
+    private void RunHookOnPosix(string input, params string[] arguments)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            runtime.TestIgnore("Windows puts no sh on the path.");
+            return;
+        }
+
+        _hookRuns.Add(RunHook(input, arguments));
+    }
+
     /// <summary>With a data directory inside the workspace, so the marker dies with the scenario.</summary>
-    private string RunHook(string input)
+    private string RunHook(string input, string[] arguments)
     {
         var start = new ProcessStartInfo("sh")
         {
@@ -214,6 +228,8 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
             Environment = { ["CLAUDE_PLUGIN_DATA"] = ws.PathOf(".hook-data") }
         };
         start.ArgumentList.Add(ws.PathOf($"{Dist.Plugin}/hooks/build-index"));
+        foreach (var argument in arguments)
+            start.ArgumentList.Add(argument);
 
         using var hook = Process.Start(start) ?? throw new InvalidOperationException("sh did not start");
         hook.StandardInput.Write(input);

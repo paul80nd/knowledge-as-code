@@ -87,7 +87,7 @@ A moment whose lookups keep missing in a trial moves to a pointer the plugin pus
 its plugin manifest. Each entry in a view states its record's status, so a draft rule reads as a draft.
 
 * **The build index** lists every standard rule by title, under its standard's id. A hook the plugin ships pushes it
-  once a session.
+  once to each agent in a session, and again after a compaction.
 * **The review view** lists each rule's obligations: each MUST to check, and each SHOULD to note a departure from. It
   lists the controls that check each standard, with each control's mechanism and status. A control can name a whole
   standard, so the reviewer reads the control's record to learn which obligations it checks.

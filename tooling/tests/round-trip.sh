@@ -297,7 +297,7 @@ if [ -f "$BUILD_INDEX" ]; then
     || fail "the build-index hook did not print its output on a session's first call."
   [ -z "$SECOND" ] || fail "the build-index hook printed its output a second time in one session."
 
-  echo "round-trip: the build-index hook pushes $CONTEXT_LENGTH characters, once a session."
+  echo "round-trip: the build-index hook pushes $CONTEXT_LENGTH characters, once to the main session."
   echo "round-trip: a later call in that session took $(elapsed "$BEFORE" "$AFTER")."
 
   # Every tool call runs the hook, and a Write call's input carries the whole file.
