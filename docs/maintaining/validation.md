@@ -41,7 +41,8 @@ full statement of each one.
 * It reports a warning a record names in `accepts:` as info, with the reason, and warns on an entry matching no
   warning on its record. [The `accepts` field](../use/cli/validate.md#the-accepts-field)
 * With `--since`, it compares each record with its state at that revision, paired by id. It fails a change in
-  substance to a decided ADR or a published postmortem, and warns on a record deleted while in force.
+  substance to a decided ADR or a published postmortem, and a clause id or a rule id gone from an active policy or
+  standard. It warns on a record deleted while in force.
   [Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision)
 * `kac checks` lists each check with its severity and what it proves, read from the corpus's own `.schema/`, a type
   the corpus declares itself included. [`checks`](../use/cli/checks.md#what-it-does)

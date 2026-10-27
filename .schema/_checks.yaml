@@ -731,6 +731,14 @@ checks:
       Runs only where `validate --since` names a revision, and compares each postmortem with its state there. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems>.
 
+  part-id-kept:
+    severity: error
+    description: With `--since`, a record in force at that revision keeps the id of every part it had there.
+    notes: >
+      Runs only where `validate --since` names a revision. A part added or reworded passes, and so does a new title.
+      A record that was not in force there changes freely. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#policies>.
+
   retire-not-delete:
     severity: warning
     description: With `--since`, no record in force at that revision has been deleted.

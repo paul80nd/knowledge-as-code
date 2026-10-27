@@ -19,7 +19,8 @@ public static class HistoryRules
         new ImmutableAfter(new RuleId("immutable-after-published"), ["published"], "postmortem",
             id => "A published account changes only by a typo fixed, a link corrected, a reflow or an `accepts` "
                   + "entry. Restore the text, and write what was learnt since in a new postmortem that links to "
-                  + $"{id}.")
+                  + $"{id}."),
+        new PartIdKept()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IHistoryRule> ByRuleId =

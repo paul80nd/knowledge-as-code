@@ -23,8 +23,7 @@ optional field from [the type page](../policies.md#metadata) where you have a va
 * **`id`**: `pol-` plus a four-character mnemonic for the policy's concept. Start it with the same letter as the slug,
   so the folder still reads alphabetically. Upper-case here and lower-case in the filename, so `pol-VURM` sits in
   `vurm-vulnerability-remediation.md`. **Immutable once the policy is active.** A change of meaning is a new policy and
-  a retirement of this one. A reassigned mnemonic still resolves, so no check fires and every citation of it says
-  something untrue.
+  a retirement of this one. A reassigned mnemonic still resolves, so every citation of it says something untrue.
 * **Where you save it**: the folder below `policies/` becomes the policy's category, which is the broad area
   the commitment belongs to. That is a different question from the topics `tags` records. If two folders fit, pick
   the one a reader looking for this policy would try first. A policy saved straight into `policies/` has no category.
@@ -66,9 +65,11 @@ needs it has arrived at the wrong document and does not know it yet.
 
 **Clause ids.** A clause id matches `[A-Z][A-Z0-9]{1,6}`, is unique within the policy, and is immutable once the policy
 is active. Anything else cites a clause as `pol-{{MNEM}}.{{ID}}`, in the form [Metadata][referring] sets out. CI checks
-that every citation resolves to a clause that exists, so removing one is a breaking change. Prefer the shortest natural
-word. Compress only where no natural word is short enough. A report shows an id beside its clause text, but a CI failure
-or a diff shows the id alone, so keep it guessable.
+that every citation resolves to a clause that exists, so removing one is a breaking change. Under `validate --since`,
+`part-id-kept` fails a change that removes or renames a clause id in an active policy. Reword a clause in place, and
+write a new policy where one has to go. Prefer the shortest natural word. Compress only where no natural word is short
+enough. A report shows an id beside its clause text, but a CI failure or a diff shows the id alone, so keep it
+guessable.
 
 **Shared clause ids.** Where two policies bind the same obligation from their own side, give both clauses the same id,
 and make each signpost the other. The signpost closes the clause in brackets, addresses the other clause as

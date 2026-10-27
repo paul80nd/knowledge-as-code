@@ -165,6 +165,8 @@ public static class ChecksTable
             "With `--since`, a published postmortem has changed by no more than a typo, a link, its status or "
             + "`accepts`.",
             null),
+        ("part-id-kept", [new("part-id-kept")],
+            "With `--since`, a record in force at that revision keeps the id of every part it had there.", null),
         ("retire-not-delete", [HistoryRules.RetireNotDelete],
             "With `--since`, no record in force at that revision has been deleted.", null),
         ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",

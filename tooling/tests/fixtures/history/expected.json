@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 5,
-    "templates": 3,
+    "validated": 9,
+    "templates": 5,
     "skipped": 0,
-    "errors": 2,
+    "errors": 4,
     "warnings": 1,
     "infos": 0
   },
@@ -23,11 +23,25 @@
       "message": "adr-0003 was `accepted` at HEAD, and no record here has that id now. Something outside the corpus may still cite adr-0003, so restore the record and retire it through its `status`."
     },
     {
+      "file": "policies/kept-clause-ids.md",
+      "line": null,
+      "severity": "error",
+      "check": "part-id-kept",
+      "message": "this policy was `active` at HEAD, and its clause `LOCAL` is gone. A citation of pol-KEPT.LOCAL may outlive it, so restore the clause, and write the change in a new policy that supersedes pol-KEPT."
+    },
+    {
       "file": "postmortems/0001-catalogue-dark.md",
       "line": 35,
       "severity": "error",
       "check": "immutable-after-published",
       "message": "this postmortem was published at HEAD, and has changed by more than a typo since: `## Root cause`. A published account changes only by a typo fixed, a link corrected, a reflow or an `accepts` entry. Restore the text, and write what was learnt since in a new postmortem that links to pmt-0001."
+    },
+    {
+      "file": "standards/kept-rule-ids.md",
+      "line": null,
+      "severity": "error",
+      "check": "part-id-kept",
+      "message": "this standard was `active` at HEAD, and its rule `FAST` is gone. A citation of std-KEPT.FAST may outlive it, so restore the rule, and write the change in a new standard that supersedes std-KEPT."
     }
   ]
 }

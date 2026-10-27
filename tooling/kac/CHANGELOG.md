@@ -41,6 +41,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `superseded-by`, `review-by` or `accepts` passes. `retire-not-delete` warns on a record deleted while in force. A ref
   git cannot resolve exits 1. Without the flag, one line names the checks skipped. Both starter pipelines fetch the
   full history and pass `--since` on a pull request.
+- **`kac validate --since <ref>` keeps clause ids and rule ids.** `part-id-kept` is an error where a policy or a
+  standard was `active` at the revision, and a clause id or a rule id it had there has gone. The message names the id
+  and says to supersede the record with a new one. A part added or reworded passes, and so does a new title. A record
+  that was a draft, retired, deprecated or superseded at the revision changes freely, and that includes a draft made
+  `active` in the same change.
 
 ### Changed
 

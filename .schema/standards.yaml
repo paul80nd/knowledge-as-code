@@ -229,6 +229,9 @@ rules:
       neither `derived-from` nor `implements` is set, so this standard does not say where its authority
       comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the
       document as an explanation.
+  - id: part-id-kept
+    description: Once status is `active`, every rule id stays, so a citation written against it still resolves.
+    severity: error
   - id: binds-only-under-rules
     description: >
       Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal.

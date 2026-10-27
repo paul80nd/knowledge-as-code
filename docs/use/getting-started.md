@@ -63,6 +63,7 @@ running `generate`, then `validate`, then `git add -A`:
 new: wrote 120 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+validate: skipped immutable-after-accepted, part-id-kept, immutable-after-published and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
 
