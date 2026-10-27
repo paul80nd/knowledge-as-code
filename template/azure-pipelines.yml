@@ -1,10 +1,10 @@
 # CI for this corpus, on Azure Pipelines.
 #
-# Runs the validator, the freshness check and the two packaging commands on every pull request into
-# main. It writes back one thing: the comment `kac validate` posts on a pull request with findings.
-# `generate --check` reports staleness and names the command you run locally, and the export and the
-# bundle land in an untracked `.dist/` the agent throws away. Publishing what was built is a separate
-# act, and no step here does it.
+# Restores the corpora this one consumes, then runs the validator, the freshness check and the two
+# packaging commands on every pull request into main. It writes back one thing: the comment
+# `kac validate` posts on a pull request with findings. `generate --check` reports staleness and names
+# the command you run locally, and the export and the bundle land in an untracked `.dist/` the agent
+# throws away. Publishing what was built is a separate act, and no step here does it.
 #
 # Wiring PR validation, which is the part that catches people out: this is an Azure Repos repository,
 # where the `pr:` trigger below is ignored. Add this pipeline as a required build validation on main:
@@ -15,6 +15,12 @@
 # Posting the findings to the pull request needs one more console setting: give the project's build
 # service *Contribute to pull requests* on this repository, under Project settings -> Repositories ->
 # <your-repo> -> Security.
+#
+# Restoring from an Azure Artifacts feed reads it as the pipeline's build service, which is
+# `<project> Build Service (<org>)`, or `Project Collection Build Service (<org>)` where the job's
+# authorization scope is the collection. It can read a feed in this project by default. For a feed in
+# another project, add it to the feed as a Feed Reader, under Artifacts -> <the feed> -> Feed
+# settings -> Permissions.
 #
 # Dependabot reads none of the pins below, so you move each by hand:
 # * `kac` is pinned in `.config/dotnet-tools.json`, at the version `kac new` wrote. Move it with
@@ -56,10 +62,20 @@ steps:
     displayName: Install the pinned kac
     workingDirectory: $(Build.SourcesDirectory)
 
+  # Fetches each corpus `consumes:` declares into `.imports/`, which `validate` reads, and does nothing
+  # where `consumes:` is empty. A folder `source:` must exist on the agent, because no step here builds
+  # it. A script sees the access token only where its step maps it.
+  - script: dotnet tool run kac restore
+    displayName: Restore the corpora this one consumes
+    workingDirectory: $(Build.SourcesDirectory)
+    env:
+      KAC_REGISTRY_TOKEN: $(System.AccessToken)
+
   # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
-  # Only this step gets the token, because only it posts. On a pull request, `--since` compares each
-  # record with the branch it targets. The target branch is set on a pull request alone, as
-  # refs/heads/main, and the comparison wants origin/main.
+  # Only this step and the restore step get the token. This one posts with it, and the restore step
+  # reads a private feed with it. On a pull request, `--since` compares each record with the branch it
+  # targets. The target branch is set on a pull
+  # request alone, as refs/heads/main, and the comparison wants origin/main.
   - script: |
       target="${SYSTEM_PULLREQUEST_TARGETBRANCH#refs/heads/}"
       dotnet tool run kac validate ${target:+--since "origin/$target"}

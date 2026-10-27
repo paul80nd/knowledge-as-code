@@ -203,13 +203,21 @@ dotnet tool run kac restore     # each consumed corpus, into .imports/<shortcode
 
 `.imports/` is not committed, so run [`restore`](cli/restore.md) as the first step of the job.
 
-A private feed needs a token, which the job reads from `KAC_REGISTRY_TOKEN`. In GitHub Actions the built-in
-`github.token` reaches GitHub Packages in the same organisation, and the job needs `packages: read`.
+A private feed needs a token, which `restore` reads from `KAC_REGISTRY_TOKEN`. Set it on the restore step alone.
+
+* **GitHub Actions.** Pass `${{ github.token }}`, and give the job `packages: read`. The token reads a GitHub
+  Packages package linked to this repository. For a package linked to another repository, add this repository to the
+  package's settings, in Manage Actions access, with the Read role.
+* **Azure Pipelines.** Map `$(System.AccessToken)` onto the step, because a script sees the token only where its step
+  maps it. The token belongs to the project's build service, which reads an Azure Artifacts feed in the same
+  project. For a feed in another project, add that identity to the feed as a Feed Reader, under the feed's
+  permissions.
 
 A `source:` naming a folder needs no token. Run `export` and `pack` in the producer before this step.
 
-**Restore before you validate.** A declared import that is not on disk fails [`validate`](cli/validate.md). A corpus
-that consumes nothing skips the step.
+**Restore before you validate.** A declared import that is not on disk fails [`validate`](cli/validate.md). Where
+`consumes:` is empty, `restore` prints that it has nothing to restore and succeeds. The starter pipelines `kac new`
+writes run it on every corpus.
 
 ## Building the plugin
 

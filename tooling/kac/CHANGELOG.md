@@ -35,6 +35,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   its `plugin.json` entry lists `reports@2` under `optional`. Where the export includes reports at another shape,
   `kac bundle` refuses the plugin until the entry names that shape. Add `"optional": ["reports@2"]` to the
   `controls-lookup` entry of your `plugin.json`.
+- **Both starter pipelines run `kac restore` before `validate`.** A new corpus can declare `consumes:` with no edit
+  to its pipeline. Where `consumes:` is empty, the step prints that there is nothing to restore and succeeds. The
+  GitHub starter grants `packages: read` and passes `github.token` to the step as `KAC_REGISTRY_TOKEN`. The Azure
+  starter passes `$(System.AccessToken)`. Each header comment names the feed permission a package from another
+  repository or project needs.
 
 ## 0.40.0 - 2026-10-27
 
