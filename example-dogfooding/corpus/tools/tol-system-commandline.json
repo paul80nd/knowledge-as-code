@@ -28,11 +28,11 @@
   },
   "sections": {
     "What we use it for": "Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-08-21. No project references it today.",
-    "Status": "[tol-spectre-console](https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/dog-fooding/tools/build/spectre-console.md) reads a command line and renders output, and `kac` needed both. Keeping this parser meant a second library for everything a verb prints, so 0.2.1 dropped it. The package reference is already gone.\n\nEvery verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
+    "Status": "[tol-spectre-console](https://github.com/paul80nd/knowledge-as-code/blob/01c2db7153b064d26441c61b1aa8dd22e4dac7f7/examples/dog-fooding/tools/build/spectre-console.md) reads a command line and renders output, and `kac` needed both. Keeping this parser meant a second library for everything a verb prints, so 0.2.1 dropped it. The package reference is already gone.\n\nEvery verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
     "Licence and obligations": "MIT. Nothing followed for a package this repository published.",
     "Where it is used": "Nowhere. No service in this catalogue uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4d4fed4016c894cf9a13de86443f5fd9303c631a/examples/dog-fooding/tools/build/system-commandline.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/01c2db7153b064d26441c61b1aa8dd22e4dac7f7/examples/dog-fooding/tools/build/system-commandline.md"
   }
 }

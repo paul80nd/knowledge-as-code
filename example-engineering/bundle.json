@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.42.2",
+  "version": "0.43.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.42.2",
+    "contentVersion": "0.43.0",
     "types": [
       "adrs",
       "controls",
@@ -63,7 +63,7 @@
       "requires": [
         "standards@3"
       ],
-      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
     },
     {
       "path": "skills/standards-review",

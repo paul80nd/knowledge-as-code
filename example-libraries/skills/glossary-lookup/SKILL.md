@@ -1,8 +1,8 @@
 ---
 name: glossary-lookup
 description: Look a term up in the knowledge corpus glossary that travels with this plugin. Use when someone asks what a
-  word means here, or how two words differ. Use it as well, unprompted, when a noun in this repository names something
-  in the business that you cannot define from the code around it.
+  word means here, how two words differ, or which terms there are. Use it as well, unprompted, when a noun in this
+  repository names something in the business that you cannot define from the code around it.
 ---
 
 # Looking a term up in the glossary
@@ -119,6 +119,22 @@ The export reads the same however old it is. Quote `generatedAt` and `commit` fr
 Where the corpus has not defined your word, say so in the spelling you were asked about. Quote the nearest entry, and
 say what it defines. Whether your word means what that entry means is a ruling for the glossary's owner. A nearest
 entry passed off as the entry is a definition nobody wrote.
+
+## List the glossaries that travelled
+
+**Where someone asks which terms the estate defines, group `terms.jsonl` by `record`.** Each group is one glossary,
+and each line in it is one term, under its `title`. A glossary whose record sits under `corpus/glossary/<shortcode>/`
+came from a corpus this one consumes. Its terms are in the same file under its prefix, and they count as fully as the
+ones written here. A line gives no glossary title, so read `fields.title`, a string, from the glossary's own file.
+
+Answer with each glossary's id and title, and each term's `id` and `title`, so a reader can open each one.
+
+**Read the definition to test a meaning in hand.** Where the question is whether a meaning in hand is already
+defined, read the `definition` and `not` of each entry on its subject, and compare the wording. A term with the right
+title can still mean something else here.
+
+**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
+whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 

@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.86.0",
+  "version": "0.87.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.86.0",
+    "contentVersion": "0.87.0",
     "types": [
       "controls",
       "deviations",
@@ -83,7 +83,7 @@
       "requires": [
         "standards@3"
       ],
-      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
     },
     {
       "path": "skills/standards-review",

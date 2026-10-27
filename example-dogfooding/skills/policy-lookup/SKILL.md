@@ -1,9 +1,9 @@
 ---
 name: policy-lookup
 description: Find what this estate is committed to, in the policy clauses that travel with this plugin. Use when
-  someone asks whether something is allowed here. Use it as well, unprompted, before you propose a design or a change
-  touching secrets, access, retention, backups, logging, accessibility, third-party components, or what reaches
-  production.
+  someone asks whether something is allowed here, or which policies there are. Use it as well, unprompted, before you
+  propose a design or a change touching secrets, access, retention, backups, logging, accessibility, third-party
+  components, or what reaches production.
 ---
 
 # Looking a clause up in the policies
@@ -126,6 +126,23 @@ The export reads the same however old it is. Quote `generatedAt` and `commit` fr
 Where the estate has not written your subject down, say so in the words it would use. "Password rotation" meets a
 policy about rotating secrets. Quote the nearest clause, and say what it governs. Whether your subject falls inside its
 Scope is a ruling for its owner. A nearest clause passed off as the clause is a commitment nobody made.
+
+## List the policies that travelled
+
+**Where someone asks which policies the estate has, group `clauses.jsonl` by `record`.** Each group is one policy,
+and each line in it is one clause. A policy whose record sits under `corpus/policies/<shortcode>/` came from a corpus
+this one consumes. Its clauses are in the same file under its prefix, and they count as fully as the ones written
+here. A line gives no policy title, so read `fields.title`, a string, from the policy's own file.
+
+Answer with each policy's id and title, and each clause's `id`, so a reader can open each one. Quote `links.human` for
+any clause you name.
+
+**Read the clause to test a sentence in hand.** Where the question is whether a sentence in hand is already a
+commitment, read the `clause` of each line on its subject, and compare the wording. A policy on the same subject
+often leaves that commitment unstated.
+
+**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
+whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 

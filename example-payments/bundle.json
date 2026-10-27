@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.38.2",
+  "version": "0.39.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.38.2",
+    "contentVersion": "0.39.0",
     "types": [
       "fixes",
       "nfrs",
@@ -75,7 +75,7 @@
       "requires": [
         "standards@3"
       ],
-      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
     },
     {
       "path": "skills/standards-review",

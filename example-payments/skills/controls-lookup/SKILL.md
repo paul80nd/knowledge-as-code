@@ -1,8 +1,8 @@
 ---
 name: controls-lookup
 description: Find out what proves a rule here, in the controls that travel with this plugin. Use when someone asks
-  whether a rule is checked, or which rules nothing checks. Use it as well, unprompted, before you change or delete a
-  check, a pipeline job, or a rule some check may be watching.
+  whether a rule is checked, which rules nothing checks, or which controls there are. Use it as well, unprompted,
+  before you change or delete a check, a pipeline job, or a rule some check may be watching.
 ---
 
 # Asking what proves a rule
@@ -154,6 +154,21 @@ the key existed has none. Say so, and give `status` as written. Call no control 
 `planned` and `retired` still mean what the bullets above say.
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
+
+## List the controls that travelled
+
+**Where someone asks which controls the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/controls/`.** Each file is
+one control. A file under `corpus/controls/<shortcode>/` came from a corpus this one consumes, and it counts as fully
+as one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:ctl-0004`.
+
+Answer with each control's id and `fields.title`, so a reader can open each one.
+
+**Read the sections to test a check in hand.** Where the question is whether a check in hand is already recorded,
+read the `What it checks` and `Coverage and gaps` of each control on its subject. A title on the same subject often
+leaves that check out.
+
+**Where someone asks which rules nothing checks, read `${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/reports.md`, and
+answer from the report it finds.** Coverage is a question about the whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 
