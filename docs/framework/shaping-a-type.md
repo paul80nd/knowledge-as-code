@@ -130,9 +130,9 @@ agent asking what it must do filters on one value.
 how that mapping is checked, and what it claims.
 
 **A clause id stays once the policy is `active`.** A standard cites a clause by its id, and the citation outlives any
-edit to the policy. Under `validate --since`, `part-id-kept` compares each policy that was `active` at that revision
-with its state now. It fails where a clause id the policy had there has gone. A reworded clause, a new clause and a new
-title pass. A clause that has to go takes a new policy, and this one is retired.
+edit to the policy. Under `validate --since`, `clause-id-kept` compares each policy that was `active` at that
+revision with its state now. It fails where a clause id the policy had there has gone. A reworded clause, a new clause
+and a new title pass. A clause that has to go takes a new policy, and this one is retired.
 
 **In the export:** each clause travels as its own entry with its `level`, beside `Scope`, `Exceptions` and the opening
 paragraph of `Purpose`, and no alignment travels: [`frameworks.jsonl`](../reference/export.md#frameworksjsonl) sends
@@ -169,9 +169,9 @@ clause writes it as `[pol-INTC].HOLDS`, and that link ends at the policy.
 they have to apply. `superseded-by` sends a reader arriving from an old citation to the standard that replaced this one.
 
 **A rule id stays once the standard is `active`.** A control's `verifies` cites a rule by its id, and so does a
-consumer's corpus. Under `validate --since`, `part-id-kept` fails where a rule id an active standard had at that
-revision has gone, as it does for a policy's clause id. A rule that has to go takes a new standard, which names this one
-in `supersedes`.
+consumer's corpus. Under `validate --since`, `rule-id-kept` fails where a rule id an active standard had at that
+revision has gone, as `clause-id-kept` does for a policy's clause id. A rule that has to go takes a new standard, which
+names this one in `supersedes`.
 
 **In the export:** each rule travels as its id, its heading without the id, and one entry per bullet, giving the
 bullet's `level` and its text in your Markdown, beside `Summary`, `Conformance checklist` and `implements`. `Examples`

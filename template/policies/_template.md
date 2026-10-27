@@ -67,7 +67,7 @@ needs it has arrived at the wrong document and does not know it yet.
 **Clause ids.** A clause id matches `[A-Z][A-Z0-9]{1,6}`, is unique within the policy, and is immutable once the policy
 is active. Anything else cites a clause as `pol-{{MNEM}}.{{ID}}`, in the form [Metadata][referring] sets out. CI checks
 that every citation resolves to a clause that exists, so removing one is a breaking change. Under `validate --since`,
-`part-id-kept` fails a change that removes or renames a clause id in an active policy. Reword a clause in place, and
+`clause-id-kept` fails a change that removes or renames a clause id in an active policy. Reword a clause in place, and
 write a new policy where one has to go. Prefer the shortest natural word. Compress only where no natural word is short
 enough. A report shows an id beside its clause text, but a CI failure or a diff shows the id alone, so keep it
 guessable.

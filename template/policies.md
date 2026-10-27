@@ -97,8 +97,8 @@ the clauses and the `Alignment` column. The steps below add what the template le
 * **A policy has no roles section and no approver field.** The `owner` answers for the policy, and the template says how
   it is approved. The process that does the work says who carries out a commitment.
 * **A clause id stays once the policy is active.** A standard cites a clause by its id, and a citation outlives the
-  edit that removes the clause. Under `validate --since`, `part-id-kept` fails a change that removes or renames a clause
-  id in an active policy. Where a clause has to go, retire the policy and write a new one.
+  edit that removes the clause. Under `validate --since`, `clause-id-kept` fails a change that removes or renames a
+  clause id in an active policy. Where a clause has to go, retire the policy and write a new one.
 
 ## What CI checks
 
@@ -117,7 +117,7 @@ this type's records.
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `alignment-unlinked`                   | error   | Every framework an `Alignment` cell cites is written as a link the corpus resolves.                                 |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
-| `part-id-kept`                         | error   | With `--since`, a record in force at that revision keeps the id of every part it had there.                         |
+| `clause-id-kept`                       | error   | With `--since`, a policy active at that revision keeps the id of every clause it had there.                         |
 | `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
 | `policy-in-date`                       | warning | A policy names a review date that has not passed.                                                                   |

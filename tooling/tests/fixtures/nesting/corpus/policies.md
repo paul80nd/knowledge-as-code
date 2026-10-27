@@ -39,7 +39,7 @@ this type's records.
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `alignment-unlinked`                   | error   | Every framework an `Alignment` cell cites is written as a link the corpus resolves.                                 |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
-| `part-id-kept`                         | error   | With `--since`, a record in force at that revision keeps the id of every part it had there.                         |
+| `clause-id-kept`                       | error   | With `--since`, a policy active at that revision keeps the id of every clause it had there.                         |
 | `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
 | `policy-in-date`                       | warning | A policy names a review date that has not passed.                                                                   |

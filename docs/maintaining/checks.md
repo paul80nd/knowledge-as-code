@@ -52,8 +52,10 @@ revision and the working tree, through the same `Corpus.Load` the working tree t
 parsed alike. Any other file is the same at both, and pairs with itself. `Validator.CheckHistory` pairs the two
 copies by `id`, and hands a rule only a record whose text differs. `Substance.Changes` lists the parts of a record that
 changed in substance, which is the question both immutability rules ask. A rule on a type's parts compares
-`Before.Parts` with `After.Parts`, as `PartIdKept` does. One instance serves every type declaring `part-id-kept`, and
-reads the noun and the `in-force:` value from the type it is handed.
+`Before.Parts` with `After.Parts`, as `PartIdKept` does. It reads the noun and the `in-force:` value from the type it is
+handed, and `HistoryRules.All` constructs it once per type under an id of that type's own: `clause-id-kept` and
+`rule-id-kept`. The golden suite's coverage gate counts check ids as one set, so an id two types shared would stay
+covered after either type's fixture case was deleted.
 
 `retire-not-delete` is no rule class. It reads only a type's `in-force:` value, so `Validator.CheckHistory` reports it
 for every type.

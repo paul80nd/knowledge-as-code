@@ -8,8 +8,10 @@ its place in the working tree, and runs `kac validate --json --since HEAD`.
 * **A moved file passes.** `adr-0005` moved from `0005-old-name.md` to `0005-new-name.md` with its text unchanged, and
   is paired by its id.
 * **`immutable-after-published`.** `pmt-0001` was published at the base, and its `Root cause` now says something else.
-* **`part-id-kept`.** `pol-KEPT` was active at the base, and its clause `LOCAL` is now `NOLINK`. `std-KEPT` was active,
-  and its rule `FAST` is gone. Both reword a part, `pol-KEPT` takes a new title and a clause, and none of that reports.
+* **`clause-id-kept`.** `pol-KEPT` was active at the base, and its clause `LOCAL` is now `NOLINK`. It also rewords a
+  clause, adds one and takes a new title, and none of that reports.
+* **`rule-id-kept`.** `std-KEPT` was active at the base, and its rule `FAST` is gone. Its other rule is reworded, which
+  reports nothing.
 * **A record out of force loses a part freely.** `pol-DRFT` loses a clause in the change that makes it active, and
   `std-WDRN` loses a rule while deprecated. Neither reports anything.
 

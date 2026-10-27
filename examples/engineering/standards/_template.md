@@ -72,7 +72,7 @@ Rules section with none.
 `[A-Z][A-Z0-9]{1,6}`, is unique within the standard, and is immutable once the standard is active. A control's
 `verifies` and any other record cite the rule as `std-{{MNEM}}.{{ID}}`, and a link lands on the slug of the whole
 heading, as `#rotate-every-secret-rotates`. `part-id-format` reports a heading with no id. Under `validate --since`,
-`part-id-kept` fails a change that removes or renames a rule id in an active standard. Reword a rule in place, and write
+`rule-id-kept` fails a change that removes or renames a rule id in an active standard. Reword a rule in place, and write
 a new standard that supersedes this one where a rule has to go. Draw the id from the heading, so a reader meeting
 `std-SECRET.ROTATE` in a CI failure can guess the rule.
 

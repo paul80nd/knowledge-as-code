@@ -2,13 +2,14 @@ namespace kac.core;
 
 /// <summary>
 /// A record whose status was its type's <c>in-force:</c> value keeps the id of every part it had then. Each id that has
-/// gone is one finding, reported at the heading of the parts section.
+/// gone is one finding, reported at the heading of the parts section. One instance serves each type that declares such
+/// a rule, under an id of that type's own.
 /// </summary>
-public sealed class PartIdKept : IHistoryRule
+public sealed class PartIdKept(RuleId ruleId) : IHistoryRule
 {
-    public RuleId RuleId { get; } = new("part-id-kept");
+    public RuleId RuleId => ruleId;
 
-    public IReadOnlyList<CheckId> Emits { get; } = [new("part-id-kept")];
+    public IReadOnlyList<CheckId> Emits { get; } = [new(ruleId.Value)];
 
     public void Check(HistoryRuleContext ctx)
     {

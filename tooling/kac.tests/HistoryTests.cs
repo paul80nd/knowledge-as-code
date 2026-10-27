@@ -95,7 +95,7 @@ public class HistoryTests
             [Policy("active", "Keep records in git", ("CLEAN", "stay clean"), ("LOCAL", "link nothing"))],
             [Policy("active", "Keep records in git", ("CLEAN", "stay clean"))]));
 
-        Assert.Equal(new CheckId("part-id-kept"), finding.Check);
+        Assert.Equal(new CheckId("clause-id-kept"), finding.Check);
         Assert.Equal(Sev.Error, finding.Severity);
         Assert.Equal("policies/vurm-records.md", finding.File);
         Assert.Equal(
@@ -155,7 +155,7 @@ public class HistoryTests
             [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"), ("FAST", "Tests run fast"))],
             [Standard("active", "Testing", ("CLEAN", "A clean record reports nothing"))]));
 
-        Assert.Equal(new CheckId("part-id-kept"), finding.Check);
+        Assert.Equal(new CheckId("rule-id-kept"), finding.Check);
         Assert.Equal("standards/testing.md", finding.File);
         Assert.Equal(
             "this standard was `active` at origin/main, and its rule `FAST` is gone. A citation of std-TEST.FAST "
