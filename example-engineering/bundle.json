@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.42.0",
+  "version": "0.42.1",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.42.0",
+    "contentVersion": "0.42.1",
     "types": [
       "adrs",
       "controls",
@@ -49,7 +49,7 @@
       "requires": [
         "controls@3"
       ],
-      "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+      "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit. Where someone asks what nothing covers across the corpus, it reads corpus/reports/ through ask-the-corpus/reports.md."
     },
     {
       "path": "skills/policy-lookup",

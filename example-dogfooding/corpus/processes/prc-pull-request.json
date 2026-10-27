@@ -24,10 +24,10 @@
     ]
   },
   "sections": {
-    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only way in. Where a build broke, read a [runbook](https://github.com/paul80nd/knowledge-as-code/blob/5366f89b36406e8d238c777f2e4cf7cc245e4492/examples/dog-fooding/runbooks.md).",
+    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only way in. Where a build broke, read a [runbook](https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/dog-fooding/runbooks.md).",
     "Prerequisites": "* A branch off `main`, with the change committed to it.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --` from the repository root, and as\n  `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`. Both build the tool on this\n  branch.\n* Judging what a version move means, which steps 4 and 5 need.\n* Writing a commit message, which step 10 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5366f89b36406e8d238c777f2e4cf7cc245e4492/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/64704ade123e06dc96422bf6d1d2d21019d3c37f/examples/dog-fooding/processes/pull-request.md"
   }
 }

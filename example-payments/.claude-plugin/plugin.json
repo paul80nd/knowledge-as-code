@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-payments",
   "displayName": "Example Payments",
-  "version": "0.38.0",
+  "version": "0.38.1",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
   "author": {
     "name": "Paul Law",
@@ -69,7 +69,10 @@
         "requires": [
           "controls@3"
         ],
-        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+        "optional": [
+          "reports@2"
+        ],
+        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit. Where someone asks what nothing covers across the corpus, it reads corpus/reports/ through ask-the-corpus/reports.md."
       },
       {
         "path": "skills/fix-lookup",
