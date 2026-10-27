@@ -1,33 +1,51 @@
 #!/usr/bin/env sh
-# build-index: the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once a session, so the session
-# reads the build index as context. Without that file it prints nothing.
+# build-index: the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once to each agent in a session,
+# the main session and each subagent, as context. Without that file it prints nothing. With `reset`, as the
+# SessionStart entry for a compaction runs it, it deletes the session's markers and prints nothing.
 # hooks/hooks.json sends it every tool call, so up to the marker test it starts one cat and runs only built-ins.
 input=$(cat)
 
-# A JSON string escapes every quote inside it, so `"session_id"` with bare quotes is the key and nothing else.
-id=
-case $input in
-  *'"session_id"'*)
-    rest=${input#*'"session_id"'}
-    rest=${rest#"${rest%%[![:space:]]*}"}
-    rest=${rest#:}
-    rest=${rest#"${rest%%[![:space:]]*}"}
-    case $rest in \"*) rest=${rest#\"}; id=${rest%%\"*} ;; esac
-    ;;
-esac
-case $id in *[!A-Za-z0-9_-]*) id= ;; esac
+# A JSON string escapes every quote inside it, so `"<key>"` with bare quotes is the key and nothing else. Sets $value to
+# that key's string, or to nothing where it is absent or contains a character outside [A-Za-z0-9_-].
+value_of() {
+  value=
+  case $input in
+    *"\"$1\""*)
+      rest=${input#*"\"$1\""}
+      rest=${rest#"${rest%%[![:space:]]*}"}
+      rest=${rest#:}
+      rest=${rest#"${rest%%[![:space:]]*}"}
+      case $rest in \"*) rest=${rest#\"}; value=${rest%%\"*} ;; esac
+      ;;
+  esac
+  case $value in *[!A-Za-z0-9_-]*) value= ;; esac
+}
+
+value_of session_id
+id=$value
+value_of agent_id
+agent=$value
+marker=$id
+[ -n "$id" ] && [ -n "$agent" ] && marker=$id.$agent
 
 markers=${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}}/build-index
-[ -n "$id" ] && [ -d "$markers/$id" ] && exit 0
+
+# An id holds no `.`, so `$id.*` matches this session's subagents and no other session.
+if [ "$1" = reset ]; then
+  [ -n "$id" ] && rmdir "$markers/$id" "$markers/$id".* 2>/dev/null
+  exit 0
+fi
+
+[ -n "$marker" ] && [ -d "$markers/$marker" ] && exit 0
 
 case $0 in */*) here=${0%/*} ;; *) here=. ;; esac
 [ -f "$here/build-index.json" ] || exit 0
 
 # A marker made with mkdir fires once, because only one of two parallel calls creates it. With no id, or no marker it
 # can make, it prints every time.
-if [ -n "$id" ] && mkdir -p "$markers" 2>/dev/null; then
+if [ -n "$marker" ] && mkdir -p "$markers" 2>/dev/null; then
   find "$markers/." ! -name . -prune -type d -mtime +7 -exec rmdir {} + 2>/dev/null
-  mkdir "$markers/$id" 2>/dev/null || [ ! -d "$markers/$id" ] || exit 0
+  mkdir "$markers/$marker" 2>/dev/null || [ ! -d "$markers/$marker" ] || exit 0
 fi
 
 cat "$here/build-index.json"

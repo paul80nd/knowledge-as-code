@@ -23,9 +23,10 @@ tags: [ agents, export, plugin, skills ]
 Every corpus here publishes a Claude Code plugin: a frozen copy of its export, and the skills that read it.
 `template/.plugin/` contains those skills, `plugin.json` says which of them travel, and `kac bundle` assembles both.
 `kac bundle` also generates each view `plugin.json` declares: a file shaped for one moment of the work, written from the
-export, such as the index of rules a session reads before it writes code. A hook pushes that index once a session. A
-skill answers from the export beside it, using no more than a session's ability to read a file, and states plainly
-what did not travel. The reviewer skill reads the review view whole, in a subagent of its own, and reads the change it
+export, such as the index of rules a session reads before it writes code. A hook pushes that index once to each agent
+in a session, and again after a compaction. A skill answers from the export beside it, using no more than a session's
+ability to read a file, and states plainly what did not travel. The reviewer skill reads the review view whole, in a
+subagent of its own, and reads the change it
 reviews with whatever the session has. The copy a skill reads cannot be changed, so a skill with something to send
 back raises an issue on the repository the export came from: a finding where the corpus is wrong, and a request where
 the work is about to depart from a clause that is right. It files with `gh` or `az`, and hands the reader the body
@@ -136,13 +137,15 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
-### HOOK: A hook runs in a POSIX shell, and pushes a view once a session
+### HOOK: A hook runs in a POSIX shell, and pushes a view once to each agent
 
 - A hook **MUST** run under a POSIX shell.
 - A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
 - What a hook prints **MUST** be rendered by `kac bundle`, so the hook computes nothing about the export.
 - A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`, or under the temporary directory where that is unset.
-- A hook pushing a view **MUST** push it at most once a session.
+- A hook pushing a view **MUST** push it at most once to each agent between compactions, the main session and each
+  subagent alike.
+- A hook pushing a view **MUST** push it again to each agent after a compaction, because the summary can drop it.
 - What a hook pushes **MUST** be at most 10,000 characters, because Claude Code shows a session only the first 2,000 of
   a longer one.
 - Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
@@ -424,8 +427,9 @@ broke it.
 - [ ] Every view is declared as a component naming it in `view`, and is written by `kac bundle` from the export alone.
 - [ ] Every hook runs under a POSIX shell alone, prints a file `kac bundle` rendered, and writes only under
       `${CLAUDE_PLUGIN_DATA}`, or the temporary directory where that is unset.
-- [ ] Every hook pushing a view pushes it at most once a session, at most 10,000 characters, and its path and counts
-      where the view is longer.
+- [ ] Every hook pushing a view pushes it at most once to each agent between compactions, and again after one.
+- [ ] Every hook pushing a view pushes at most 10,000 characters, and the view's path and counts where the view is
+      longer.
 - [ ] Every component reading no export declares `standalone` where it supports nothing, and leaves it off where it
       supports the components that do.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
@@ -668,6 +672,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-27: a hook pushes a view once to each agent, the main session and each subagent alike, and again after a
+  compaction.
 - 2026-10-27: the bar on requiring a shell or a runtime binds a skill reading an export. A skill that files an issue or
   fetches a record's published source may run `gh` or `az` for that call, and says what it hands the reader where
   neither can run. `READS` takes a heading stating both.
