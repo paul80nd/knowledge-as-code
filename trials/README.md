@@ -7,6 +7,7 @@ its method and every run, so you can run it again after a large change and compa
 |------------------------------------------|------------------------------------------------------------------------------|
 | [Comprehension](comprehension/README.md) | Whether each section of the documentation site lets its reader act           |
 | [Capture](capture/README.md)             | Whether an adopting team's knowledge is getting written down in its corpus   |
+| [Landscape](landscape/README.md)         | How `kac` compares with the offerings like it, and what it lacks             |
 | [Plugin](plugin/README.md)               | Whether a corpus's plugin makes an agent's code follow the corpus's rules    |
 | [Process level](process-level/README.md) | Whether a process written as outcomes draws fewer findings asking for a step |
 | [Review](review/README.md)               | Whether the plugin's reviewer cites the rule a change breaks                 |
