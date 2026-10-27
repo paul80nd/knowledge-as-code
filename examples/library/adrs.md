@@ -74,14 +74,14 @@ Open a pull request with the status at `proposed`.
 CI runs the [universal checks](knowledge-as-code/metadata.md#universal-checks) on every record, and the checks below on
 this type's records.
 
-| Check                        | Level   | What it verifies                                                                                      |
-|------------------------------|---------|-------------------------------------------------------------------------------------------------------|
-| `related-matches-section`    | error   | A field that mirrors a section reconciles with the ids in that section.                               |
-| `ref-resolves`               | error   | An id in a field that references another document names one that exists, of the type the field names. |
-| `reciprocal`                 | error   | A reciprocal field and its counterpart agree in both directions.                                      |
-| `y-statement`                | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.       |
-| `alternatives-verdict`       | warning | Each Alternatives Considered bullet states a verdict.                                                 |
-| `decision-cites-descriptive` | warning | No link in Decision or Consequences lands on a record of a descriptive type.                          |
-| `immutable-after-accepted`   | error   | With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link or its status. |
+| Check                        | Level   | What it verifies                                                                                                 |
+|------------------------------|---------|------------------------------------------------------------------------------------------------------------------|
+| `related-matches-section`    | error   | A field that mirrors a section reconciles with the ids in that section.                                          |
+| `ref-resolves`               | error   | An id in a field that references another document names one that exists, of the type the field names.            |
+| `reciprocal`                 | error   | A reciprocal field and its counterpart agree in both directions.                                                 |
+| `y-statement`                | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.                  |
+| `alternatives-verdict`       | warning | Each Alternatives Considered bullet states a verdict.                                                            |
+| `decision-cites-descriptive` | warning | No link in Decision or Consequences lands on a record of a descriptive type.                                     |
+| `immutable-after-accepted`   | error   | With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link, its status or `accepts`. |
 
 <!-- END GENERATED: checks-adrs -->

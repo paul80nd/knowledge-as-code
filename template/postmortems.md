@@ -77,14 +77,14 @@ prompt under each section states how to write that section.
 CI runs the [universal checks](knowledge-as-code/metadata.md#universal-checks) on every record, and the checks below on
 this type's records.
 
-| Check                          | Level | What it verifies                                                                                      |
-|--------------------------------|-------|-------------------------------------------------------------------------------------------------------|
-| `timestamp-format`             | error | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                      |
-| `ref-resolves`                 | error | An id in a field that references another document names one that exists, of the type the field names. |
-| `duration-matches-the-moments` | error | `duration` is the span from `occurred-at` to `restored-at`.                                           |
-| `immutable-after-published`    | error | With `--since`, a published postmortem has changed by no more than a typo, a link or its status.      |
-| `detected-not-before-occurred` | error | `detected-at` is at or after `occurred-at`.                                                           |
-| `restored-not-before-occurred` | error | `restored-at` is at or after `occurred-at`.                                                           |
+| Check                          | Level | What it verifies                                                                                            |
+|--------------------------------|-------|-------------------------------------------------------------------------------------------------------------|
+| `timestamp-format`             | error | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                            |
+| `ref-resolves`                 | error | An id in a field that references another document names one that exists, of the type the field names.       |
+| `duration-matches-the-moments` | error | `duration` is the span from `occurred-at` to `restored-at`.                                                 |
+| `immutable-after-published`    | error | With `--since`, a published postmortem has changed by no more than a typo, a link, its status or `accepts`. |
+| `detected-not-before-occurred` | error | `detected-at` is at or after `occurred-at`.                                                                 |
+| `restored-not-before-occurred` | error | `restored-at` is at or after `occurred-at`.                                                                 |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

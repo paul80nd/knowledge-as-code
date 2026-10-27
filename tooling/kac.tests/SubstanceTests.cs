@@ -84,6 +84,11 @@ public class SubstanceTests
             .Replace("decided-on: \"2026-01-05\"", "decided-on: \"2026-01-05\"\nreview-by: \"2027-01-05\""))));
 
     [Fact]
+    public void A_warning_accepted_in_frontmatter_is_no_change()
+        => Assert.Empty(Substance.Changes(Adr(Before), Adr(Before.Replace("decided-on: \"2026-01-05\"",
+            "decided-on: \"2026-01-05\"\naccepts:\n  - check: y-statement\n    reason: \"Written before the rule.\""))));
+
+    [Fact]
     public void Any_other_frontmatter_move_is_a_change_naming_the_field()
     {
         var change = Assert.Single(Substance.Changes(Adr(Before), Adr(Before.Replace("2026-01-05", "2026-02-05"))));

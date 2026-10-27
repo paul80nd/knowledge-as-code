@@ -158,10 +158,12 @@ public static class ChecksTable
             "No bold BCP 14 keyword states a requirement inside a glossary entry.",
             t => t.Rules.Any(r => r.Id == new RuleId("entries-state-no-requirement"))),
         ("immutable-after-accepted", [new("immutable-after-accepted")],
-            "With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link or its status.",
+            "With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link, its status or "
+            + "`accepts`.",
             null),
         ("immutable-after-published", [new("immutable-after-published")],
-            "With `--since`, a published postmortem has changed by no more than a typo, a link or its status.",
+            "With `--since`, a published postmortem has changed by no more than a typo, a link, its status or "
+            + "`accepts`.",
             null),
         ("retire-not-delete", [HistoryRules.RetireNotDelete],
             "With `--since`, no record in force at that revision has been deleted.", null),

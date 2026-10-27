@@ -17,8 +17,9 @@ public static class HistoryRules
             id => $"A decided ADR changes only by a new ADR that supersedes it. Restore the text, and write the "
                   + $"new decision in an ADR naming {id} in `supersedes`."),
         new ImmutableAfter(new RuleId("immutable-after-published"), ["published"], "postmortem",
-            id => "A published account changes only by a typo fixed, a link corrected or a reflow. Restore the "
-                  + $"text, and write what was learnt since in a new postmortem that links to {id}.")
+            id => "A published account changes only by a typo fixed, a link corrected, a reflow or an `accepts` "
+                  + "entry. Restore the text, and write what was learnt since in a new postmortem that links to "
+                  + $"{id}.")
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IHistoryRule> ByRuleId =

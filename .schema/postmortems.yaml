@@ -144,7 +144,7 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      Once status is `published`, the account changes only by a typo fixed, a link corrected or a reflow.
+      Once `published`, the account changes only by a typo fixed, a link corrected, a reflow or an `accepts` entry.
     severity: error
   - id: detected-not-before-occurred
     description: '`detected-at` is at or after `occurred-at`.'

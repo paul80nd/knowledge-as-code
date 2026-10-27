@@ -90,7 +90,8 @@ A change in substance is anything except these:
 * **A link target.** The words a reader sees must stay the same. An autolink, as `<https://example.com>`, may change
   whole.
 * **A typo.** Each changed word is within two edits of the word it replaced, and the section keeps its word count.
-* **`status`, `superseded-by` and `review-by`.** Any other frontmatter field that moves is a change in substance.
+* **`status`, `superseded-by`, `review-by` and `accepts`.** Any other frontmatter field that moves is a change in
+  substance.
 
 `validate` compares the body one `##` section at a time. A section added, removed or renamed is a change in substance.
 

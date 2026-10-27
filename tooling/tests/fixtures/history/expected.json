@@ -27,7 +27,7 @@
       "line": 35,
       "severity": "error",
       "check": "immutable-after-published",
-      "message": "this postmortem was published at HEAD, and has changed by more than a typo since: `## Root cause`. A published account changes only by a typo fixed, a link corrected or a reflow. Restore the text, and write what was learnt since in a new postmortem that links to pmt-0001."
+      "message": "this postmortem was published at HEAD, and has changed by more than a typo since: `## Root cause`. A published account changes only by a typo fixed, a link corrected, a reflow or an `accepts` entry. Restore the text, and write what was learnt since in a new postmortem that links to pmt-0001."
     }
   ]
 }

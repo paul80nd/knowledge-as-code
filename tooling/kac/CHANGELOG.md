@@ -38,9 +38,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac validate --since <ref>` compares each record with its state at that revision.** Records pair by `id`, so a
   moved file still compares. `immutable-after-accepted` and `immutable-after-published` are errors on a change in
   substance to a decided ADR or a published postmortem. A reflow, a link target, a typo or a move of `status`,
-  `superseded-by` or `review-by` passes. `retire-not-delete` warns on a record deleted while in force. A ref git cannot
-  resolve exits 1. Without the flag, one line names the checks skipped. Both starter pipelines fetch the full history
-  and pass `--since` on a pull request.
+  `superseded-by`, `review-by` or `accepts` passes. `retire-not-delete` warns on a record deleted while in force. A ref
+  git cannot resolve exits 1. Without the flag, one line names the checks skipped. Both starter pipelines fetch the
+  full history and pass `--since` on a pull request.
 
 ### Changed
 

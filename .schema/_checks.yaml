@@ -717,14 +717,16 @@ checks:
 
   immutable-after-accepted:
     severity: error
-    description: With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link or its status.
+    description: >
+      With `--since`, an accepted or rejected ADR has changed by no more than a typo, a link, its status or `accepts`.
     notes: >
       Runs only where `validate --since` names a revision, and compares each ADR with its state there. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#adrs>.
 
   immutable-after-published:
     severity: error
-    description: With `--since`, a published postmortem has changed by no more than a typo, a link or its status.
+    description: >
+      With `--since`, a published postmortem has changed by no more than a typo, a link, its status or `accepts`.
     notes: >
       Runs only where `validate --since` names a revision, and compares each postmortem with its state there. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems>.

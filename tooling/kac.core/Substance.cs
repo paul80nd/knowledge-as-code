@@ -16,7 +16,7 @@ public static class Substance
 {
     /// <summary>The frontmatter fields a record may move without changing in substance.</summary>
     private static readonly HashSet<string> Movable =
-        new(["status", "superseded-by", "review-by"], StringComparer.Ordinal);
+        new(["status", "superseded-by", "review-by", "accepts"], StringComparer.Ordinal);
 
     /// <summary>The most edits one word may take and still read as a typo fixed.</summary>
     private const int TypoEdits = 2;

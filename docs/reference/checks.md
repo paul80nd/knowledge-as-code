@@ -98,3 +98,10 @@ One fault is reported once, by whichever check owns it:
 **Some checks run only under `validate --since`.** `immutable-after-accepted`, `immutable-after-published` and
 `retire-not-delete` compare a record with its state at an earlier revision, so a run that names none skips them.
 [Comparing with a base revision](../use/cli/validate.md#comparing-with-a-base-revision) says what each reports.
+
+**Changing the id of a rejected ADR raises no finding.** A record is paired across the two revisions by its id, so a
+new id reads as one record deleted and another added. `retire-not-delete` warns only where the deleted record's status
+was its type's `in-force:` value, and an ADR is in force at `accepted`, not `rejected`.
+
+**The typo allowance can change what a sentence says.** Each changed word may sit up to two edits from the word it
+replaced, so `not` can become `now` and `12` can become `42` with no finding.

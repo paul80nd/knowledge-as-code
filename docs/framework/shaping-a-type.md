@@ -66,9 +66,9 @@ warns where a link in `Decision` or `Consequences` lands on a record of a descri
 passes. The section stands in for why the link is there, so the check is a warning.
 
 **A decided ADR is never edited in place.** Under `validate --since`, `immutable-after-accepted` compares each ADR
-that was `accepted` or `rejected` at that revision with its state now. It may move `status` and `superseded-by`, fix a
-typo, reflow a line or correct a link target. Anything more is an error, because a standard citing the ADR in
-`derived-from` relies on the words it was decided with.
+that was `accepted` or `rejected` at that revision with its state now. It may move `status`, `superseded-by`,
+`review-by` and `accepts`, fix a typo, reflow a line or correct a link target. Anything more is an error, because a
+standard citing the ADR in `derived-from` relies on the words it was decided with.
 
 **In the export:** `Decision` and `Consequences` travel whole and `Context` as its opening paragraph, while
 `Alternatives Considered` and `deciders` stay behind.
@@ -106,9 +106,9 @@ anybody notices.
 lists the ADRs, runbooks, non-functional requirements (NFRs), fixes and standards the incident caused.
 
 **A published postmortem is never rewritten.** Under `validate --since`, `immutable-after-published` compares each
-postmortem that was `published` at that revision with its state now. It may fix a typo, reflow a line or correct a
-link target. Anything more is an error, for the reason a decided ADR's is: a reader citing the account relies on the
-words it was published with.
+postmortem that was `published` at that revision with its state now. It may move `status`, `review-by` and `accepts`,
+fix a typo, reflow a line or correct a link target. Anything more is an error, for the reason a decided ADR's is: a
+reader citing the account relies on the words it was published with.
 
 **In the export:** the three moments, `duration` and `prompted` travel with every section except `Timeline`, `Actions`
 and `Related`, because `Timeline` and `Actions` name clocks and a tracker a reader elsewhere cannot open.
