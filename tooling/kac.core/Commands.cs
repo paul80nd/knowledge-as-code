@@ -613,16 +613,17 @@ public static class Commands
 
         // Relative to where the command was typed, as a shell's own redirection is, not to the corpus root.
         var full = Path.GetFullPath(outPath);
+        var shown = outPath.Replace('\\', '/');
 
         // A finished report holds verdicts somebody wrote. `writing-a-report` merges them by hand, and refusing
         // here is what leaves something to merge.
         if (File.Exists(full))
-            return Fail($"report: {outPath} already exists, so nothing was written. A report holds verdicts "
+            return Fail($"report: {shown} already exists, so nothing was written. A report holds verdicts "
                         + "somebody wrote. Write this run somewhere else, and merge the two by hand.");
 
         var folder = Path.GetDirectoryName(full);
         if (folder is not null && !Directory.Exists(folder))
-            return Fail($"report: there is nowhere to put {outPath}. Create the folder first.");
+            return Fail($"report: there is nowhere to put {shown}. Create the folder first.");
 
         File.WriteAllText(full, plan.Text);
         Out.Markup(Wrote(outPath));
@@ -741,8 +742,13 @@ public static class Commands
         return count == 0 ? counted : $"[{colour}]{counted}[/]";
     }
 
-    private static string Wrote(string path)
+    /// <summary>
+    /// The line reporting one written file, with its folder in grey. A backslash is printed as <c>/</c>, so a path
+    /// reads the same on every platform.
+    /// </summary>
+    public static string Wrote(string written)
     {
+        var path = written.Replace('\\', '/');
         var cut = path.LastIndexOf('/') + 1;
         return cut == 0
             ? $"[grey]wrote[/] {path.EscapeMarkup()}"
