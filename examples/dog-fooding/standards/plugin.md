@@ -28,10 +28,11 @@ skill answers from the export beside it, using no more than a session's ability 
 what did not travel. The reviewer skill reads the review view whole, in a subagent of its own, and reads the change it
 reviews with whatever the session has. The copy a skill reads cannot be changed, so a skill with something to send
 back raises an issue on the repository the export came from: a finding where the corpus is wrong, and a request where
-the work is about to depart from a clause that is right. Back at that repository, a skill in the corpus's own working
-tree triages those issues, marks each one with the route it belongs on, and drafts the record a routed finding asks
-for as a pull request. The record cites the issue it came from, and the pull request cites the record. Merging it
-closes the issue. That skill ships in no plugin, because it writes to the tracker and to the records.
+the work is about to depart from a clause that is right. It files with `gh` or `az`, and hands the reader the body
+where neither can run. Back at that repository, a skill in the corpus's own working tree triages those issues, marks
+each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request. The record
+cites the issue it came from, and the pull request cites the record. Merging it closes the issue. That skill ships in
+no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -42,18 +43,22 @@ closes the issue. That skill ships in no plugin, because it writes to the tracke
   write-back or review whose order a rule fixes.
 - A skill's description **SHOULD** name each case that triggers it, and each case once.
 
-### READS: A skill assumes only that the session can read a file
+### READS: A skill reading an export only reads files, and one that calls `gh` or `az` says what it does without them
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
 - A skill reviewing a change **MUST** name the change as everything that differs from a fixed point.
 - A skill reviewing a change **MUST** leave the choice of how to read that change to the session.
-- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond what the session
-  uses to read a change under review.
+- A skill reading an export **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond
+  what the session uses to read a change under review.
 - A skill reading an export **MUST NOT** require a network call to answer from it.
 - A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the
   change under review.
 - Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
+- A skill that files an issue or fetches a record's published source **MAY** run `gh` or `az` to make that call, even
+  where it also reads an export.
+- A skill that files an issue or fetches a record's published source **MUST** say what it hands the reader where
+  neither `gh` nor `az` can run.
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
 
@@ -395,8 +400,11 @@ broke it.
 - [ ] Every skill states what it is for and the intent of the type it reads, and gives the reason for each rule.
 - [ ] Every numbered list in a skill is an order that the type it reads, or a rule here, fixes.
 - [ ] Every skill's description names each case that triggers it, and none twice.
-- [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else, apart from
-      reading the change a review is asked about.
+- [ ] Every instruction a skill reading an export gives can be followed by a session that can read a file and nothing
+      else, apart from reading the change a review is asked about, and the `gh` or `az` call that files an issue or
+      fetches a record's published source.
+- [ ] Every skill that files an issue or fetches a record's published source says what it hands the reader where
+      neither `gh` nor `az` can run.
 - [ ] Every skill reviewing a change names it as what differs from a fixed point, and names no tool for reading it.
 - [ ] Every path a skill names opens on `${CLAUDE_PLUGIN_ROOT}`.
 - [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.
@@ -468,8 +476,12 @@ facts.
 
 The session is why a skill names a property of the answer and not a tool. A session with no Grep tool met a
 **MUST**-shaped instruction naming one, and its only options were to ignore the instruction or to stop. The machine is
-why nothing here asks for a shell. Each lookup skill promises at the top that there is nothing to install and nothing
-to run, and a Windows reader with no `grep` is who that promise is for.
+why a skill reading an export asks for no shell. Each lookup skill promises at the top that there is nothing to install
+and nothing to run, and a Windows reader with no `grep` is who that promise is for.
+
+A skill that files an issue or fetches a record's published source cannot make that promise. Its work is a call to a
+platform, and no file read makes one. So it runs `gh` or `az`, which a reader on that platform is usually signed in to
+already. Where neither can run, it hands the reader the body to file by hand, or asks them to paste the record.
 
 The session is also why a skill states its intent and the reason for each rule. A session meets cases the author never
 saw, and a reason is what it can apply to the next one. A step covers only the case it was written for, so a skill
@@ -656,6 +668,9 @@ standard.
 
 ## Changelog
 
+- 2026-10-27: the bar on requiring a shell or a runtime binds a skill reading an export. A skill that files an issue or
+  fetches a record's published source may run `gh` or `az` for that call, and says what it hands the reader where
+  neither can run. `READS` takes a heading stating both.
 - 2026-10-23: a review leaves to CI a control at the status its type exports as `inForce`, and no longer assumes
   `active`.
 - 2026-10-20: a router sends a question it can place to the lookup for that type, and reads a type no lookup reads

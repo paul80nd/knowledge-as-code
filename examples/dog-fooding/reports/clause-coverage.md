@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.39.0
 sources:
-  - { resource: example-dogfooding, version: "0.85.3" }
-  - { resource: example-engineering, version: "0.42.1" }
+  - { resource: example-dogfooding, version: "0.86.0" }
+  - { resource: example-engineering, version: "0.42.2" }
 verified:
-  - { at: 2026-10-27T13:21:54Z, by: human:paul.law }
+  - { at: 2026-10-27T13:52:18Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.42.1.
+* `eng`, example-engineering, at 0.42.2.
 
 No column here says a clause is verified. `Controls` lists each control naming a rule in `Covered by`, and a control may
 check one obligation of that rule and leave the rest. The `Deviations` column lists a deviation only while its `status`
@@ -137,7 +137,7 @@ where the rule and the practice differ.
 | `SELFVER` | MUST NOT | `std-PLUGIN.FINDING`, `std-PLUGIN.TRIAGE`, `eng:std-PR.AGENT`                                          |            | `eng:ctl-0007`         |                       | Covered | The approver reads the change itself. A session filing a finding cannot call its own observation corroborated.                                                                                                                |
 | `DUTIES`  | MUST NOT | `eng:std-PR.AGENT`                                                                                     |            | `eng:ctl-0007`         | `eng:pol-ACCS.DUTIES` | Covered | Somebody other than the author approves it. One maintainer does both here.                                                                                                                                                    |
 | `UNPROV`  | MUST NOT | `std-PLUGIN.DECLARE`, `std-PLUGIN.GAPS`, `std-PLUGIN.ROUTER`, `std-PLUGIN.TRIAGE`, `std-PLUGIN.TYPES`  |            | `ctl-0008`             |                       | Covered | A skill states the record an answer came from. No proposal states the run that produced it.                                                                                                                                   |
-| `ACCESS`  | MUST NOT | `std-PLUGIN.HOOK`, `std-PLUGIN.READS`, `std-PLUGIN.TRACKER`                                            |            |                        |                       | Covered | A skill asks only to read a file. An agent still has the maintainer's own keys.                                                                                                                                               |
+| `ACCESS`  | MUST NOT | `std-PLUGIN.HOOK`, `std-PLUGIN.READS`, `std-PLUGIN.TRACKER`                                            |            |                        |                       | Covered | A skill reading an export asks only to read a file, and one that files an issue uses the maintainer's own `gh` or `az`. An agent still has the maintainer's own keys.                                                         |
 
 ### eng:pol-AUTV
 
