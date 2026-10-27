@@ -23,6 +23,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   names the client it runs at the top, and its fallback section lists the cases that section covers: a client that is
   not installed, and a session that cannot run a command. `raise-finding` and `request-deviation` print the whole body
   for you to file by hand, and `corpus-retrieval` asks you for the section it needs.
+- **Each lookup skill lists what travelled.** `kac new`, `kac update` and `kac bundle` send lookup skills that answer
+  "which standards are there?" and its like for policies, glossary terms, controls, processes and fixes.
+  `standards-lookup` reads the build index, and the others group their flat file or list their folder. Each counts an
+  inherited record, answers with ids and titles, and reads the record to test whether a sentence is already stated. A
+  question about what nothing covers goes to `ask-the-corpus`.
 
 ### Fixed
 

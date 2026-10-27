@@ -1,8 +1,9 @@
 ---
 name: standards-lookup
 description: Find the rules you have to build to, in the standards that travel with this plugin. Use when someone
-  asks what the rule is for something here. Use it as well, unprompted, before you write or change code touching
-  secrets, APIs, tests, builds, deployment, logging, dependencies, or data a service keeps.
+  asks what the rule is for something here, or which standards there are. Use it as well, unprompted, before you
+  write or change code touching secrets, APIs, tests, builds, deployment, logging, dependencies, or data a service
+  keeps.
 ---
 
 # Looking a rule up in the standards
@@ -19,6 +20,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                       # what this exp
 ${CLAUDE_PLUGIN_ROOT}/corpus/standards/rules.jsonl               # one line of JSON per rule. Search this
 ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<record>.json             # one standard this corpus wrote
 ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<shortcode>/<record>.json # one standard a corpus this one consumes wrote
+${CLAUDE_PLUGIN_ROOT}/views/build-index.md                       # every standard, and the title of each of its rules
 ```
 
 Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
@@ -137,6 +139,24 @@ The export reads the same however old it is. Quote `generatedAt` and `commit` fr
 Where the estate has not written your subject down, say so in the words it would use. Quote the nearest rule, and say
 what it governs. Whether your work falls inside it is a ruling for its owner. A nearest rule passed off as the rule is
 a requirement nobody set.
+
+## List the standards that travelled
+
+**Where someone asks which standards the estate has, read `${CLAUDE_PLUGIN_ROOT}/views/build-index.md`.** Each
+heading gives one standard's id, title and status, and each line under it gives one rule's title. A standard whose
+record sits under `corpus/standards/<shortcode>/` came from a corpus this one consumes. The index already lists it
+under its prefix, and it counts as fully as one written here. Where the index is absent, group `rules.jsonl` by
+`record`.
+
+Answer with each standard's id and title, so a reader can open the record. To cite a rule, find its line in
+`rules.jsonl` by its title, and give its `id` and `links.human`.
+
+**Read the obligations to test a sentence in hand.** Where the question is whether a sentence in hand is already a
+rule, read the `obligations` of each rule whose title fits, and compare the wording. A title on the same subject
+often leaves that obligation unstated.
+
+**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
+whole corpus, and a report is what answers it.
 
 ## Say when there is nothing
 
