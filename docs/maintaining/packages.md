@@ -68,6 +68,8 @@ Each refusal exits `1` and writes nothing.
   [A push to a registry](../use/cli/pack.md#a-push-to-a-registry)
 * `restore` sends the registry token only to an `https://` source.
   [A private feed](../use/cli/restore.md#a-private-feed)
+* `restore` sends the token as Basic auth with `KAC_REGISTRY_USER` where that is set, and as a bearer token where it
+  is not. [A private feed](../use/cli/restore.md#a-private-feed)
 
 ## Specified by
 
@@ -97,6 +99,7 @@ Each refusal exits `1` and writes nothing.
 * A move of the range re-resolves the lock
 * A prerelease is restored where the range names it exactly
 * A restore sends the registry token to an https source
+* A restore sends a registry user and token as Basic auth
 * A restore sends no registry token over plain HTTP
 * A restore refuses a shortcode the package does not carry
 * A restore refuses a range no version in the source satisfies

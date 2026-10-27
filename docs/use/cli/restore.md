@@ -62,11 +62,22 @@ registry, no token and no release. Run `kac export` and then `kac pack` in the p
 
 #### A private feed
 
-A registry serving a private feed refuses an anonymous read. GitHub Packages is one. Put a token in the environment,
-where nothing echoes it into a log:
+A registry serving a private feed refuses an anonymous read. GitHub Packages and Azure Artifacts are two. Put a token
+in the environment, where nothing echoes it into a log. In a pipeline, pass the job's own token, such as
+`github.token` or `$(System.AccessToken)`, and `kac` sends it as a bearer token:
 
 ```bash
 export KAC_REGISTRY_TOKEN="$GITHUB_TOKEN"
+kac restore
+```
+
+On your own machine, use a personal access token, and set `KAC_REGISTRY_USER` to any name as well. `kac` then sends
+the name and the token as Basic auth, which is how Azure Artifacts takes a personal access token. There, the token
+needs the **Packaging (Read)** scope:
+
+```bash
+export KAC_REGISTRY_USER=kac                              # any name
+read -rs KAC_REGISTRY_TOKEN && export KAC_REGISTRY_TOKEN  # paste the token, which is not echoed
 kac restore
 ```
 

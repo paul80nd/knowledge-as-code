@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac restore` sends a personal access token as Basic auth where `KAC_REGISTRY_USER` is set.** Azure Artifacts
+  takes a personal access token in no other form, so a restore from your own machine was refused. Set
+  `KAC_REGISTRY_USER` to any name, and `KAC_REGISTRY_TOKEN` to a token with the Packaging (Read) scope. Where
+  `KAC_REGISTRY_USER` is unset, `kac` sends the token as a bearer token, which is what a pipeline's own token needs. A
+  refused read and an empty version listing each name both variables.
+
 ### Changed
 
 - **`corpus-retrieval`, `raise-finding` and `request-deviation` say what they hand you without `gh` or `az`.** Each
