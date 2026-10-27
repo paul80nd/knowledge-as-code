@@ -86,9 +86,16 @@ jobs:
       - name: Seal the export into a package
         run: dotnet run --project ../../tooling/kac -- pack
 
-  # Nothing here is per-corpus, so it runs once beside the matrix above.
+  # Nothing here is per-corpus, so it runs once per platform beside the matrix above. Windows runs the three test
+  # layers, so a corpus maintained there gets the bytes and the paths a Linux build writes.
   tool:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -111,12 +118,15 @@ jobs:
         working-directory: template
         run: dotnet run --project ../tooling/kac -- generate --check
 
-      # Unpinned for the reason the `corpora` job gives.
+      # Unpinned for the reason the `corpora` job gives. Linux alone, because only the step below uses it.
       - name: Install the Claude Code CLI
+        if: runner.os == 'Linux'
         run: npm install -g @anthropic-ai/claude-code@latest # zizmor: ignore[adhoc-packages]
 
       # `bundle-empty` pins what an emptied plugin holds; this asks whether it is still valid to install.
+      # Linux alone: the script is POSIX sh, and `round-trip` already validates a plugin built on Windows.
       - name: Bundle a corpus that adopted no type, and validate what it produced
+        if: runner.os == 'Linux'
         shell: sh
         working-directory: examples/library
         env:
@@ -173,7 +183,9 @@ jobs:
         run: dotnet test --project tooling/kac.goldens
 
       # Pack fails on metadata no test reads, and installing catches a package that resolves to no command.
+      # Linux alone: the script is POSIX sh, and the package is the same on every platform.
       - name: Pack the tool, then stand a corpus up with the installed copy
+        if: runner.os == 'Linux'
         shell: sh
         env:
           TEMP_ROOT: ${{ runner.temp }}
