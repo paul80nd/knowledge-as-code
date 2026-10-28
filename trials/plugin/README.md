@@ -165,6 +165,10 @@ and the report contains the prompts.
 | Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash. |
 | `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                                         |
 
+Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
+`jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
+`every case passed`. It needs `jq`, and Node.js for `regrade.mjs`.
+
 ### On Windows
 
 Run the trial in Git Bash, and run every command on this page there. Write each path Git Bash style, as
@@ -183,10 +187,6 @@ that reads a `Bash` call's input finds none, and a session cannot run a build or
 [Writing a case](#writing-a-case) says.
 
 Run the pilot first, and read its result before the full pass.
-
-Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
-`jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
-`every case passed`. It needs `jq`, and Node.js for `regrade.mjs`.
 
 ## Running the trial
 
