@@ -71,8 +71,10 @@ To tell the two apart, ask whether a capable engineer new to the organisation wo
 told. If they would, the case is a control. `stage.sh` refuses a case in neither folder. A case also gives its kind
 as its first tag, so `--tag house` runs one kind alone.
 
-The cases for a corpus live in their own folder under [`cases/`](cases/). Nothing else in the method knows which
-corpus it runs against.
+The cases for a corpus live in a folder of their own. Nothing else in the method knows which corpus it runs against.
+Keep the cases for your own corpus in a private repository your organisation owns, as
+[What leaves the organisation](#what-leaves-the-organisation) says. This repository's cases are under
+[`cases/`](cases/):
 
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
@@ -135,14 +137,21 @@ A run against your own corpus writes three kinds of output:
 
 * **The cases** contain your team's tasks, and the scaffold each one starts from. They stay with the organisation
   that wrote them. Never publish them.
-* **The raw results** are `sessions.tsv`, each `aggregate-result.json`, and the workspaces and traces `--keep-temp`
-  keeps. They contain case names, prompt text, the code each session wrote, and graders' explanations quoting it.
-  They stay with the organisation that ran the trial. Never publish them.
+* **The raw results** are everything in the run folder but `aggregate.md`: `sessions.tsv`, `adjudication.tsv` and
+  `results/`. The write-up beside it, the prose arm's cut, each `aggregate-result.json` in the stage, and the
+  workspaces and traces `--keep-temp` keeps are raw results too. They contain case names, prompt text, the code each
+  session wrote, and graders' explanations quoting it. They stay with the organisation that ran the trial. Never
+  publish them.
 * **`aggregate.md`** contains only counts, rates, the model and the cost, under the fields
   [defined below](#the-aggregate). It contains no case name, prompt or code, so you can publish it without a review.
 
-Publish `aggregate.md` alone. Pass `--no-publish` to every `claude plugin eval` command. Without it, the tool
-publishes its report to claude.ai wherever your account supports it, and the report contains the prompts.
+**Keep the cases and the run folder in a private repository your organisation owns.** Use the corpus's own repository
+where it is private, or make one for the trial. Use your clone of this repository for its scripts alone, and commit
+nothing to it. A fork of this repository is public, so one push to it publishes the cases and the raw results.
+
+Publish `aggregate.md` alone, where whoever asked for the run asks you to post it. Pass `--no-publish` to every
+`claude plugin eval` command. Without it, the tool publishes its report to claude.ai wherever your account supports it,
+and the report contains the prompts.
 
 ## What you need
 
@@ -173,25 +182,31 @@ Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It run
 ## Running the trial
 
 Run each step from the root of a clone of this repository, and the commands in the corpus as its `CLAUDE.md` says.
-Set three paths first, each absolute, because steps 4 to 6 run in another folder:
+Set four paths first, each absolute, because steps 4 to 6 run in another folder:
 
-| Variable  | The folder                                                 |
-|-----------|------------------------------------------------------------|
-| `$CORPUS` | the corpus, which contains its `.corpus.yaml`              |
-| `$CASES`  | the corpus's cases, which contains `house/` and `control/` |
-| `$STAGE`  | an empty folder for one run, outside every git repository  |
+| Variable  | The folder                                                                                  |
+|-----------|---------------------------------------------------------------------------------------------|
+| `$CORPUS` | the corpus, which contains its `.corpus.yaml`                                               |
+| `$CASES`  | the corpus's cases, which contains `house/` and `control/`, in your private repository      |
+| `$RUNS`   | the folder each run folder is written to, named by its date, in the same private repository |
+| `$STAGE`  | an empty folder for one run, outside every git repository                                   |
 
 ```sh
 CORPUS=/c/Users/<you>/source/<corpus repository>
-CASES=/c/Users/<you>/source/<cases repository>/cases
+CASES=/c/Users/<you>/source/<private repository>/plugin-trial/cases
+RUNS=/c/Users/<you>/source/<private repository>/plugin-trial/runs
 STAGE=/c/Users/<you>/plugin-trial/stage-1
 ```
+
+For a run of this repository's own cases, `$CASES` is a folder under `trials/plugin/cases/`, and `$RUNS` is
+`trials/plugin/runs`.
 
 Give the repository that contains the cases a `.gitattributes` file with the line `* text=auto eol=lf`. Git for
 Windows otherwise checks text files out with CRLF line endings, and a scaffold or a grader with CRLF endings breaks.
 
-1. **Build the plugin.** Commit the cases first, because `kac export` marks an untracked case as a dirty tree. In the
-   corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
+1. **Build the plugin.** Where the cases sit in the corpus's repository, commit them first, because `kac export` marks
+   an untracked case there as a dirty tree. In the corpus, run `kac export`, then `kac bundle`. The plugin is
+   `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
    plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
@@ -228,11 +243,11 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
      --output-dir "$STAGE/out-hook" --allow-tools Bash Write Edit )
    ```
 
-7. **Score the run** into a new folder under `runs/`, named by its date:
+7. **Score the run** into a new folder under `$RUNS`, named by its date:
 
    ```sh
    trials/plugin/score.sh -k "$STAGE/out-hook/aggregate-result.json" "$STAGE/out-plugin/aggregate-result.json" \
-     "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> "$CASES/excluded.tsv"
+     "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" "$CASES/excluded.tsv"
    ```
 
    Leave out `-k` to score a run with no hook arm, and pass `-` for the prose result to score one with no prose arm.
@@ -249,13 +264,14 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
    Then score the run again with it:
 
    ```sh
-   trials/plugin/score.sh -a trials/plugin/runs/<date>/adjudication.tsv -k "$STAGE/out-hook/aggregate-result.json" \
-     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> \
+   trials/plugin/score.sh -a "$RUNS/<date>/adjudication.tsv" -k "$STAGE/out-hook/aggregate-result.json" \
+     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" \
      "$CASES/excluded.tsv"
    ```
 
-10. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
-   the result file gives no tokens, take them from the `result` line of each trace.
+10. **Write what you found** to `$RUNS/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
+   the result file gives no tokens, take them from the `result` line of each trace. Commit the run folder and the
+   write-up to your private repository, and publish only `aggregate.md`.
 
 `--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 8. Without it,
 both are deleted when the stage finishes.
