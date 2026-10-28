@@ -142,3 +142,9 @@ skill. It cost about the same a session, and used about half a turn more.
 
 The sessions ran on a subscription, so read the list cost as a relative measure. No session ended on an error or on a
 usage limit.
+
+## The #952 regrade
+
+#952 changed the graders of five cases this run scored: `returns-api-routes`, `stock-v1-retirement`,
+`order-repository-tests`, `dotnet-ci` and `request-logging`. This run has no workspace left to regrade them against.
+Its kept folders still exist, but each has lost its trace and every file its session wrote. The verdicts above stand.

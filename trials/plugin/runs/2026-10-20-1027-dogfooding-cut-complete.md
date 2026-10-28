@@ -88,3 +88,9 @@ and the none arm in 7.
 The batches ran side by side, in about 7 minutes. `cost_usd` in
 [`aggregate.md`](2026-10-20-1027-dogfooding-cut-complete/aggregate.md) includes #923's plugin stage. The cut and the
 reading by hand ran as subagents, which the list cost does not include.
+
+## The #952 regrade
+
+#952 changed the graders of five cases this run scored: `returns-api-routes`, `stock-v1-retirement`,
+`order-repository-tests`, `dotnet-ci` and `request-logging`. This run has no workspace left to regrade them against.
+Its kept folders still exist, but each has lost its trace and every file its session wrote. The verdicts above stand.

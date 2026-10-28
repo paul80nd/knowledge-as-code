@@ -232,3 +232,9 @@ test input, still fail.
 * **The graders read literal forms**, so the graders' figures penalise an arm that complies in another form. That cost
   the plugin 4 sessions, the none arm 1 and the prose arm none. The graders also passed 4 weak outputs: 3 in the prose
   arm and 1 in the plugin arm.
+
+## The #952 regrade
+
+#952 changed the graders of five cases this run scored: `returns-api-routes`, `stock-v1-retirement`,
+`order-repository-tests`, `dotnet-ci` and `request-logging`. This run has no workspace left to regrade them against.
+Its kept folders still exist, but each has lost its trace and every file its session wrote. The verdicts above stand.
