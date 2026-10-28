@@ -161,6 +161,8 @@ _**Covers:** `eng:pol-AGNT.ACCESS`_
   inside it holds none.
 - A skill **MUST** file the item under the area path that `tracker` block states.
 - Where that area path is refused, a skill **MUST** file the item at the project default and say so.
+- Every corpus sharing one Azure DevOps project with another corpus **MUST** state an area under `tracker`, because
+  triage selects its queue by area.
 - A skill **MUST** raise it as an issue or a work item.
 - A skill **SHOULD** use the client that already authenticates to that platform.
 - A skill **MUST NOT** offer to edit the installed copy.
@@ -250,7 +252,12 @@ _**Covers:** `eng:pol-DEVI.RECORD`_
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
 - A skill **MUST** say where a query returned as many issues as its limit allows.
 - A skill **MUST NOT** take `kac:finding` off an issue it triaged.
-- A skill **MUST** apply `kac:triaged` and exactly one route mark to every issue it triaged.
+- A skill **MUST** apply `kac:triaged` and exactly one route mark to every issue it triaged, except a finding it
+  bounced.
+- Where a finding belongs in another area of the same project, a skill **MUST** bounce it: move it to that area by its
+  area path, and comment why it moved and where.
+- A skill **MUST NOT** apply `kac:triaged` or a route mark to a finding it bounced, because whoever triages that area
+  reads it from their own queue.
 - The route **MUST** be one of `kac:route-framework`, `kac:route-record`, `kac:route-misfiled`, `kac:route-none` and
   `kac:route-unclear`.
 - A skill **MUST** apply `kac:route-unclear` wherever choosing between the others would be a guess.
@@ -260,7 +267,8 @@ _**Covers:** `eng:pol-DEVI.RECORD`_
 - A comment routing a finding a record already answers **MUST** name that record.
 - The comment **MUST NOT** state the route as machine-readable data, because the mark is that data.
 - A skill **MUST NOT** state whether the finding's claim is true.
-- A skill **MUST** show every verdict to a person and wait, before it writes any mark or comment.
+- A skill **MUST** show every verdict to a person and wait, before it writes any mark or comment or bounces any
+  finding.
 - A skill drafting a record from a finding **MUST** take it only from an issue marked `kac:route-record`.
 - That record **MUST** name an `owner` the person running the skill supplied, and the skill **MUST NOT** invent one.
 - That record **MUST** carry a `status` its type treats as unsettled, wherever the type declares one.
@@ -281,7 +289,8 @@ _**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.PROV`, `
 - A skill **MUST** compare the framework block's address with the tracker block's, both targets, both bases and both
   areas normalised.
 - Where the two are equal, a skill **MUST** mark the finding and copy nothing.
-- Where only the areas differ, a skill **MUST** mark the finding, move it to the framework's area, and copy nothing.
+- Where only the areas differ, a skill **MUST** bounce the finding to the framework's area, as `TRIAGE` states, and
+  copy nothing.
 - Where the targets or the bases differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
 - A skill **MUST NOT** file a finding on a tracker outside the organisation holding the corpus.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's
@@ -460,8 +469,10 @@ broke it.
 - [ ] No plugin declares a component that triages findings.
 - [ ] The queue read both the marked findings and the open issues whose body carries the block without the mark.
 - [ ] The queue read only the corpus's own area, where the corpus states one.
-- [ ] Every triaged issue keeps `kac:finding`, and gains `kac:triaged` and exactly one `kac:route-*` mark.
-- [ ] Every verdict was shown to a person and agreed before any mark or comment was written.
+- [ ] Every triaged issue keeps `kac:finding`. One kept here gains `kac:triaged` and exactly one `kac:route-*` mark,
+      and one bounced to another area gains neither and has a comment saying why and where.
+- [ ] Every corpus sharing an Azure DevOps project with another corpus states an area.
+- [ ] Every verdict was shown to a person and agreed before any mark, comment or bounce was written.
 - [ ] Every verdict has a comment saying why, and none of them says whether the claim is true.
 - [ ] No comment repeats its route as machine-readable data.
 - [ ] Every record drafted from a finding came from a `kac:route-record` issue, and arrived as a pull request nobody
@@ -642,9 +653,11 @@ An area path is stated rather than derived for the same reason the tracker is. O
 backlog to any number of corpora, and each publishes from a repository of its own, so no publishing block names the
 area the project divides that backlog by. GitHub gives a repository one issue list and labels to sort it, so the key
 means nothing there and `kac validate` refuses it. The same division bounds triage. A queue read across the whole
-project would mark another corpus's findings, so triage reads its own area. Two corpora in one project share an `id`,
-because `id` leaves the area out, so triage compares the area beside it. A finding that belongs in the other area moves
-there by its area path, and keeps its history.
+project would mark another corpus's findings, so triage reads its own area, and each corpus sharing a project states
+one. Two corpora in one project share an `id`, because `id` leaves the area out, so triage compares the area beside
+it. A finding that belongs in the other area is bounced there by its area path and keeps its history. It goes
+unmarked, because a route mark is the verdict of the corpus that keeps a finding, and the corpus whose area it reaches
+has not yet given one.
 
 The verdict is a mark, and the reason is a comment. A route stated twice is two things that can disagree, so the
 comment argues and states no data. It is also the only part a person can push back on, which a mark on its own gives
@@ -679,7 +692,8 @@ standard.
 ## Changelog
 
 - 2026-10-28: triage reads its queue from the corpus's own area, and compares the area wherever it compares two
-  addresses. A framework finding that differs only by area moves to the framework's area by its area path.
+  addresses. A finding that belongs in another area of the same project is bounced there by its area path, with a
+  comment and no triage mark. Every corpus sharing an Azure DevOps project states an area.
 - 2026-10-27: a hook pushes a view once to each agent, the main session and each subagent alike, and again after a
   compaction.
 - 2026-10-27: the bar on requiring a shell or a runtime binds a skill reading an export. A skill that files an issue or

@@ -104,17 +104,22 @@ either end and lowercase it, and read an empty one as none.
 **Two addresses match only where their targets, bases and areas all match.** One URL under two clients is two
 backlogs. One Azure DevOps project under two areas is one backlog divided between two owners.
 
-**Where the target and base match and only the area differs, move the work item.** Nothing is refiled: the finding
-keeps its id and its history, and changes area. Set `System.AreaPath` to the other address's area path, or to the
-project alone where that address states no area:
+**Where the target and base match and only the area differs, bounce the work item.** A bounce moves the finding to
+the other area and leaves the verdict to whoever triages that area. Nothing is refiled: the finding keeps its id, its
+history and `kac:finding`. Set `System.AreaPath` to the other address's area path, or to the project alone where that
+address states no area, and say in the same command why it moved and where:
 
 ```bash
 az boards work-item update --org https://dev.azure.com/<org> --id <id> \
-  --fields "System.AreaPath=<project>\<area>"
+  --fields "System.AreaPath=<project>\<area>" \
+  --discussion "<why it moved, and the corpus whose area it moved to>"
 ```
 
-A move is a write, so it waits for the same yes as the labels. Where Azure refuses the area, because it does not exist
-or you cannot write to it, leave the work item where it is and say so in your reply.
+**A bounced finding takes no `kac:triaged` and no route label.** It leaves this corpus's queue because the queue
+selects by area, and it arrives in the other area's queue untriaged. A route label here would hide it there.
+
+A bounce is a write, so it waits for the same yes as the labels. Where Azure refuses the area, because it does not
+exist or you cannot write to it, leave the work item where it is, untouched, and say so in your reply.
 
 **A `consumes:` entry states no framework.** The framework this corpus took is stated once, at the top level.
 
@@ -127,8 +132,9 @@ that address, so say where you could not read one.
 
 `kac:finding` says what the ticket is. It never comes off, so every finding ever filed stays one query away.
 
-`kac:triaged` plus one route label says what triage decided. The queue is `kac:finding` without `kac:triaged`, so
-nothing is triaged twice.
+`kac:triaged` plus one route label says what triage decided about a finding it keeps. The queue is `kac:finding`
+without `kac:triaged`, so nothing is triaged twice. A finding bounced to another area gets neither label, as
+[Read the addresses](#read-the-addresses) says.
 
 | Label                 | What it means                                                                   |
 |-----------------------|---------------------------------------------------------------------------------|
@@ -236,8 +242,9 @@ az boards work-item show --org https://dev.azure.com/<org> --id <id>
 
 **Read only this corpus's own area.** Several corpora can file into one project, each under its own area, and the
 others' findings are theirs to triage. Write the area path as [Read the addresses](#read-the-addresses) does.
-`UNDER` takes in the areas below it too. Where the tracker states no area, drop the `[System.AreaPath]` clause and its
-`AND`, and say in your reply that the queue read the whole project.
+`UNDER` takes in the areas below it too. A finding another corpus bounced here arrives with `kac:finding` alone, so
+this query reads it. Where the tracker states no area, drop the `[System.AreaPath]` clause and its `AND`, and say in
+your reply that the queue read the whole project.
 
 **A finding may have arrived with no mark at all.** `raise-finding` files one unmarked where the platform refuses a
 mark it does not have, so the second GitHub search looks for the block in the body instead. That search returns
@@ -347,8 +354,8 @@ type is a decision a person takes, so say in the comment which type it would nee
 [Read the addresses](#read-the-addresses) normalises them. Say in the comment which of these it is:
 
 * **The targets or the bases differ.** The ticket has to move to another backlog, and the comment names it.
-* **Only the areas differ.** The work item moves to that corpus's area after step 8 labels it, as
-  [Read the addresses](#read-the-addresses) shows.
+* **Only the areas differ.** Bounce the work item to that corpus's area, as
+  [Read the addresses](#read-the-addresses) shows. It takes no label here, and that corpus's triage routes it.
 * **All three are equal.** One backlog serves both corpora. Nothing moves, and what changes is which corpus answers.
 
 ### 7. Show the table and wait
@@ -356,13 +363,18 @@ type is a decision a person takes, so say in the comment which type it would nee
 Print one row per finding: the issue number, its title cut short, the route, and the reason in under a dozen words. Put
 the `kac:route-unclear` rows at the top, because those are the ones needing an answer.
 
+Show a bounce as its own row, with the area it goes to in place of a route.
+
 **Say what you are about to write**: every label the repository is missing, then one `kac:triaged` label, one route
-label and one comment on each issue, and each work item you will move to another area. Then wait for the yes.
+label and one comment on each issue you keep, and one move and its comment on each issue you bounce. Then wait for the
+yes.
 
 ### 8. Label, and comment the reason
 
 Create the labels the repository was missing first, as the section above them writes it. Then label and comment one
 issue at a time, doing the pair together. An issue labelled with no comment is a verdict nobody can argue with.
+Bounce each finding that goes to another area with the command in [Read the addresses](#read-the-addresses), which
+moves it and comments in one call.
 
 #### GitHub
 
@@ -395,6 +407,7 @@ Three sentences is plenty. The route, why, and what happens next.
 * **Name the issue a duplicate duplicates**, and the record that already covers a finding you routed to
   `kac:route-none`.
 * **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
+* **Say why a bounced finding left and which corpus's area it went to.** Its triage there starts from this comment.
 * **Say what step 5 decided** where it narrowed, redirected or settled the finding: the step, rule or part the draft
   refines, the type the record belongs to, the file outside the corpus the detail goes to, or the section that settles
   it.
@@ -413,8 +426,9 @@ conditions: a person reads every word first, and the body contains none of the f
 [Read the addresses](#read-the-addresses) normalises them. They are equal where a problem with `kac` and a problem with
 a record are filed in the same place.
 
-**Every case here still gets `kac:triaged` and `kac:route-framework`, as step 8 applies them.** A finding left without
-`kac:triaged` stays in the queue and is re-read, re-commented and re-drafted on every run.
+**Every case kept here still gets `kac:triaged` and `kac:route-framework`, as step 8 applies them.** A finding left
+without `kac:triaged` in this corpus's area stays in the queue and is re-read, re-commented and re-drafted on every
+run. A bounced finding is the one exception, because it leaves the area.
 
 **Where `framework.base` is `null`, this corpus states no address for the framework.** Mark the finding, draft the
 upstream body, and say in your reply that nobody named a tracker for it. The fix is a `framework:` block in
@@ -423,9 +437,9 @@ upstream body, and say in your reply that nobody named a tracker for it. The fix
 **Where they are equal, the finding is already where framework work is filed.** Mark it and stop. There is nothing to
 copy.
 
-**Where only the areas differ, mark the finding, move the work item to the framework's area, and stop.**
-[Read the addresses](#read-the-addresses) shows the move. The work item stays inside the project, so there is nothing
-to copy and nothing to strip.
+**Where only the areas differ, bounce the work item to the framework's area, and stop.**
+[Read the addresses](#read-the-addresses) shows the bounce. It takes no label here. The work item stays inside the
+project, so there is nothing to copy and nothing to strip.
 
 **Where the targets or the bases differ, draft the upstream body and post it as a comment.** Then mark it and stop.
 Somebody copies the body into whatever tracker they can reach. Never file it yourself: an Azure DevOps user has no
@@ -470,7 +484,6 @@ the body says what that repository owes.
 * `kac:route-framework` has no record to write. Its upstream body is already a comment on the issue.
 * `kac:route-misfiled` asks for a record in a corpus this one consumes, so its own maintainer drafts it. Where that
   corpus files on another tracker, which `.imports/<shortcode>/manifest.json` says, refile the ticket there first.
-  Where it files in another area of the same project, triage has already moved the work item there.
 * `kac:route-none` is settled.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
@@ -568,11 +581,11 @@ true, which triage did not.
 
 After `triage`, say how many findings you read, how many you labelled, and the count against each route. Name every
 `kac:route-unclear` row and what a person has to decide about it. Where you drafted an upstream body, say which issue it
-is a comment on and which tracker it is for. Name each work item you moved, and the area it moved to.
+is a comment on and which tracker it is for. Name each work item you bounced, and the area it went to.
 
 After `draft`, name the pull request and its URL, and the issue it answers. Say that the record names that issue in
 `sources`, and that merging the pull request closes it. Say which fields you left empty, and that the record is a
 draft until somebody accepts it.
 
 **Name what you could not do**: a missing client, a label you could not create, an issue the tracker refused to
-update, an area it refused to move one to.
+update, an area it refused to bounce one to.
