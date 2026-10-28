@@ -133,3 +133,9 @@ Scenario: A full update changes nothing on the corpus new just created
   Given a git repository
   When I create a corpus there adopting "adrs,glossary"
   Then a full update finds it in step
+
+Scenario: A corpus publishing nowhere states no tracker, and validates
+  Given a git repository
+  When I create a corpus there
+  Then it succeeds
+  And ".corpus.yaml" in the new corpus states no "tracker" block

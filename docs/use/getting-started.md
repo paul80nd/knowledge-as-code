@@ -75,6 +75,7 @@ updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
+new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.
 ```
 
 The first commit is yours to make, once you have read what is staged.
@@ -136,6 +137,20 @@ ones you meet first.
 
 Two more commands write your corpus out for an agent to read: `kac export` and `kac bundle`. Together they build a
 plugin, which is your corpus packaged for Claude Code.
+
+!!! note "Set a tracker before you publish a plugin"
+
+    The plugin's `raise-finding` and `request-deviation` skills file an issue about your corpus on its tracker. A corpus
+    published to `mkdocs` or `none` has no tracker, so they print the issue for you to file instead. Add a
+    [`tracker`](corpus-descriptor.md#tracker) block to `.corpus.yaml` naming where your issues go:
+
+    ```yaml
+    tracker:
+      target: github
+      base: https://github.com/your-org/your-corpus
+    ```
+
+    `kac bundle` warns while the plugin ships either skill and the corpus has no tracker.
 
 * [Installing the plugin you built](cli/bundle.md#an-install) takes it into Claude Code on your own machine.
 * [Building the plugin](ci.md#building-the-plugin) runs both commands in CI once a record of yours passes.

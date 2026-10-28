@@ -18,6 +18,19 @@ public static class Tracker
 
     public static ExportTracker None => new(Publishing.None, null, null, null);
 
+    /// <summary>The skills that file on the corpus's tracker, and print the issue where it has no backlog.</summary>
+    public static readonly IReadOnlyList<string> Filing = ["raise-finding", "request-deviation"];
+
+    /// <summary>
+    /// Opens what <c>new</c> and <c>bundle</c> print where <paramref name="tracker"/> addresses no backlog, and is null
+    /// where it addresses one. Each caller closes the line with its own step.
+    /// </summary>
+    public static string? Unaddressed(ExportTracker tracker, IReadOnlyList<string> skills) =>
+        tracker.Id is null && skills.Count > 0
+            ? $"this corpus has no tracker to file on, so {string.Join(" and ", skills)} will print each issue "
+              + "for you to file."
+            : null;
+
     /// <summary>
     /// A stated key wins over the derived one. The base falls back only where the stated target agrees with the derived
     /// one: a corpus naming another platform's client knows an address nobody else does.

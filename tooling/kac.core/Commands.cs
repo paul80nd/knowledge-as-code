@@ -196,6 +196,7 @@ public static class Commands
         var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable,
             annotator: null, comment: null);
         Stage(dir);
+        if (kac.core.New.Unfiled(answers) is { } unfiled) Note(unfiled);
 
         if (validated == 0) return 0;
 

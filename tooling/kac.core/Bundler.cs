@@ -226,6 +226,10 @@ public static class Bundler
                   + $"{ManifestFile}. Set content-version in .corpus.yaml and export again to choose the version "
                   + "it publishes.");
 
+        var filing = Tracker.Filing.Where(skill => included.Any(c => c.Path == $"skills/{skill}")).ToList();
+        if (Tracker.Unaddressed(exportManifest.Tracker, filing) is { } unfiled)
+            warnings.Add($"{unfiled} Add a `tracker:` block to .corpus.yaml and export again to set one.");
+
         // A path no component owns is unconditional and travels whatever the corpus adopted.
         var files = (from file in source.PluginTree
             where file.Path != ManifestFile
