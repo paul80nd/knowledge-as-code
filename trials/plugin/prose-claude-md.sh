@@ -5,6 +5,7 @@
 #
 # <export dir> is what `kac export` wrote, or the corpus/ folder of the plugin `kac bundle` built. The types, their
 # folders and their parts files come from its manifest.json, so nothing here knows a type by name.
+# shellcheck disable=SC2016 # each $name in a jq program is a jq variable
 set -eu
 
 if [ "$#" -ne 2 ]; then
@@ -14,6 +15,10 @@ fi
 
 export_dir=$1
 out=$2
+
+# Prints what a command wrote with every carriage return removed, because a Windows jq writes CRLF.
+lf() { lf_out=$("$@") || return; [ -z "$lf_out" ] || printf '%s\n' "$lf_out" | tr -d '\r'; }
+
 manifest="$export_dir/manifest.json"
 
 if [ ! -f "$manifest" ]; then
@@ -26,7 +31,6 @@ bookkeeping='["type", "path", "anchor", "links", "trust", "status", "reviewBy", 
   "title", "shortcode"]'
 
 # A field as one line of prose: a list joined with commas, an object as JSON, a null left out.
-# shellcheck disable=SC2016 # a jq program, whose $skip jq binds
 render_fields='def one: if type == "object" then tojson else tostring end;
   def show:
     if type == "array" and length > 0 and all(type == "object" and has("text"))
@@ -37,7 +41,7 @@ render_fields='def one: if type == "object" then tojson else tostring end;
   | map(select(.value != null and (.key as $k | $skip | index($k) | not)))
   | map("\(.key):\(.value | show)") | .[]'
 
-name=$(jq -r '.about.displayName // .corpus' "$manifest")
+name=$(lf jq -r '.about.displayName // .corpus' "$manifest")
 
 # The id of every part written, so a part no record claimed fails the run.
 written=$(mktemp)
@@ -47,17 +51,17 @@ trap 'rm -f "$written"' EXIT
   printf '# The knowledge of %s\n\n' "$name"
   printf 'This is what the corpus records, type by type. Each heading gives the id to cite it by.\n'
 
-  jq -c '.types[]' "$manifest" | while IFS= read -r t; do
-    type=$(printf '%s' "$t" | jq -r '.type')
-    dir="$export_dir/$(printf '%s' "$t" | jq -r '.dir')"
-    parts_file=$(printf '%s' "$t" | jq -r '.partsFile // empty')
-    record_key=$(printf '%s' "$t" | jq -r '.recordKey // empty')
-    frameworks_file=$(printf '%s' "$t" | jq -r '.frameworksFile // empty')
+  jq -c '.types[]' "$manifest" | tr -d '\r' | while IFS= read -r t; do
+    type=$(lf jq -rn --argjson t "$t" '$t.type')
+    dir="$export_dir/$(lf jq -rn --argjson t "$t" '$t.dir')"
+    parts_file=$(lf jq -rn --argjson t "$t" '$t.partsFile // empty')
+    record_key=$(lf jq -rn --argjson t "$t" '$t.recordKey // empty')
+    frameworks_file=$(lf jq -rn --argjson t "$t" '$t.frameworksFile // empty')
 
     printf '\n## %s\n' "$type"
 
     find "$dir" -name '*.json' | sort | while IFS= read -r file; do
-      id=$(jq -r '.fields.id' "$file")
+      id=$(lf jq -r '.fields.id' "$file")
       jq -r --argjson skip "$bookkeeping" "
         \"\n### \(.fields.title // .fields.id) (\`\(.fields.id)\`)\n\",
         \"Status: \(.fields.status // \"none\").\",
@@ -90,7 +94,11 @@ trap 'rm -f "$written"' EXIT
   done
 } > "$out"
 
-expected=$(jq '[.types[].parts] | add' "$manifest")
+# Takes out the carriage returns a Windows jq writes, so the prose arm's text is the same on every machine.
+tr -d '\r' < "$out" > "$out.lf"
+mv "$out.lf" "$out"
+
+expected=$(lf jq '[.types[].parts] | add' "$manifest")
 actual=$(wc -l < "$written" | tr -d ' ')
 if [ "$actual" -ne "$expected" ]; then
   echo "prose-claude-md.sh: the manifest counts $expected parts, and $actual were written" >&2

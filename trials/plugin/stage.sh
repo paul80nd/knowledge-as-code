@@ -70,6 +70,13 @@ if [ -f "$cases/excluded.tsv" ]; then
 fi
 "$here/prose-claude-md.sh" "$plugin/corpus" "$stage/CLAUDE.md"
 
+# Claude Code warns on a CLAUDE.md over 40,000 characters, and the README says to give the prose arm a cut past that.
+chars=$(wc -m < "$stage/CLAUDE.md" | tr -d ' ')
+echo "the prose arm's CLAUDE.md is $chars characters"
+if [ "$chars" -gt 40000 ]; then
+  echo "stage.sh: the prose arm's CLAUDE.md is over 40,000 characters. Cut it, as the README says." >&2
+fi
+
 # The tool loads no CLAUDE.md in a run, so the prose arm appends it to the system prompt.
 find "$stage/prose/evals" -name case.yaml | while IFS= read -r case_file; do
   {

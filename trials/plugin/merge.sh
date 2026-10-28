@@ -6,6 +6,7 @@
 # Each case's runs are the runs of every batch that ran it. The cost is the sum, and the result is partial if any
 # batch was. Every batch must have run the same stage, model, Claude Code version and plugin, and must grade each case
 # it shares with the others by the same graders.
+# shellcheck disable=SC2016 # each $name in a jq program is a jq variable
 set -eu
 
 if [ "$#" -lt 3 ]; then
@@ -16,14 +17,17 @@ fi
 out=$1
 shift
 
+# Prints what a command wrote with every carriage return removed, because a Windows jq writes CRLF.
+lf() { lf_out=$("$@") || return; [ -z "$lf_out" ] || printf '%s\n' "$lf_out" | tr -d '\r'; }
+
 for field in .suite.ablation .suite.modelOverride .claudeVersion '.suite.plugins | map({name, version})'; do
-  if [ "$(jq -s "map($field) | unique | length" "$@")" != "1" ]; then
-    echo "merge.sh: the batches differ in $field: $(jq -sc "map($field) | unique" "$@")" >&2
+  if [ "$(lf jq -s "map($field) | unique | length" "$@")" != "1" ]; then
+    echo "merge.sh: the batches differ in $field: $(lf jq -sc "map($field) | unique" "$@")" >&2
     exit 1
   fi
 done
 
-graders=$(jq -s '[.[].cases[] | {name, graders: [.graders[] | {name, type, config}]}] | group_by(.name)
+graders=$(lf jq -s '[.[].cases[] | {name, graders: [.graders[] | {name, type, config}]}] | group_by(.name)
   | map(select(map(.graders) | unique | length > 1) | .[0].name)' "$@")
 if [ "$graders" != "[]" ]; then
   echo "merge.sh: these cases are graded differently in different batches: $graders" >&2
@@ -31,7 +35,7 @@ if [ "$graders" != "[]" ]; then
   exit 1
 fi
 
-jq -s '. as $all
+lf jq -s '. as $all
   | .[0]
   | .costUsd = ($all | map(.costUsd) | add)
   | .partial = ($all | map(.partial) | any)
