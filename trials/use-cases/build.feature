@@ -4,12 +4,14 @@ Feature: Build. A session writing code meets every rule that binds the code it c
   Need: every MUST that applies to the files being changed, wherever it is filed, and the facts the code relies on.
   Each scenario is a hypothesis. It holds where its trial case passes at the threshold its Then states.
   The baselines come from the plugin trial's full pass, trials/plugin/runs/full-pass/sessions.tsv, read adjudicated.
+  The first two come from trials/plugin/runs/hook-arm.md instead, graded and not adjudicated, because the plugin's
+  lead is read from the hook arm, which is the plugin as it ships.
 
   @intent:nudge @type:standards @trial:plugin/engineering/house/health-endpoint
   Scenario: A rule filed under another topic reaches the session
-    Baseline: the plugin arm complied in 0 of 3 runs, the prose arm in 2 of 3, and the none arm in 0 of 3.
-    The lookup found std-API and std-OBS, and not std-DEPLOY (#929).
-    Measured in trials/plugin/runs/hook-arm.md on 0.36.2: the hook arm 3 of 3, the plugin arm 3 of 3, none 0 of 3.
+    Baseline: on 0.36.2 the hook arm complied in 3 of 3 runs, the plugin arm in 3 of 3, and the none arm in 0 of 3.
+    In the full pass the plugin arm complied in 0 of 3 and the prose arm in 2 of 3. The lookup found std-API and
+    std-OBS, and not std-DEPLOY (#929).
     Given std-DEPLOY requires an artefact to record its commit, and checks for it on a health or version endpoint
     And a task asking for a health endpoint, which names neither deployment nor the rule
     When the session adds the endpoint
@@ -18,9 +20,9 @@ Feature: Build. A session writing code meets every rule that binds the code it c
 
   @intent:nudge @type:standards @trial:plugin/engineering/house/pricing-call
   Scenario: A tracing rule reaches a session writing an outbound call
-    Baseline: the plugin arm complied in 0 of 3 runs, the prose arm in 1 of 3, and the none arm in 0 of 3.
-    The lookup found the timeout and contract rules, and not the tracing rule (#929).
-    Measured in trials/plugin/runs/hook-arm.md on 0.36.2: the hook arm 3 of 3, the plugin arm 1 of 3, none 0 of 3.
+    Baseline: on 0.36.2 the hook arm complied in 3 of 3 runs, the plugin arm in 1 of 3, and the none arm in 0 of 3.
+    In the full pass the plugin arm complied in 0 of 3 and the prose arm in 1 of 3. The lookup found the timeout and
+    contract rules, and not the tracing rule (#929).
     Given std-OBS requires a service to pass the inbound traceparent to everything it calls
     And a task asking for an outbound HTTP call, which names neither tracing nor the rule
     When the session writes the call
