@@ -33,8 +33,8 @@ Only the corpus's own maintainer runs this. A session holding the corpus's sourc
 holding the export alone is not.
 
 **Walk up from where you are to `.corpus.yaml`.** Start from a file inside the corpus you mean, because one repository
-may hold several. Its `corpus:` names the corpus to triage, and its tracker address names the backlog. Say both in your
-reply before you write anything.
+may hold several. Its `corpus:` names the corpus to triage, and its tracker address and area name the backlog. Say
+both in your reply before you write anything.
 
 * **Where you find no `.corpus.yaml`, refuse.** You are outside a corpus. Somebody holding an export alone uses
   `raise-finding`, which files one issue and asks first.
@@ -63,8 +63,10 @@ wrote. A verdict says where the observation belongs, never whether it is right.
 | `corpus`                 | the name of this corpus, as `example-payments`                         |
 | `tracker.target`         | one of `github`, `azure-devops`, `none`                                |
 | `tracker.base`           | the backlog to file against                                            |
+| `tracker.area`           | the area path inside an Azure DevOps project, separated by `/`         |
 | `framework.target`       | the same three values                                                  |
 | `framework.base`         | where a problem with `kac`, the schema or a skill is reported          |
+| `framework.area`         | the area path that problem is filed under                              |
 | `publishing-target`      | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
 | `publishing.base`        | the repository holding the records                                     |
 | `publishing.path-prefix` | the folder inside it the corpus sits in                                |
@@ -87,16 +89,37 @@ issue list of its own, so there is nothing to state. Read the block where it is 
 segment from `/_git/` or `/_wiki/` onwards names a repository or a wiki and no ticket is filed on either. Take
 `https://dev.azure.com/acme/Platform` out of `https://dev.azure.com/acme/Platform/_git/knowledge`.
 
+**An area divides one Azure DevOps project between corpora.** Nothing derives it, so a corpus without `area` files in
+the project's default area. `area` separates its segments with `/`, and Azure Boards separates an area path with `\`.
+Write the path as the project and the area joined by a backslash, with every `/` turned into a `\`: an `area` of
+`kac-it-swdev/subteam` is `<project>\kac-it-swdev\subteam`. `raise-finding` files to the same path.
+
 **A key may be present and empty.** Test the value, not the key.
 
 **Normalise an address before you compare it.** `https://github.com/Example/Repo.git` and
 `https://www.github.com/example/repo` are one backlog written two ways. Drop the scheme, drop a leading `www.`, drop a
-`.git` suffix, drop a trailing slash, and lowercase what is left. Two addresses match only where their targets match
-as well, because one URL under two clients is two backlogs.
+`.git` suffix, drop a trailing slash, and lowercase what is left. Normalise an area the same way: trim a `/` from
+either end and lowercase it, and read an empty one as none.
+
+**Two addresses match only where their targets, bases and areas all match.** One URL under two clients is two
+backlogs. One Azure DevOps project under two areas is one backlog divided between two owners.
+
+**Where the target and base match and only the area differs, move the work item.** Nothing is refiled: the finding
+keeps its id and its history, and changes area. Set `System.AreaPath` to the other address's area path, or to the
+project alone where that address states no area:
+
+```bash
+az boards work-item update --org https://dev.azure.com/<org> --id <id> \
+  --fields "System.AreaPath=<project>\<area>"
+```
+
+A move is a write, so it waits for the same yes as the labels. Where Azure refuses the area, because it does not exist
+or you cannot write to it, leave the work item where it is and say so in your reply.
 
 **A `consumes:` entry states no framework.** The framework this corpus took is stated once, at the top level.
 
-**Where the corpus consumes another one, `.imports/<shortcode>/manifest.json` states that corpus's own tracker.**
+**Where the corpus consumes another one, `.imports/<shortcode>/manifest.json` states that corpus's own tracker.** Its
+`tracker` block has `target`, `base`, `area` and `id`. The `id` leaves `area` out, so compare the area beside it.
 `kac restore` writes the folder, so it is missing until somebody runs it. A finding you route to another corpus needs
 that address, so say where you could not read one.
 
@@ -207,9 +230,14 @@ The query returns ids. Read each work item after it, because the body is where t
 
 ```bash
 az boards query --org https://dev.azure.com/<org> --project <project> \
-  --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.Tags] CONTAINS 'kac:finding' AND [System.Tags] NOT CONTAINS 'kac:triaged' AND [System.State] <> 'Closed'"
+  --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.AreaPath] UNDER '<project>\<area>' AND [System.Tags] CONTAINS 'kac:finding' AND [System.Tags] NOT CONTAINS 'kac:triaged' AND [System.State] <> 'Closed'"
 az boards work-item show --org https://dev.azure.com/<org> --id <id>
 ```
+
+**Read only this corpus's own area.** Several corpora can file into one project, each under its own area, and the
+others' findings are theirs to triage. Write the area path as [Read the addresses](#read-the-addresses) does.
+`UNDER` takes in the areas below it too. Where the tracker states no area, drop the `[System.AreaPath]` clause and its
+`AND`, and say in your reply that the queue read the whole project.
 
 **A finding may have arrived with no mark at all.** `raise-finding` files one unmarked where the platform refuses a
 mark it does not have, so the second GitHub search looks for the block in the body instead. That search returns
@@ -315,17 +343,21 @@ Work down this list and take the first that fits.
 type is a decision a person takes, so say in the comment which type it would need.
 
 **A misfiled finding is not always on the wrong tracker.** Compare that corpus's tracker in
-`.imports/<shortcode>/manifest.json` with this corpus's. Where they differ, the ticket has to move, and the comment
-names the backlog it goes to. Where they are equal, one repository publishes both corpora, nothing is refiled, and
-what changes is which corpus answers. Say which of the two this is.
+`.imports/<shortcode>/manifest.json` with this corpus's, target, base and area, as
+[Read the addresses](#read-the-addresses) normalises them. Say in the comment which of these it is:
+
+* **The targets or the bases differ.** The ticket has to move to another backlog, and the comment names it.
+* **Only the areas differ.** The work item moves to that corpus's area after step 8 labels it, as
+  [Read the addresses](#read-the-addresses) shows.
+* **All three are equal.** One backlog serves both corpora. Nothing moves, and what changes is which corpus answers.
 
 ### 7. Show the table and wait
 
 Print one row per finding: the issue number, its title cut short, the route, and the reason in under a dozen words. Put
 the `kac:route-unclear` rows at the top, because those are the ones needing an answer.
 
-**Say what you are about to write**: every label the repository is missing, and then one `kac:triaged` label, one
-route label and one comment on each issue. Then wait for the yes.
+**Say what you are about to write**: every label the repository is missing, then one `kac:triaged` label, one route
+label and one comment on each issue, and each work item you will move to another area. Then wait for the yes.
 
 ### 8. Label, and comment the reason
 
@@ -377,8 +409,9 @@ thing that can disagree with the first.
 A framework finding describes the tool rather than the person who filed it, so it may travel. It travels under two
 conditions: a person reads every word first, and the body contains none of the filer's own provenance.
 
-**Compare the framework's address with this corpus's tracker address**, both normalised, and compare the targets
-too. They are equal where a problem with `kac` and a problem with a record are filed in the same place.
+**Compare the framework's address with this corpus's tracker address**: target, base and area, as
+[Read the addresses](#read-the-addresses) normalises them. They are equal where a problem with `kac` and a problem with
+a record are filed in the same place.
 
 **Every case here still gets `kac:triaged` and `kac:route-framework`, as step 8 applies them.** A finding left without
 `kac:triaged` stays in the queue and is re-read, re-commented and re-drafted on every run.
@@ -390,9 +423,13 @@ upstream body, and say in your reply that nobody named a tracker for it. The fix
 **Where they are equal, the finding is already where framework work is filed.** Mark it and stop. There is nothing to
 copy.
 
-**Where they differ, draft the upstream body and post it as a comment.** Then mark it and stop. Somebody copies the
-body into whatever tracker they can reach. Never file it yourself: an Azure DevOps user has no GitHub account, and a
-corpus published from somebody else's repository is somebody else's backlog.
+**Where only the areas differ, mark the finding, move the work item to the framework's area, and stop.**
+[Read the addresses](#read-the-addresses) shows the move. The work item stays inside the project, so there is nothing
+to copy and nothing to strip.
+
+**Where the targets or the bases differ, draft the upstream body and post it as a comment.** Then mark it and stop.
+Somebody copies the body into whatever tracker they can reach. Never file it yourself: an Azure DevOps user has no
+GitHub account, and a corpus published from somebody else's repository is somebody else's backlog.
 
 **Strip the filer's provenance out of what you draft.** Take out the session id, the repository the session was working
 in, its commit, and the name of the corpus. What is left is what the framework maintainer needs.
@@ -433,6 +470,7 @@ the body says what that repository owes.
 * `kac:route-framework` has no record to write. Its upstream body is already a comment on the issue.
 * `kac:route-misfiled` asks for a record in a corpus this one consumes, so its own maintainer drafts it. Where that
   corpus files on another tracker, which `.imports/<shortcode>/manifest.json` says, refile the ticket there first.
+  Where it files in another area of the same project, triage has already moved the work item there.
 * `kac:route-none` is settled.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
@@ -530,11 +568,11 @@ true, which triage did not.
 
 After `triage`, say how many findings you read, how many you labelled, and the count against each route. Name every
 `kac:route-unclear` row and what a person has to decide about it. Where you drafted an upstream body, say which issue it
-is a comment on and which tracker it is for.
+is a comment on and which tracker it is for. Name each work item you moved, and the area it moved to.
 
 After `draft`, name the pull request and its URL, and the issue it answers. Say that the record names that issue in
 `sources`, and that merging the pull request closes it. Say which fields you left empty, and that the record is a
 draft until somebody accepts it.
 
 **Name what you could not do**: a missing client, a label you could not create, an issue the tracker refused to
-update.
+update, an area it refused to move one to.

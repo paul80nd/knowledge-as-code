@@ -246,6 +246,7 @@ _**Covers:** `eng:pol-DEVI.RECORD`_
 - A skill triaging findings **MUST NOT** decide which corpus it is in from the `publishing` block, because a corpus
   published as a wiki or a site has no repository there and its maintainer still has both a tracker and the source.
 - A skill **MUST** select its queue as `kac:finding` without `kac:triaged`.
+- Where the corpus states an area, a skill **MUST** select its queue from that area alone.
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
 - A skill **MUST** say where a query returned as many issues as its limit allows.
 - A skill **MUST NOT** take `kac:finding` off an issue it triaged.
@@ -277,10 +278,11 @@ _**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.PROV`, `
 
 ### STRIP: A framework finding travels stripped, and only by hand
 
-- A skill **MUST** compare the framework block's address with the tracker block's, both targets and both bases
-  normalised.
+- A skill **MUST** compare the framework block's address with the tracker block's, both targets, both bases and both
+  areas normalised.
 - Where the two are equal, a skill **MUST** mark the finding and copy nothing.
-- Where the two differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
+- Where only the areas differ, a skill **MUST** mark the finding, move it to the framework's area, and copy nothing.
+- Where the targets or the bases differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
 - A skill **MUST NOT** file a finding on a tracker outside the organisation holding the corpus.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's
   commit, or the name of the corpus the finding was filed from.
@@ -457,6 +459,7 @@ broke it.
       `publishing` block.
 - [ ] No plugin declares a component that triages findings.
 - [ ] The queue read both the marked findings and the open issues whose body carries the block without the mark.
+- [ ] The queue read only the corpus's own area, where the corpus states one.
 - [ ] Every triaged issue keeps `kac:finding`, and gains `kac:triaged` and exactly one `kac:route-*` mark.
 - [ ] Every verdict was shown to a person and agreed before any mark or comment was written.
 - [ ] Every verdict has a comment saying why, and none of them says whether the claim is true.
@@ -638,7 +641,10 @@ maintainer for ever. `.corpus.yaml` is beside the records in every case.
 An area path is stated rather than derived for the same reason the tracker is. One Azure DevOps project gives one
 backlog to any number of corpora, and each publishes from a repository of its own, so no publishing block names the
 area the project divides that backlog by. GitHub gives a repository one issue list and labels to sort it, so the key
-means nothing there and `kac validate` refuses it.
+means nothing there and `kac validate` refuses it. The same division bounds triage. A queue read across the whole
+project would mark another corpus's findings, so triage reads its own area. Two corpora in one project share an `id`,
+because `id` leaves the area out, so triage compares the area beside it. A finding that belongs in the other area moves
+there by its area path, and keeps its history.
 
 The verdict is a mark, and the reason is a comment. A route stated twice is two things that can disagree, so the
 comment argues and states no data. It is also the only part a person can push back on, which a mark on its own gives
@@ -672,6 +678,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-28: triage reads its queue from the corpus's own area, and compares the area wherever it compares two
+  addresses. A framework finding that differs only by area moves to the framework's area by its area path.
 - 2026-10-27: a hook pushes a view once to each agent, the main session and each subagent alike, and again after a
   compaction.
 - 2026-10-27: the bar on requiring a shell or a runtime binds a skill reading an export. A skill that files an issue or
