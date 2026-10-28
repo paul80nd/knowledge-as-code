@@ -42,8 +42,21 @@ both in your reply before you write anything.
 * **Test the corpus, never the publishing address.** A corpus published as a wiki or a documentation site has no
   repository in `publishing.base`, and its maintainer still has a tracker and the source.
 
-**Every invocation needs the tracker's client, signed in.** `gh auth status` says whether you are signed in to the host.
-Where the client is missing, print what you produced and say which invocation you could not finish.
+**Every invocation needs the tracker's client, signed in.** The platform file says how to check. Where the client is
+missing, print what you produced and say which invocation you could not finish.
+
+## The platform files
+
+**Every command this skill runs is in the file for the tracker's `target`.** Read that file, and no other, before you
+run the first command. Each of its sections is headed by the step it serves, and sends you back to that step.
+
+| `target`       | Read                                                                                               |
+|----------------|----------------------------------------------------------------------------------------------------|
+| `github`       | [github.md](github.md): `gh` for the labels, the issues and the pull request                       |
+| `azure-devops` | [azure-devops.md](azure-devops.md): `az boards`, `az rest` and `az repos`                          |
+| `none`         | nothing. [Where the platform runs no tracker](#where-the-platform-runs-no-tracker) says what to do |
+
+Both files sit beside this one, in the base directory this skill was loaded from.
 
 ## Triage does not decide whether a finding is true
 
@@ -90,9 +103,8 @@ segment from `/_git/` or `/_wiki/` onwards names a repository or a wiki and no t
 `https://dev.azure.com/acme/Platform` out of `https://dev.azure.com/acme/Platform/_git/knowledge`.
 
 **An area divides one Azure DevOps project between corpora.** Nothing derives it, so a corpus without `area` files in
-the project's default area. `area` separates its segments with `/`, and Azure Boards separates an area path with `\`.
-Write the path as the project and the area joined by a backslash, with every `/` turned into a `\`: an `area` of
-`kac-it-swdev/subteam` is `<project>\kac-it-swdev\subteam`. `raise-finding` files to the same path.
+the project's default area. `raise-finding` files to the same area. `azure-devops.md` says how to write it as an area
+path.
 
 **A key may be present and empty.** Test the value, not the key.
 
@@ -106,20 +118,14 @@ backlogs. One Azure DevOps project under two areas is one backlog divided betwee
 
 **Where the target and base match and only the area differs, bounce the work item.** A bounce moves the finding to
 the other area and leaves the verdict to whoever triages that area. Nothing is refiled: the finding keeps its id, its
-history and `kac:finding`. Set `System.AreaPath` to the other address's area path, or to the project alone where that
-address states no area, and say in the same command why it moved and where:
-
-```bash
-az boards work-item update --org https://dev.azure.com/<org> --id <id> \
-  --fields "System.AreaPath=<project>\<area>" \
-  --discussion "<why it moved, and the corpus whose area it moved to>"
-```
+history and `kac:finding`. Move it to the other address's area, or to the project alone where that address states no
+area, then comment why it moved and where. `azure-devops.md` has both commands under "Bounce a work item".
 
 **A bounced finding takes no `kac:triaged` and no route label.** It leaves this corpus's queue because the queue
 selects by area, and it arrives in the other area's queue untriaged. A route label here would hide it there.
 
 A bounce is a write, so it waits for the same yes as the labels. Where Azure refuses the area, because it does not
-exist or you cannot write to it, leave the work item where it is, untouched, and say so in your reply.
+exist or you cannot write to it, leave the work item where it is, with no comment, and say so in your reply.
 
 **A `consumes:` entry states no framework.** The framework this corpus took is stated once, at the top level.
 
@@ -151,62 +157,22 @@ An issue left untriaged is an issue nobody sees again.
 
 ## Making the labels
 
-A corpus that ran `kac new` last week has none of these, and `gh issue edit` rejects the whole command when one label
-is missing. So every label you are about to apply has to exist before step 8 applies the first one.
+A platform that refuses an unknown label needs every label you are about to apply made before step 8 applies the
+first one. A corpus that ran `kac new` last week has none of them. The platform file says whether its platform refuses
+one.
 
-**List them before you triage, and create nothing yet.** Read what the repository already has, and count the missing
-ones into what you tell the person you are about to write.
+**List them before you triage, and create nothing yet.** Read what the tracker already has, and count the missing ones
+into what you tell the person you are about to write.
 
 **Create the missing ones after they say yes**, immediately before you label the first issue.
 
-**Count `kac:finding` among them.** `raise-finding` files a finding unlabelled where the repository refuses the label,
-so making it is what stops the next one going missing.
-
-### GitHub
-
-`tracker.target` is `github`, and `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`.
-
-Read first:
-
-```bash
-gh label list --repo <owner>/<repo> --limit 100 --json name --jq '.[].name'
-```
-
-Then, once they have agreed:
-
-```bash
-gh label create kac:finding --repo <owner>/<repo> --color 006B75 --force \
-  --description "An observation an agent filed against a corpus"
-gh label create kac:triaged --repo <owner>/<repo> --color BFDADC --force \
-  --description "A finding triage has routed"
-gh label create kac:route-framework --repo <owner>/<repo> --color 1D76DB --force \
-  --description "The finding reports the framework rather than a record"
-gh label create kac:route-record --repo <owner>/<repo> --color 0E8A16 --force \
-  --description "A record here is wrong, or one is missing"
-gh label create kac:route-misfiled --repo <owner>/<repo> --color FBCA04 --force \
-  --description "The finding belongs to a corpus this one consumes"
-gh label create kac:route-none --repo <owner>/<repo> --color CFD3D7 --force \
-  --description "A duplicate, or already covered by a record"
-gh label create kac:route-unclear --repo <owner>/<repo> --color D876E3 --force \
-  --description "Triaged, and a person has to decide"
-```
-
-`--force` updates a label that is already there, so running this every time costs one call each and changes nothing.
+**Count `kac:finding` among them.** `raise-finding` files a finding unlabelled where the tracker refuses the label, so
+making it is what stops the next one going missing.
 
 **An account that cannot create a label can still read the issues.** Carry on, and say in your reply that you will
 apply no labels.
 
-### Azure DevOps
-
-`tracker.target` is `azure-devops`, and `tracker.base` is the project, as `https://dev.azure.com/<org>/<project>`. `az`
-wants the two apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
-
-**A project name arrives percent-encoded, and `az` wants it spelled out.** A base ending `Engineering%20Standards`
-names a project `az` takes as `Engineering Standards`. Decode every escape before you pass it to `--project`.
-
-**Azure creates a tag it does not already have.** There is nothing to make first, so skip this section and triage.
-
-### Where the platform runs no tracker
+## Where the platform runs no tracker
 
 A `tracker.target` of `none`, or a derivation that reaches none, means this corpus files nowhere. There is no queue to
 read. Say so, name the corpus, and ask whoever is with you where its findings go.
@@ -218,39 +184,15 @@ read. Say so, name the corpus, and ask whoever is with you where its findings go
 The queue takes three reads: the findings waiting, the findings a label never reached, and the findings already
 routed. The third is not work: it is how you spot a duplicate of something already settled.
 
-#### GitHub
-
-```bash
-gh issue list --repo <owner>/<repo> --state open --limit 200 \
-  --search "label:kac:finding -label:kac:triaged" --json number,title,body,createdAt
-gh issue list --repo <owner>/<repo> --state open --limit 200 \
-  --search "kac-finding in:body -label:kac:finding" --json number,title,body,createdAt \
-  --jq '[.[] | select(.body | contains("```yaml kac-finding"))]'
-gh issue list --repo <owner>/<repo> --state all --limit 200 \
-  --search "label:kac:triaged" --json number,title,labels
-```
-
-#### Azure DevOps
-
-The query returns ids. Read each work item after it, because the body is where the block and the observation are.
-
-```bash
-az boards query --org https://dev.azure.com/<org> --project <project> \
-  --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.AreaPath] UNDER '<project>\<area>' AND [System.Tags] CONTAINS 'kac:finding' AND [System.Tags] NOT CONTAINS 'kac:triaged' AND [System.State] <> 'Closed'"
-az boards work-item show --org https://dev.azure.com/<org> --id <id>
-```
-
-**Read only this corpus's own area.** Several corpora can file into one project, each under its own area, and the
-others' findings are theirs to triage. Write the area path as [Read the addresses](#read-the-addresses) does.
-`UNDER` takes in the areas below it too. A finding another corpus bounced here arrives with `kac:finding` alone, so
-this query reads it. Where the tracker states no area, drop the `[System.AreaPath]` clause and its `AND`, and say in
-your reply that the queue read the whole project.
+**Read only this corpus's own area.** Several corpora can file into one Azure DevOps project, each under its own area,
+and the others' findings are theirs to triage. A finding another corpus bounced here arrives with `kac:finding` alone,
+so the first read takes it in. Where the tracker states no area, say in your reply that the queue read the whole
+project.
 
 **A finding may have arrived with no mark at all.** `raise-finding` files one unmarked where the platform refuses a
-mark it does not have, so the second GitHub search looks for the block in the body instead. That search returns
-candidates and not findings. GitHub reads `kac-finding` as two words, so it returns any issue that discusses a finding.
-The `--jq` filter keeps only a body with the opening fence in it. Azure creates a tag it does not hold, so an Azure
-backlog has no unmarked case. Mark what survives the filter `kac:finding` before you triage it.
+mark it does not have. The second read searches the bodies for the block instead, and returns candidates, not
+findings. Give each one whose body has the opening fence the `kac:finding` label, then triage it. A platform that
+creates any tag it is given has no unmarked case.
 
 **Read every one before you classify any of them.** Duplicates are only visible against the whole queue, and two
 findings that are halves of one problem read as two unrelated tickets on their own.
@@ -259,8 +201,8 @@ findings that are halves of one problem read as two unrelated tickets on their o
 
 **An empty queue is an answer.** Say the queue is empty and stop.
 
-**Given one issue, read it with `gh issue view <issue> --json number,title,body,labels,state`.** Classify it alone,
-and show a one-row table. Refuse one already labelled `kac:triaged`.
+**Given one issue, read it on its own as well as the queue.** Classify it alone, and show a one-row table. Refuse one
+already labelled `kac:triaged`.
 
 ### 2. Read the block in each body
 
@@ -273,9 +215,12 @@ filing by hand leaves it out. Classify from the body either way.
 **A body with no block is still a finding.** Somebody filed it by hand, or an older skill wrote it. Read the prose and
 classify it.
 
+**A body may arrive as HTML.** Read the block's text out of it, as the platform file says, and say in the triage
+comment that the body arrived as HTML.
+
 ### 3. Find the duplicates
 
-Compare each finding against the others in the queue, and against the routed findings the third query returned. Two
+Compare each finding against the others in the queue, and against the routed findings the third read returned. Two
 findings are one where the same thing was observed, whoever wrote them and however differently.
 
 **Two halves of one problem are one finding.** Route the fuller one and mark the other `kac:route-none`, naming the
@@ -365,39 +310,18 @@ the `kac:route-unclear` rows at the top, because those are the ones needing an a
 
 Show a bounce as its own row, with the area it goes to in place of a route.
 
-**Say what you are about to write**: every label the repository is missing, then one `kac:triaged` label, one route
+**Say what you are about to write**: every label the tracker is missing, then one `kac:triaged` label, one route
 label and one comment on each issue you keep, and one move and its comment on each issue you bounce. Then wait for the
 yes.
 
 ### 8. Label, and comment the reason
 
-Create the labels the repository was missing first, as the section above them writes it. Then label and comment one
-issue at a time, doing the pair together. An issue labelled with no comment is a verdict nobody can argue with.
-Bounce each finding that goes to another area with the command in [Read the addresses](#read-the-addresses), which
-moves it and comments in one call.
+Create the labels the tracker was missing first, as [Making the labels](#making-the-labels) says. Then label and
+comment one issue at a time, doing the pair together. An issue labelled with no comment is a verdict nobody can argue
+with. Bounce each finding that goes to another area, as [Read the addresses](#read-the-addresses) says.
 
-#### GitHub
-
-```bash
-gh issue edit <number> --repo <owner>/<repo> --add-label kac:triaged --add-label kac:route-record
-gh issue comment <number> --repo <owner>/<repo> --body-file <path>
-```
-
-Write the comment to a file. Passing it inline turns every backtick into a quoting problem.
-
-#### Azure DevOps
-
-Azure replaces the whole tag field, so read the tags the work item has and write them back with the new ones on the
-end. Writing only the new ones drops `kac:finding`, and the issue leaves every query that would have found it again.
-
-```bash
-az boards work-item show --org https://dev.azure.com/<org> --id <id> --query "fields.\"System.Tags\""
-az boards work-item update --org https://dev.azure.com/<org> --id <id> \
-  --fields "System.Tags=<the tags that command printed>; kac:triaged; kac:route-record" \
-  --discussion "<the reason>"
-```
-
-**`--discussion` takes the text and not a path.** Keep the Azure comment free of backticks and quotation marks.
+**Write each comment to a file with your own file tool.** Passing it inline turns every backtick into a quoting
+problem. The platform file has the commands that label, comment and bounce.
 
 #### What the comment says
 
@@ -408,6 +332,7 @@ Three sentences is plenty. The route, why, and what happens next.
   `kac:route-none`.
 * **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
 * **Say why a bounced finding left and which corpus's area it went to.** Its triage there starts from this comment.
+* **Say that the body arrived as HTML**, where it did.
 * **Say what step 5 decided** where it narrowed, redirected or settled the finding: the step, rule or part the draft
   refines, the type the record belongs to, the file outside the corpus the detail goes to, or the section that settles
   it.
@@ -441,9 +366,10 @@ copy.
 [Read the addresses](#read-the-addresses) shows the bounce. It takes no label here. The work item stays inside the
 project, so there is nothing to copy and nothing to strip.
 
-**Where the targets or the bases differ, draft the upstream body and post it as a comment.** Then mark it and stop.
-Somebody copies the body into whatever tracker they can reach. Never file it yourself: an Azure DevOps user has no
-GitHub account, and a corpus published from somebody else's repository is somebody else's backlog.
+**Where the targets or the bases differ, draft the upstream body and post it as a comment**, with the comment command
+step 8 uses. Then mark it and stop. Somebody copies the body into whatever tracker they can reach. Never file it
+yourself: an Azure DevOps user has no GitHub account, and a corpus published from somebody else's repository is
+somebody else's backlog.
 
 **Strip the filer's provenance out of what you draft.** Take out the session id, the repository the session was working
 in, its commit, and the name of the corpus. What is left is what the framework maintainer needs.
@@ -488,15 +414,8 @@ the body says what that repository owes.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
 
-**Refuse a finding that already has a pull request, open or merged.** The record it asked for is written. Read that
-alongside the labels:
-
-```bash
-gh issue view <issue> --repo <owner>/<repo> --json state,closedByPullRequestsReferences
-```
-
-`closedByPullRequestsReferences` names every pull request that closes this issue, from the moment one opens. Name it
-and stop. On Azure DevOps the linked pull requests are on the work item.
+**Refuse a finding that already has a pull request, open or merged.** The record it asked for is written. The
+platform file reads the linked pull requests and the state alongside the labels. Name the pull request and stop.
 
 **Refuse a closed finding as well.** Somebody closed it by hand, so the observation is settled and no record is owed.
 
@@ -528,12 +447,12 @@ that type needs and what each one takes. Follow it rather than copying a neighbo
 **Load `technical-writing`, then `writing-a-record`.** Both sit beside this one under `.claude/skills/`.
 
 **Name the issue in `sources`.** Every type accepts the field, and it gives a reviewer the observation to check the
-record against. Write the full address on either tracker, because no type renders `sources` and a short form such as
-`<owner>/<repo>#<issue>` links nowhere.
+record against. Write the full address the platform file gives, because no type renders `sources` and a short form
+such as `<owner>/<repo>#<issue>` links nowhere.
 
 ```yaml
 sources:
-  - { resource: https://github.com/<owner>/<repo>/issues/<issue> }
+  - { resource: <the issue's full address> }
 ```
 
 **An edit keeps the entries the record already has**, and adds this one under them.
@@ -557,17 +476,11 @@ has.
 
 ### 4. Open the pull request
 
-The body closes the finding and names the record.
+The pull request links the finding, so merging it settles the finding. Closing the finding yourself would settle an
+observation nobody has accepted.
 
-```bash
-gh pr create --repo <owner>/<repo> --title "<the record, in one line>" --body-file <path>
-```
-
-**Write `Closes #<issue>` in the body.** GitHub closes the finding when somebody merges the pull request, and leaves
-the link to it on the issue. Closing it yourself would settle an observation nobody has accepted.
-
-On Azure DevOps the command is `az repos pr create`, against the repository inside the project. `--work-items <id>`
-links the finding, and `--transition-work-items true` moves it on when somebody completes the pull request.
+**Commit the record to a new branch and push it.** Then write the body to a file and open the pull request against the
+repository step 2 found, with the command in the platform file. Its title is the record, in one line.
 
 **Name the record's id and its path in the body.** The finding closes with a link to the pull request, so the body is
 where a reader arriving from the observation learns which record answered it.
@@ -581,10 +494,11 @@ true, which triage did not.
 
 After `triage`, say how many findings you read, how many you labelled, and the count against each route. Name every
 `kac:route-unclear` row and what a person has to decide about it. Where you drafted an upstream body, say which issue it
-is a comment on and which tracker it is for. Name each work item you bounced, and the area it went to.
+is a comment on and which tracker it is for. Name each work item you bounced, and the area it went to. Name each
+finding whose body arrived as HTML.
 
 After `draft`, name the pull request and its URL, and the issue it answers. Say that the record names that issue in
-`sources`, and that merging the pull request closes it. Say which fields you left empty, and that the record is a
+`sources`, and that merging the pull request settles it. Say which fields you left empty, and that the record is a
 draft until somebody accepts it.
 
 **Name what you could not do**: a missing client, a label you could not create, an issue the tracker refused to

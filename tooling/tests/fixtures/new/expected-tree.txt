@@ -1,4 +1,6 @@
 .claude/skills/harvest-findings/SKILL.md
+.claude/skills/harvest-findings/azure-devops.md
+.claude/skills/harvest-findings/github.md
 .claude/skills/technical-writing/SKILL.md
 .claude/skills/writing-a-record/SKILL.md
 .claude/skills/writing-a-report/SKILL.md
