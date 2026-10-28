@@ -17,6 +17,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Changed
+
+- **`raise-finding` and `request-deviation` keep each platform's command in a file of its own.** `github.md` and
+  `azure-devops.md` sit beside each `SKILL.md`, and a session reads only the one its tracker's `target` names, so it
+  loads no command for a platform it does not file on. The template version moves to 25, and `kac update` writes the
+  four new files.
+
 ### Fixed
 
 - **`kac report coverage` counts the clauses a corpus inherits without adopting `policies`.** It looked for the clause

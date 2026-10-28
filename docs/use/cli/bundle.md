@@ -101,21 +101,21 @@ wrote .dist/plugin/hooks/breadcrumb.cmd
 wrote .dist/plugin/hooks/breadcrumb.txt
 wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
-wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
-wrote .dist/plugin/skills/ask-the-corpus/deviations.md
-wrote .dist/plugin/skills/ask-the-corpus/reports.md
-wrote .dist/plugin/skills/ask-the-corpus/runbooks.md
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
+wrote .dist/plugin/skills/raise-finding/azure-devops.md
+wrote .dist/plugin/skills/raise-finding/github.md
 wrote .dist/plugin/skills/request-deviation/SKILL.md
+wrote .dist/plugin/skills/request-deviation/azure-devops.md
+wrote .dist/plugin/skills/request-deviation/github.md
 bundle: trimmed skills/controls-lookup: the export carries no controls.
 bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 46 file(s) to .dist/plugin/ as example-libraries 0.25.1. 6 component(s) included, 6 trimmed.
+bundle: wrote 50 file(s) to .dist/plugin/ as example-libraries 0.31.0. 6 component(s) included, 6 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -143,7 +143,7 @@ the four skills that name no type of their own. Its export has standards, so it 
 `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 78 file(s) to .dist/plugin/ as example-engineering 0.37.1. 12 component(s) included, 2 trimmed.
+bundle: wrote 82 file(s) to .dist/plugin/ as example-engineering 0.45.0. 12 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:

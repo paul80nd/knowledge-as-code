@@ -3,7 +3,7 @@
 # wildcard. The first matching rule wins, so a rule carving a file out of a folder sits above the folder's rule.
 
 # The template's shape. Increment when a corpus has to respond: a file added, removed, renamed or moved between layers.
-version: 24
+version: 25
 
 # The oldest kac that reads this manifest. The template is fetched rather than shipped, so the two version apart.
 minimum-tool: "0.6.0"

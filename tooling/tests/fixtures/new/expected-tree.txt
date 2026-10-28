@@ -26,7 +26,11 @@
 .plugin/skills/policy-lookup/SKILL.md
 .plugin/skills/process-lookup/SKILL.md
 .plugin/skills/raise-finding/SKILL.md
+.plugin/skills/raise-finding/azure-devops.md
+.plugin/skills/raise-finding/github.md
 .plugin/skills/request-deviation/SKILL.md
+.plugin/skills/request-deviation/azure-devops.md
+.plugin/skills/request-deviation/github.md
 .plugin/skills/standards-lookup/SKILL.md
 .plugin/skills/standards-review/SKILL.md
 .schema/README.md
