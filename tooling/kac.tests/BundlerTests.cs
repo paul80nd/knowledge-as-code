@@ -386,6 +386,43 @@ public class BundlerTests
     }
 
     [Fact]
+    public void A_plugin_shipping_a_skill_that_files_warns_where_the_corpus_has_no_tracker()
+        => Assert.Contains(
+            "this corpus has no tracker to file on, so raise-finding will print each issue for you to file. Add a "
+            + "`tracker:` block to .corpus.yaml and export again to set one.",
+            Plan(plugin: [(Bundler.ManifestFile, Source(Standalone("skills/raise-finding")))],
+                export: [Versioned("2.3.4")]).Warnings);
+
+    [Fact]
+    public void The_tracker_warning_names_each_skill_that_files()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/look", "glossary"),
+                    Standalone("skills/raise-finding"), Component("skills/request-deviation")))
+            ],
+            export: [Versioned("2.3.4", "glossary")]);
+
+        Assert.Contains(plan.Warnings,
+            w => w.StartsWith("this corpus has no tracker to file on, so raise-finding and request-deviation will",
+                StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void A_corpus_whose_tracker_files_on_a_backlog_is_not_warned()
+        => Assert.Empty(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Standalone("skills/raise-finding")))],
+            export: [Tracked("https://github.com/acme/corpus")]).Warnings);
+
+    [Fact]
+    public void A_trimmed_skill_that_files_is_not_warned_about()
+        => Assert.DoesNotContain(
+            Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/request-deviation")))],
+                export: [Versioned("2.3.4")]).Warnings,
+            w => w.Contains("tracker", StringComparison.Ordinal));
+
+    [Fact]
     public void An_identity_key_the_corpus_never_declared_is_removed_rather_than_inherited()
     {
         const string inherited = """
@@ -992,6 +1029,18 @@ public class BundlerTests
                 "corpus": "example-libraries",
                 "contentVersion": {{(contentVersion is null ? "null" : $"\"{contentVersion}\"")}},
                 "types": [{{Entries(types)}}]
+              }
+              """);
+
+    private static (string, string) Tracked(string backlog) =>
+        (Exporter.ManifestFile,
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "corpus": "example-libraries",
+                "contentVersion": "2.3.4",
+                "tracker": { "target": "github", "base": "{{backlog}}" },
+                "types": []
               }
               """);
 

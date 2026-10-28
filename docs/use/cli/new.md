@@ -103,7 +103,12 @@ updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
+new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.
 ```
+
+The last line appears where the corpus has no tracker to file on. `new` writes no
+[`tracker`](../corpus-descriptor.md#tracker) block, so the tracker comes from `publishing-target`, and `mkdocs` and
+`none` give none. The two skills that file an issue then print it for you to file.
 
 Take the framework from a URL rather than a folder and the second line adds the commit it resolved, as
 `…knowledge-as-code at c1c9621.` The third line names the owner it wrote into the seeded records.

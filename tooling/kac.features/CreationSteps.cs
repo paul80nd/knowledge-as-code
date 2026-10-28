@@ -183,6 +183,11 @@ public sealed class CreationSteps(Workspace ws)
     public void ThenInTheNewCorpusSays(string path, string text)
         => Assert.Contains(text, File.ReadAllText(At(path)));
 
+    [Then(@"""(.*)"" in the new corpus states no ""(.*)"" block")]
+    public void ThenInTheNewCorpusStatesNoBlock(string path, string key)
+        => Assert.DoesNotContain(File.ReadAllLines(At(path)),
+            line => line.StartsWith(key + ":", StringComparison.Ordinal));
+
     [Then(@"the new corpus holds ""(.*)""")]
     public void ThenTheNewCorpusHolds(string path) => Assert.True(File.Exists(At(path)), $"no {path}");
 

@@ -248,6 +248,20 @@ public static class New
     }
 
     /// <summary>Each key takes a line of comment, so a corpus changing one has somewhere to read first.</summary>
+    /// <summary>
+    /// Null where the corpus has a backlog to file on. The descriptor this writes states no <c>tracker:</c>, so the
+    /// tracker is the one <c>publishing-target</c> derives.
+    /// </summary>
+    public static string? Unfiled(NewAnswers answers)
+    {
+        var derived = kac.core.Tracker.Own(
+            new CorpusDescriptor { PublishingTarget = answers.PublishingTarget, Base = answers.Base });
+
+        return kac.core.Tracker.Unaddressed(derived, kac.core.Tracker.Filing) is { } line
+            ? $"new: {line} Add a `tracker:` block to {DescriptorFile} to set one."
+            : null;
+    }
+
     public static string Descriptor(NewAnswers answers, Upstream upstream)
     {
         var sb = new StringBuilder();

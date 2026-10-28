@@ -280,6 +280,22 @@ public class NewTests
         Assert.Contains("publishing:\n  base: https://github.com/acme/corpus\n", yaml);
     }
 
+    [Theory]
+    [InlineData(Publishing.None, null)]
+    [InlineData(Publishing.MkDocs, "https://acme.github.io/corpus")]
+    [InlineData(Publishing.GitHub, null)]
+    public void A_corpus_with_no_tracker_to_file_on_is_told_how_to_set_one(string target, string? published)
+        => Assert.Equal(
+            "new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each "
+            + "issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.",
+            New.Unfiled(Answers() with { PublishingTarget = target, Base = published }));
+
+    [Theory]
+    [InlineData(Publishing.GitHub, "https://github.com/acme/corpus")]
+    [InlineData(Publishing.AzureDevOpsWiki, "https://dev.azure.com/acme/Standards/_wiki/wikis/corpus")]
+    public void A_corpus_publishing_where_its_backlog_lives_is_told_nothing(string target, string published)
+        => Assert.Null(New.Unfiled(Answers() with { PublishingTarget = target, Base = published }));
+
     [Fact]
     public void The_descriptor_names_the_framework_tracker_from_the_repository_it_took_from()
     {

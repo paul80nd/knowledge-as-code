@@ -102,6 +102,15 @@ Scenario: A standalone component always ships
   Then the bundle includes "skills/raise-finding"
   And ".dist/plugin/skills/raise-finding/SKILL.md" exists
 
+Scenario: A plugin shipping raise-finding for a corpus with no tracker still builds
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a standalone component "skills/raise-finding"
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/raise-finding"
+  And ".dist/export/manifest.json" states "tracker.target" as "none"
+
 Scenario: A file outside the skill and hook directories ships with no component
   Given the bundle fixture corpus
   And it has been exported

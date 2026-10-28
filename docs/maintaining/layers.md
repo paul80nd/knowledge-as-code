@@ -108,6 +108,7 @@ Each refusal exits `1` and writes nothing.
 * A reference to a declined type's page loses its definition and keeps its words
 * A corpus adopting every type keeps the links between its type pages
 * A full update changes nothing on the corpus new just created
+* A corpus publishing nowhere states no tracker, and validates
 
 [`Update.feature`][Update.feature]:
 
@@ -140,6 +141,8 @@ Each refusal exits `1` and writes nothing.
 * `--drop-type` asking before it deletes, and taking no for an answer. The specs have no terminal to answer on.
 * The plan `--check` prints, and the note that an arriving type's pages are not linked from the pages already there.
   A scenario cannot read what a command prints.
+* The line `new` prints where the corpus has no tracker to file on. A scenario cannot read the output, so `NewTests`
+  asserts it.
 
 ## Where to go next
 

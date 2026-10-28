@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac new` and `kac bundle` say when a corpus has no tracker to file on.** A corpus publishing to `mkdocs` or
+  `none` states no `tracker:` block, so `raise-finding` and `request-deviation` print each issue for you to file. `new`
+  now closes on a line saying so, and that a `tracker:` block in `.corpus.yaml` sets one. `bundle` prints the same
+  warning wherever the plugin ships either skill, and still builds. `validate` says nothing, because a corpus that
+  never bundles never files. Getting started names setting a tracker as a step before you publish a plugin.
+
 ### Changed
 
 - **`slug-length` says how much shorter the filename has to be.** It printed the slug's length and the limit, and

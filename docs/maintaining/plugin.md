@@ -36,6 +36,8 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 * It renders the breadcrumb the hook prints, and keeps the hook's permission bit. [The breadcrumb](#the-breadcrumb)
 * It renders what the build-index hook prints, where the build index ships, and warns where the index is over the
   hook's cap. [The build-index hook](#the-build-index-hook)
+* It warns where the plugin ships `raise-finding` or `request-deviation` and the export's tracker has no backlog to
+  file on. [A corpus with no tracker](../use/cli/bundle.md#a-corpus-with-no-tracker)
 * It writes each view a surviving component declares, from the export alone. [Views](#views)
 * It reads a type under a component's `optional` where the export has it, and trims nothing for its absence.
   [Views](../use/cli/bundle.md#views)
@@ -226,6 +228,7 @@ type trim.
 * A component reading no type ships beside one that reads a type
 * A component reading no type leaves with the last component reading one
 * A standalone component always ships
+* A plugin shipping raise-finding for a corpus with no tracker still builds
 * A file outside the skill and hook directories ships with no component
 * The plugin contains the export unchanged
 * The plugin manifest takes who the plugin is from the descriptor
@@ -275,7 +278,8 @@ type trim.
 * Claude Code sending `agent_id` to a subagent's hook, and firing `SessionStart` with `compact`. A scenario runs the
   script on the input Claude Code documents, and cannot start Claude Code. `tooling/tests/round-trip.sh` runs the
   installed script twice for one session.
-* The warning over the build-index hook's cap. A scenario cannot read the output, so `BundlerTests` asserts it.
+* The warning over the build-index hook's cap, and the one over a corpus with no tracker. A scenario cannot read the
+  output, so `BundlerTests` asserts each.
 * What the run prints: each trim, the closing count, the install hint and every refusal's reason. A scenario cannot
   read the output.
 

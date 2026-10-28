@@ -70,6 +70,19 @@ result, whichever tool the call used. An agent whose first call is an edit has t
 Claude Code passes a hook at most 10,000 characters of context. Over that, `bundle` writes the rule and standard counts
 and the build index's path in its place, and warns.
 
+### A corpus with no tracker
+
+`raise-finding` and `request-deviation` file an issue on the [`tracker`](../corpus-descriptor.md#tracker) the export
+states. Where that tracker has no backlog to file on, `bundle` warns and still builds. The warning names each of the two
+skills the plugin ships:
+
+```text
+bundle: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml and export again to set one.
+```
+
+A corpus publishing to `mkdocs` or `none` has no tracker until you add the block. [`validate`](validate.md) says
+nothing about it, because a corpus that never bundles never files.
+
 ## Examples
 
 ### A built plugin
