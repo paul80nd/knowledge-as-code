@@ -15,19 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.43.0 - 2026-10-28
 
 ### Changed
 
-- **`raise-finding` and `request-deviation` keep each platform's command in a file of its own.** `github.md` and
-  `azure-devops.md` sit beside each `SKILL.md`, and a session reads only the one its tracker's `target` names, so it
-  loads no command for a platform it does not file on. The template version moves to 25, and `kac update` writes the
-  four new files.
-- **`harvest-findings` keeps each platform's commands in a file of its own, and gives Azure DevOps a command for every
-  step.** `github.md` and `azure-devops.md` sit beside its `SKILL.md`. On Azure DevOps it reads a work item and posts
-  a comment through `az rest`, so the comment keeps its Markdown and a body stored as HTML is read out of it. `draft`
-  checks the work item's linked pull requests and opens one with `az repos pr create`. The template version moves to
-  26, and `kac update` writes the two new files.
+- **`raise-finding`, `request-deviation` and `harvest-findings` keep each platform's commands in a file of their
+  own.** `github.md` and `azure-devops.md` sit beside each `SKILL.md`, and a session reads only the one its tracker's
+  `target` names. On Azure DevOps, `harvest-findings` now has a command for every step: it reads a work item and posts
+  a Markdown comment through `az rest`, reads a body stored as HTML, and opens a `draft` with `az repos pr create`.
+  The template version moves to 26, and `kac update` writes the six new files.
 
 ### Fixed
 
