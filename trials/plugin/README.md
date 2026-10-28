@@ -10,16 +10,17 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 
 | Arm    | The session has                                                             | How it runs                                                           |
 |--------|-----------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| plugin | the plugin `kac bundle` builds from the corpus, its build-index hook silent | the with-arm of `claude plugin eval` on the plugin                    |
-| hook   | the same plugin, its hook pushing the build index at the first read or edit | a third run, on the plugin as built, under `--ablation none`          |
+| hook   | the plugin `kac bundle` builds from the corpus, as it ships                 | a third run, on the plugin as built, under `--ablation none`          |
+| plugin | the same plugin, its build-index hook silent                                | the with-arm of `claude plugin eval` on the plugin                    |
 | prose  | every record the plugin's export contains, as one text on its system prompt | a second run, on a plugin with no components, under `--ablation none` |
 | none   | nothing                                                                     | the without-arm of the same run as the plugin arm                     |
 
-The plugin and hook arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin arm's copy,
-so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index the first time the
-session reads or edits a file through a file tool. A plugin whose bundle trimmed the build index ships no
-`hooks/build-index.json`, as `examples/library` does. `stage.sh` warns and stages it anyway, and its hook arm pushes
-nothing.
+**The hook arm is the plugin that ships, so the trial reports the plugin's lead from it.** The plugin arm measures the
+lookup alone. The hook and plugin arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin
+arm's copy, so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index at the
+first tool call of the session, whichever tool the call uses, and at the first tool call of each subagent. A plugin
+whose bundle trimmed the build index ships no `hooks/build-index.json`, as `examples/library` does. `stage.sh` warns
+and stages it anyway, and its hook arm pushes nothing.
 
 `claude plugin eval` leaves a hook's context out of `trace.jsonl`. Read whether the build index arrived from the
 session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
@@ -45,10 +46,10 @@ beside the run. [Past the paste size](runs/2026-10-20-923-past-paste-size.md) is
 
 ## The full pass and the pilot
 
-The full pass is 22 scored cases, run 3 times each in each of the 3 arms: 198 graded sessions. It runs in 3 batches
-of one run each, so that each batch fits one window of a subscription's usage limit.
+The full pass is 22 scored cases, run 3 times each in each of the hook, plugin, prose and none arms: 264 graded
+sessions. It runs in 3 batches of one run each, so that each batch fits one window of a subscription's usage limit.
 [Combining batches](#combining-batches) says how the batches become one scored run. The pilot is 3 cases, run once
-each in each arm: 9 graded sessions. It measures the cost of a session and checks the grading before anyone approves
+each in each arm: 12 graded sessions. It measures the cost of a session and checks the grading before anyone approves
 the full pass.
 
 ## Choosing cases
@@ -203,7 +204,7 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
    Every field of the missing arm is then 0 or empty.
 
 8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
-   every house case where the plugin arm disagrees with the hook or prose arm, and every pass by a grader you know
+   every house case where the hook arm disagrees with the plugin or prose arm, and every pass by a grader you know
    passes weak output.
    Each run prints a `kept temp:` folder, whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open
    it. The workspace is `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside
@@ -298,11 +299,11 @@ own. An arm with no result file has no sessions, so its rates and every lead ove
 * **A session of an excluded case** is counted nowhere. `excluded_cases` says how many cases were left out.
 * **A verdict read by hand replaces the graders' verdict** in every count but the `graders_` fields.
 
-The plugin's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported beside
-it and never added in, because the plugin's skills teach a session to cite and the other arms have nothing that does.
-The controls are reported in fields of their own, so a none arm that follows general practice by default cannot close
-the gap on the house cases. The hook arm's lead over an arm is measured the same way, and its lead over the plugin arm
-is what the build index adds to the lookup.
+The hook arm's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported
+beside it and never added in, because the plugin's skills teach a session to cite and the prose and none arms have
+nothing that does. The controls are reported in fields of their own, so a none arm that follows general practice by
+default cannot close the gap on the house cases. The plugin arm's lead over an arm is measured the same way. The hook
+arm's lead over the plugin arm is what the build index adds to the lookup.
 
 ## Adjudication
 
@@ -369,17 +370,19 @@ written for every kind and every arm, zero included.
 
 ## Reading the result
 
-The plugin leads an arm where `house.lead_over_<arm>` is above 0. State the lead over each arm, and give the citation
-rates beside them. Give the control fields after them. A control lead near 0 is expected, because every arm follows
-general practice.
+**The hook arm's lead answers whether the plugin works**, because the hook arm is the plugin that ships. The plugin
+leads an arm where `house.hook_lead_over_<arm>` is above 0. State its lead over the prose and none arms, and give the
+citation rates beside them. Give the control fields after them. A control lead near 0 is expected, because every arm
+follows general practice.
 
 A run of one session per case is too small to judge a lead by. The pilot reports one so that the full pass can be
 priced and its grading checked.
 
-The hook arm helps where `house.hook_lead_over_plugin` is above 0. Read it case by case against the scenarios in
+The plugin arm's lead, `house.lead_over_<arm>`, measures the lookup alone. The build index helps where
+`house.hook_lead_over_plugin` is above 0. Read it case by case against the scenarios in
 [`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case.
 
-Where the plugin leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
+Where the hook arm leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.
 
 ## Runs

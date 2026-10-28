@@ -11,7 +11,7 @@
 # prose arm, and each lead over an arm with no sessions is empty.
 set -eu
 
-method=5
+method=6
 
 usage="usage: score.sh [-a <adjudication.tsv>] [-k <hook stage result>] <plugin stage result> <prose stage result | ->"
 usage="$usage <run folder> [<excluded.tsv>]"
