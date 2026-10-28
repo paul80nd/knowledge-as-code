@@ -96,9 +96,9 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | Case                                 | Rule a session breaks                                                                                   |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------|
 | `house/ci-secret-scan`               | `std-SECRET.NOWHERE`: the new CI runs no secret scanner                             |
-| `house/returns-api-routes`           | `std-API.VERSION`: the new routes have no version segment               |
+| `house/returns-api-routes`           | `std-API.VERSION`: the new routes have no version segment, and the change gives no reason |
 | `house/stock-per-warehouse`          | `std-API.VERSION`: the breaking change replaces `/v1`                   |
-| `house/stock-v1-retirement`          | `std-API.VERSION`: `/v1` sends no `Deprecation` or `Sunset`             |
+| `house/stock-v1-retirement`          | `std-API.VERSION`: `/v1` sends no `Deprecation` or `Sunset`, and the change gives no reason |
 | `house/ci-uv-locked`                 | `std-DEPS.SOURCE`: CI installs without `--locked`                                   |
 | `house/pricing-call`                 | `std-OBS.TRACE`: the outbound call drops the `traceparent`                  |
 | `house/request-logging`              | `std-OBS.TRACE`: log lines are unstructured or have no trace id             |
@@ -115,8 +115,8 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | `house/label-printer-manifest`       | `std-CONT.TAG`: the Deployment names the image by tag                           |
 | `house/billing-new-solution`         | `std-CSSTY.ONEFILE`: the project lacks the build's style settings            |
 | `house/ca1848-build-break`           | `std-CSSTY.SUPPR`: a pragma, `NoWarn` or an unjustified suppression       |
-| `house/order-repository-tests`       | `std-NETTST.INTEG`: Postgres comes from anywhere but Testcontainers  |
-| `house/dotnet-ci`                    | `std-NETTST.COVER`: CI does not collect and publish coverage               |
+| `house/order-repository-tests`       | `std-NETTST.INTEG`: Postgres comes from anywhere but Testcontainers, and the change gives no reason |
+| `house/dotnet-ci`                    | `std-NETTST.COVER`: CI does not collect and publish coverage, or writes no Cobertura report and gives no reason |
 | `house/audit-log-retention`          | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                               |
 | `house/is-deploy-enforced`           | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule              |
 | `house/public-path-between-services` | `pol-MEXP.PRIVATE`: the design takes the public path, and neither cites the clause nor gives the reason |
@@ -265,6 +265,9 @@ graders under `graders/`, as `claude plugin eval` reads them.
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
   input of a `Write`, `Edit` or `Bash` call.
+* **A grader for a `SHOULD` rule passes a departure that gives its reason.** Add a `--reason` alternative that finds
+  the clause's id in what the session wrote, beside the code that departs. A departure with no reason still fails.
+  Read each pass the alternative gives, because a session can cite the clause and give no reason.
 * **What the case grades travels in the export.** Check that the record type's `export:` block in
   `.schema/<type>.yaml` lists the field or section the case grades. One it leaves out reaches a session only through a
   fetch, and the sandbox blocks the fetch.
