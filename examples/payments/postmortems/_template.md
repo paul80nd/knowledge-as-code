@@ -24,6 +24,9 @@ optional field from [the type page](../postmortems.md#metadata) where you have a
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 **The three moments.** Each is a UTC timestamp, as `2026-09-07T20:18:00Z`, and each names a different point.
 
 | Field         | The moment to pick                                                              |

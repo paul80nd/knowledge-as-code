@@ -77,8 +77,8 @@ Scenario: A status is checked for agreement first, then for being upper-case
 Scenario: The mnemonic prefix is excluded from the slug-length measurement
   When I validate the corpus
   Then the findings for "policies/mexp-slug-that-is-definitely-way-too-long.md" are exactly:
-    | line | check       | message                                                                        |
-    |      | slug-length | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30. |
+    | line | check       | message                                                                                                         |
+    |      | slug-length | slug 'slug-that-is-definitely-way-too-long' is 36 characters; rename the file to bring it within 30, 6 shorter. |
 
 Scenario: A mis-cased id label is flagged wherever a reader meets it
   When I validate the corpus
@@ -118,7 +118,7 @@ Scenario: The whole corpus produces exactly these findings and nothing else
   And the findings are exactly:
     | file                                                        | severity | line | check               | message                                                                                                                                                     |
     | policies/cats-category-written.md                           | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
-    | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.                                                                    |
+    | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; rename the file to bring it within 30, 16 shorter.                                  |
     | adrs/0004-missing-consequences.md                           | error    |      | required-section    | missing required section '## Consequences'.                                                                                                                 |
     | adrs/0004-missing-consequences.md                           | error    | 2    | id-matches-filename | id 'adr-0009' carries number '0009', and the filename carries '0004'.                                                                                       |
     | adrs/0005-no-h1.md                                          | warning  | 0    | y-statement         | no Y-statement block-quote follows the H1.                                                                                                                  |
@@ -144,7 +144,7 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-WRITTEN]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                       |
     | policies/lead-label-leads-elsewhere.md                      | error    | 17   | label-canonical     | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                                |
     | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                            |
-    | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                                                                              |
+    | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; rename the file to bring it within 30, 6 shorter.                                             |
     | policies/obsv-no-identity-line.md                           | error    | 10   | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                                                                            |
     | policies/pipe-id-disagrees.md                               | error    | 2    | id-matches-filename | id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'.                                                                                     |
     | policies/recv-identity-id.md                                | error    | 12   | identity-id         | identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'.                                                                                    |

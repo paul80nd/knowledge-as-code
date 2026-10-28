@@ -13,7 +13,7 @@
       "line": null,
       "severity": "error",
       "check": "slug-length",
-      "message": "slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30."
+      "message": "slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; rename the file to bring it within 30, 16 shorter."
     },
     {
       "file": "adrs/0004-missing-consequences.md",
@@ -202,7 +202,7 @@
       "line": null,
       "severity": "error",
       "check": "slug-length",
-      "message": "slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30."
+      "message": "slug 'slug-that-is-definitely-way-too-long' is 36 characters; rename the file to bring it within 30, 6 shorter."
     },
     {
       "file": "policies/obsv-no-identity-line.md",

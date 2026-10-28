@@ -76,7 +76,8 @@ public static class IdChecks
 
         if (slug.Length > t.SlugMax)
             report.Err(new CheckId("slug-length"),
-                $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.");
+                $"slug '{slug}' is {slug.Length} characters; rename the file to bring it within {t.SlugMax}, "
+                + $"{slug.Length - t.SlugMax} shorter.");
     }
 
     /// <summary>

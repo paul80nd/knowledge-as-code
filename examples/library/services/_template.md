@@ -30,6 +30,9 @@ write it down as an open question, because nobody reading later can tell your gu
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `svc-` plus the name of the **deployable**, not the repository it lives in. A repository shipping three app
   services yields three ids, and none of them is the repository's name. `repos` states the repository. Contributors get
   this wrong more often than anything else here. Save the file as `<slug>.md`.

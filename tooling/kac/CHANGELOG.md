@@ -15,6 +15,19 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`slug-length` says how much shorter the filename has to be.** It printed the slug's length and the limit, and
+  left the arithmetic to you. It now prints `slug '<slug>' is 38 characters; rename the file to bring it within 30, 8
+  shorter.`, with the slug's real length, the type's `slug-max` and the difference between them.
+- **Every `_template.md` states the slug limit and the order of a list.** Its Frontmatter guidance says the slug is 30
+  characters at most, and that each list field's entries go in alphabetical order, so a record written as it asks
+  passes `slug-length` and `list-order`. `knowledge-as-code/contributing.md` states both once. `kac update` writes
+  the new `contributing.md`. It leaves a template you already hold alone, so add the paragraph by hand, or run
+  `kac update --policy full` where you have not edited your templates.
+
 ## 0.41.0 - 2026-10-27
 
 ### Added

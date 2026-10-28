@@ -27,4 +27,8 @@ where a page is not.
 Type-specific steps live with the type. Each type's page says what that type holds, what it is not, and what it asks of
 you when you add one.
 
+Two rules apply to a record of every type, and `kac validate` checks both. Keep the slug to 30 characters at most: the
+filename without `.md` and without any number or mnemonic at its head. Write each list field's entries in alphabetical
+order.
+
 [contributing]: https://paul80nd.github.io/knowledge-as-code/framework/contributing/

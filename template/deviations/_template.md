@@ -26,6 +26,9 @@ id that a citation needs. Write it before you depart, or immediately afterwards 
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `dev-` plus a slug naming the departure, as `dev-legacy-report-secrets`. Save the file as `<slug>.md`.
 * **`status`**: a deviation past its review date is still `active`, because that is what is true.
 * **`departs-from`**: the policy or standard clauses this departs from, one entry each. A policy clause is

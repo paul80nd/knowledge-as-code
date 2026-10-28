@@ -23,6 +23,9 @@ offering that grows a section of its own trips it.
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `ofr-` plus a slug naming the offering. Save the file as `<slug>.md`.
 * **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.

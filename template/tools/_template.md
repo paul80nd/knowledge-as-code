@@ -22,6 +22,9 @@ optional field from [the type page](../tools.md#metadata) where you have a value
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `tol-` plus a slug naming the tool, as `tol-vitest`. Save the file as `<slug>.md`.
 * **`status`**: approved means approved **for new work**. Something already in use but not approved is drift, and
   finding it is a manual job until something implements `drift-against-manifests`. `trial` covers something being

@@ -20,6 +20,9 @@ optional field from [the type page](../policies.md#metadata) where you have a va
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `pol-` plus a four-character mnemonic for the policy's concept. Start it with the same letter as the slug,
   so the folder still reads alphabetically. Upper-case here and lower-case in the filename, so `pol-VURM` sits in
   `vurm-vulnerability-remediation.md`. **Immutable once the policy is active.** A change of meaning is a new policy and

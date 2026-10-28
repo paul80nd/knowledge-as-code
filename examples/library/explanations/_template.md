@@ -19,6 +19,9 @@ an optional field from [the type page](../explanations.md#metadata) where you ha
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `exp-` plus a slug naming the subject. Save the file as `<slug>.md`, with no number prefix, because
   explanations are named, not sequenced.
 * **`status`**: `stale` is an honest state. Use it where the page no longer matches what runs.
