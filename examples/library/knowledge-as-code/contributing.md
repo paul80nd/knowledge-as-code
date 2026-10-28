@@ -29,6 +29,6 @@ you when you add one.
 
 Two rules apply to a record of every type, and `kac validate` checks both. Keep the slug to 30 characters at most: the
 filename without `.md` and without any number or mnemonic at its head. Write each list field's entries in alphabetical
-order.
+order. A report's `sources` is the exception, and keeps the order `kac report` writes.
 
 [contributing]: https://paul80nd.github.io/knowledge-as-code/framework/contributing/

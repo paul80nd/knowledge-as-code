@@ -231,6 +231,11 @@ public class ValueCheckTests
     }
 
     [Fact]
+    public void A_list_whose_order_is_as_written_is_not_held_to_alphabetical()
+        => Assert.Empty(Run("field: [ zebra, alpha ]\n",
+            new FieldSpec { Name = "field", Type = "list", OrderAsWritten = true }));
+
+    [Fact]
     public void Digit_runs_in_a_list_compare_as_numbers()
     {
         Assert.Empty(Run("field: [ a-8, a-29 ]\n", Field("list")));

@@ -44,7 +44,7 @@ judgement.
 **Frontmatter**
 
 Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
-head. Write each list field's entries in alphabetical order.
+head. Write each list field's entries in alphabetical order, except `sources`.
 
 * **`id`**: `rpt-` plus a slug naming the question. Save the file as `<slug>.md`.
 * **`generated`**: who wrote the content as it stands, and when. `kac report` writes itself into `by`, which is true

@@ -98,10 +98,13 @@ fields:
         type: string
         description: Quoted. The `content-version` that corpus was at.
     min-items: 1
+    order: as-written
     description: Every corpus this report answers for, and the version of each it is true of.
     notes: >
       A consumer installs the corpus under a shortcode of its own, so `resource` states the corpus and never
-      a path.
+      a path. `kac report` writes this corpus first, then each import in the order `consumes:` lists it, and
+      `list-order` passes over that order. `report-stale` reads each entry wherever it sits, so nothing checks
+      the order itself.
 
   verified:
     required: false

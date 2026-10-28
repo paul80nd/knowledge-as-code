@@ -132,7 +132,8 @@ Information about a record lives in the frontmatter, a generated block, or git. 
   usually name none.
 * Never name a framework in a policy's `sources`. `aligns-with` is the field for that.
 * What the type is modelled on is `lineage:` in the schema, and never a record's `sources`.
-* Sort every list alphabetically. Numbers compare as numbers, so `A.8.7` comes before `A.8.29`.
+* Sort every list alphabetically. Numbers compare as numbers, so `A.8.7` comes before `A.8.29`. A report's `sources`
+  is the exception: it keeps the order `kac report` writes.
 * A tag is a word a reader searches for. It never repeats another field.
 * Accept a warning on the record, in `accepts:`, with a reason saying why it stands. Never accept one to hide
   unfinished work.

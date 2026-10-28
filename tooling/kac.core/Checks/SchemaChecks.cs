@@ -408,6 +408,10 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
                          + "list's length is read against. Declare it 'type: list', or drop the floor.", f);
 
+        if (spec.OrderAsWritten && spec.Type != "list")
+            Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'order:', which only a list's "
+                         + "entries are read in. Declare it 'type: list', or drop the key.", f);
+
         if (spec.MinRecords is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);

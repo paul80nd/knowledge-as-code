@@ -264,6 +264,18 @@ public class SchemaCheckTests
     }
 
     [Fact]
+    public void An_order_on_anything_but_a_list_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("owner", new FieldSpec { Name = "owner", Type = "string", OrderAsWritten = true })
+        ])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("field 'owner' is 'type: string' and declares 'order:'", finding.Message);
+    }
+
+    [Fact]
     public void A_values_list_on_an_enum_is_what_the_key_is_for()
         => Assert.Empty(Check(Widgets(fields:
         [

@@ -105,6 +105,12 @@ public sealed class FieldSpec
     public int? MinItems { get; init; }
 
     /// <summary>
+    /// Whether a list's entries keep the order the author wrote, from <c>order: as-written</c>. <c>list-order</c>
+    /// passes over such a list, and checks every other list for alphabetical order.
+    /// </summary>
+    public bool OrderAsWritten { get; init; }
+
+    /// <summary>
     /// The floor on how many records of the type carry a given value, and null where the schema sets none.
     /// </summary>
     public int? MinRecords { get; init; }
@@ -1022,6 +1028,10 @@ public sealed partial class Schema
                 corpusEnums));
         }
 
+        var order = Yaml.Str(node.Get("order"));
+        if (order is not (null or "alphabetical" or "as-written"))
+            problem ??= $"field '{name}' declares 'order: {order}'. Write 'alphabetical' or 'as-written'.";
+
         var shape = Yaml.Str(node.Get("shape"));
         if (shape is { Length: > 0 })
         {
@@ -1058,6 +1068,7 @@ public sealed partial class Schema
             From = Yaml.Str(node.Get("from")),
             AllowLiteral = Yaml.StrList(node.Get("allow-literal")),
             MinItems = Yaml.NullableInt(node.Get("min-items")),
+            OrderAsWritten = order == "as-written",
             MinRecords = Yaml.NullableInt(node.Get("min-records")),
             Description = Collapse(Yaml.Str(node.Get("description"))),
             Notes = Collapse(Yaml.Str(node.Get("notes"))),

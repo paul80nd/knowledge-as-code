@@ -47,7 +47,9 @@ editing this tool, and [Rule expressions](expressions.md) is the reference for w
 A rule written in C# names the check id it reports under: `no-dependency-cycles` reports as `dependency-cycle`.
 [Checks in C#](../maintaining/checks.md#when-a-rule-needs-c) says when a rule needs one, and how it is written.
 
-A list the schema asks an author to fill takes a floor, set with `min-items:`. A rule with no `severity:` runs nothing,
+A list the schema asks an author to fill takes a floor, set with `min-items:`. `list-order` warns on a list out of
+alphabetical order. A list whose order means something declares `order: as-written`, and `list-order` passes over it.
+A report's `sources` declares it, because `kac report` writes the corpus first. A rule with no `severity:` runs nothing,
 as [A rule with no `severity:`](held-to.md#a-rule-with-no-severity) says.
 
 A rule that counts words, links or days sets a ratio, a ceiling or a window. Three windows are fixed:
