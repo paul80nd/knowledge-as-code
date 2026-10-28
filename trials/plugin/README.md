@@ -26,7 +26,8 @@ and stages it anyway, and its hook arm pushes nothing.
 session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
 `hook_additional_context`. The hook's marker is under `config/plugins/data/`.
 
-Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`.
+Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`. On
+Windows they get no `Bash`, as [On Windows](#on-windows) says.
 
 [`prose-claude-md.sh`](prose-claude-md.sh) writes the prose text from the export the plugin contains. It reads the
 types, their folders and their parts files from the export's `manifest.json`. For each record of each type it writes
@@ -169,11 +170,19 @@ and the report contains the prompts.
 Run the trial in Git Bash, and run every command on this page there. Write each path Git Bash style, as
 `/c/Users/<you>/...`. Never write `C:\...`.
 
-A run that grants `Bash` runs each shell command in Claude Code's sandbox. macOS has it. On Linux, install `bubblewrap`
-and `socat`. The [eval documentation](https://code.claude.com/docs/en/plugin-evals#grant-tools) says native Windows has
-no sandbox, and that Claude Code refuses each run that grants `Bash` where there is none. The first real run under Git
-Bash settles what `claude plugin eval` does there. So run the pilot first, and read its result before the full pass.
-Where every session ends on an error, stop, and tell whoever asked for the run.
+**On Windows, grant the sessions no shell.** A run that grants `Bash` runs each shell command in Claude Code's sandbox,
+and native Windows has none. The [eval documentation](https://code.claude.com/docs/en/plugin-evals#grant-tools) says:
+"If you grant Bash or PowerShell on a machine with no sandbox backend, Claude Code refuses each run rather than running
+it unconfined". So in steps 4 to 6, pass `--allow-tools Write Edit`, with no `Bash`. Each case grants `Read`, `Glob`
+and `Grep` itself, in its `allowed_tools`. On macOS, grant `Bash` as the steps show. On Linux, install `bubblewrap`
+and `socat` first.
+
+A run with no shell still answers whether an agent writes code to the rules, because the session still writes the
+files and the graders still read them. It measures less on a case whose task or grader needs a command run. A grader
+that reads a `Bash` call's input finds none, and a session cannot run a build or a test. Leave each such case out, as
+[Writing a case](#writing-a-case) says.
+
+Run the pilot first, and read its result before the full pass.
 
 Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
 `jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
@@ -225,7 +234,9 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
      --output-dir "$STAGE/out-plugin" --allow-tools Bash Write Edit )
    ```
 
-   The parentheses run the command in a subshell, so your shell stays at the root of this repository for step 7.
+   The parentheses run the command in a subshell, so your shell stays at the root of this repository for step 7. On
+   Windows, write `--allow-tools Write Edit` in place of `--allow-tools Bash Write Edit`, here and in steps 5 and 6,
+   as [On Windows](#on-windows) says.
 
 5. **Run the prose arm:**
 
@@ -321,6 +332,13 @@ gives every key `claude plugin eval` reads in those files.
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
   input of a `Write`, `Edit` or `Bash` call.
+* **For a run on Windows, list each case that needs a shell in `excluded.tsv`.** A case needs one where its task
+  means running a command, such as a build, a test or a commit. It also needs one where a `task-` or `comply-` grader
+  can pass only on a `Bash` call's input. Give the reason `needs a shell, and a Windows run grants none`. `stage.sh`
+  then leaves the case out, and the aggregate counts it under `excluded_cases`. A tag cannot do this, because `--tag`
+  keeps the cases it names and drops none.
+* **A grader for a case that needs no shell reads a file, or a `Write` or `Edit` call's input.** A `--shell`
+  alternative may sit beside it, and finds nothing on Windows.
 * **A grader for a `SHOULD` rule passes a departure that gives its reason.** Add a `--reason` alternative that finds
   the clause's id in what the session wrote, beside the code that departs. A departure with no reason still fails.
   Read each pass the alternative gives, because a session can cite the clause and give no reason.
