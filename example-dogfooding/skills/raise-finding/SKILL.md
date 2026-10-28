@@ -156,56 +156,15 @@ Leave the copy under `${CLAUDE_PLUGIN_ROOT}` as it is, and offer no edit to it, 
 Write the body to a file first, because passing it inline turns every backtick and quote in the block into a quoting
 problem.
 
-Choose the section below by the `target` of the tracker you picked. Three trackers in one export can name three
-platforms.
+**Read the file for the `target` of the tracker you picked, and no other.** Each holds one platform's command, and
+three trackers in one export can name three platforms.
 
-### GitHub
-
-`target` is `github`, and `base` is the repository, as `https://github.com/<owner>/<repo>`.
-
-```bash
-gh issue create --repo <owner>/<repo> --title "<the title>" --body-file <path> --label kac:finding
+```text
+${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/github.md        # target github: gh issue create, and the label
+${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/azure-devops.md  # target azure-devops: az rest, and the area path
 ```
 
-**Run it again with no `--label` where the repository has no `kac:finding` label.** The error names the label. Say in
-your reply that you filed it unlabelled and why, because the observation matters more than the mark.
-
-**A failure on sign-in or on permission ends with the body printed.** `gh auth status` says whether you are signed in
-to that host. A repository with issues turned off, or an account without the rights to open one, ends the same way.
-Say which it was.
-
-### Azure DevOps
-
-`target` is `azure-devops`, and `base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`.
-`az` takes the two segments apart: the organisation follows the host, and the project follows the organisation.
-
-**Decode the project name before you pass it**, because `base` arrives percent-encoded. A base ending
-`Engineering%20Standards` names the project `Engineering Standards`.
-
-```bash
-az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding"
-```
-
-**A tag is what this platform calls a label**, so `System.Tags` takes the mark. Azure creates a tag it does not
-already have. Where the command fails for any other reason, print the body and say so.
-
-#### The area path
-
-**`area` says which area path inside the project the item belongs to**, because one project can give one backlog to
-any number of corpora.
-
-Where the tracker states one, add `System.AreaPath` to `--fields` as the project and the area joined by a backslash.
-Azure Boards separates an area path with backslashes, and `area` arrives with forward slashes, so convert every one:
-an `area` of `kac-it-swdev/subteam` goes in as `<project>\kac-it-swdev\subteam`.
-
-```bash
-az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding" "System.AreaPath=<project>\<area>"
-```
-
-**Leave the field out where `area` is null.** The item then lands in the project's default area.
-
-**Run it again without `System.AreaPath` where the area is refused**, because it does not exist or you cannot file
-into it. Say in your reply that the item landed in the project's default area, and why.
+Where the file for that target is missing, the plugin is not assembled as it should be. Say so, and print the body.
 
 ### Where the tracker files nowhere
 
