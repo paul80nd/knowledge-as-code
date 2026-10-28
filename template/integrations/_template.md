@@ -21,6 +21,9 @@ an optional field from [the type page](../integrations.md#metadata) where you ha
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `itg-` plus a slug naming the system, as `itg-email-provider`. Save the file as `<slug>.md`.
 * **`used-by`**: the service ids that call it. CI fails an id that names no service. An integration nothing uses is a
   candidate for retirement.

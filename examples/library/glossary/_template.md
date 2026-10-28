@@ -22,6 +22,9 @@ Name the file for the context, in kebab case.
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `gls-` plus the filename's slug, as `gls-search` in `search.md`.
 * **`status`**: write `draft` while the terms are still settling.
 * **`narrows`**: the more general glossary this one sits inside. Left empty by the corpus-wide glossary, which nothing

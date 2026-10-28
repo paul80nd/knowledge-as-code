@@ -27,6 +27,9 @@ an optional field from [the type page](../data.md#metadata) where you have a val
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `dat-` plus a slug naming the domain, as `dat-bookings`. Save the file as `<slug>.md`.
 * **`owned-by`**: a single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.

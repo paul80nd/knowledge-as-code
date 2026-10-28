@@ -24,6 +24,9 @@ optional field from [the type page](../adrs.md#metadata) where you have a value 
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: matches the filename number. Four digits, never reused. Save the file as `{{nnnn}}-kebab-case-title.md`,
   taking the next unused number. The ADRs index shows the highest one in use.
 * **`tier`**: always `decided` for an ADR.

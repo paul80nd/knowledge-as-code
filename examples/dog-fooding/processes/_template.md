@@ -20,6 +20,9 @@ optional field from [the type page](../processes.md#metadata) where you have a v
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `prc-` plus a slug naming the task, as `prc-releasing`. Save the file as `<slug>.md`.
 * **`last-rehearsed`**: the last time somebody followed the process end to end, as
   `{ at: "2026-10-20", by: human:alex.doe }`. `at` is the day, quoted. `by` is a person as `human:alex.doe`, or an

@@ -22,6 +22,9 @@ optional field from [the type page](../controls.md#metadata) where you have a va
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `ctl-` plus a four-digit number, as `ctl-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
 * **`verifies`**: the rules this control checks, as `verifies: [ std-SECRET.ROTATE ]`. A bare standard id is refused, so
   a control checking every rule of a standard lists every rule. The standard names the control once in `verified-by`.

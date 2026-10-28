@@ -20,6 +20,9 @@ optional field from [the type page](../standards.md#metadata) where you have a v
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 * **`id`**: `std-` plus a mnemonic for the concept the standard governs, two to seven characters and upper-case. A
   reader meets it in a control's `verifies:`, so draw it from the concept rather than from the current wording. The
   filename carries none of it: `std-SECRET` sits in `common/secret-handling.md`. **Immutable once the standard is

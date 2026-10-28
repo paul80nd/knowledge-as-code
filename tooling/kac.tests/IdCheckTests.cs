@@ -133,6 +133,11 @@ public class IdCheckTests
     }
 
     [Fact]
+    public void A_slug_over_the_limit_says_how_much_shorter_the_filename_must_be()
+        => Assert.Equal($"slug '{TooLong}' is 36 characters; rename the file to bring it within 30, 6 shorter.",
+            Assert.Single(Filename($"adrs/0003-{TooLong}.md", Numbered())).Message);
+
+    [Fact]
     public void A_mnemonic_head_is_excluded_too()
         => Assert.Contains($"slug '{TooLong}' is 36 characters",
             Assert.Single(Filename($"policies/mexp-{TooLong}.md", Mnemonic())).Message);

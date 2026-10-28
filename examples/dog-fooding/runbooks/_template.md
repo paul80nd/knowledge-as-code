@@ -21,6 +21,9 @@ optional field from [the type page](../runbooks.md#metadata) where you have a va
 
 **Frontmatter**
 
+Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
+head. Write each list field's entries in alphabetical order.
+
 Title this document for the **failure**, not the fix. A reader at 2am searches for the failure.
 
 * **`id`**: `rbk-` plus a slug naming the failure, as `rbk-estate-rebuild`. Save the file as `<slug>.md`.
