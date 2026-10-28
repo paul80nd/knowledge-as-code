@@ -105,6 +105,30 @@ public class SchemaTests
     public void A_required_when_the_schema_cannot_read_stops_the_load(string condition)
         => Assert.Throws<RuleExprException>(() => Schema.ParseRequiredWhen("f", condition));
 
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("alphabetical", false)]
+    [InlineData("as-written", true)]
+    public void Order_reads_both_values_and_defaults_to_alphabetical(string? order, bool asWritten)
+    {
+        var field = Sources(order);
+
+        Assert.Null(field.Problem);
+        Assert.Equal(asWritten, field.OrderAsWritten);
+    }
+
+    [Fact]
+    public void An_order_the_loader_does_not_know_is_reported_against_the_field()
+        => Assert.Equal("field 'sources' declares 'order: newest-first'. Write 'alphabetical' or 'as-written'.",
+            Sources("newest-first").Problem);
+
+    private static FieldSpec Sources(string? order) =>
+        Schema.Load(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["reports.yaml"] = "type: report\nfolder: reports\npage: reports.md\nfields:\n  sources:\n"
+                               + "    type: list\n" + (order is null ? "" : $"    order: {order}\n")
+        }).ByFolder["reports"].Fields["sources"];
+
     [Fact]
     public void DeclaredParts_on_a_type_without_parts_names_the_top_level_parts_block()
     {

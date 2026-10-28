@@ -55,7 +55,7 @@ checks.
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `list-order`                | warning | List entries read in alphabetical order, numbers compared as numbers, unless the field keeps them as written.   |
 | `acceptance-check`          | error   | An `accepts` entry names a check that reports warnings, and is not `acceptance-stale`.                          |
 | `acceptance-stale`          | warning | Each `accepts` entry matches a warning its check reports on the same record.                                    |
 | `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |

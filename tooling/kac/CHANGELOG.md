@@ -24,6 +24,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   reported 0 clauses and gave no reason. `report` now reads an imported type as clauses where its lines state a
   `clause` and a `level`, the keys `policy-lookup` reads. A producer that renamed `policies` still reports, and an
   imported glossary's terms stay out. Regenerate a coverage report you keep as a record.
+- **`list-order` passes over a report's `sources` in the order `kac report` writes it.** The run lists the corpus the
+  report answers for first, then each import, and `validate` warned wherever an import sorted ahead of the corpus. A
+  list field may now declare `order: as-written`, and `list-order` passes over that list. `sources` declares it in
+  `.schema/reports.yaml`, which `kac update` writes. `order:` on a field that is not a list reports `schema-dispatch`,
+  and a value other than `alphabetical` or `as-written` reports `schema-unreadable`.
 
 ## 0.42.0 - 2026-10-28
 

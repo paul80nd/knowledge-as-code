@@ -23,6 +23,8 @@ such as a `rules:` entry nothing runs or an `id.style:` no code reads. Every fin
 | An `in-force:` value the field's `values:` does not include                              | `schema-shape`       |
 | A `status:` that states a range and names no `in-force:` value                           | `schema-shape`       |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
+| `order: as-written` on any field that is not a `list`                                    | `schema-dispatch`    |
+| An `order:` that is neither `alphabetical` nor `as-written`                              | `schema-unreadable`  |
 | A `type:` or an `of:` naming a value no check reads, at any depth of an `entry:` block   | `schema-dispatch`    |
 | An `of:` on any field that is not a `list`                                               | `schema-dispatch`    |
 | A `type: id` or an `of: id` with no `ref:`, so nothing resolves what the value points at | `schema-dispatch`    |

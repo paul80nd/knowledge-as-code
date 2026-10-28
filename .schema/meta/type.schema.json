@@ -663,6 +663,10 @@
           "type": "integer",
           "minimum": 1
         },
+        "order": {
+          "description": "The order a list's entries read in. `alphabetical` is the default, and `list-order` warns on the first pair out of it. `as-written` keeps the order the author or the tool wrote, and `list-order` passes over it. Only a `type: list` field may declare it.",
+          "enum": ["alphabetical", "as-written"]
+        },
         "min-records": {
           "description": "The fewest records that may share one value, for a field whose values group documents. `kac` counts per type, case-insensitively, and once per record however often it repeats a value. It warns on every record using a value below the floor, and never errors.",
           "type": "integer",
@@ -702,6 +706,16 @@
           ]
         },
         "min-items": {
+          "properties": {
+            "type": {
+              "const": "list"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "order": {
           "properties": {
             "type": {
               "const": "list"

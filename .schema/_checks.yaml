@@ -153,11 +153,13 @@ checks:
 
   list-order:
     severity: warning
-    description: A list field's entries read in alphabetical order, with digit runs compared as numbers.
+    description: >
+      A list field's entries read in alphabetical order, with digit runs compared as numbers, unless the field
+      declares `order: as-written`.
     notes: >
-      No list field's order means anything, so alphabetical is the order that scan-reads and the one any two
-      authors agree on. Digit runs compare as numbers, so `A.8.7` precedes `A.8.29`. Only the first pair out of
-      order is reported.
+      Alphabetical is the order that scan-reads and the one any two authors agree on. A field whose order means
+      something declares `order: as-written`, and this passes over it. Digit runs compare as numbers, so `A.8.7`
+      precedes `A.8.29`. Only the first pair out of order is reported.
 
   type-matches-folder:
     severity: error

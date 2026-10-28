@@ -43,7 +43,8 @@ public static class ChecksTable
             "A list field carries at least as many entries as its schema asks for.",
             t => t.AnyField(f => f.MinItems is not null)),
         ("list-order", [new("list-order")],
-            "List entries read in alphabetical order, with numbers compared as numbers.", null),
+            "List entries read in alphabetical order, numbers compared as numbers, unless the field keeps them as "
+            + "written.", null),
         ("entry-shape / entry-key", [new("entry-shape"), new("entry-key")],
             "An object field, and each entry of an object list, carries the keys the field declares and no others.",
             t => t.AnyField(f => f.Of == "object" || f.Type == "object")),

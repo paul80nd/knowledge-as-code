@@ -23,6 +23,9 @@ A finding beside the one a record is for is there because the rule cannot be rea
 `check-states-no-method` together. An NFR writing `target` as an em dash reports `bare-key` and `required-field`
 together.
 
+`reports/own-corpus-first.md` trips nothing. Its `sources` lists `fixture-corpus` ahead of an import that sorts
+before it, as `kac report` writes them, and pins that `list-order` passes over a field declaring `order: as-written`.
+
 `.corpus.yaml` states a name and a content version for `report-stale` to compare against, a `repos-base` for
 `mirrors-repo-links` to resolve against, and the `platform` and `component-type` ranges the services use. A rule
 measured against today reads a date `FixtureDateTests` holds well clear of it.

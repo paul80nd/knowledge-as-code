@@ -204,6 +204,8 @@ public static class ValueChecks
             Pattern(name, "entry", item, spec, at, report);
         }
 
+        if (spec.OrderAsWritten) return;
+
         for (var i = 1; i < seq.Children.Count; i++)
         {
             if (SortKey(seq.Children[i - 1], spec) is not { } prev
