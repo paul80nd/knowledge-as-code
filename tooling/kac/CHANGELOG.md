@@ -23,6 +23,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `azure-devops.md` sit beside each `SKILL.md`, and a session reads only the one its tracker's `target` names, so it
   loads no command for a platform it does not file on. The template version moves to 25, and `kac update` writes the
   four new files.
+- **`harvest-findings` keeps each platform's commands in a file of its own, and gives Azure DevOps a command for every
+  step.** `github.md` and `azure-devops.md` sit beside its `SKILL.md`. On Azure DevOps it reads a work item and posts
+  a comment through `az rest`, so the comment keeps its Markdown and a body stored as HTML is read out of it. `draft`
+  checks the work item's linked pull requests and opens one with `az repos pr create`. The template version moves to
+  26, and `kac update` writes the two new files.
 
 ### Fixed
 
