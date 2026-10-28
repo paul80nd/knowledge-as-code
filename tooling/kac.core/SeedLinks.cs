@@ -186,25 +186,43 @@ public static partial class SeedLinks
     }
 
     /// <summary>
-    /// Copy one planned file into a corpus, taking out the links its owner cannot follow. Only a page the unlinking
-    /// changed is written a second time, so every other file keeps the line endings it was checked out with. Returns
-    /// null where no line kept the words of a link it lost.
+    /// Copy one planned file into a corpus, taking out the links its owner cannot follow and writing
+    /// <paramref name="owner"/> into a seeded record. Only a page either step changed is written a second time, so
+    /// every other file keeps the line endings it was checked out with. <c>Owned</c> is true for a seeded record.
     /// </summary>
-    public static UnlinkedPage? Receive(PlannedFile file, string templateRoot, string corpusRoot,
-        DeclinedNames declined)
+    public static (UnlinkedPage? Unlinked, bool Owned) Receive(PlannedFile file, string templateRoot,
+        string corpusRoot, DeclinedNames declined, string owner)
     {
         var target = Path.Combine(corpusRoot, file.To);
         Files.Copy(Path.Combine(templateRoot, file.From), target);
-        if (!Reaches(file)) return null;
+        if (!Reaches(file)) return (null, false);
 
         var sent = File.ReadAllText(target);
         var (received, lines) = Unlink(sent, declined);
+        var owned = SeedOwner.Reaches(file) && SeedOwner.Held(received) is not null;
+        if (owned) received = SeedOwner.Owned(received, owner);
+
         if (received != sent) File.WriteAllText(target, received);
-        return lines.Count == 0 ? null : new UnlinkedPage(file.To, lines);
+        return (lines.Count == 0 ? null : new UnlinkedPage(file.To, lines), owned);
     }
 
-    /// <summary>Each file in turn, keeping the pages that lost a link.</summary>
-    public static IReadOnlyList<UnlinkedPage> ReceiveAll(IEnumerable<PlannedFile> files, string templateRoot,
-        string corpusRoot, DeclinedNames declined) =>
-        [.. files.Select(f => Receive(f, templateRoot, corpusRoot, declined)).OfType<UnlinkedPage>()];
+    /// <summary>Each file in turn, keeping the pages that lost a link and the records given an owner.</summary>
+    public static Receipt ReceiveAll(IEnumerable<PlannedFile> files, string templateRoot, string corpusRoot,
+        DeclinedNames declined, string owner)
+    {
+        var unlinked = new List<UnlinkedPage>();
+        var owned = new List<string>();
+
+        foreach (var file in files)
+        {
+            var (page, isOwned) = Receive(file, templateRoot, corpusRoot, declined, owner);
+            if (page is not null) unlinked.Add(page);
+            if (isOwned) owned.Add(file.To);
+        }
+
+        return new Receipt(unlinked, owned);
+    }
 }
+
+/// <summary>The seed pages that lost a link, and the path of each record given the author as its owner.</summary>
+public sealed record Receipt(IReadOnlyList<UnlinkedPage> Unlinked, IReadOnlyList<string> Owned);

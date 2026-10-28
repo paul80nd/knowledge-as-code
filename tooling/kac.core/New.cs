@@ -47,6 +47,9 @@ public sealed record NewAnswers
     public string? Base { get; init; }
 
     public string Ci { get; init; } = CiSystem.None;
+
+    /// <summary>Written as the <c>owner</c> of every record the corpus is seeded with.</summary>
+    public required string Owner { get; init; }
 }
 
 /// <summary>Everything that can stop a run is read before anything is asked.</summary>
@@ -227,12 +230,12 @@ public static class New
 
     /// <summary>
     /// <c>declined</c> is for <c>SeedLinks</c>, which takes out a seed page's links to types this corpus turned down.
-    /// <c>Unlinked</c> lists the pages it took one out of.
+    /// <c>Received</c> lists the pages it took one out of, and the records given <c>NewAnswers.Owner</c>.
     /// </summary>
-    public static (IReadOnlyList<string> Written, IReadOnlyList<UnlinkedPage> Unlinked) Apply(NewPlan plan,
+    public static (IReadOnlyList<string> Written, Receipt Received) Apply(NewPlan plan, NewAnswers answers,
         string templateRoot, string corpusRoot, DeclinedNames declined)
     {
-        var unlinked = SeedLinks.ReceiveAll(plan.Copied, templateRoot, corpusRoot, declined);
+        var received = SeedLinks.ReceiveAll(plan.Copied, templateRoot, corpusRoot, declined, answers.Owner);
 
         foreach (var file in plan.Composed)
         {
@@ -241,7 +244,7 @@ public static class New
             File.WriteAllText(target, file.Content);
         }
 
-        return ([.. plan.Paths], unlinked);
+        return ([.. plan.Paths], received);
     }
 
     /// <summary>Each key takes a line of comment, so a corpus changing one has somewhere to read first.</summary>

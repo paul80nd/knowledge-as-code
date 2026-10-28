@@ -57,10 +57,11 @@ mkdir my-corpus && cd my-corpus
 kac new
 ```
 
-It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
-each. Name a publishing target and it asks one more: the URL a person opens to browse the corpus. Answer nothing at all
-and you still end with a corpus that validates, holding every type the framework declares. `--yes` takes every default
-and asks nothing, which is what a pipeline runs.
+It asks what the corpus is called, which types it adopts, where it publishes, what builds it and who owns the records it
+seeds, with a default for each. The owner defaults to `human:` and the part of your git email before the `@`. Name a
+publishing target and it asks one more: the URL a person opens to browse the corpus. Answer nothing at all and you still
+end with a corpus that validates, holding every type the framework declares. `--yes` takes every default and asks
+nothing, which is what a pipeline runs.
 
 The folder does not have to be a repository yet. `new` offers to run `git init` where there is none. It finishes by
 running `generate`, then `validate`, then `git add -A`:
@@ -68,6 +69,7 @@ running `generate`, then `validate`, then `git add -A`:
 ```text
 new: did not write .github/dependabot.yml, .github/workflows/kac.yml, azure-pipelines.yml: this corpus is built by none.
 new: wrote 120 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
+new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
@@ -144,9 +146,17 @@ Every command takes the same few options, and each answers with one of three exi
 
 ## Add your first record
 
-Your corpus arrives with a few records in it. The ADR under `adrs/` and the policy under `policies/` are there to show
-the shape, and yours go beside them. The glossary under `glossary/` is the framework's own vocabulary, inherited word
-for word. Write your own glossaries beside it and leave that one as it is.
+Your corpus arrives with two records that are its own, each with you as its `owner`. Accept each one, rewrite it, or
+delete it:
+
+* **`adr-0001`**, under `adrs/`, records the decision to keep knowledge as code. It arrives `proposed`, because accepting
+  it is your decision. If your corpus consumes a parent corpus, delete it: the parent already records that decision.
+  [Imports](imports.md) says how one corpus consumes another.
+* **`pol-DEVI`**, under `policies/`, is the policy the deviation mechanism rests on: how a team records a knowing
+  departure from a rule, who accepts the risk, and when it is reviewed. It arrives `draft`.
+
+The glossary under `glossary/` is the framework's own vocabulary, inherited word for word. Write your own glossaries
+beside it and leave that one as it is.
 
 1. **Pick the type.** `knowledge-as-code/taxonomy.md` in your own corpus has a decision table saying where a record
    goes, covering the types that corpus adopted. [The default types](../framework/types.md) introduces every one of

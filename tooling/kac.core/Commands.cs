@@ -158,8 +158,11 @@ public static class Commands
             Path.GetTempPath(), prompt: asker is not null, toolVersion);
         if (take.Problem is { } unreadable) return Fail(unreadable);
 
+        var author = SeedOwner.Of(dir);
+        if (request.Owner is null) NoGitAuthor("new", author);
+
         var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
-            Git.Run(dir, "remote", "get-url", "origin")?.Trim(), asker);
+            Git.Run(dir, "remote", "get-url", "origin")?.Trim(), author.Owner, asker);
         if (answered.Failed) return Fail(answered.Problem);
         var answers = answered.Answers;
 
@@ -174,7 +177,7 @@ public static class Commands
         if (plan.Faults.Unsound) return StopUnsound("new", request.From, plan.Faults);
 
         var declined = SeedLinks.Declined(take.Schema, answers.Types);
-        var (written, unlinked) = kac.core.New.Apply(plan, take.Root, dir, declined);
+        var (written, received) = kac.core.New.Apply(plan, answers, take.Root, dir, declined);
         foreach (var path in written) Out.Markup(Wrote(path));
 
         if (plan.DeclinedTypes.Count > 0)
@@ -185,7 +188,8 @@ public static class Commands
 
         Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
                 + $"from {request.From}{At(take.Commit)}.");
-        Unlinked("new", unlinked);
+        Owned("new", answers.Owner, received.Owned);
+        Unlinked("new", received.Unlinked);
 
         // Generation writes what validation then checks, so it goes first. Staging goes last.
         Generate(dir, check: false);
@@ -255,6 +259,7 @@ public static class Commands
             : $"{string.Join(", ", answers.Types)} ({answers.Types.Count} of {declared})");
         Row(grid, "publishing", answers.PublishingTarget);
         Row(grid, "built by", answers.Ci);
+        Row(grid, "owner", answers.Owner);
         Row(grid, "template", upstream.Url + Ref(upstream.Ref) + At(upstream.Commit));
         Out.Write(grid);
 
@@ -695,7 +700,8 @@ public static class Commands
         if (request.DropType is { } dropping && Relinquish(dropping, request) is { } stopped)
             return stopped;
 
-        var unlinked = kac.core.Update.Apply(plan, take.Root, corpusRoot, declined);
+        var author = SeedOwner.Of(corpusRoot);
+        var received = kac.core.Update.Apply(plan, take.Root, corpusRoot, declined, author.Owner);
         CorpusDescriptor.Stamp(corpusRoot, take.Manifest.Version, today, take.Commit);
 
         // Only where a flag asked for it: `types:` is a block somebody laid out by hand.
@@ -703,7 +709,7 @@ public static class Commands
             CorpusDescriptor.SetTypes(corpusRoot, adopted);
 
         return ReportUpdate(plan, adoption, corpusRoot, origin, take.Manifest.Version, today,
-            request.DropType, request.AddType, unlinked);
+            request.DropType, request.AddType, received, author);
     }
 
     /// <summary>Only the message column wraps, so a check id is never split across lines.</summary>
@@ -768,6 +774,19 @@ public static class Commands
             Out.Line($"  {page.Path}:{line.Number}  {string.Join(", ", line.Types)}");
     }
 
+    /// <summary>Said where git gave no email, because the owner is then a guess at a login name.</summary>
+    private static void NoGitAuthor(string verb, Author author)
+    {
+        if (!author.FromGit)
+            Note($"{verb}: git has no user.email here, so the owner of each seeded record is {author.Owner}, "
+                 + "from the name you logged in as.");
+    }
+
+    private static void Owned(string verb, string owner, IReadOnlyList<string> paths)
+    {
+        if (paths.Count > 0) Account($"{verb}: wrote {owner} as the owner of {string.Join(", ", paths)}.");
+    }
+
     private static void Account(string line) => Out.Markup(Prefix(line, "grey"));
 
     private static string Prefix(string line, string colour)
@@ -822,7 +841,7 @@ public static class Commands
     }
 
     private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string origin,
-        int templateVersion, string today, string? dropped, string? added, IReadOnlyList<UnlinkedPage> unlinked)
+        int templateVersion, string today, string? dropped, string? added, Receipt received, Author author)
     {
         Out.Line($"update: taking the framework from {origin}.");
         foreach (var file in plan.Written) Out.Markup(Wrote(file.To));
@@ -849,7 +868,9 @@ public static class Commands
         if (added is not null)
             Note($"update: {added} arrives linking to the types this corpus holds. The pages already "
                  + $"here name {added} without linking to it, and they are yours to change.");
-        Unlinked("update", unlinked);
+        if (received.Owned.Count > 0) NoGitAuthor("update", author);
+        Owned("update", author.Owner, received.Owned);
+        Unlinked("update", received.Unlinked);
 
         // Overlay pages carry generated blocks built from this corpus's types, so a passing
         // `generate --check` is the update's postcondition.

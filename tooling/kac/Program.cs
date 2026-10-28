@@ -155,6 +155,10 @@ internal sealed class NewSettings : KacSettings
     [Description("What builds the corpus: github, azure-devops or none.")]
     public string? Ci { get; init; }
 
+    [CommandOption("--owner <OWNER>")]
+    [Description("The owner of the records it seeds, as human:alex.doe or role:cto. Defaults to your git email.")]
+    public string? Owner { get; init; }
+
     [CommandOption("--yes")]
     [Description("Take the default for every answer not given, and ask nothing.")]
     public bool Yes { get; init; }
@@ -172,6 +176,7 @@ internal sealed class NewCommand : Command<NewSettings>
             Types = settings.Types,
             Publishing = settings.Publishing,
             Ci = settings.Ci,
+            Owner = settings.Owner,
             From = settings.From,
             Ref = settings.Ref,
             Path = settings.Path,

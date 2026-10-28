@@ -24,7 +24,8 @@ public class NewTests
     private static NewAnswers Answers(params string[] types) => new()
     {
         Name = "acme-corpus",
-        Types = types.Length > 0 ? types : ["adrs"]
+        Types = types.Length > 0 ? types : ["adrs"],
+        Owner = "human:alex.doe"
     };
 
     private static Upstream Taken() => new(
@@ -378,6 +379,67 @@ public class NewTests
     [Fact]
     public void A_tool_version_nothing_can_parse_stops_nothing()
         => Assert.Null(New.TooOldFor("0.6.0", "dev", "new"));
+
+    [Fact]
+    public void The_author_is_the_local_part_of_the_git_email()
+    {
+        var author = SeedOwner.Guess("Alex.Doe@example.com", "ignored");
+
+        Assert.Equal("human:alex.doe", author.Owner);
+        Assert.True(author.FromGit);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("@example.com")]
+    public void An_author_with_no_git_email_is_the_os_user(string? email)
+    {
+        var author = SeedOwner.Guess(email, "alex");
+
+        Assert.Equal("human:alex", author.Owner);
+        Assert.False(author.FromGit);
+    }
+
+    [Theory]
+    [InlineData("alex_doe+kac@example.com", "human:alex-doe-kac")]
+    [InlineData("Alex Doe", "human:alex-doe")]
+    public void A_character_the_owner_pattern_refuses_becomes_a_hyphen(string email, string expected)
+        => Assert.Equal(expected, SeedOwner.Guess(email.Contains('@') ? email : null, email).Owner);
+
+    [Fact]
+    public void A_seeded_record_takes_the_owner_given()
+    {
+        const string sent = "---\nid: adr-0001\nstatus: proposed\nowner: human:paul.law\n---\n\n# A decision\n";
+
+        Assert.Equal("---\nid: adr-0001\nstatus: proposed\nowner: human:alex.doe\n---\n\n# A decision\n",
+            SeedOwner.Owned(sent, "human:alex.doe"));
+    }
+
+    [Fact]
+    public void Only_the_frontmatter_owner_is_rewritten()
+    {
+        const string sent = "---\r\nid: adr-0001\r\nowner: human:paul.law\r\n---\r\n\r\nowner: human:paul.law\r\n";
+
+        Assert.Equal("---\r\nid: adr-0001\r\nowner: role:cto\r\n---\r\n\r\nowner: human:paul.law\r\n",
+            SeedOwner.Owned(sent, "role:cto"));
+    }
+
+    [Fact]
+    public void A_page_with_no_frontmatter_owner_is_left_as_sent()
+    {
+        const string sent = "# CLAUDE.md\n\nowner: human:paul.law\n";
+
+        Assert.Equal(sent, SeedOwner.Owned(sent, "human:alex.doe"));
+    }
+
+    [Theory]
+    [InlineData("adrs/0001-knowledge-as-code.md", Manifest.Seed, true)]
+    [InlineData("adrs/_template.md", Manifest.Seed, false)]
+    [InlineData("glossary/knowledge-as-code.md", Manifest.Overlay, false)]
+    [InlineData(".editorconfig", Manifest.Seed, false)]
+    public void Only_a_seeded_record_is_given_an_owner(string to, string layer, bool reaches)
+        => Assert.Equal(reaches, SeedOwner.Reaches(new PlannedFile("template/" + to, to, layer)));
 
     [Fact]
     public void Every_system_this_repositorys_manifest_names_is_one_the_tool_offers()

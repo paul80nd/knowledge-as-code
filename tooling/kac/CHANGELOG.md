@@ -27,6 +27,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   passes `slug-length` and `list-order`. `knowledge-as-code/contributing.md` states both once. `kac update` writes
   the new `contributing.md`. It leaves a template you already hold alone, so add the paragraph by hand, or run
   `kac update --policy full` where you have not edited your templates.
+- **`kac new` and `kac update` write you as the owner of each record they seed.** `adr-0001` and `pol-DEVI` arrived
+  owned by the framework's author, and a corpus published them under that name. Both commands read
+  `git config user.email` and write `human:` and the part before the `@`. Where git has no email, they use the name
+  you logged in as, and say so. `kac new` asks for the owner with that default, and `--owner` answers it. Both print
+  the owner they wrote. The framework's glossary keeps its owner.
 
 ## 0.41.0 - 2026-10-27
 

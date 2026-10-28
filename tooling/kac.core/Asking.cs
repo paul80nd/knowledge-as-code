@@ -49,6 +49,7 @@ public sealed record NewRequest
 
     public string? Publishing { get; init; }
     public string? Ci { get; init; }
+    public string? Owner { get; init; }
 
     public string From { get; init; } = Asking.DefaultFrom;
     public string? Ref { get; init; }
@@ -94,10 +95,10 @@ public static class Asking
 
     /// <summary>
     /// <c>asker</c> is null where nobody can be asked. <c>origin</c> is the repository's own remote, or null where
-    /// there is none yet.
+    /// there is none yet. <c>author</c> is the owner offered for the seeded records, which <c>SeedOwner.Of</c> reads.
     /// </summary>
     public static Answered Resolve(NewRequest request, string folderName, IReadOnlyList<string> declared,
-        string? origin, IAsker? asker)
+        string? origin, string author, IAsker? asker)
     {
         if (Unattended(asker, request.Yes) && Unanswerable(request) is { } unanswerable)
             return Problem(unanswerable);
@@ -129,6 +130,14 @@ public static class Asking
 
         var published = Base(publishing, origin, asker);
 
+        var owner = (request.Owner ?? (asker is null
+            ? author
+            : asker.Text("Who owns the records it is seeded with?", author))).Trim();
+
+        if (!SeedOwner.Valid(owner))
+            return Problem($"new: '{owner}' is not an owner. Write a person as human:alex.doe, or a post as "
+                           + "role:head-of-engineering.");
+
         return new Answered(
             new NewAnswers
             {
@@ -136,7 +145,8 @@ public static class Asking
                 Types = types,
                 PublishingTarget = publishing,
                 Base = published,
-                Ci = ci
+                Ci = ci,
+                Owner = owner
             },
             null);
     }

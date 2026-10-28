@@ -32,6 +32,10 @@ public sealed class UpdateSteps(Workspace ws)
         Commit();
     }
 
+    /// <summary>Set in the repository's own config, which git reads ahead of the global one.</summary>
+    [Given(@"the corpus to update is worked on by ""(.*)""")]
+    public void GivenTheCorpusToUpdateIsWorkedOnBy(string email) => Git("config", "user.email", email);
+
     [Given(@"the corpus to update commits a change to ""(.*)""")]
     public void GivenTheCorpusToUpdateCommitsAChangeTo(string path)
     {

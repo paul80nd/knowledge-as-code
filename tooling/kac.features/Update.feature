@@ -136,6 +136,13 @@ Scenario: An update adding a type writes its page and template, and adopts it
   And the updated corpus holds ".schema/policies.yaml"
   And the updated corpus adopts "policies"
 
+Scenario: An update adding a type writes its author as the owner of the records it seeds
+  Given a corpus to update, adopting "adrs,glossary"
+  And the corpus to update is worked on by "sam.lee@example.com"
+  When I update the corpus adding "policies"
+  Then it succeeds
+  And "policies/devi-deviations.md" in the updated corpus still says "owner: human:sam.lee"
+
 Scenario: An update dropping a type whose folder holds no record deletes its page
   Given a corpus to update, adopting "adrs,glossary,tools"
   When I update the corpus dropping "tools" with --yes

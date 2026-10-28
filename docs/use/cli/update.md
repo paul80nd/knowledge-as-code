@@ -82,12 +82,14 @@ kac update --drop-type tools
 
 Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving pages
 link to the types the corpus already has, and name the types it declined without linking to them. The pages already
-there name the new type without linking to it, because each was written while the type was still declined. The run
-says both, and lists each arriving line that lost a link:
+there name the new type without linking to it, because each was written while the type was still declined. A record the
+type seeds arrives with you as its owner, as [A seeded record's owner](../layers.md#a-seeded-records-owner) says. The
+run says all three, and lists each arriving line that lost a link:
 
 ```text
 update: policies arrives linking to the types this corpus holds. The pages already here name policies without linking
 to it, and they are yours to change.
+update: wrote human:alex.doe as the owner of policies/devi-deviations.md.
 update: these lines name a type this corpus declined, and the link to it is gone. Read each one:
   policies.md:13  standards
   policies.md:14  controls, processes
