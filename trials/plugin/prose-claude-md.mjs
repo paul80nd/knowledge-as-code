@@ -25,11 +25,11 @@ if (!existsSync(manifestPath) || !statSync(manifestPath).isFile()) {
 const bookkeeping = new Set(["type", "path", "anchor", "links", "trust", "status", "reviewBy", "review-by", "record",
   "part", "id", "title", "shortcode"]);
 
-// A value as JSON on one line, escaping DEL as jq does.
+// A value as JSON on one line, with DEL written as \u007f.
 const json = (v) => (v === undefined ? "null" : JSON.stringify(v).replaceAll("\u007f", "\\u007f"));
 // A value as text: a string as it is, anything else as JSON.
 const text = (v) => (typeof v === "string" ? v : json(v));
-// Whether a value counts as present: only null and false do not, as in jq.
+// Whether a value counts as present. Only null and false do not.
 const present = (v) => v !== null && v !== undefined && v !== false;
 const isObject = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 

@@ -68,11 +68,11 @@ for (const f of given) {
   }
 }
 
-// A value as JSON on one line, escaping DEL as jq does.
+// A value as JSON on one line, with DEL written as \u007f.
 const json = (v) => (v === undefined ? "null" : JSON.stringify(v).replaceAll("\u007f", "\\u007f"));
 // A value as text: a string as it is, anything else as JSON.
 const text = (v) => (typeof v === "string" ? v : json(v));
-// Whether a value counts as present: only null and false do not, as in jq.
+// Whether a value counts as present. Only null and false do not.
 const present = (v) => v !== null && v !== undefined && v !== false;
 
 for (const f of given) {
@@ -88,7 +88,7 @@ for (const f of [proseJson, hookJson]) {
 
 mkdirSync(`${out}/results`, { recursive: true });
 
-// A value as one TSV cell, escaped as jq's @tsv escapes it.
+// A value as one TSV cell, with each backslash, tab, line feed and carriage return escaped.
 function cell(v) {
   if (v === null || v === undefined) return "";
   if (typeof v !== "string") return String(v);
@@ -182,7 +182,7 @@ for (const f of [proseJson, hookJson]) {
 const version = text(results.get(pluginJson).claudeVersion);
 const runLengths = results.get(pluginJson).cases.flatMap((c) => Object.values(c.arms).map((runs) => runs.length));
 const runs = runLengths.length === 0 ? "null" : String(Math.max(...runLengths));
-// The cost to the cent, rounded half away from zero as jq's round is.
+// The cost to the cent, rounded half away from zero.
 const costTotal = given.reduce((sum, f) => sum + (results.get(f).costUsd ?? 0), 0) * 100;
 const cost = Math.sign(costTotal) * Math.round(Math.abs(costTotal)) / 100;
 

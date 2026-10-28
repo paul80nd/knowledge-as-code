@@ -29,7 +29,7 @@ session's own transcript, under `config/projects/` in the folder `--keep-temp` k
 Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`. On
 Windows they get no `Bash`, as [On Windows](#on-windows) says.
 
-[`prose-claude-md.sh`](prose-claude-md.sh) writes the prose text from the export the plugin contains. It reads the
+[`prose-claude-md.mjs`](prose-claude-md.mjs) writes the prose text from the export the plugin contains. It reads the
 types, their folders and their parts files from the export's `manifest.json`. For each record of each type it writes
 the title, the id, every field, every exported section and the link, then each part with its id and every field. So
 the prose arm and the plugin arm have the same records.
@@ -85,7 +85,7 @@ Keep the cases for your own corpus in a private repository your organisation own
 | [`cases/payments/`](cases/payments/)       | `examples/payments`    | 4 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
-reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
+reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.mjs` leaves its sessions out of
 every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
 The file is optional. A first run on another corpus, or on another machine, finds its own exclusions.
 
@@ -156,18 +156,17 @@ and the report contains the prompts.
 
 ## What you need
 
-| Tool                         | Why                                                                                                                                                      |
-|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.                                                                                           |
-| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus. [Getting started](../../docs/use/getting-started.md) says how to install it.             |
-| `sh`                         | The stage and score scripts are POSIX shell. macOS and Linux have it. On Windows, use Git Bash, which Git for Windows installs.                          |
-| `jq`                         | The scripts read JSON with it. On Windows, run `winget install jqlang.jq`, then open a new Git Bash.                                                     |
-| Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash. |
-| `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                                         |
+| Tool                         | Why                                                                                                                                          |
+|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.                                                                               |
+| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus. [Getting started](../../docs/use/getting-started.md) says how to install it. |
+| `sh`                         | `stage.sh` and the fixture test are POSIX shell. macOS and Linux have it. On Windows, use Git Bash, which Git for Windows installs.          |
+| Node.js 24 or later          | The other scripts run on it, using only its built-in modules. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash.  |
+| `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                             |
 
-Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
-`jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
-`every case passed`. It needs `jq`, and Node.js for `regrade.mjs`.
+Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture,
+then over the same fixture with CRLF line endings, as Git for Windows checks files out without a `.gitattributes`. Go
+on once it prints `every case passed`. It needs `sh` and Node.js.
 
 ### On Windows
 
@@ -257,8 +256,9 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
 7. **Score the run** into a new folder under `$RUNS`, named by its date:
 
    ```sh
-   trials/plugin/score.sh -k "$STAGE/out-hook/aggregate-result.json" "$STAGE/out-plugin/aggregate-result.json" \
-     "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" "$CASES/excluded.tsv"
+   node trials/plugin/score.mjs -k "$STAGE/out-hook/aggregate-result.json" \
+     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" \
+     "$CASES/excluded.tsv"
    ```
 
    Leave out `-k` to score a run with no hook arm, and pass `-` for the prose result to score one with no prose arm.
@@ -275,7 +275,7 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
    Then score the run again with it:
 
    ```sh
-   trials/plugin/score.sh -a "$RUNS/<date>/adjudication.tsv" -k "$STAGE/out-hook/aggregate-result.json" \
+   node trials/plugin/score.mjs -a "$RUNS/<date>/adjudication.tsv" -k "$STAGE/out-hook/aggregate-result.json" \
      "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" \
      "$CASES/excluded.tsv"
    ```
@@ -295,12 +295,12 @@ ending `-r2`, and so on. Stage once, and run every batch from that stage, so eve
 same prose text. Then merge each stage's result files, and score the three merged files as step 7:
 
 ```sh
-trials/plugin/merge.sh "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
-trials/plugin/merge.sh "$STAGE/hook.json" "$STAGE"/out-hook-r*/aggregate-result.json
-trials/plugin/merge.sh "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
+node trials/plugin/merge.mjs "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
+node trials/plugin/merge.mjs "$STAGE/hook.json" "$STAGE"/out-hook-r*/aggregate-result.json
+node trials/plugin/merge.mjs "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
 ```
 
-[`merge.sh`](merge.sh) gives each case the runs of every batch, in the order you pass the batches. It sums the cost,
+[`merge.mjs`](merge.mjs) gives each case the runs of every batch, in the order you pass the batches. It sums the cost,
 and marks the result partial if any batch was. It refuses batches that differ in stage, model, Claude Code version or
 plugin, or that grade a shared case by different graders.
 
@@ -389,7 +389,7 @@ reads each grader's verdict, and ignores the tool's score.
 
 ## Scoring
 
-[`score.sh`](score.sh) reads the plugin result file, the prose result file unless you pass `-` in its place, and the
+[`score.mjs`](score.mjs) reads the plugin result file, the prose result file unless you pass `-` in its place, and the
 hook result file where `-k` names one. It writes `sessions.tsv` and `aggregate.md`, and reports each kind of case on its
 own. An arm with no result file has no sessions, so its rates and every lead over it are empty.
 
@@ -422,7 +422,7 @@ read:
 | `adjudicated` | your verdict, in the same three values                                                         |
 | `reason`      | one sentence on what the workspace shows                                                       |
 
-`score.sh -a` refuses a file whose `graders` column differs from the graders' verdict, or whose line matches no
+`score.mjs -a` refuses a file whose `graders` column differs from the graders' verdict, or whose line matches no
 session. Either means the file belongs to another run. Adjudication covers compliance only. A `cite-` grader reads the
 final reply for an id, so read its fails, and fix the grader where one is wrong.
 

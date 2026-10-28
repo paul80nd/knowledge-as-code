@@ -25,10 +25,10 @@ const batches = batchPaths.map((f) => {
   }
 });
 
-// A value as JSON, escaping DEL as jq does.
+// A value as JSON, with DEL written as \u007f.
 const json = (v, indent) => JSON.stringify(v, null, indent).replaceAll("\u007f", "\\u007f");
 
-// jq's order of values: null, false, true, numbers, strings by code point, arrays, then objects by their sorted keys.
+// The order values sort and group in: null, false, true, numbers, strings by code point, arrays, then objects.
 const rank = (v) => (v === null ? 0 : v === false ? 1 : v === true ? 2 : typeof v === "number" ? 3
   : typeof v === "string" ? 4 : Array.isArray(v) ? 5 : 6);
 function compare(a, b) {
@@ -77,8 +77,9 @@ for (const [field, read] of fields) {
 }
 
 const allCases = batches.flatMap((b) => b.cases);
-const graders = groupBy(allCases.map((c) => ({ name: or(c.name), graders: c.graders.map((g) => ({ name: or(g.name),
-  type: or(g.type), config: or(g.config) })) })), (c) => c.name)
+const gradedBy = (c) => ({ name: or(c.name), graders: c.graders.map((g) => ({ name: or(g.name), type: or(g.type),
+  config: or(g.config) })) });
+const graders = groupBy(allCases.map(gradedBy), (c) => c.name)
   .filter((group) => unique(group.map((c) => c.graders)).length > 1).map((group) => group[0].name);
 if (graders.length > 0) {
   writeSync(2, `merge.mjs: these cases are graded differently in different batches: ${json(graders, 2)}\n`);
