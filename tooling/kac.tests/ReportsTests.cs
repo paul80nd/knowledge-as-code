@@ -202,7 +202,52 @@ public class ReportsTests
     public void A_coverage_report_states_that_a_control_vouches_for_the_rule_it_names()
         => Assert.Contains("`Controls` lists each control naming a rule in `Covered by`", Coverage());
 
+    [Fact]
+    public void A_consumer_that_declines_the_clause_type_reports_the_clauses_it_inherits()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |", Declining(Grandparent("active")));
+
+    [Fact]
+    public void An_inherited_clause_type_its_producer_renamed_is_still_read()
+        => Assert.Contains("| `KEEP` | SHOULD |", Declining(Imported("obligations",
+            """{"id":"obl-RET.KEEP","record":"obl-RET","part":"KEEP","level":"SHOULD","clause":"Keep it."}""")));
+
+    [Fact]
+    public void An_inherited_glossary_files_none_of_its_terms_as_a_clause()
+        => Assert.Contains("| **Total** | **0** | **0** | **0** |", Declining(Imported("glossary",
+            """{"id":"gl-CORE.TERM","record":"gl-CORE","part":"TERM","title":"Term","definition":"A word."}""")));
+
     private static string Coverage() => Plan("coverage").Body;
+
+    /// <summary>One producer publishing one type, whose parts file is the single line given.</summary>
+    private static InheritedCorpus Imported(string type, string line) =>
+        new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
+            new ExportPublishing("github", null, null, null, null),
+            null,
+            Tracker.None,
+            [],
+            [
+                new InheritedType(type, 1, type, $"{type}/parts.jsonl", "record", "part", "id", null,
+                    new Dictionary<string, string>(StringComparer.Ordinal), [line], [])
+            ]);
+
+    /// <summary>A consumer whose schema adopts no type at all, and which writes nothing itself.</summary>
+    private static string Declining(InheritedCorpus source)
+    {
+        var corpus = new LoadedCorpus
+        {
+            Schema = new Schema { ByFolder = new Dictionary<string, TypeSchema>(StringComparer.Ordinal) },
+            Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
+            Tree = new Tree(new HashSet<string>(StringComparer.Ordinal), _ => ""),
+            Adopted = [],
+            Docs = [],
+            Templates = [],
+            SkippedNoFrontmatter = 0
+        };
+
+        var plan = Reports.Plan("coverage", corpus, [source], Stamp);
+        Assert.NotNull(plan);
+        return plan.Body;
+    }
 
     /// <summary>
     /// A standard whose two rules each cover one clause, a control naming each rule, and with <paramref name="whole"/>

@@ -97,6 +97,10 @@ public static class Reports
     /// </summary>
     private const string AlignmentColumn = "Alignment";
 
+    /// <summary>The keys a clause line states its wording and its level under.</summary>
+    private const string ClauseKey = "clause";
+    private const string LevelKey = "level";
+
     /// <summary>
     /// What a report calls a corpus whose descriptor states no <c>corpus:</c>. Only a printed report meets it.
     /// </summary>
@@ -140,11 +144,8 @@ public static class Reports
             }
         }
 
-        // Only the clause-bearing type. Reading every type carrying parts would file a glossary's terms as obligations.
-        var clauseType = ClauseType(corpus)?.Key;
-
         foreach (var source in inherited)
-        foreach (var type in source.Types.Where(t => t.Type == clauseType))
+        foreach (var type in source.Types.Where(CarriesClauses))
         foreach (var line in type.PartLines)
         {
             if (JsonRead.Parse(line) is not { } json) continue;
@@ -158,7 +159,7 @@ public static class Reports
             // name for it.
             found.Add(new ClauseFact(
                 Exporter.Scoped(id, source.Shortcode), Exporter.Scoped(record, source.Shortcode), key,
-                JsonRead.Str(json["level"]), JsonRead.Str(json["clause"]) ?? "", null, [],
+                JsonRead.Str(json[LevelKey]), JsonRead.Str(json[ClauseKey]) ?? "", null, [],
                 source.Shortcode));
         }
 
@@ -166,8 +167,17 @@ public static class Reports
     }
 
     /// <summary>
-    /// The type whose parts are clauses, found through what it declares, so a corpus that renamed it still reports.
-    /// Read from the whole schema, because a consumer inheriting every policy may not adopt the type itself.
+    /// Whether an imported type's parts are clauses, read from the keys its producer wrote on each line. A consumer
+    /// declining the type has no schema for it, and a type renamed on either side keeps the keys.
+    /// <c>policy-lookup</c> reads the same two keys.
+    /// </summary>
+    private static bool CarriesClauses(InheritedType type) =>
+        type.PartLines.Any(line => JsonRead.Parse(line) is { } json
+                                   && json.ContainsKey(ClauseKey) && json.ContainsKey(LevelKey));
+
+    /// <summary>
+    /// The type whose parts are clauses in this corpus's own records, found through what it declares, so a corpus that
+    /// renamed it still reports.
     /// </summary>
     private static TypeSchema? ClauseType(LoadedCorpus corpus) =>
         corpus.Schema.ByFolder.Values.FirstOrDefault(t => t.Parts is { } parts

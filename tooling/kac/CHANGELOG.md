@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **`kac report coverage` counts the clauses a corpus inherits without adopting `policies`.** It looked for the clause
+  type in the corpus's own schema, which has only the types the corpus adopted. So a consumer declining `policies`
+  reported 0 clauses and gave no reason. `report` now reads an imported type as clauses where its lines state a
+  `clause` and a `level`, the keys `policy-lookup` reads. A producer that renamed `policies` still reports, and an
+  imported glossary's terms stay out. Regenerate a coverage report you keep as a record.
+
 ## 0.42.0 - 2026-10-28
 
 ### Added
