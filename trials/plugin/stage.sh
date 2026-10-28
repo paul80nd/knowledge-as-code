@@ -3,7 +3,7 @@
 #
 #   stage.sh <plugin dir> <cases dir> <empty stage dir>
 #
-# <cases dir> keeps each case in house/ or control/, which is how score.sh tells the two kinds apart.
+# <cases dir> keeps each case in house/ or control/, which is how score.mjs tells the two kinds apart.
 # A case listed in <cases dir>/excluded.tsv is not staged, so no session runs it.
 # <stage>/plugin is the plugin less hooks/build-index.json, so its hook prints nothing, for the plugin and none arms.
 # <stage>/hook is the plugin as built, whose hook pushes the build index, for the hook arm. A plugin with no
@@ -68,7 +68,7 @@ if [ -f "$cases/excluded.tsv" ]; then
     rm -rf "$stage/plugin/evals/$excluded" "$stage/hook/evals/$excluded" "$stage/prose/evals/$excluded"
   done
 fi
-"$here/prose-claude-md.sh" "$plugin/corpus" "$stage/CLAUDE.md"
+node "$here/prose-claude-md.mjs" "$plugin/corpus" "$stage/CLAUDE.md"
 
 # Claude Code warns on a CLAUDE.md over 40,000 characters, and the README says to give the prose arm a cut past that.
 chars=$(wc -m < "$stage/CLAUDE.md" | tr -d ' ')
