@@ -79,7 +79,7 @@ public static class Tracker
         {
             Publishing.GitHub => For(Publishing.GitHub, published, null),
 
-            // `az boards` files against the project whichever of them publishes the records, so the
+            // A work item is filed against the project whichever of them publishes the records, so the
             // wiki target does not travel. It says how a record is read and nothing about where a ticket
             // goes.
             Publishing.AzureDevOps or Publishing.AzureDevOpsWiki => For(Publishing.AzureDevOps, published, null),

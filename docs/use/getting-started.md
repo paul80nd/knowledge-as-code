@@ -68,7 +68,7 @@ running `generate`, then `validate`, then `git add -A`:
 
 ```text
 new: did not write .github/dependabot.yml, .github/workflows/kac.yml, azure-pipelines.yml: this corpus is built by none.
-new: wrote 120 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
+new: wrote 124 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
 new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
 updated 1 of 40 generated file(s).

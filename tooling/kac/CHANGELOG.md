@@ -17,6 +17,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Changed
+
+- **`raise-finding` and `request-deviation` keep each platform's command in a file of its own.** `github.md` and
+  `azure-devops.md` sit beside each `SKILL.md`, and a session reads only the one its tracker's `target` names, so it
+  loads no command for a platform it does not file on. The template version moves to 25, and `kac update` writes the
+  four new files.
+
 ### Fixed
 
 - **`kac report coverage` counts the clauses a corpus inherits without adopting `policies`.** It looked for the clause
@@ -29,6 +36,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   list field may now declare `order: as-written`, and `list-order` passes over that list. `sources` declares it in
   `.schema/reports.yaml`, which `kac update` writes. `order:` on a field that is not a list reports `schema-dispatch`,
   and a value other than `alphabetical` or `as-written` reports `schema-unreadable`.
+- **`raise-finding` and `request-deviation` file an Azure DevOps work item whose description stays Markdown.**
+  `az boards work-item create` cannot mark a description as Markdown, so Azure DevOps read the body as HTML and lost
+  the fences around its `kac-finding` or `kac-deviation` block. Each skill now writes a JSON patch file and posts it
+  with `az rest`, which sets `/multilineFieldsFormat/System.Description` to `Markdown`. `az rest` signs in through
+  `az login`. Where Azure DevOps refuses that sign-in, the skill prints the body and names `az login`.
 
 ## 0.42.0 - 2026-10-28
 
