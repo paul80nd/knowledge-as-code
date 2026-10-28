@@ -71,9 +71,24 @@ export KAC_REGISTRY_TOKEN="$GITHUB_TOKEN"
 kac restore
 ```
 
-On your own machine, use a personal access token, and set `KAC_REGISTRY_USER` to any name as well. `kac` then sends
-the name and the token as Basic auth, which is how Azure Artifacts takes a personal access token. There, the token
-needs the **Packaging (Read)** scope:
+On your own machine with Azure Artifacts, start with a Microsoft Entra token, because there is no token to create or
+rotate. Sign in with `az login`, then ask the Azure CLI for a token to Azure DevOps. Leave `KAC_REGISTRY_USER` unset,
+so `kac` sends it as a bearer token:
+
+```bash
+unset KAC_REGISTRY_USER                                   # a name would send the token as Basic auth
+export KAC_REGISTRY_TOKEN=$(az account get-access-token \
+  --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv)
+kac restore
+```
+
+The token lasts about an hour, so set it again in each session and do not store it.
+[Issue Entra tokens with Azure CLI](https://learn.microsoft.com/azure/devops/cli/entra-tokens) gives the resource id
+and the lifetime.
+
+Otherwise, use a personal access token, and set `KAC_REGISTRY_USER` to any name as well. `kac` then sends the name and
+the token as Basic auth, which is how Azure Artifacts takes a personal access token. There, the token needs the
+**Packaging (Read)** scope:
 
 ```bash
 export KAC_REGISTRY_USER=kac                              # any name
