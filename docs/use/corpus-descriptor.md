@@ -262,7 +262,7 @@ has the address.
 
 [`new`](cli/new.md) writes `target` and `base` when the corpus is created. It takes `base` from `--from` where that
 named a repository, and from the framework's own repository where it named a folder. It reads `target` from the host,
-and writes `none` for a host that neither `gh` nor `az boards` serves. Nothing derives this block.
+and writes `none` for a host that neither `gh` nor `az` serves. Nothing derives this block.
 
 #### Three addresses, and telling them apart
 
