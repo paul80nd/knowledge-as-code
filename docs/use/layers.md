@@ -35,6 +35,16 @@ A type's root page and its `_template.md` arrive with the framework's wording, a
 domain. [`update-policy`](corpus-descriptor.md#update-policy) decides whether an update writes them again, and
 `--policy` overrides it for one run. A seed belongs to the corpus once written.
 
+## A seeded record's owner
+
+`new` and `update` write you as the `owner` of each record they seed. They read `git config user.email` and write
+`human:` and the part before the `@`, so `alex.doe@example.com` becomes `human:alex.doe`. Where git has no email, they
+use the name you logged in as, and say so. `new` asks for the owner with that value as the default, and `--owner`
+answers the question. Both commands print the owner they wrote.
+
+An overlay record, such as the framework's glossary, keeps the owner it arrived with. Under `full`, an update compares
+a seeded record using the owner the corpus gave it, so a different author does not count as a change.
+
 ## A seeded record that moved
 
 The template seeds a record at the top of its type's folder, as `policies/devi-deviations.md`, and a corpus may file it

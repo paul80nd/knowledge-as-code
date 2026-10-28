@@ -341,16 +341,16 @@ public static class Update
     private static string Owned(string rel, string? reason) => reason is null ? rel : $"{rel}  ({reason})";
 
     /// <summary>
-    /// Commits and stages nothing. <c>declined</c> reaches the seed pages alone. <c>SeedLinks</c> says why. Returns the
-    /// pages it took a link out of.
+    /// Commits and stages nothing. <c>declined</c> and <c>owner</c> reach the seed pages alone. <c>SeedLinks</c> says
+    /// why. Returns the pages it took a link out of, and the records it wrote <c>owner</c> into.
     /// </summary>
-    public static IReadOnlyList<UnlinkedPage> Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
-        DeclinedNames declined)
+    public static Receipt Apply(UpdatePlan plan, string templateRoot, string corpusRoot, DeclinedNames declined,
+        string owner)
     {
-        var unlinked = SeedLinks.ReceiveAll(plan.Copies, templateRoot, corpusRoot, declined);
+        var received = SeedLinks.ReceiveAll(plan.Copies, templateRoot, corpusRoot, declined, owner);
 
         foreach (var rel in plan.Deleted) File.Delete(Path.Combine(corpusRoot, rel));
-        return unlinked;
+        return received;
     }
 
     /// <summary>
@@ -437,15 +437,17 @@ public static class Update
 
     /// <summary>
     /// LF-normalised and compared on the authored half. See <c>Markers.Authored</c>. The template's side is unlinked
-    /// first, so <c>full</c> holds a corpus to what <c>new</c> would have written.
+    /// first, so <c>full</c> holds a corpus to what <c>new</c> would have written. A seeded record is compared under
+    /// the owner the corpus gave it, so the owner alone never makes one differ.
     /// </summary>
     internal static bool Same(string templateRoot, string corpusRoot, PlannedFile file,
         DeclinedNames declined)
     {
         var sent = Files.ReadLf(Path.Combine(templateRoot, file.From));
+        var held = Files.ReadLf(Path.Combine(corpusRoot, file.To));
         if (SeedLinks.Reaches(file)) sent = SeedLinks.Unlinked(sent, declined);
-        return Markers.Authored(sent)
-               == Markers.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
+        if (SeedOwner.Reaches(file) && SeedOwner.Held(held) is { } owner) sent = SeedOwner.Owned(sent, owner);
+        return Markers.Authored(sent) == Markers.Authored(held);
     }
 
     /// <summary>

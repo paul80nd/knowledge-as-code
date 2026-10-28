@@ -18,6 +18,8 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 * It writes a corpus that validates, whichever types it adopts. [`new`](../use/cli/new.md#what-it-does)
 * It removes the links to the types the corpus declined, and keeps the links between the types it adopted.
   [`new`](../use/cli/new.md#what-it-does)
+* It writes the author as the `owner` of each record it seeds, from `git config user.email` or `--owner`.
+  [A seeded record's owner](../use/layers.md#a-seeded-records-owner)
 * It writes the CI starter for the system named, and no other. [CI starters](../use/layers.md#ci-starters)
 * It pins the release of the `kac` running it in `.config/dotnet-tools.json`.
   [Files no template can send](../use/layers.md#files-no-template-can-send)
@@ -43,6 +45,8 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 * It reports a type the corpus has not adopted, and adopts nothing. [`update`](../use/cli/update.md#known-limits)
 * `--add-type` writes the type's page, template and schema, and adds it to `types:`.
   [A type adopted, or given up](../use/cli/update.md#a-type-adopted-or-given-up)
+* It writes the author as the `owner` of each record it seeds.
+  [A seeded record's owner](../use/layers.md#a-seeded-records-owner)
 * `--drop-type` deletes the page of a type whose folder holds no record, once it has an answer.
   [A type adopted, or given up](../use/cli/update.md#a-type-adopted-or-given-up)
 * It stamps `descriptor-version` with the format this tool writes. [`update`](../use/cli/update.md#known-limits)
@@ -57,6 +61,7 @@ Each refusal exits `1` and writes nothing.
 * a repository holding uncommitted changes [`new`](../use/cli/new.md#known-limits)
 * a folder with no repository, no terminal to ask on and no `--yes` [`new`](../use/cli/new.md#known-limits)
 * a template it cannot read [`new`](../use/cli/new.md#known-limits)
+* an owner the `owner` pattern refuses [A seeded record's owner](../use/layers.md#a-seeded-records-owner)
 
 ### `update`
 
@@ -91,6 +96,9 @@ Each refusal exits `1` and writes nothing.
 * A template that cannot be read is refused
 * A template needing a newer kac is refused
 * A new corpus is given a descriptor and a README of its own
+* A corpus created with --yes is seeded with records its author owns
+* An owner given as a flag is written into the seeded records
+* An owner the pattern refuses is refused
 * A new corpus pins the kac that created it
 * An update leaves the tool manifest to the corpus
 * A corpus built by GitHub is sent the GitHub starter alone
@@ -121,6 +129,7 @@ Each refusal exits `1` and writes nothing.
 * A check runs over a tree with uncommitted changes
 * A type the corpus has not adopted is not adopted by an update
 * An update adding a type writes its page and template, and adopts it
+* An update adding a type writes its author as the owner of the records it seeds
 * An update dropping a type whose folder holds no record deletes its page
 * An update dropping a type whose folder holds a record is refused
 * An update dropping a type with nobody to answer is refused

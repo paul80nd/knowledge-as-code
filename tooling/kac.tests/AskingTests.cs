@@ -42,12 +42,15 @@ public class AskingTests
         }
     }
 
+    private const string Author = "human:alex.doe";
+
     private static Asking.Answered Resolve(NewRequest request, IAsker? asker = null, string? origin = null) =>
-        Asking.Resolve(request, "folder-name", Declared, origin, asker);
+        Asking.Resolve(request, "folder-name", Declared, origin, Author, asker);
 
     private static NewRequest Flagged() => new()
     {
-        Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None
+        Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None,
+        Owner = "role:head-of-knowledge"
     };
 
     [Theory]
@@ -114,7 +117,7 @@ public class AskingTests
     public void An_answer_with_no_flag_is_asked_for()
     {
         var asker = new Scripted(text: "typed-in");
-        var answered = Resolve(new NewRequest(), asker);
+        var answered = Resolve(new NewRequest { Owner = Author }, asker);
 
         Assert.Equal("typed-in", answered.Resolved().Name);
         Assert.Contains(asker.Asked, q => q.Contains("called"));
@@ -129,7 +132,26 @@ public class AskingTests
         Assert.Equal(Declared, answers.Types);
         Assert.Equal(Publishing.None, answers.PublishingTarget);
         Assert.Equal(CiSystem.None, answers.Ci);
+        Assert.Equal(Author, answers.Owner);
     }
+
+    [Fact]
+    public void The_owner_is_asked_for_with_the_author_as_the_default()
+    {
+        var asker = new Scripted();
+        var answers = Resolve(Flagged() with { Owner = null }, asker).Resolved();
+
+        Assert.Equal(Author, answers.Owner);
+        Assert.Contains(asker.Asked, q => q.Contains("owns the records"));
+    }
+
+    [Fact]
+    public void An_owner_given_as_a_flag_is_written()
+        => Assert.Equal("role:head-of-knowledge", Resolve(Flagged()).Resolved().Owner);
+
+    [Fact]
+    public void An_owner_the_pattern_refuses_is_named_back()
+        => Assert.Contains("'Alex Doe' is not an owner", Resolve(Flagged() with { Owner = "Alex Doe" }).Problem);
 
     [Fact]
     public void A_run_with_nobody_to_ask_names_every_flag_it_needed()

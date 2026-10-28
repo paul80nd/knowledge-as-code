@@ -53,6 +53,26 @@ Scenario: A new corpus is given a descriptor and a README of its own
   And ".corpus.yaml" in the new corpus says "corpus: field-notes"
   And "README.md" in the new corpus says "# field-notes"
 
+Scenario: A corpus created with --yes is seeded with records its author owns
+  Given a git repository whose author is "Alex.Doe@example.com"
+  When I create a corpus there adopting "adrs,glossary,policies"
+  Then it succeeds
+  And "adrs/0001-knowledge-as-code.md" in the new corpus says "owner: human:alex.doe"
+  And "policies/devi-deviations.md" in the new corpus says "owner: human:alex.doe"
+  And "glossary/knowledge-as-code.md" in the new corpus says "owner: human:paul.law"
+
+Scenario: An owner given as a flag is written into the seeded records
+  Given a git repository whose author is "alex.doe@example.com"
+  When I create a corpus there owned by "role:head-of-knowledge"
+  Then it succeeds
+  And "adrs/0001-knowledge-as-code.md" in the new corpus says "owner: role:head-of-knowledge"
+
+Scenario: An owner the pattern refuses is refused
+  Given a git repository
+  When I create a corpus there owned by "Alex Doe"
+  Then it refuses
+  And the folder holds nothing new
+
 Scenario: A new corpus pins the kac that created it
   Given a git repository
   When I create a corpus there with kac "0.99.0+5fa039b0"

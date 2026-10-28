@@ -39,6 +39,14 @@ public sealed class CreationSteps(Workspace ws)
         Git("init", "-q", "-b", "main", ".");
     }
 
+    /// <summary>Set in the repository's own config, which git reads ahead of the global one.</summary>
+    [Given(@"a git repository whose author is ""(.*)""")]
+    public void GivenAGitRepositoryWhoseAuthorIs(string email)
+    {
+        GivenAGitRepository();
+        Git("config", "user.email", email);
+    }
+
     [Given("a corpus descriptor above it")]
     public void GivenACorpusDescriptorAboveIt()
     {
@@ -130,6 +138,9 @@ public sealed class CreationSteps(Workspace ws)
 
     [When(@"I create a corpus there named ""(.*)""")]
     public void WhenICreateACorpusThereNamed(string name) => ws.Exit = Creation.Create(_folder, name: name);
+
+    [When(@"I create a corpus there owned by ""(.*)""")]
+    public void WhenICreateACorpusThereOwnedBy(string owner) => ws.Exit = Creation.Create(_folder, owner: owner);
 
     [When(@"I create a corpus there built by ""(.*)""")]
     public void WhenICreateACorpusThereBuiltBy(string ci) => ws.Exit = Creation.Create(_folder, ci: ci);

@@ -3,20 +3,21 @@
 <!-- BEGIN GENERATED: usage-new -->
 
 ```text
-kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path <PATH>] [--publishing <TARGET>] [--ref <REF>] [--types <TYPES>] [--yes]
+kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--owner <OWNER>] [--path <PATH>] [--publishing <TARGET>] [--ref <REF>] [--types <TYPES>] [--yes]
 ```
 
-| Option                  | What it does                                                                            |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `--ci <SYSTEM>`         | What builds the corpus: github, azure-devops or none.                                   |
-| `--from <URL\|PATH>`    | The repository or folder serving the template. Defaults to the framework's own.         |
-| `--name <NAME>`         | What the corpus is called. Defaults to the name of this folder.                         |
-| `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                             |
-| `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root.   |
-| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops, azure-devops-wiki, mkdocs or none. |
-| `--ref <REF>`           | The branch or tag to take the template from.                                            |
-| `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                          |
-| `--yes`                 | Take the default for every answer not given, and ask nothing.                           |
+| Option                  | What it does                                                                                  |
+|-------------------------|-----------------------------------------------------------------------------------------------|
+| `--ci <SYSTEM>`         | What builds the corpus: github, azure-devops or none.                                         |
+| `--from <URL\|PATH>`    | The repository or folder serving the template. Defaults to the framework's own.               |
+| `--name <NAME>`         | What the corpus is called. Defaults to the name of this folder.                               |
+| `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                                   |
+| `--owner <OWNER>`       | The owner of the records it seeds, as human:alex.doe or role:cto. Defaults to your git email. |
+| `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root.         |
+| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops, azure-devops-wiki, mkdocs or none.       |
+| `--ref <REF>`           | The branch or tag to take the template from.                                                  |
+| `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                                |
+| `--yes`                 | Take the default for every answer not given, and ask nothing.                                 |
 
 <!-- END GENERATED: usage-new -->
 
@@ -30,9 +31,9 @@ writes the files a template cannot supply:
 * `.config/dotnet-tools.json`, which pins the version of `kac` running `new`.
 * `README.md`, for you to rewrite, where the template sends none of its own.
 
-It asks what the corpus is called, which types it adopts, where it publishes and what builds it. Each question has a
-default. Whichever types you adopt, the corpus it writes validates before the command finishes.
-[Layers](../layers.md) says which files it writes, and who owns each one afterwards.
+It asks what the corpus is called, which types it adopts, where it publishes, what builds it and who owns the records it
+seeds. Each question has a default. Whichever types you adopt, the corpus it writes validates before the command
+finishes. [Layers](../layers.md) says which files it writes, and who owns each one afterwards.
 
 If you adopt only some types, `new` removes the links to the types you skipped. A type page links the other type pages,
 and `new` drops each dead link and leaves the type's name standing in the sentence. The sentence may still send a reader
@@ -69,16 +70,18 @@ mkdir my-corpus && cd my-corpus
 kac new
 ```
 
-`new` asks four questions. Each has a default and each has a flag:
+`new` asks five questions. Each has a default and each has a flag:
 
-| Asked              | Default                          | Flag           |
-|--------------------|----------------------------------|----------------|
-| The corpus's name  | the folder's name                | `--name`       |
-| Which types        | every type the template declares | `--types`      |
-| Where it publishes | `none`                           | `--publishing` |
-| Which CI system    | `none`                           | `--ci`         |
+| Asked                         | Default                                     | Flag           |
+|-------------------------------|---------------------------------------------|----------------|
+| The corpus's name             | the folder's name                           | `--name`       |
+| Which types                   | every type the template declares            | `--types`      |
+| Where it publishes            | `none`                                      | `--publishing` |
+| Which CI system               | `none`                                      | `--ci`         |
+| Who owns the records it seeds | `human:` and your git email before the `@`  | `--owner`      |
 
-Name a publishing target and it asks a fifth: the URL the published corpus is browsed at. That one has no flag.
+Name a publishing target and it asks a sixth: the URL the published corpus is browsed at. That one has no flag.
+[A seeded record's owner](../layers.md#a-seeded-records-owner) says how the owner's default is worked out.
 
 ### A corpus with no questions
 
@@ -94,6 +97,7 @@ missing answer exits rather than waiting, because a hung pipeline is worse than 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
 new: wrote 122 file(s) for my-corpus, taken from /path/to/template.
+new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
@@ -102,7 +106,7 @@ new: staged. `git status` shows everything this wrote, and the first commit is y
 ```
 
 Take the framework from a URL rather than a folder and the second line adds the commit it resolved, as
-`…knowledge-as-code at c1c9621.`
+`…knowledge-as-code at c1c9621.` The third line names the owner it wrote into the seeded records.
 
 `new` stops short of committing. Read what is staged, then:
 

@@ -20,10 +20,13 @@ public static class Creation
     /// <paramref name="tool"/> is the version of <c>kac</c> the run claims to be, where not new enough.
     /// </summary>
     public static int Create(string folder, string? from = null, string? types = null, string? name = null,
-        string ci = CiSystem.None, bool yes = true, string? tool = null) =>
+        string ci = CiSystem.None, bool yes = true, string? tool = null, string? owner = null) =>
         Commands.New(
             folder,
-            new NewRequest { From = from ?? RepoRoot, Yes = yes, Ci = ci, Types = types, Name = name },
+            new NewRequest
+            {
+                From = from ?? RepoRoot, Yes = yes, Ci = ci, Types = types, Name = name, Owner = owner
+            },
             tool ?? NewEnough,
             "2026-01-01");
 
