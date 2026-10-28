@@ -26,7 +26,8 @@ and stages it anyway, and its hook arm pushes nothing.
 session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
 `hook_additional_context`. The hook's marker is under `config/plugins/data/`.
 
-Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`.
+Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`. On
+Windows they get no `Bash`, as [On Windows](#on-windows) says.
 
 [`prose-claude-md.sh`](prose-claude-md.sh) writes the prose text from the export the plugin contains. It reads the
 types, their folders and their parts files from the export's `manifest.json`. For each record of each type it writes
@@ -40,9 +41,10 @@ not the same.
 
 **Where the prose text is too large for a `CLAUDE.md`, give the prose arm a cut of it.** Claude Code warns on a
 `CLAUDE.md` over 40,000 characters, so cut the text to that size. Have a reader who has not seen the cases choose the
-cut as the corpus's team would, copying record blocks verbatim. After `stage.sh`, rewrite each prose `case.yaml` from
-the case folder with the cut appended in place of the whole text. Keep the cut, and the list of what it left out,
-beside the run. [Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made this way.
+cut as the corpus's team would, copying record blocks verbatim. A new Claude Code session, given the prose text and
+none of the cases, can be that reader. After `stage.sh`, rewrite each prose `case.yaml` from the case folder with the
+cut appended in place of the whole text. Keep the cut, and the list of what it left out, beside the run.
+[Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made this way.
 
 ## The full pass and the pilot
 
@@ -70,8 +72,10 @@ To tell the two apart, ask whether a capable engineer new to the organisation wo
 told. If they would, the case is a control. `stage.sh` refuses a case in neither folder. A case also gives its kind
 as its first tag, so `--tag house` runs one kind alone.
 
-The cases for a corpus live in their own folder under [`cases/`](cases/). Nothing else in the method knows which
-corpus it runs against.
+The cases for a corpus live in a folder of their own. Nothing else in the method knows which corpus it runs against.
+Keep the cases for your own corpus in a private repository your organisation owns, as
+[What leaves the organisation](#what-leaves-the-organisation) says. This repository's cases are under
+[`cases/`](cases/):
 
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
@@ -83,7 +87,9 @@ corpus it runs against.
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
 reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
 every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
-The lists in `engineering`, `library` and `dog-fooding` exclude these:
+The file is optional. A first run on another corpus, or on another machine, finds its own exclusions.
+
+This repository's lists, in `engineering`, `library` and `dog-fooding`, exclude these:
 
 | Case                                      | Why no session can show the rule                                                         |
 |-------------------------------------------|------------------------------------------------------------------------------------------|
@@ -93,36 +99,38 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | `library/house/notices-down`              | The sandbox blocks the fetch of the record's source, where a session reads `owner`.      |
 | `dog-fooding/house/golden-red-in-ci`      | The sandbox stops `dotnet`, which fails to create a NuGet mutex under `/tmp`.            |
 
-| Case                                 | Rule a session breaks                                                                                   |
-|--------------------------------------|---------------------------------------------------------------------------------------------------------|
-| `house/ci-secret-scan`               | `std-SECRET.NOWHERE`: the new CI runs no secret scanner                             |
-| `house/returns-api-routes`           | `std-API.VERSION`: the new routes have no version segment, and the change gives no reason |
-| `house/stock-per-warehouse`          | `std-API.VERSION`: the breaking change replaces `/v1`                   |
-| `house/stock-v1-retirement`          | `std-API.VERSION`: `/v1` sends no `Deprecation` or `Sunset`, and the change gives no reason |
-| `house/ci-uv-locked`                 | `std-DEPS.SOURCE`: CI installs without `--locked`                                   |
-| `house/pricing-call`                 | `std-OBS.TRACE`: the outbound call drops the `traceparent`                  |
-| `house/request-logging`              | `std-OBS.TRACE`: log lines are unstructured or have no trace id             |
-| `house/stock-alert-rules`            | `std-OBS.ALERT`: an alert names no owner or first action                         |
-| `house/cover-timeout-pr`             | `std-PR.AGENT`: the PR body omits the agent, model or task          |
-| `house/pagination-fix-commit`        | `std-VCS.ATTRIB`: the commit subject lacks `#2231`                   |
-| `house/flaky-test-skip`              | `std-GATES.BLOCK`: the skip cites no deviation                               |
-| `house/request-a-deviation`          | `std-GATES.BLOCK`: no draft request, or one naming an owner                  |
-| `house/ci-every-branch`              | `std-GATES.BUILD`: push builds only some branches              |
-| `house/orders-column-rename`         | `std-DEPLOY.WAYBACK`: the migration renames or drops the column        |
-| `house/health-endpoint`              | `std-DEPLOY.ONCE`: the health endpoint reports no commit                          |
-| `house/ci-coverage-threshold`        | `std-TEST.REACH`: the build has no coverage floor                                 |
-| `house/go-service-dockerfile`        | `std-CONT.BASE`: a `FROM` has no digest                                  |
-| `house/label-printer-manifest`       | `std-CONT.TAG`: the Deployment names the image by tag                           |
-| `house/billing-new-solution`         | `std-CSSTY.ONEFILE`: the project lacks the build's style settings            |
-| `house/ca1848-build-break`           | `std-CSSTY.SUPPR`: a pragma, `NoWarn` or an unjustified suppression       |
-| `house/order-repository-tests`       | `std-NETTST.INTEG`: Postgres comes from anywhere but Testcontainers, and the change gives no reason |
+The cases in this repository's [`cases/engineering/`](cases/engineering/) test these rules:
+
+| Case                                 | Rule a session breaks                                                                                           |
+|--------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| `house/ci-secret-scan`               | `std-SECRET.NOWHERE`: the new CI runs no secret scanner                                                         |
+| `house/returns-api-routes`           | `std-API.VERSION`: the new routes have no version segment, and the change gives no reason                       |
+| `house/stock-per-warehouse`          | `std-API.VERSION`: the breaking change replaces `/v1`                                                           |
+| `house/stock-v1-retirement`          | `std-API.VERSION`: `/v1` sends no `Deprecation` or `Sunset`, and the change gives no reason                     |
+| `house/ci-uv-locked`                 | `std-DEPS.SOURCE`: CI installs without `--locked`                                                               |
+| `house/pricing-call`                 | `std-OBS.TRACE`: the outbound call drops the `traceparent`                                                      |
+| `house/request-logging`              | `std-OBS.TRACE`: log lines are unstructured or have no trace id                                                 |
+| `house/stock-alert-rules`            | `std-OBS.ALERT`: an alert names no owner or first action                                                        |
+| `house/cover-timeout-pr`             | `std-PR.AGENT`: the PR body omits the agent, model or task                                                      |
+| `house/pagination-fix-commit`        | `std-VCS.ATTRIB`: the commit subject lacks `#2231`                                                              |
+| `house/flaky-test-skip`              | `std-GATES.BLOCK`: the skip cites no deviation                                                                  |
+| `house/request-a-deviation`          | `std-GATES.BLOCK`: no draft request, or one naming an owner                                                     |
+| `house/ci-every-branch`              | `std-GATES.BUILD`: push builds only some branches                                                               |
+| `house/orders-column-rename`         | `std-DEPLOY.WAYBACK`: the migration renames or drops the column                                                 |
+| `house/health-endpoint`              | `std-DEPLOY.ONCE`: the health endpoint reports no commit                                                        |
+| `house/ci-coverage-threshold`        | `std-TEST.REACH`: the build has no coverage floor                                                               |
+| `house/go-service-dockerfile`        | `std-CONT.BASE`: a `FROM` has no digest                                                                         |
+| `house/label-printer-manifest`       | `std-CONT.TAG`: the Deployment names the image by tag                                                           |
+| `house/billing-new-solution`         | `std-CSSTY.ONEFILE`: the project lacks the build's style settings                                               |
+| `house/ca1848-build-break`           | `std-CSSTY.SUPPR`: a pragma, `NoWarn` or an unjustified suppression                                             |
+| `house/order-repository-tests`       | `std-NETTST.INTEG`: Postgres comes from anywhere but Testcontainers, and the change gives no reason             |
 | `house/dotnet-ci`                    | `std-NETTST.COVER`: CI does not collect and publish coverage, or writes no Cobertura report and gives no reason |
-| `house/audit-log-retention`          | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                               |
-| `house/is-deploy-enforced`           | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule              |
-| `house/public-path-between-services` | `pol-MEXP.PRIVATE`: the design takes the public path, and neither cites the clause nor gives the reason |
-| `control/orders-db-connection`       | `std-SECRET.NOWHERE`: the password lands in a file                                  |
-| `control/label-printer-image`        | `std-CONT.MINIMAL`: no non-root `USER`                          |
-| `control/stock-reserve-endpoint`     | `std-API.SPEC`: no contract for the new endpoint                         |
+| `house/audit-log-retention`          | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                                       |
+| `house/is-deploy-enforced`           | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule                      |
+| `house/public-path-between-services` | `pol-MEXP.PRIVATE`: the design takes the public path, and neither cites the clause nor gives the reason         |
+| `control/orders-db-connection`       | `std-SECRET.NOWHERE`: the password lands in a file                                                              |
+| `control/label-printer-image`        | `std-CONT.MINIMAL`: no non-root `USER`                                                                          |
+| `control/stock-reserve-endpoint`     | `std-API.SPEC`: no contract for the new endpoint                                                                |
 
 ## What leaves the organisation
 
@@ -130,39 +138,84 @@ A run against your own corpus writes three kinds of output:
 
 * **The cases** contain your team's tasks, and the scaffold each one starts from. They stay with the organisation
   that wrote them. Never publish them.
-* **The raw results** are `sessions.tsv`, each `aggregate-result.json`, and the workspaces and traces `--keep-temp`
-  keeps. They contain case names, prompt text, the code each session wrote, and graders' explanations quoting it.
-  They stay with the organisation that ran the trial. Never publish them.
+* **The raw results** are everything in the run folder but `aggregate.md`: `sessions.tsv`, `adjudication.tsv` and
+  `results/`. The write-up beside it, the prose arm's cut, each `aggregate-result.json` in the stage, and the
+  workspaces and traces `--keep-temp` keeps are raw results too. They contain case names, prompt text, the code each
+  session wrote, and graders' explanations quoting it. They stay with the organisation that ran the trial. Never
+  publish them.
 * **`aggregate.md`** contains only counts, rates, the model and the cost, under the fields
   [defined below](#the-aggregate). It contains no case name, prompt or code, so you can publish it without a review.
 
-Publish `aggregate.md` alone. Pass `--no-publish` to every `claude plugin eval` command. Without it, the tool
-publishes its report to claude.ai wherever your account supports it, and the report contains the prompts.
+**Keep the cases and the run folder in a private repository your organisation owns.** Use the corpus's own repository
+where it is private, or make one for the trial. Use your clone of this repository for its scripts alone, and commit
+nothing to it. A fork of this repository is public, so one push to it publishes the cases and the raw results.
+
+Publish `aggregate.md` alone, where whoever asked for the run asks you to post it. Pass `--no-publish` to every
+`claude plugin eval` command. Without it, the tool publishes its report to claude.ai wherever your account supports it,
+and the report contains the prompts.
 
 ## What you need
 
-| Tool                         | Why                                                                        |
-|------------------------------|----------------------------------------------------------------------------|
-| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.             |
-| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus.            |
-| `sh`, `jq`                   | The stage and score scripts are POSIX shell, and read JSON with `jq`.      |
-| Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. |
-| `git`                        | Each scaffold makes its workspace a git repository.                        |
-
-A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. macOS has it. On Linux, install
-`bubblewrap` and `socat`. On Windows, run the trial under WSL2.
+| Tool                         | Why                                                                                                                                                      |
+|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.                                                                                           |
+| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus. [Getting started](../../docs/use/getting-started.md) says how to install it.             |
+| `sh`                         | The stage and score scripts are POSIX shell. macOS and Linux have it. On Windows, use Git Bash, which Git for Windows installs.                          |
+| `jq`                         | The scripts read JSON with it. On Windows, run `winget install jqlang.jq`, then open a new Git Bash.                                                     |
+| Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash. |
+| `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                                         |
 
 Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
 `jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
 `every case passed`. It needs `jq`, and Node.js for `regrade.mjs`.
 
+### On Windows
+
+Run the trial in Git Bash, and run every command on this page there. Write each path Git Bash style, as
+`/c/Users/<you>/...`. Never write `C:\...`.
+
+**On Windows, grant the sessions no shell.** A run that grants `Bash` runs each shell command in Claude Code's sandbox,
+and native Windows has none. The [eval documentation](https://code.claude.com/docs/en/plugin-evals#grant-tools) says:
+"If you grant Bash or PowerShell on a machine with no sandbox backend, Claude Code refuses each run rather than running
+it unconfined". So in steps 4 to 6, pass `--allow-tools Write Edit`, with no `Bash`. Each case grants `Read`, `Glob`
+and `Grep` itself, in its `allowed_tools`. On macOS, grant `Bash` as the steps show. On Linux, install `bubblewrap`
+and `socat` first.
+
+A run with no shell still answers whether an agent writes code to the rules, because the session still writes the
+files and the graders still read them. It measures less on a case whose task or grader needs a command run. A grader
+that reads a `Bash` call's input finds none, and a session cannot run a build or a test. Leave each such case out, as
+[Writing a case](#writing-a-case) says.
+
+Run the pilot first, and read its result before the full pass.
+
 ## Running the trial
 
-Run each step from the root of this repository, and the commands in the corpus as its `CLAUDE.md` says. `$CORPUS` is
-the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outside the repository.
+Run each step from the root of a clone of this repository, and the commands in the corpus as its `CLAUDE.md` says.
+Set four paths first, each absolute, because steps 4 to 6 run in another folder:
 
-1. **Build the plugin.** Commit the cases first, because `kac export` marks an untracked case as a dirty tree. In the
-   corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
+| Variable  | The folder                                                                                  |
+|-----------|---------------------------------------------------------------------------------------------|
+| `$CORPUS` | the corpus, which contains its `.corpus.yaml`                                               |
+| `$CASES`  | the corpus's cases, which contains `house/` and `control/`, in your private repository      |
+| `$RUNS`   | the folder each run folder is written to, named by its date, in the same private repository |
+| `$STAGE`  | an empty folder for one run, outside every git repository                                   |
+
+```sh
+CORPUS=/c/Users/<you>/source/<corpus repository>
+CASES=/c/Users/<you>/source/<private repository>/plugin-trial/cases
+RUNS=/c/Users/<you>/source/<private repository>/plugin-trial/runs
+STAGE=/c/Users/<you>/plugin-trial/stage-1
+```
+
+For a run of this repository's own cases, `$CASES` is a folder under `trials/plugin/cases/`, and `$RUNS` is
+`trials/plugin/runs`.
+
+Give the repository that contains the cases a `.gitattributes` file with the line `* text=auto eol=lf`. Git for
+Windows otherwise checks text files out with CRLF line endings, and a scaffold or a grader with CRLF endings breaks.
+
+1. **Build the plugin.** Where the cases sit in the corpus's repository, commit them first, because `kac export` marks
+   an untracked case there as a dirty tree. In the corpus, run `kac export`, then `kac bundle`. The plugin is
+   `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
    plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
@@ -176,36 +229,41 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
 4. **Run the plugin and none arms:**
 
    ```sh
-   cd "$STAGE/plugin" && claude plugin eval . --eval-dir evals --ablation with-without --runs <runs> \
+   ( cd "$STAGE/plugin" && claude plugin eval . --eval-dir evals --ablation with-without --runs <runs> \
      --model claude-opus-5-5 --scaffold --trust-plugin --no-publish --keep-temp -j 3 \
-     --output-dir "$STAGE/out-plugin" --allow-tools Bash Write Edit
+     --output-dir "$STAGE/out-plugin" --allow-tools Bash Write Edit )
    ```
+
+   The parentheses run the command in a subshell, so your shell stays at the root of this repository for step 7. On
+   Windows, write `--allow-tools Write Edit` in place of `--allow-tools Bash Write Edit`, here and in steps 5 and 6,
+   as [On Windows](#on-windows) says.
 
 5. **Run the prose arm:**
 
    ```sh
-   cd "$STAGE/prose" && claude plugin eval . --eval-dir evals --ablation none --runs <runs> \
+   ( cd "$STAGE/prose" && claude plugin eval . --eval-dir evals --ablation none --runs <runs> \
      --model claude-opus-5-5 --scaffold --trust-plugin --no-publish --keep-temp -j 3 \
-     --output-dir "$STAGE/out-prose" --allow-tools Bash Write Edit
+     --output-dir "$STAGE/out-prose" --allow-tools Bash Write Edit )
    ```
 
 6. **Run the hook arm:**
 
    ```sh
-   cd "$STAGE/hook" && claude plugin eval . --eval-dir evals --ablation none --runs <runs> \
+   ( cd "$STAGE/hook" && claude plugin eval . --eval-dir evals --ablation none --runs <runs> \
      --model claude-opus-5-5 --scaffold --trust-plugin --no-publish --keep-temp -j 3 \
-     --output-dir "$STAGE/out-hook" --allow-tools Bash Write Edit
+     --output-dir "$STAGE/out-hook" --allow-tools Bash Write Edit )
    ```
 
-7. **Score the run** into a new folder under `runs/`, named by its date:
+7. **Score the run** into a new folder under `$RUNS`, named by its date:
 
    ```sh
    trials/plugin/score.sh -k "$STAGE/out-hook/aggregate-result.json" "$STAGE/out-plugin/aggregate-result.json" \
-     "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> "$CASES/excluded.tsv"
+     "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" "$CASES/excluded.tsv"
    ```
 
    Leave out `-k` to score a run with no hook arm, and pass `-` for the prose result to score one with no prose arm.
-   Every field of the missing arm is then 0 or empty.
+   Every field of the missing arm is then 0 or empty. The last argument is optional: leave out `"$CASES/excluded.tsv"`
+   where the case folder has no such file.
 
 8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
    every house case where the hook arm disagrees with the plugin or prose arm, and every pass by a grader you know
@@ -217,22 +275,24 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
    Then score the run again with it:
 
    ```sh
-   trials/plugin/score.sh -a trials/plugin/runs/<date>/adjudication.tsv -k "$STAGE/out-hook/aggregate-result.json" \
-     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> \
+   trials/plugin/score.sh -a "$RUNS/<date>/adjudication.tsv" -k "$STAGE/out-hook/aggregate-result.json" \
+     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" "$RUNS/<date>" \
      "$CASES/excluded.tsv"
    ```
 
-10. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
-   the result file gives no tokens, take them from the `result` line of each trace.
+10. **Write what you found** to `$RUNS/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
+   the result file gives no tokens, take them from the `result` line of each trace. Commit the run folder and the
+   write-up to your private repository, and publish only `aggregate.md`.
 
 `--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 8. Without it,
 both are deleted when the stage finishes.
 
 ## Combining batches
 
-Run each batch as steps 4, 5 and 6, with `--runs 1` and its own `--output-dir`. Stage once, and run every batch from
-that stage, so every batch has the same plugin and the same prose text. Then merge each stage's result files, and
-score the three merged files as step 7:
+Run each batch as steps 4, 5 and 6, with `--runs 1`, and give each batch its own `--output-dir`. Write the first
+batch to `"$STAGE/out-plugin-r1"`, `"$STAGE/out-prose-r1"` and `"$STAGE/out-hook-r1"`, the second to the same names
+ending `-r2`, and so on. Stage once, and run every batch from that stage, so every batch has the same plugin and the
+same prose text. Then merge each stage's result files, and score the three merged files as step 7:
 
 ```sh
 trials/plugin/merge.sh "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
@@ -253,15 +313,18 @@ folder to each workspace and trace the batch kept, and writes a result file of t
 node trials/plugin/regrade.mjs "$CASES" "$STAGE/out-plugin-r1/aggregate-result.json" "$STAGE/plugin-r1.json"
 ```
 
-Open each kept folder with `chmod 700` first, as step 7 says. The script compares its verdict with the tool's for
+Open each kept folder with `chmod 700` first, as step 8 says. The script compares its verdict with the tool's for
 every grader whose name and definition did not change, and exits 1 on any disagreement. Trust it on the changed
 graders only where that check passes. Merge and score the regraded file in place of the one the tool wrote.
 
 ## Writing a case
 
 A case is a folder under `house/` or `control/`, with a `prompt.md`, a `case.yaml` naming its `scaffold.sh`, and
-graders under `graders/`, as `claude plugin eval` reads them.
+graders under `graders/`. The [eval suite reference](https://code.claude.com/docs/en/plugin-evals#eval-suite-reference)
+gives every key `claude plugin eval` reads in those files.
 
+* **`case.yaml` has no `execution:` block, and ends with a newline.** `stage.sh` appends an `execution:` block to each
+  prose arm's `case.yaml`, so a second block, or a last line with no newline, breaks the file.
 * **The prompt is a task somebody would type.** It never names the rule, the record or the corpus.
 * **The first tag in `prompt.md` is the case's kind**, `house` or `control`, followed by the id of the record the rule
   sits in.
@@ -269,12 +332,20 @@ graders under `graders/`, as `claude plugin eval` reads them.
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
   input of a `Write`, `Edit` or `Bash` call.
+* **For a run on Windows, list each case that needs a shell in `excluded.tsv`.** A case needs one where its task
+  means running a command, such as a build, a test or a commit. It also needs one where a `task-` or `comply-` grader
+  can pass only on a `Bash` call's input. Give the reason `needs a shell, and a Windows run grants none`. `stage.sh`
+  then leaves the case out, and the aggregate counts it under `excluded_cases`. A tag cannot do this, because `--tag`
+  keeps the cases it names and drops none.
+* **A grader for a case that needs no shell reads a file, or a `Write` or `Edit` call's input.** A `--shell`
+  alternative may sit beside it, and finds nothing on Windows.
 * **A grader for a `SHOULD` rule passes a departure that gives its reason.** Add a `--reason` alternative that finds
   the clause's id in what the session wrote, beside the code that departs. A departure with no reason still fails.
   Read each pass the alternative gives, because a session can cite the clause and give no reason.
-* **What the case grades travels in the export.** Check that the record type's `export:` block in
-  `.schema/<type>.yaml` lists the field or section the case grades. One it leaves out reaches a session only through a
-  fetch, and the sandbox blocks the fetch.
+* **What the case grades travels in the export.** After step 1, open the record's file under
+  `$CORPUS/.dist/plugin/corpus/`, and check that it contains the field or section the case grades. The `export:` block
+  in `.schema/<type>.yaml`, at the corpus's root or in a folder above it, decides what travels. A field or section it
+  leaves out reaches a session only through a fetch, and the sandbox blocks the fetch.
 
 The prefix of a grader's file name says what it measures:
 
@@ -288,6 +359,30 @@ The prefix of a grader's file name says what it measures:
 **Graders whose names share the part before `--` are alternatives.** The set passes where one of them does. A file
 can arrive through `Write` or through `Bash`, so `comply-contract--written` and `comply-contract--shell` each look for
 the contract in one tool's input, and the session complies where either finds it.
+
+**Use only the `regex` and `tool_used` grader types**, because `regrade.mjs` applies no other. A grader file is
+frontmatter alone. Write each value on one line, plain or in single quotes, and `target` as an inline mapping.
+[Grader types](https://code.claude.com/docs/en/plugin-evals#grader-types) defines every key.
+
+| Type        | Keys                                                 | Passes when                                                                    |
+|-------------|------------------------------------------------------|--------------------------------------------------------------------------------|
+| `regex`     | `pattern`, and optionally `flags`, `match`, `target` | `pattern` is found in the target. `match: not_contains` passes on its absence. |
+| `tool_used` | `tool`, and optionally `input_match`, `min`, `max`   | the calls to `tool` whose input matches `input_match` number `min` to `max`    |
+
+A `regex` grader reads the final reply by default, which is `target: last_message`. To read a file in the workspace,
+write `target: { source: file, path: <path> }`. `regrade.mjs` reads no other target, and no `match` other than
+`contains` and `not_contains`. A `tool_used` grader's `min` is 1 by default, and its `max` is unlimited.
+
+A `fired-` grader is a `tool_used` grader on `Skill`, whose `input_match` names the skill. The skill names are the
+folder names under `$CORPUS/.dist/plugin/skills/`, which step 1 writes. This is `fired-standards-lookup.md`:
+
+```markdown
+---
+type: tool_used
+tool: Skill
+input_match: '"skill"\s*:\s*"(?:[\w-]+:)?standards-lookup"'
+---
+```
 
 `claude plugin eval` scores every grader together, and leaves a `fired-` grader out of a two-arm score. The trial
 reads each grader's verdict, and ignores the tool's score.
@@ -386,8 +481,9 @@ A run of one session per case is too small to judge a lead by. The pilot reports
 priced and its grading checked.
 
 The plugin arm's lead, `house.lead_over_<arm>`, measures the lookup alone. The build index helps where
-`house.hook_lead_over_plugin` is above 0. Read it case by case against the scenarios in
-[`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case.
+`house.hook_lead_over_plugin` is above 0. Read it case by case. For this repository's cases, read it against the
+scenarios in [`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case. The cases of
+another corpus have no scenarios there.
 
 Where the hook arm leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.
