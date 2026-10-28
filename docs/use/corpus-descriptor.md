@@ -214,8 +214,9 @@ wiki inside the project is cut back to the project.
 already written, as `kac-it-swdev` or `kac-it-swdev/subteam`. The client that files converts it to the backslashes Azure
 Boards uses.
 
-State it where one Azure DevOps project contains several corpora, so each team sees its own work. Leave it out and an
-item lands in the project's default area.
+State an `area` in every corpus that shares its Azure DevOps project with another corpus. The `harvest-findings` skill
+triages only the findings in a corpus's own area, and in a corpus without one it reads the whole project. A corpus
+alone in its project needs none. Leave it out and an item lands in the project's default area.
 
 `area` applies to `azure-devops` alone, and [`validate`](cli/validate.md) refuses it beside `github` or `none`. A block
 stating no `target` is judged by the target [`publishing-target`](#publishing-target) implies. Nothing derives `area`,
