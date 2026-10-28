@@ -28,10 +28,10 @@
   },
   "sections": {
     "What we use it for": "The site documents `kac`, and MkDocs was chosen because it is what tool documentation uses. The site is not a corpus, so `publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.\n\nUnder MkDocs, `strict: true` in `mkdocs.yml` turned a dead link into a failed build. MkDocs reported a page the navigation does not list at INFO only, so `NavigationTests` in `kac.tests` covers that case.",
-    "Status": "[tol-zensical](https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/dog-fooding/tools/docs/zensical.md) builds the site instead, from the same `mkdocs.yml`. The theme this generator rendered with reaches end of life on 2026-11-05, and MkDocs 2.0 drops the plugin system. `mkdocs.yml` still builds the same site under 1.6.1, so returning to this generator is a change to `docs/requirements.txt` and to the build command.",
+    "Status": "[tol-zensical](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/dog-fooding/tools/docs/zensical.md) builds the site instead, from the same `mkdocs.yml`. The theme this generator rendered with reaches end of life on 2026-11-05, and MkDocs 2.0 drops the plugin system. `mkdocs.yml` still builds the same site under 1.6.1, so returning to this generator is a change to `docs/requirements.txt` and to the build command.",
     "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output and not a redistribution of the generator, so nothing follows for what is published."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/dog-fooding/tools/docs/mkdocs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/dog-fooding/tools/docs/mkdocs.md"
   }
 }

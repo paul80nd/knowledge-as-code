@@ -30,9 +30,9 @@
   "sections": {
     "What we use it for": "Each feature document states what a verb does, in the words a reader of the documentation would use. Reqnroll binds each step to a method. A step that no longer matches fails the build, so a feature document cannot describe a command surface the tool has stopped offering.",
     "Licence and obligations": "BSD-3-Clause. It asks that the copyright notice travel with a redistribution. It also forbids using the project's name to endorse anything built on it. Nothing here redistributes it.",
-    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/dog-fooding/services/kac.md) is tested with it."
+    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/dog-fooding/services/kac.md) is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/dog-fooding/tools/testing/reqnroll.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/dog-fooding/tools/testing/reqnroll.md"
   }
 }

@@ -321,9 +321,10 @@ Cite as `std-PLUGIN.STRIP`.
 
 Controls: none.
 
-- A skill **MUST** compare the framework block's address with the tracker block's, both targets and both bases normalised.
+- A skill **MUST** compare the framework block's address with the tracker block's, both targets, both bases and both areas normalised.
 - Where the two are equal, a skill **MUST** mark the finding and copy nothing.
-- Where the two differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
+- Where only the areas differ, a skill **MUST** bounce the finding to the framework's area, as `TRIAGE` states, and copy nothing.
+- Where the targets or the bases differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
 - A skill **MUST NOT** file a finding on a tracker outside the organisation holding the corpus.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's commit, or the name of the corpus the finding was filed from.
 - The upstream body **MUST** state the version of the framework the session ran.
@@ -439,6 +440,7 @@ Controls: none.
 - A skill **MUST NOT** file a correction on the address a `publishing` block states, because a published form and a backlog are one address on GitHub and two on Azure DevOps, where the project holds the backlog and the repository inside it holds none.
 - A skill **MUST** file the item under the area path that `tracker` block states.
 - Where that area path is refused, a skill **MUST** file the item at the project default and say so.
+- Every corpus sharing one Azure DevOps project with another corpus **MUST** state an area under `tracker`, because triage selects its queue by area.
 - A skill **MUST** raise it as an issue or a work item.
 - A skill **SHOULD** use the client that already authenticates to that platform.
 - A skill **MUST NOT** offer to edit the installed copy.
@@ -488,10 +490,13 @@ Controls: none.
 - A skill triaging findings **MUST** read the corpus it is about from the `.corpus.yaml` it walks up to.
 - A skill triaging findings **MUST NOT** decide which corpus it is in from the `publishing` block, because a corpus published as a wiki or a site has no repository there and its maintainer still has both a tracker and the source.
 - A skill **MUST** select its queue as `kac:finding` without `kac:triaged`.
+- Where the corpus states an area, a skill **MUST** select its queue from that area alone.
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
 - A skill **MUST** say where a query returned as many issues as its limit allows.
 - A skill **MUST NOT** take `kac:finding` off an issue it triaged.
-- A skill **MUST** apply `kac:triaged` and exactly one route mark to every issue it triaged.
+- A skill **MUST** apply `kac:triaged` and exactly one route mark to every issue it triaged, except a finding it bounced.
+- Where a finding belongs in another area of the same project, a skill **MUST** bounce it: move it to that area by its area path, and comment why it moved and where.
+- A skill **MUST NOT** apply `kac:triaged` or a route mark to a finding it bounced, because whoever triages that area reads it from their own queue.
 - The route **MUST** be one of `kac:route-framework`, `kac:route-record`, `kac:route-misfiled`, `kac:route-none` and `kac:route-unclear`.
 - A skill **MUST** apply `kac:route-unclear` wherever choosing between the others would be a guess.
 - A skill **MUST** create every mark it applies before it applies one, on a platform that refuses an unknown mark.
@@ -500,7 +505,7 @@ Controls: none.
 - A comment routing a finding a record already answers **MUST** name that record.
 - The comment **MUST NOT** state the route as machine-readable data, because the mark is that data.
 - A skill **MUST NOT** state whether the finding's claim is true.
-- A skill **MUST** show every verdict to a person and wait, before it writes any mark or comment.
+- A skill **MUST** show every verdict to a person and wait, before it writes any mark or comment or bounces any finding.
 - A skill drafting a record from a finding **MUST** take it only from an issue marked `kac:route-record`.
 - That record **MUST** name an `owner` the person running the skill supplied, and the skill **MUST NOT** invent one.
 - That record **MUST** carry a `status` its type treats as unsettled, wherever the type declares one.
@@ -842,7 +847,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1024,7 +1029,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1072,7 +1077,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/f9d1e0eb7e9131b3e611efff0f7b61e7f1f7d292/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
