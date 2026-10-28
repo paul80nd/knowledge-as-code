@@ -152,6 +152,10 @@ publishes its report to claude.ai wherever your account supports it, and the rep
 A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. macOS has it. On Linux, install
 `bubblewrap` and `socat`. On Windows, run the trial under WSL2.
 
+Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture with
+`jq` as installed, then with a `jq` ending each line with CRLF, as a Windows build does. Go on once it prints
+`every case passed`. It needs `jq`, and Node.js for `regrade.mjs`.
+
 ## Running the trial
 
 Run each step from the root of this repository, and the commands in the corpus as its `CLAUDE.md` says. `$CORPUS` is

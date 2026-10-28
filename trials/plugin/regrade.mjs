@@ -30,10 +30,10 @@ function scalar(text) {
 
 function parseGrader(file) {
   const text = readFileSync(file, "utf8");
-  const m = text.match(/^---\n([\s\S]*?)\n---/);
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) throw new Error(`${file}: no frontmatter`);
   const fields = {};
-  for (const line of m[1].split("\n")) {
+  for (const line of m[1].split(/\r?\n/)) {
     if (line.trim() === "") continue;
     const kv = line.match(/^([a-z_]+):[ \t]*(.*)$/);
     if (!kv) throw new Error(`${file}: cannot read line: ${line}`);
@@ -83,7 +83,7 @@ function readTrace(path) {
   const calls = new Map();
   let result = null;
   let lastText = null;
-  for (const line of readFileSync(path, "utf8").split("\n")) {
+  for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
     if (line.trim() === "") continue;
     const event = JSON.parse(line);
     if (event.type === "result") result = event.result;
@@ -138,7 +138,7 @@ const disagreements = [];
 let changed = 0;
 
 for (const kase of result.cases) {
-  const kind = kase.dir.split("/").at(-2);
+  const kind = kase.dir.split(/[/\\]/).at(-2);
   const caseDir = join(casesDir, kind, kase.name);
   if (!existsSync(caseDir)) throw new Error(`no case folder ${caseDir}`);
   const before = new Map(kase.graders.map((g) => [g.name, g]));
