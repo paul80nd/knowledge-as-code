@@ -15,8 +15,8 @@ detail: >
 versus:
   runbooks: >
     Is something in production broken while you read this? Broken in production is a runbook, read under pressure.
-    A problem that stops only your own work, such as a failing build or a failed install, is a fix, even where
-    finding its cause takes more than one check.
+    A problem that stops only your own work, such as a failing build, is a fix, even where finding its cause takes
+    more than one check.
 
 lineage:
   prior-art: >

@@ -56,8 +56,10 @@ Run each command from the root of the repository.
    GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens --filter-trait "Scenario=<name>"
    ```
 
-   A failed scenario prints one line opening `FAIL` or `MISSING`. Where it passes, or only `kac.tests` failed, fetch
-   `main` and run the unit layer against it. Each failing test's message says what to change.
+   A failed scenario prints one line opening `FAIL` or `MISSING`. Where only `kac.tests` failed, run
+   `dotnet test --project tooling/kac.tests`, and change what the failing test's message says. Where the scenario
+   passes here, fetch `main` and run the unit layer against it, as CI does. Each failing test's message says what to
+   change.
 
    ```sh
    git fetch origin main
@@ -66,7 +68,9 @@ Run each command from the root of the repository.
 
 2. Where a line under `FAIL` says `the export no longer writes`, restore that path in the tool and leave the golden
    alone. A consumer that reads that path breaks.
-3. Regenerate the scenario that failed.
+3. Confirm your branch changed `.schema/`, what `kac export` or `kac pack` writes, or a check or a message in
+   `tooling/`. A diff from none of these is not one your change made.
+4. Regenerate the scenario that failed.
 
    ```sh
    GITHUB_ACTIONS=true KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --output Detailed --filter-trait "Scenario=<name>"
@@ -75,16 +79,16 @@ Run each command from the root of the repository.
    It prints one line opening `UPDATE` under the scenario. The run passes even where that line says
    `WARNING: export failed` or `WARNING: still stale after regen`, so read the line for `WARNING`.
 
-4. Read the diff, and list the files the update added.
+5. Read the diff, and list the files the update added.
 
    ```sh
    git diff tooling/tests/fixtures/
    git status --short tooling/tests/fixtures/
    ```
 
-5. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you
+6. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you
    have just accepted. Add the case that would have caught it before you regenerate again.
-6. Run all three test layers, one at a time. Each prints `Test run summary: Passed!`.
+7. Run all three test layers, one at a time. Each prints `Test run summary: Passed!`.
 
    ```sh
    dotnet test --project tooling/kac.tests
@@ -92,14 +96,21 @@ Run each command from the root of the repository.
    GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens
    ```
 
-7. Run `dotnet run --project ../../tooling/kac -- generate` in each corpus you changed under `examples/`, and in
+8. Run `dotnet run --project ../../tooling/kac -- generate` in each corpus you changed under `examples/`, and in
    `template/` with `../tooling/kac` as the project.
-8. Say in the commit message why the golden moved.
+9. Say in the commit message why the golden moved.
 
-It worked when all three layers pass and the diff contains only lines you can account for. To undo step 3, run
+It worked when all three layers pass and the diff contains only lines you can account for. To undo step 4, run
 `git checkout -- tooling/tests/fixtures/`, which also discards any other uncommitted change there. List the files it
-leaves with `git clean -n tooling/tests/fixtures/`, and delete each one you did not write. Where an update prints a
-`WARNING`, or the three layers disagree, raise an issue on this repository for the tool's owner.
+leaves with `git clean -n tooling/tests/fixtures/`, and delete each one you did not write.
+
+Raise an issue on this repository for the tool's owner where any of these happens:
+
+* The export dropped a path and you cannot restore it.
+* Step 3 finds no change of yours behind the diff.
+* An update prints a `WARNING`.
+* The three layers disagree and you cannot tell which is right.
+* CI fails while the unit layer passes here against `origin/main`. Attach the job's log.
 
 ## Why it happens
 

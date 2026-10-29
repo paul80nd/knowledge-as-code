@@ -58,10 +58,12 @@ with no `.imports/`.
 
 2. Where `examples/engineering`'s records changed on this branch and its `content-version` did not move, move it as
    [std-VERS] says, then repeat step 1.
-3. In `.corpus.yaml` in `examples/payments`, set `resolved:` to the producer's `content-version`.
+3. In `.corpus.yaml` in `examples/payments`, set `resolved:` to the producer's `content-version`. This sets a stale
+   lock forward, and sets back a lock that is ahead of the producer.
 4. Where the minor moved, set `version:` to a range that admits it. Below 1.0.0 a caret pins the minor, so `^0.10.0`
    does not admit `0.11.0`.
-5. Where the message said `there is no folder`, set `source:` to `../engineering/.dist/package`.
+5. Where the message said `there is no folder` and `source:` names another folder, set `source:` to
+   `../engineering/.dist/package`.
 6. Repeat steps 3 to 5 in `examples/dog-fooding`.
 7. Delete `.imports/` in both consumers, from the root of the repository. A restore keeps a folder that already has
    the version it resolved to.
@@ -80,9 +82,15 @@ with no `.imports/`.
 It worked when `restore` prints `restore: example-engineering <version> as 'eng:'.` and `validate` reports
 `0 error(s)` in both consumers. To undo what steps 3 to 8 wrote, run
 `git checkout -- examples/payments/.corpus.yaml examples/dog-fooding/.corpus.yaml` from the root of the repository. It
-also discards any other uncommitted edit to either file, and leaves the package step 1 wrote. Where the folder has the
-version and the restore still refuses it, or CI fails again after the lock and the package agree here, raise an issue
-on this repository for the tool's owner, with the job's log.
+also discards any other uncommitted edit to either file, and leaves the package step 1 wrote. Before the pull request
+opens, check that both consumers moved their own `content-version` with the lock.
+
+Raise an issue on this repository for the tool's owner where any of these happens:
+
+* The folder has the version and the restore still refuses it.
+* The package was fetched at one version and says it is another.
+* The message says `there is no folder` and `source:` already names `../engineering/.dist/package`.
+* CI fails again after the lock and the package agree here. Attach the job's log.
 
 ## Why it happens
 
