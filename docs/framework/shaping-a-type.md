@@ -467,8 +467,8 @@ frontmatter an agent reads and in the list a person follows, and `related-matche
 the other does not.
 
 `feature-files` lists the test files that specify the offering. A path names its repository first, so a reader can tell
-which repository a test sits in without resolving the rest. `feature-file-repo` checks that first segment against the
-repositories the implementing services name.
+which repository a test sits in without resolving the rest. `feature-file-repo` checks the opening segments, as many as
+an entry has, against the repositories the implementing services name.
 
 **In the export:** every section travels. A reader sees each work item's label in `Where the detail lives` and not its
 address, which would not open outside the estate anyway.

@@ -29,16 +29,31 @@ public sealed class FeatureFileRepo : ICorpusRule
 
             foreach (var path in doc.FrontList(Paths))
             {
-                var first = path.Split('/')[0];
-                if (repos.Contains(first)) continue;
+                var segments = path.Split('/');
+                if (repos.Any(repo => Opens(segments, repo))) continue;
+
+                // The message quotes as many segments as the widest entry takes.
+                var width = Math.Min(segments.Length, repos.Max(repo => repo.Split('/').Length));
+                var opening = string.Join('/', segments[..width]);
 
                 var known = string.Join(", ", repos.Order(StringComparer.OrdinalIgnoreCase));
                 ctx.Warn(doc, Reports,
-                    $"'{Paths}: {path}' starts in '{first}', which is no repository of a service this "
+                    $"'{Paths}: {path}' starts in '{opening}', which is no repository of a service this "
                     + $"record implements. Those services are in: {known}.",
                     doc.FrontStartLine);
             }
         }
+    }
+
+    /// <summary>
+    /// Whether a path opens with every part of a <c>repos</c> entry, so <c>&lt;group&gt;/&lt;repo&gt;</c> takes two
+    /// segments and <c>&lt;repo&gt;</c> one.
+    /// </summary>
+    private static bool Opens(string[] segments, string repo)
+    {
+        var parts = repo.Split('/');
+        return parts.Length <= segments.Length
+               && parts.Zip(segments).All(p => string.Equals(p.First, p.Second, StringComparison.OrdinalIgnoreCase));
     }
 
     private static HashSet<string> Repositories(CorpusRuleContext ctx, Doc doc, FieldSpec services)

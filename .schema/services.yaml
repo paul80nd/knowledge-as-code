@@ -45,7 +45,8 @@ lineage:
     same once per corpus.
     [purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses a
     repository as `pkg:git/<host>/<owner>/<repo>` and answers the mixed estate none of these corpora has, and it was
-    declined because `feature-file-repo` reads the first segment of a path and `pkg:git` is what it would read there
+    declined because `feature-file-repo` reads a path's opening segments as a repository and `pkg:git` is what it
+    would read there
 id:
   prefix: svc
   style: slug

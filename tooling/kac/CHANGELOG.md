@@ -38,7 +38,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `mirrors-repo-links` resolves `<project>/<repo>` to `<base>/<project>/_git/<repo>`. Against a project it resolves
   `<repo>` to `<base>/_git/<repo>`. It warns on an entry in the other form, and reads `dev.azure.com/{org}` and
   `{org}.visualstudio.com` as one organisation. It percent-decodes each link and suggests one percent-encoded. Point
-  `repos-base` at the organisation where repositories sit in several projects.
+  `repos-base` at the organisation where repositories sit in several projects. `feature-file-repo` compares as many
+  opening segments of a feature path as an entry has.
 - **`kac report coverage` lists only the controls that check something now.** The `Controls` column named every
   control verifying a rule in `Covered by`, so a `not-enforced` control read as coverage. It now leaves out a control
   whose `mechanism` is `not-enforced`, and one whose `status` is not its type's `in-force:` value, such as `planned`.
