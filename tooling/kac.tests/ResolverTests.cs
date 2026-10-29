@@ -130,13 +130,12 @@ public class ResolverTests
     /// </summary>
     private static ImportGraph Consuming() =>
         new([
-            new Import("eng", "example-engineering", "0.1.0", null, [
-                new ImportedRecord("eng", "pol-SCRT", "policies", "policies/scrt.md", true,
-                    ["STORE", "ROTATE"]),
-                new ImportedRecord("eng", "svc-GATE", "services", "services/gate.md", false, []),
+            new Import("eng", "example-engineering", "0.1.0", [
+                new ImportedRecord("eng", "pol-SCRT", "policies", true, ["STORE", "ROTATE"]),
+                new ImportedRecord("eng", "svc-GATE", "services", false, []),
 
                 // This corpus declares no `gp:`, so the scope comes off the record and off nothing else.
-                new ImportedRecord("gp", "pol-OLD", "policies", "policies/old.md", true, ["KEEP"])
+                new ImportedRecord("gp", "pol-OLD", "policies", true, ["KEEP"])
             ])
         ], [], []);
 

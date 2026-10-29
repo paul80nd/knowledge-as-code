@@ -9,9 +9,39 @@ Scenario: A coverage report marks each clause covered or uncovered and leaves th
   When I write the "coverage" report to "reports/clause-coverage.md"
   Then it succeeds
   And only "reports/clause-coverage.md" changed
-  And "reports/clause-coverage.md" contains "| `pol-COVR` | 2 | 1 | 1 |"
-  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER.NAMED` |  |  |  | covered | |"
+  And "reports/clause-coverage.md" contains "| [`pol-COVR`][pol-COVR] | 2 | 1 | 1 |"
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | [`std-COVER`][std-COVER]`.NAMED` |  |  |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  |  |  |  | uncovered | |"
+
+Scenario: A report links each record it cites, and defines each link once at its foot
+  Given the report fixture corpus
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  Then it succeeds
+  And "reports/clause-coverage.md" contains "### [pol-COVR][pol-COVR]"
+  And "reports/clause-coverage.md" contains "### [eng:pol-HELD][eng:pol-HELD]"
+  And "reports/clause-coverage.md" contains "[std-COVER]: ../standards/coverage.md"
+  And "reports/clause-coverage.md" contains "[pol-COVR]: ../policies/covr-coverage-fixture.md"
+  And "reports/clause-coverage.md" contains "[eng:pol-HELD]: https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/policies/held.md"
+
+Scenario: A report cites an import stating no page as bare code, and names it in its limits
+  Given the report fixture corpus
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  Then it succeeds
+  And "reports/clause-coverage.md" contains "### old:pol-PAST"
+  And "reports/clause-coverage.md" contains "| `old:pol-PAST` | 1 | 0 | 1 |"
+  And "reports/clause-coverage.md" contains "Nothing imported from `old` states the page it was published at, so its ids are not linked."
+  And "reports/clause-coverage.md" does not contain "[old:pol-PAST]"
+
+Scenario: Every link a report kept as a record writes resolves
+  Given the report fixture corpus
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  And I validate the corpus
+  Then the findings for "reports/clause-coverage.md" are exactly:
+    | line | check          | message                                                 |
+    | 1    | required-field | missing required field 'id'.                            |
+    | 1    | required-field | missing required field 'owner'.                         |
+    | 2    | id-prefix      | id '' must start with 'rpt-'.                           |
+    | 19   | identity       | no identity line follows the H1. Add `Report: ` `DRAFT`. |
 
 Scenario: A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
   Given the report fixture corpus
@@ -56,8 +86,8 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     """
   When I write the "coverage" report to "reports/clause-coverage.md"
   Then it succeeds
-  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER.NAMED` |  | `ctl-0001` |  | covered | |"
-  And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | `dev-open-door` |  | `pol-PAIR.OPEN` | uncovered | |"
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | [`std-COVER`][std-COVER]`.NAMED` |  | [`ctl-0001`][ctl-0001] |  | covered | |"
+  And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | [`dev-open-door`][dev-open-door] |  | [`pol-PAIR`][pol-PAIR]`.OPEN` | uncovered | |"
 
 Scenario: A coverage row leaves out a deviation that is no longer in force
   Given the report fixture corpus
@@ -85,7 +115,7 @@ Scenario: A frameworks report counts the clauses citing each reference
   When I write the "frameworks" report to "frameworks-report.md"
   Then it succeeds
   And "frameworks-report.md" contains "| ISO 27001:2022 | Obliged | 1 | 0 |"
-  And "frameworks-report.md" contains "| A.8.13 | 2 | `pol-BKUP.COPY`, `pol-BKUP.SHARED` | `pol-BKUP` | |"
+  And "frameworks-report.md" contains "| A.8.13 | 2 | [`pol-BKUP`][pol-BKUP]`.COPY`, [`pol-BKUP`][pol-BKUP]`.SHARED` | [`pol-BKUP`][pol-BKUP] | |"
 
 Scenario: A frameworks report leaves out the references an imported corpus cites
   Given the export-inherited fixture corpus
@@ -107,14 +137,16 @@ Scenario: A report's frontmatter states the run that wrote it and leaves the res
   And the report at "reports/clause-coverage.md" leaves "owner" empty
   And the report at "reports/clause-coverage.md" leaves "verified" empty
   And the report at "reports/clause-coverage.md" names these sources:
-    | resource       | version |
-    | report-fixture | 1.2.3   |
+    | resource            | version |
+    | report-fixture      | 1.2.3   |
+    | example-engineering | 0.4.1   |
+    | example-archive     | 1.0.0   |
 
 Scenario: A corpus that imports policies reports on them, and names this corpus first among its sources
   Given the export-inherited fixture corpus
   When I write the "coverage" report to "coverage-report.md"
   Then it succeeds
-  And "coverage-report.md" contains "| `eng:pol-KEEP` | 1 | 0 | 1 |"
+  And "coverage-report.md" contains "| [`eng:pol-KEEP`][eng:pol-KEEP] | 1 | 0 | 1 |"
   And the report at "coverage-report.md" names these sources:
     | resource            | version |
     | test-inherited      |         |

@@ -12,7 +12,6 @@ public class ImportsTests
         Assert.Equal("eng", record.Scope);
         Assert.Equal("pol-SCRT", record.Id);
         Assert.Equal("policies", record.Type);
-        Assert.Equal("policies/scrt-secrets-are-never-embedded.md", record.Path);
         Assert.Equal(["STORE", "ROTATE"], record.Parts);
         Assert.True(record.KeepsParts);
     }
@@ -27,17 +26,12 @@ public class ImportsTests
     }
 
     [Fact]
-    public void The_link_template_is_the_producers_own()
-        => Assert.Equal("https://example.com/eng/{path}#{anchor}", Assert.Single(Loaded().Imports).Link);
-
-    [Fact]
     public void A_record_its_producer_inherited_is_scoped_to_the_corpus_that_wrote_it()
     {
         var records = Assert.Single(Loaded(Files(grandparent: true)).Imports).Records;
         var old = Assert.Single(records, r => r.Id == "pol-OLD");
 
         Assert.Equal("gp", old.Scope);
-        Assert.Equal("policies/old.md", old.Path);
         Assert.Equal(["KEEP"], old.Parts);
     }
 
@@ -171,7 +165,6 @@ public class ImportsTests
                                         "corpus": "example-engineering",
                                         "shortcode": "eng",
                                         "contentVersion": "0.1.0",
-                                        "publishing": { "humanTemplate": "https://example.com/eng/{path}#{anchor}" },
                                         "types": [
                                           {
                                             "type": "policies",
@@ -184,7 +177,6 @@ public class ImportsTests
             ["eng/policies/pol-SCRT.json"] = """
                                              {
                                                "type": "policies",
-                                               "path": "policies/scrt-secrets-are-never-embedded.md",
                                                "fields": { "id": "pol-SCRT" }
                                              }
                                              """
@@ -196,7 +188,6 @@ public class ImportsTests
             files["eng/policies/gp/pol-OLD.json"] = """
                                                     {
                                                       "type": "policies",
-                                                      "path": "policies/old.md",
                                                       "fields": { "id": "pol-OLD" }
                                                     }
                                                     """;

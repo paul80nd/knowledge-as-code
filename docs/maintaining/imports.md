@@ -16,13 +16,15 @@ package is fetched.
   [Spelling a citation](../use/imports.md#spelling-a-citation)
 * A record arriving through a chain keeps the shortcode of the corpus that wrote it.
   [Spelling a citation](../use/imports.md#spelling-a-citation)
-* A check reads an imported record's id, type, path and parts, and nothing else.
+* A check reads an imported record's id, type and parts, and nothing else.
   [What a check may ask](../use/imports.md#what-a-check-may-ask-across-the-boundary)
 * An export includes what its corpus consumes, at any depth, and so does a package built from it.
   [What an export inherits](../use/imports.md#what-an-export-inherits)
 * `export.exclude` withholds this corpus's own records alone, so inherited records travel whole.
   [What an export inherits](../use/imports.md#what-an-export-inherits)
 * A report covers the clauses a corpus imports beside its own. [`report`](../use/cli/report.md)
+* A report links an imported record to the page its producer published, and cites one with no page as bare code.
+  [Links to each record](../use/cli/report.md#links-to-each-record)
 
 ## What it refuses
 
@@ -68,6 +70,7 @@ package is fetched.
 
 [`Report.feature`][Report.feature]:
 
+* A report cites an import stating no page as bare code, and names it in its limits
 * A corpus that imports policies reports on them, and names this corpus first among its sources
 * A report refuses a consumed corpus that has not been restored
 

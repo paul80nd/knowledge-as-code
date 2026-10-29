@@ -74,8 +74,8 @@ wrote it, so `gp:pol-OLD` resolves in a corpus whose `consumes:` names only `eng
 
 ## What a check may ask across the boundary
 
-A check reads four things of an imported record: its id, its type, its path and the parts it has. It never reads a
-producer's prose, frontmatter or git history, so an imported record is never held to this corpus's rules.
+A check reads an imported record's id, its type and the parts it has. It never reads a producer's prose, frontmatter
+or git history, so an imported record is never held to this corpus's rules.
 
 ## Where to go next
 

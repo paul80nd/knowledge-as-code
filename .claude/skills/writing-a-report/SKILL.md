@@ -63,7 +63,8 @@ A report is wrong the moment the corpus moves, and `report-stale` says so once `
 **Two ways forward, and the mechanical cells decide which.** Run `kac report` and compare every mechanical cell with
 the record. Where all of them match, raise the `sources` version by hand. Where any moved, merge as below and write
 yourself into `generated`, even where every verdict carries forward. A cell can move because a record the report only
-lists changed, such as a deviation or a control.
+lists changed, such as a deviation or a control. The link definitions at the foot are not cells. An imported link
+names the commit its producer exported from, so it moves with every export and decides nothing.
 
 **A hand-raise leaves `generated` alone.** It applies only where every mechanical cell matched. `generated.by` states
 who answered the judgement cells, and a raise answers none of them. So `generated` goes on stating an edit older than
@@ -87,8 +88,9 @@ verifier read.
 3. Carry the `Verdict` and `Note` forward wherever the mechanical cells are unchanged.
 4. Ask about every row whose mechanical cells moved. A clause that gained a covering standard is now `Covered` and its
    note may have gone stale. A clause that lost one needs a fresh verdict.
-5. Carry forward every section the tool does not write. It writes `Limits`, `Totals`, the rows, and
-   `What this leaves open`, and anything else on the page is yours.
+5. Carry forward every section the tool does not write. It writes `Limits`, `Totals`, the rows,
+   `What this leaves open` and the link definitions at the foot, and anything else on the page is yours. Take the
+   definitions from the run whole.
 6. Take the new `sources` whole, and take `report` and `tool` from the run. Write yourself into `generated.by` with
    the moment you finished the merge.
 

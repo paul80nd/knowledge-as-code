@@ -1,0 +1,16 @@
+{
+  "type": "policies",
+  "path": "policies/past.md",
+  "fields": {
+    "id": "pol-PAST",
+    "title": "Retiring what nobody reads",
+    "status": "active",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Purpose": "What we retire, and when.",
+    "Scope": "Every store this organisation runs.",
+    "Exceptions": "None."
+  },
+  "links": null
+}

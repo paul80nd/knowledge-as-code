@@ -50,6 +50,20 @@ control is left out too, because it checks nothing. `## Limits` says so.
 A shared key is a candidate pair: one obligation written from both sides as two clauses with one key. `report` lists
 the match and never decides it. Two runs over an unchanged corpus print the same report.
 
+### Links to each record
+
+Every record id a report cites links to that record's page. A cited part follows the link as a code span of its own,
+so a rule reads ``[`std-CI`][std-CI]`.PERMS` ``. In the clause tables, the `###` heading links the policy, and the
+`Clause` cell keeps the bare key.
+
+* A record this corpus holds links by its path from the `reports/` folder. `link-resolves` checks each link once the
+  report is kept as a record.
+* An imported record links to the page its producer published, which its export states as `links.human`.
+* A corpus that publishes nowhere a link can address states no page for its records. Their ids stay bare code, and
+  `## Limits` names that corpus, whether you import it directly or through a chain.
+
+Each link is defined once, at the foot of the report.
+
 ### The provenance frontmatter
 
 A run writes three keys, following the
@@ -125,16 +139,17 @@ kac report coverage
 ```
 
 ```text
-| Policy         | Clauses | Covered | Uncovered |
-|----------------|---------|---------|-----------|
-| `eng:pol-A11Y` | 11      | 5       | 6         |
-| `eng:pol-ACCS` | 13      | 2       | 11        |
-| `eng:pol-AGNT` | 8       | 8       | 0         |
-| **Total**      | **243** | **92**  | **151**   |
+| Policy                         | Clauses | Covered | Uncovered |
+|--------------------------------|---------|---------|-----------|
+| [`eng:pol-A11Y`][eng:pol-A11Y] | 11      | 5       | 6         |
+| [`eng:pol-ACCS`][eng:pol-ACCS] | 13      | 2       | 11        |
+| [`eng:pol-AGNT`][eng:pol-AGNT] | 8       | 8       | 0         |
+| **Total**                      | **243** | **92**  | **151**   |
 ```
 
 Each policy then gets a section of its own, one row per clause. The rows give the rules covering it, the deviations
-departing from it, the controls in force checking those rules, and any clause elsewhere sharing its key.
+departing from it, the controls in force checking those rules, and any clause elsewhere sharing its key. The link
+definitions close the report.
 
 ### A frameworks report
 
@@ -183,6 +198,9 @@ report states that limit in its own text.
 
 **Coverage is not verification.** A control may check one obligation of a rule and leave the rest, so no column
 claims a clause is verified.
+
+**A local link resolves from `reports/` alone.** A report written to any other folder links this corpus's own records
+to paths that lead nowhere.
 
 **A redirect into `reports/` can collide with the run.** `kac` reads every file in that folder, including the one a
 shell has just opened. On Windows the run stops. Use `--out`, which writes after the corpus is read.
