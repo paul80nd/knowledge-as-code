@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-29T09:10:00Z
+  at: 2026-10-29T09:23:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.43.0
 sources:
-  - { resource: example-dogfooding, version: "0.91.1" }
+  - { resource: example-dogfooding, version: "0.91.2" }
   - { resource: example-engineering, version: "0.45.0" }
 verified:
-  - { at: 2026-10-29T09:15:00Z, by: human:paul.law }
+  - { at: 2026-10-29T09:25:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.45.0.
+* `eng`, example-engineering.
 
 No column here says a clause is verified. `Controls` lists each control naming a rule in `Covered by`, and a control may
 check one obligation of that rule and leave the rest. The `Controls` column lists a control only while its `status` is

@@ -53,8 +53,9 @@ head. Write each list field's entries in alphabetical order, except `sources`.
   used, as `coverage`, and `tool` keeps the tool that wrote the mechanical half, as `kac/{{0.24.0}}`.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. This corpus
   comes first, then one entry per corpus it imports. Raise a version by hand where a corpus moved and nothing in this
-  report changed, and leave `generated` alone. Raising an imported entry also means editing the `Imported:` bullet
-  under `## Limits` to match, and adding a `verified` entry for the body you changed.
+  report changed, and leave `generated` alone. A raise leaves the body untouched, so `verified` stays as it is.
+  Where this corpus exports reports, raising an imported entry also moves the corpus's `content-version` by a patch,
+  and the first entry rises to match.
 * **`verified`**: who has checked this report, one entry per actor, oldest first. A draft states none, and every
   other status states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with
   its version as `coverage-sweep/1.2.0`. Write an actor once: a second check by the same actor moves the `at` on the

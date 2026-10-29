@@ -242,10 +242,16 @@ public class ReportsTests
 
     [Fact]
     public void An_inherited_glossary_files_none_of_its_terms_as_a_clause()
-        => Assert.Contains("| **Total** | **0** | **0** | **0** |", Declining(Imported("glossary",
-            """{"id":"gl-CORE.TERM","record":"gl-CORE","part":"TERM","title":"Term","definition":"A word."}""")));
+        => Assert.Contains("| **Total** | **0** | **0** | **0** |", Declining(Glossary()));
+
+    [Fact]
+    public void The_imported_bullet_names_each_producer_and_leaves_its_version_to_sources()
+        => Assert.Contains("* `eng`, example-engineering.", Declining(Glossary()));
 
     private static string Coverage() => Plan("coverage").Body;
+
+    private static InheritedCorpus Glossary() => Imported("glossary",
+        """{"id":"gl-CORE.TERM","record":"gl-CORE","part":"TERM","title":"Term","definition":"A word."}""");
 
     /// <summary>One producer publishing one type, whose parts file is the single line given.</summary>
     private static InheritedCorpus Imported(string type, string line) =>
