@@ -41,7 +41,7 @@ _Boundary: this policy states which environments are separated and what is prohi
 | `SAMEDEF` | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `BASELIN` | **MUST** be able to state the configuration an environment is running, and reproduce it                                               | [ISO 27001:2022].A.8.9                        |
 | `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
-| `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
+| `MASK`    | **MUST** mask or synthesise the data used below production ([pol-DATA].MASK states the general duty)                                  | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 | `DEBUG`   | **MUST NOT** develop, test or debug against the live production system                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `REUSE`   | **MUST NOT** reuse a production secret in any environment below production ([pol-SCRT].REUSE is wider, and owns the exceptions)       | [NIST SSDF 1.1].PO.5                          |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment ([pol-DATA].UNMASK states the same prohibition)      | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
