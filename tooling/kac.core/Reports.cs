@@ -89,6 +89,13 @@ public static class Reports
     private const string DepartsFrom = "departs-from";
     private const string Verifies = "verifies";
 
+    /// <summary>
+    /// The field and value marking a control that checks nothing, which the <c>Controls</c> column leaves out. Named
+    /// here, because no declaration says which value of a field means unenforced.
+    /// </summary>
+    private const string Mechanism = "mechanism";
+    private const string NotEnforced = "not-enforced";
+
     /// <summary>The field a type's <c>in-force:</c> value is declared on and a record's state is read from.</summary>
     private const string Status = "status";
 
@@ -198,7 +205,7 @@ public static class Reports
         var covers = Edges(corpus, inherited, Implements);
         var rules = RuleCovers(corpus, inherited);
         var departures = Edges(corpus, inherited, DepartsFrom, inForceOnly: true);
-        var controls = Edges(corpus, inherited, Verifies);
+        var controls = Edges(corpus, inherited, Verifies, inForceOnly: true, leaveOut: (Mechanism, NotEnforced));
         var pairs = Pairs(clauses);
 
         var rows = clauses.Select(c =>
@@ -213,13 +220,23 @@ public static class Reports
                 pairs.GetValueOrDefault(c.Id));
         }).ToList();
 
+        const string listed = " The controls index of each corpus lists every control it wrote.";
+
         var body = new StringBuilder();
         Limits(body, corpus, inherited,
             "A clause uncovered here may well be covered in a corpus consuming this one, and every "
             + "consumer answers for its own coverage.",
             "No column here says a clause is verified. `Controls` lists each control naming a rule in "
             + "`Covered by`, and a control may check one obligation of that rule and leave the rest."
-            + DeviationsInForce(corpus, inherited) switch
+            + InForce(corpus, inherited, Verifies) switch
+            {
+                [] => "",
+                [var inForce] => $" The `Controls` column lists a control only while its `status` is `{inForce}` "
+                                 + $"and its `{Mechanism}` is not `{NotEnforced}`.{listed}",
+                _ => " The `Controls` column lists a control only while its `status` is the value its type declares "
+                     + $"in `in-force:` and its `{Mechanism}` is not `{NotEnforced}`.{listed}"
+            }
+            + InForce(corpus, inherited, DepartsFrom) switch
             {
                 [] => "",
                 [var inForce] => $" The `Deviations` column lists a deviation only while its `status` is `{inForce}`.",
@@ -328,12 +345,12 @@ public static class Reports
     }
 
     /// <summary>
-    /// Every distinct <c>in-force:</c> value the coverage filter applies to a type declaring <c>departs-from</c>: this
+    /// Every distinct <c>in-force:</c> value the coverage filter applies to a type declaring the given field: this
     /// corpus's own schema, and each inherited type of that name as its producer's manifest states it.
     /// </summary>
-    private static List<string> DeviationsInForce(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
+    private static List<string> InForce(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field)
     {
-        var types = corpus.Schema.ByFolder.Values.Where(t => t.Fields.ContainsKey(DepartsFrom)).ToList();
+        var types = corpus.Schema.ByFolder.Values.Where(t => t.Fields.ContainsKey(field)).ToList();
         var keys = types.Select(t => t.Key).ToHashSet(StringComparer.Ordinal);
 
         return
@@ -348,10 +365,12 @@ public static class Reports
     /// Every id a field of the given name names, keyed by the id it points at, across every adopted type. Inherited
     /// records count, and both halves of an inherited edge are scoped to the corpus that wrote the record, so the join
     /// meets on both sides. <paramref name="inForceOnly"/> drops a record whose <c>status</c> is not the one its type
-    /// names in <c>in-force:</c>, and keeps every record of a type that names none.
+    /// names in <c>in-force:</c>, and keeps every record of a type that names none. <paramref name="leaveOut"/> drops a
+    /// record whose field of that name states that value.
     /// </summary>
     private static Dictionary<string, List<string>> Edges(
-        LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field, bool inForceOnly = false)
+        LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field, bool inForceOnly = false,
+        (string Field, string Value)? leaveOut = null)
     {
         var found = new Dictionary<string, List<string>>(StringComparer.Ordinal);
 
@@ -361,11 +380,15 @@ public static class Reports
         bool Lapsed(string? inForce, string? status) =>
             inForceOnly && inForce is not null && !string.Equals(status, inForce, StringComparison.Ordinal);
 
+        bool LeftOut(Func<string, string?> read) =>
+            leaveOut is var (name, value) && string.Equals(read(name), value, StringComparison.Ordinal);
+
         foreach (var doc in corpus.Docs)
         {
             if (doc.Type is not { } type || !type.Fields.ContainsKey(field)) continue;
             if (doc.FrontScalar("id") is not { Length: > 0 } id) continue;
             if (Lapsed(corpus.Schema.EffectiveField(type, Status)?.InForce, doc.FrontScalar(Status))) continue;
+            if (LeftOut(doc.FrontScalar)) continue;
 
             foreach (var target in doc.FrontList(field)) Add(target, id);
         }
@@ -379,6 +402,7 @@ public static class Reports
             if (JsonRead.Str(fields["id"]) is not { Length: > 0 } id) continue;
             if (fields[field] is not JsonArray targets) continue;
             if (Lapsed(type.InForce, JsonRead.Str(fields[Status]))) continue;
+            if (LeftOut(name => JsonRead.Str(fields[name]))) continue;
 
             foreach (var target in targets)
                 if (JsonRead.Str(target) is { Length: > 0 } value)
