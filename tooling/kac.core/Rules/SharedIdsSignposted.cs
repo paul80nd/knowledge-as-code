@@ -14,6 +14,9 @@ public sealed class SharedIdsSignposted : ICorpusRule
 
     public IReadOnlyList<CheckId> Emits => [OneWay, Unsignposted];
 
+    /// <summary>A retired record pairs with nothing, so its successor may keep its ids.</summary>
+    private const string Retired = "retired";
+
     /// <summary>Only a table row has its signposts read, so on a heading every shared id would warn.</summary>
     public IEnumerable<string> Misconfigured(CorpusRuleContext ctx)
     {
@@ -28,6 +31,7 @@ public sealed class SharedIdsSignposted : ICorpusRule
         var noun = ctx.Type.Parts?.Noun ?? "part";
 
         var parts = ctx.Records
+            .Where(doc => !string.Equals(doc.FrontScalar("status"), Retired, StringComparison.Ordinal))
             .SelectMany(doc => doc.FrontScalar("id") is { } id
                 ? doc.Parts.Where(p => p.Id is not null).Select(p => new Held(doc, id, p))
                 : [])
@@ -41,20 +45,21 @@ public sealed class SharedIdsSignposted : ICorpusRule
             {
                 if (string.Equals(a.Record, b.Record, StringComparison.OrdinalIgnoreCase)) continue;
 
-                var partId = b.Row.Id;
-                if (a.Signposts(b) && !b.Signposts(a))
+                var (forward, back) = (a.Signposts(b), b.Signposts(a));
+                if (back) continue;
+
+                var shares = $"{noun} '{b.Row.Id}' shares its id with {a.Record}.{b.Row.Id}";
+                if (forward)
                     ctx.Err(b.Doc, OneWay,
-                        $"{noun} '{partId}' shares its id with {a.Record}.{partId}, which signposts it, and does not "
-                        + $"signpost that {noun} back. Close this {noun} with ([{a.Record}].{partId} and what the "
-                        + "reader gains there).", b.Row.Line);
+                        $"{shares}, which signposts it, and does not signpost that {noun} back. Close this {noun} "
+                        + $"with ([{a.Record}].{b.Row.Id} and what the reader gains there).", b.Row.Line);
 
                 // Once a pair, against the record whose id sorts first.
-                else if (!a.Signposts(b) && !b.Signposts(a)
-                         && string.Compare(b.Record, a.Record, StringComparison.Ordinal) < 0)
+                else if (string.Compare(b.Record, a.Record, StringComparison.Ordinal) < 0)
                     ctx.Warn(b.Doc, Unsignposted,
-                        $"{noun} '{partId}' shares its id with {a.Record}.{partId}, and neither {noun} signposts the "
-                        + "other. Where they state one obligation, close each with a signpost to the other. Where "
-                        + "they do not, give one of them another id.", b.Row.Line);
+                        $"{shares}, and neither {noun} signposts the other. Where they state one obligation, close "
+                        + "each with a signpost to the other. Where they do not, give one of them another id.",
+                        b.Row.Line);
             }
         }
     }

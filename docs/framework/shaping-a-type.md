@@ -139,7 +139,8 @@ clause, as `([pol-ACCS].DUTIES states the general duty)`. You write both ends, a
 `part-ref` fails a signpost to a clause that does not exist. `pair-one-way` fails a clause that a clause of the same
 id signposts, where it does not signpost back. `shared-id-unsignposted` warns on an id two policies use with no
 signpost either way, because two authors may pick one word by coincidence. A scoped signpost, such as
-`[eng:pol-ACCS].DUTIES`, reaches a corpus that cannot write the other end, so it forms no pair.
+`[eng:pol-ACCS].DUTIES`, reaches a corpus that cannot write the other end, so it forms no pair. A `retired` policy
+forms none either, so the policy that replaces it may keep its clause ids.
 
 **In the export:** each clause travels as its own entry with its `level`, beside `Scope`, `Exceptions` and the opening
 paragraph of `Purpose`, and no alignment travels: [`frameworks.jsonl`](../reference/export.md#frameworksjsonl) sends

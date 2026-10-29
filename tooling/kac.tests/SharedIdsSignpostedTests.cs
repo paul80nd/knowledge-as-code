@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using kac.core;
 
 namespace kac.tests;
@@ -76,6 +77,13 @@ public class SharedIdsSignpostedTests
             found.Message);
     }
 
+    /// <summary>A policy replacing a retired one may keep its clause ids.</summary>
+    [Fact]
+    public void A_retired_policy_pairs_with_nothing()
+        => Assert.Empty(Run(
+            Policy("TRUS", ("INVENT", "**MUST** keep an inventory ([pol-DATA].INVENT says more)")),
+            Policy("DATA", "retired", ("INVENT", "**MUST** keep an inventory of the data we hold"))));
+
     [Fact]
     public void Each_policy_repeating_an_id_is_paired_with_every_other()
         => Assert.Equal(3, Run(
@@ -114,18 +122,21 @@ public class SharedIdsSignpostedTests
 
     /// <summary>The first clause row sits on line 17, and each row after it one line lower.</summary>
     private static Doc Policy(string mnemonic, params (string Id, string Text)[] clauses)
+        => Policy(mnemonic, "active", clauses);
+
+    private static Doc Policy(string mnemonic, string status, params (string Id, string Text)[] clauses)
     {
         var id = $"pol-{mnemonic}";
         var rows = string.Concat(clauses.Select(c => $"| `{c.Id}` | {c.Text} |\n"));
         var definitions = string.Concat(clauses
-            .SelectMany(c => System.Text.RegularExpressions.Regex.Matches(c.Text, @"\[((?:[a-z]+:)?pol-[A-Z]+)\]"))
+            .SelectMany(c => Regex.Matches(c.Text, @"\[((?:[a-z]+:)?pol-[A-Z]+)\]"))
             .Select(m => m.Groups[1].Value)
             .Distinct(StringComparer.Ordinal)
             .Select(label => $"[{label}]: {label}.md\n"));
 
         var doc = Doc.Parse($"policies/{mnemonic.ToLowerInvariant()}.md",
-            $"---\nid: {id}\ntype: policy\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
-            + $"# {mnemonic}\n\n`Policy: {id}` `ACTIVE`\n\n## Clauses\n\n"
+            $"---\nid: {id}\ntype: policy\ntier: normative\nstatus: {status}\nowner: human:alex.doe\n---\n\n"
+            + $"# {mnemonic}\n\n`Policy: {id}` `{status.ToUpperInvariant()}`\n\n## Clauses\n\n"
             + "| Id | Clause |\n|----|--------|\n" + rows + "\n" + definitions, Types);
         Assert.NotNull(doc);
         return doc;
