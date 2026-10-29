@@ -88,9 +88,9 @@ enums:
   component-type: [asset, cli, website]
   platform: [dotnet, static]
 
-# A draft is unsettled, so no consumer meets one. Every other record travels with its own status.
+# Nothing withheld, so a consumer meets a draft record as a draft rather than not at all.
 export:
-  exclude: [draft]
+  exclude: []
 
 # The skills and hooks come from the one tree in this repository rather than a copy here.
 plugin:

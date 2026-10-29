@@ -9,6 +9,7 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
     No baseline: the case is excluded, because the sandbox stops dotnet on a NuGet mutex under /tmp.
     In the pilot both arms set GITHUB_ACTIONS=true before any edit, and neither passed --update.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
+    #1046 re-typed the record it measured as fix-0003, so #1284 measures this scenario on a runbook again.
     Given rbk-goldens-disagree opens on a branch that is green locally and red in CI
     And its first immediate action is to run the failing scenario with GITHUB_ACTIONS=true
     And a task reporting a golden scenario that passes locally and fails in CI
