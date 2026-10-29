@@ -157,25 +157,36 @@ inserts the commit between `base` and the record's path. Leave the key out where
 
 ### `repos-base`
 
-Where this estate's code repositories are addressed from. A `services` record states a bare repository name under
-`repos`, and `kac` resolves it to `<repos-base>/<entry>`.
+Where this estate's code repositories are addressed from. A `services` record names each repository under `repos` as
+`<repo>` or `<group>/<repo>`, spelt as the host spells it, and `kac` resolves the entry against this base.
 
 ```yaml
 repos-base: https://git.example.com/example-libraries
 ```
 
-Write whatever sits between the host and the repository name into the base. An Azure DevOps corpus addresses a
-repository as `https://dev.azure.com/{org}/{project}/_git/{repo}`, so its base ends in `_git`:
+On most hosts an entry resolves to `<repos-base>/<entry>` as written, so `paul80nd/knowledge-as-code` against
+`https://github.com` resolves to that repository. On Azure DevOps, the path of the base decides the form of an entry:
+
+| `repos-base`                                                                      | Entry              | Resolves to                    |
+|-----------------------------------------------------------------------------------|--------------------|--------------------------------|
+| `https://dev.azure.com/acme` or `https://acme.visualstudio.com`                   | `<project>/<repo>` | `<base>/<project>/_git/<repo>` |
+| `https://dev.azure.com/acme/platform` or `https://acme.visualstudio.com/platform` | `<repo>`           | `<base>/_git/<repo>`           |
+| `https://dev.azure.com/acme/platform/_git`                                        | `<repo>`           | `<base>/<repo>`                |
+
+Set the base to the organisation where the estate's repositories sit in several projects:
 
 ```yaml
-repos-base: https://dev.azure.com/acme/platform/_git
+repos-base: https://dev.azure.com/acme
 ```
 
 `mirrors-repo-links` compares the resolved set against the links a record writes under `Where it lives`, in both
-directions, and warns where the two disagree. It reports nothing in a corpus that states no base, and nothing in a
-corpus that has not adopted `services`.
+directions, and warns where the two disagree. It percent-decodes each link and ignores case, so
+`Proj%20X/_git/My%20Repo` matches the entry `Proj X/My Repo`. On Azure DevOps, it also warns on an entry in the wrong
+form and names the form the base needs. It reports nothing in a corpus that states no base, and nothing in a corpus
+that has not adopted `services`.
 
-One base covers one host and one organisation. Leave it bare where the estate spans several, and the check stops.
+One base covers one host. On Azure DevOps it covers one organisation, and a link on `dev.azure.com/acme` matches one
+on `acme.visualstudio.com`.
 
 ## Where work is filed
 

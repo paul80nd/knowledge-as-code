@@ -791,7 +791,8 @@ checks:
     severity: warning
     description: A feature file path begins with a repository one of the implementing services names.
     notes: >
-      The first segment alone, because the rest of the path is inside a repository this corpus cannot read.
+      Only as many opening segments as an entry has, one for `<repo>` and two for `<group>/<repo>`, because the rest
+      of the path is inside a repository this corpus cannot read.
       A warning, since a regression pack can live in a repository no service claims. An offering whose
       services state no repository between them is passed over, and so is an id `ref-resolves` has already
       reported.
@@ -800,11 +801,15 @@ checks:
     severity: warning
     description: Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.
     notes: >
-      An entry resolves to `<repos-base>/<entry>`, so a corpus stating no `repos-base` in `.corpus.yaml` is passed
-      over and a record missing the section is left to `required-section`. Everything past the repository name is a
-      path inside it and is ignored, and the comparison is case-insensitive, as `mirrors-section` is. A warning,
-      since a service can sit outside the estate's usual host, and an error would make one outlier drop the key for
-      every other record.
+      An entry resolves against `repos-base` in `.corpus.yaml`, so a corpus stating none is passed over and a record
+      missing the section is left to `required-section`. An Azure DevOps organisation resolves `<project>/<repo>` to
+      `<base>/<project>/_git/<repo>`, a project resolves `<repo>` to `<base>/_git/<repo>`, and a `_git` path resolves
+      `<repo>` to `<base>/<repo>`. An entry of the other form is reported with the form it needs, and a link on
+      `dev.azure.com/{org}` and on `{org}.visualstudio.com` reads as one organisation. Any other host resolves
+      `<base>/<entry>` as written. Each link segment is percent-decoded, everything past the repository name is a path
+      inside it and is ignored, and the comparison is case-insensitive, as `mirrors-section` is. A warning, since a
+      service can sit outside the estate's usual host, and an error would make one outlier drop the key for every
+      other record.
 
   alert-after-needs-an-alert:
     severity: warning

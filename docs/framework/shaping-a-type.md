@@ -339,15 +339,17 @@ recognises.
 `What it does` and `Where it lives` are both short, and together they say which deployable this is and where its code
 sits. `Environments` is required, and lists the addresses the service runs at. `Operational notes` describes running it.
 
-**`repos` lists bare repository names, and the corpus resolves them.** A service whose content is published from one
+**`repos` lists repository names, and the corpus resolves them.** A service whose content is published from one
 repository and served from another has two answers to where its code lives, so the field is a list. Every id in this
 framework is a bare key, and a repository name follows that design: `repos-base` in
-[`.corpus.yaml`](../use/corpus-descriptor.md#repos-base) states the host and the organisation once, and an entry appends
-to it. Backstage, OpsLevel and Cortex each do the same, leaving the value a bare `org/repo`.
+[`.corpus.yaml`](../use/corpus-descriptor.md#repos-base) states the host once, and an entry is `<repo>`, or
+`<group>/<repo>` where the base sits one level above the project or owner. Backstage, OpsLevel and Cortex each do the
+same, leaving the value a bare `org/repo`. Each part is spelt as the host spells it, because a corpus cannot make its
+estate rename a repository.
 
 `Where it lives` keeps its link, so the repository is stated twice: once as a join key and once as a URL a person
-follows. `mirrors-repo-links` builds `<repos-base>/<entry>`, compares the result against the links under the heading in
-both directions, and warns where they disagree, since a service can sit outside the estate's usual host.
+follows. `mirrors-repo-links` resolves each entry against the base, compares the result against the links under the
+heading in both directions, and warns where they disagree, since a service can sit outside the estate's usual host.
 
 **`depends-on` is the estate's own graph.** A reader walks the edges without opening a record. The edges run one way,
 downward: a service records what it calls, and the reverse view is a question asked of the whole graph.
@@ -465,8 +467,8 @@ frontmatter an agent reads and in the list a person follows, and `related-matche
 the other does not.
 
 `feature-files` lists the test files that specify the offering. A path names its repository first, so a reader can tell
-which repository a test sits in without resolving the rest. `feature-file-repo` checks that first segment against the
-repositories the implementing services name.
+which repository a test sits in without resolving the rest. `feature-file-repo` checks the opening segments, as many as
+an entry has, against the repositories the implementing services name.
 
 **In the export:** every section travels. A reader sees each work item's label in `Where the detail lives` and not its
 address, which would not open outside the estate anyway.

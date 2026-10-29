@@ -88,7 +88,9 @@ Each corpus under `examples/` points at this repository in its `.corpus.yaml`:
 * `framework.base` is where a problem with the framework is reported, as
   [`kac new` writes it](#where-kac-new-takes-the-framework-from).
 * `author.url` is credited in the package and the plugin.
-* `repos-base`, in `examples/dog-fooding` alone, is where a `services` record's repositories resolve.
+* `repos-base` is where a `services` record's repositories resolve. `examples/dog-fooding` points it at this
+  repository's owner. `examples/library` and `examples/payments` point it at `git.example.com`, so a fork leaves them
+  alone.
 
 `publish-corpus.yml` and `publish-plugin.yml` publish under whichever repository runs them, and need no secret.
 `publish-plugin.yml` writes `owner: {name: "Paul Law"}` into the marketplace it publishes. Change the name to yours.

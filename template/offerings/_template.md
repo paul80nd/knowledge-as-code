@@ -30,8 +30,8 @@ head. Write each list field's entries in alphabetical order.
 * **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
 * **`feature-files`**: each path names its repository first, spelled as an entry of that repository's service
-  `repos:`, then the path inside it. `feature-file-repo` warns where that first segment is no repository of a service
-  you listed. Past that first segment the field is a plain string: `ref-resolves` never sees it, and
+  `repos:`, then the path inside it. `feature-file-repo` warns where the path opens with no repository of a service
+  you listed. Past the repository the field is a plain string: `ref-resolves` never sees it, and
   `feature-file-orphans` is declared and does not run. Keep the rest of the path correct yourself.
 
 **The work items.** They live in the list, because there is no field for them. Label each one the way your tracker

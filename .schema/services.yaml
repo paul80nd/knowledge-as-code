@@ -38,14 +38,15 @@ lineage:
     `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where `monitoring-output` states a standing
     commitment a reader can act on. Its `alert`, `ticket` and `log` are the three monitoring outputs the [SRE
     Book](https://sre.google/sre-book/introduction/) lists, and `none` is this framework's own: no source found names
-    the case where nothing is emitted at all. A `repos` entry is a bare name where each source writes an address:
-    Backstage puts the provider in the annotation key and the value in `org/repo`, OpsLevel puts it in a sibling
-    `provider:` beside an `org/repo` `name:`, and Cortex puts it in the nesting level beside a `repository:` and, for
-    Azure DevOps, a `project:`. Every one of them states the provider outside the value, and `repos-base` in
-    `.corpus.yaml` does the same once per corpus.
+    the case where nothing is emitted at all. A `repos` entry is `<repo>` or `<group>/<repo>`, as Backstage's
+    `org/repo` value and OpsLevel's `name:` are. Backstage puts the provider in the annotation key, OpsLevel puts it in
+    a sibling `provider:`, and Cortex puts it in the nesting level beside a `repository:` and, for Azure DevOps, a
+    `project:`. Every one of them states the provider outside the value, and `repos-base` in `.corpus.yaml` does the
+    same once per corpus.
     [purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses a
     repository as `pkg:git/<host>/<owner>/<repo>` and answers the mixed estate none of these corpora has, and it was
-    declined because `feature-file-repo` reads the first segment of a path and `pkg:git` is what it would read there
+    declined because `feature-file-repo` reads a path's opening segments as a repository and `pkg:git` is what it
+    would read there
 id:
   prefix: svc
   style: slug
@@ -79,12 +80,14 @@ fields:
     required: true
     type: list
     of: string
-    pattern: '^[a-z0-9-]+$'
+    pattern: '^[^/\\#?\p{Cc} ](?:[^/\\#?\p{Cc}]*[^/\\#?\p{Cc} ])?(?:/[^/\\#?\p{Cc} ](?:[^/\\#?\p{Cc}]*[^/\\#?\p{Cc} ])?)?\z'
     description: Repositories a change to this service is made in.
     notes: >
-      A list, because an asset surface can be filled by one repository and served from another. Every entry is
-      a repository a contributor edits to change this service, named as the host names it and never as a path.
-      `repos-base` in `.corpus.yaml` is what resolves one.
+      A list, because an asset surface can be filled by one repository and served from another. Every entry is a
+      repository a contributor edits to change this service, written `<repo>` or `<group>/<repo>` with each part
+      spelt as the host spells it, so spaces, capitals, dots and underscores pass. A part refuses `/`, `\`, `#`, `?`,
+      a control character, and a leading or trailing space, because no host allows them in a name and
+      `mirrors-repo-links` cuts a link at `#` and `?`. `repos-base` in `.corpus.yaml` is what resolves one.
       See <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/#repos-base>.
 
   platform:
@@ -132,7 +135,7 @@ fields:
     description: The interfaces this service offers, with the contract for each.
     notes: >
       A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
-      states a bare repository name and no convention derives a path from one. The range belongs to the
+      states a repository's name and no convention derives a path from one. The range belongs to the
       estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.
 

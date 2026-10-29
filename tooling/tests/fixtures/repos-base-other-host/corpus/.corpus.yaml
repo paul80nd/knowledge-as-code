@@ -1,0 +1,8 @@
+# A host with no form of its own, so each `repos` entry is appended to it as written.
+corpus: fixture-corpus
+repos-base: https://github.com
+
+# The ranges the services below draw on, which the schema leaves to the corpus.
+enums:
+  component-type: [api]
+  platform: [dotnet-web]

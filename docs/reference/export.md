@@ -272,8 +272,9 @@ It says where the corpus addresses its code repositories from.
 "reposBase": "https://github.com/paul80nd"
 ```
 
-A `services` record states a bare repository name under `repos`, which resolves to `<reposBase>/<entry>`. It is `null`
-where the corpus states none. Each entry in `sources` has its producer's own.
+A `services` record states each repository under `repos` as `<repo>` or `<group>/<repo>`, which resolves against
+`reposBase` as [`repos-base`](../use/corpus-descriptor.md#repos-base) describes. It is `null` where the corpus states
+none. Each entry in `sources` has its producer's own.
 
 ### `id`, and the trackers it compares
 

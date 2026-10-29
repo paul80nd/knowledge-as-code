@@ -72,6 +72,46 @@ public class FeatureFileRepoTests
             repos: [("svc-lending", ["lending"])]));
 
     [Fact]
+    public void A_path_opening_in_a_repository_named_with_its_project_is_left_alone()
+        => Assert.Empty(Check(
+            paths: ["proj x/My Repo/features/renewal.feature"],
+            services: ["svc-lending"],
+            repos: [("svc-lending", ["Proj X/My Repo"])]));
+
+    [Fact]
+    public void A_path_opening_in_another_repository_of_that_project_is_reported()
+    {
+        var found = Assert.Single(Check(
+            paths: ["Proj X/Other/features/renewal.feature"],
+            services: ["svc-lending"],
+            repos: [("svc-lending", ["Proj X/My Repo"])]));
+
+        Assert.Equal(
+            "'feature-files: Proj X/Other/features/renewal.feature' starts in 'Proj X/Other', which is no repository "
+            + "of a service this record implements. Those services are in: Proj X/My Repo.",
+            found.Message);
+    }
+
+    [Fact]
+    public void A_bare_repository_beside_one_named_with_its_project_still_matches_on_one_segment()
+        => Assert.Empty(Check(
+            paths: ["lending/features/renewal.feature", "Proj X/My Repo/features/renewal.feature"],
+            services: ["svc-lending", "svc-catalogue"],
+            repos: [("svc-lending", ["lending"]), ("svc-catalogue", ["Proj X/My Repo"])]));
+
+    [Theory]
+    [InlineData("qa-pack/features/renewal.feature", "qa-pack")]
+    [InlineData("Proj X/Other/renewal.feature", "Proj X/Other")]
+    [InlineData("Proj X", "Proj X")]
+    public void The_opening_a_message_quotes_takes_a_second_segment_only_after_a_known_group(
+        string path, string opening)
+        => Assert.Contains($"starts in '{opening}'",
+            Assert.Single(Check(
+                paths: [path],
+                services: ["svc-lending", "svc-catalogue"],
+                repos: [("svc-lending", ["lending"]), ("svc-catalogue", ["Proj X/My Repo"])])).Message);
+
+    [Fact]
     public void A_record_whose_services_state_no_repository_is_passed_over()
         => Assert.Empty(Check(
             paths: ["qa-pack/x.feature"],
