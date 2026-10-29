@@ -10,12 +10,14 @@ public sealed class Publishing
     public const string AzureDevOps = "azure-devops";
     public const string AzureDevOpsWiki = "azure-devops-wiki";
     public const string GitHub = "github";
-    public const string MkDocs = "mkdocs";
     public const string None = "none";
 
-    /// <summary>Every target a descriptor may name. <c>new</c> refuses any other at <c>--publishing</c>.</summary>
+    /// <summary>
+    /// Every target a descriptor may name. <c>new</c> refuses any other at <c>--publishing</c>, and <c>validate</c> in
+    /// the descriptor. A target belongs here only once <c>Template</c> builds its links.
+    /// </summary>
     public static readonly IReadOnlyList<string> Targets =
-        [AzureDevOps, AzureDevOpsWiki, GitHub, MkDocs, None];
+        [AzureDevOps, AzureDevOpsWiki, GitHub, None];
 
     public const string PathToken = "{path}";
     public const string AnchorToken = "{anchor}";
@@ -24,7 +26,8 @@ public sealed class Publishing
     private const string WikiSegment = "/_wiki/wikis/";
 
     /// <summary>
-    /// <c>mkdocs</c> is named by the descriptor and addressed by nothing, so a corpus on it exports without links.
+    /// Every target <c>Template</c> builds links for. A descriptor that failed <c>validate</c> can still name any other,
+    /// and a corpus on it exports without links.
     /// </summary>
     private static readonly IReadOnlyList<string> Addressable = [AzureDevOps, AzureDevOpsWiki, GitHub];
 

@@ -148,7 +148,7 @@ internal sealed class NewSettings : KacSettings
     public string? Types { get; init; }
 
     [CommandOption("--publishing <TARGET>")]
-    [Description("Where the corpus is published: github, azure-devops, azure-devops-wiki, mkdocs or none.")]
+    [Description("Where the corpus is published: github, azure-devops, azure-devops-wiki or none.")]
     public string? Publishing { get; init; }
 
     [CommandOption("--ci <SYSTEM>")]

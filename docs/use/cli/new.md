@@ -14,7 +14,7 @@ kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--owne
 | `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                                   |
 | `--owner <OWNER>`       | The owner of the records it seeds, as human:alex.doe or role:cto. Defaults to your git email. |
 | `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root.         |
-| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops, azure-devops-wiki, mkdocs or none.       |
+| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops, azure-devops-wiki or none.               |
 | `--ref <REF>`           | The branch or tag to take the template from.                                                  |
 | `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                                |
 | `--yes`                 | Take the default for every answer not given, and ask nothing.                                 |
@@ -107,8 +107,8 @@ new: this corpus has no tracker to file on, so raise-finding and request-deviati
 ```
 
 The last line appears where the corpus has no tracker to file on. `new` writes no
-[`tracker`](../corpus-descriptor.md#tracker) block, so the tracker comes from `publishing-target`, and `mkdocs` and
-`none` give none. The two skills that file an issue then print it for you to file.
+[`tracker`](../corpus-descriptor.md#tracker) block, so the tracker comes from `publishing-target`, and `none` gives
+none. The two skills that file an issue then print it for you to file.
 
 Take the framework from a URL rather than a folder and the second line adds the commit it resolved, as
 `…knowledge-as-code at c1c9621.` The third line names the owner it wrote into the seeded records.
@@ -140,6 +140,13 @@ kac new --from ../knowledge-as-code
 **It refuses a repository with uncommitted changes**, and exits `1`. Commit or stash them first, so that what `new`
 writes reads as a diff of its own. A folder that is not yet a repository gets `git init`, once you agree or pass
 `--yes`. A file the folder already holds stays where it is.
+
+**It refuses a publishing target it cannot build links for**, and exits `1`. `--publishing` takes the values the
+table above lists. `mkdocs` is not one, because `export` cannot address a page on an MkDocs site:
+
+```text
+new: --publishing 'mkdocs' is not a target. It is one of azure-devops, azure-devops-wiki, github, none.
+```
 
 **It does not decide what your repository looks like.** Branch protection, reviewers and issue templates are questions
 about your repository, and `new` asks none of them.

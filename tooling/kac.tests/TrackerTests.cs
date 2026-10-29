@@ -44,7 +44,6 @@ public class TrackerTests
     }
 
     [Theory]
-    [InlineData(Publishing.MkDocs, "https://example.github.io/corpus")]
     [InlineData(Publishing.None, null)]
     public void A_corpus_publishing_where_no_backlog_lives_states_no_tracker(string target, string? published)
     {
@@ -97,7 +96,6 @@ public class TrackerTests
     }
 
     [Theory]
-    [InlineData(Publishing.MkDocs)]
     [InlineData(Publishing.AzureDevOpsWiki)]
     [InlineData("GitHub")]
     public void A_target_that_files_nowhere_states_no_base(string target)
@@ -149,7 +147,7 @@ public class TrackerTests
     }
 
     [Theory]
-    [InlineData(Publishing.MkDocs, GitHubBase)]
+    [InlineData(Publishing.AzureDevOpsWiki, GitHubBase)]
     [InlineData(Publishing.GitHub, null)]
     public void A_pair_reaching_no_backlog_carries_no_identity(string target, string? published)
     {
@@ -183,7 +181,6 @@ public class TrackerTests
 
     [Theory]
     [InlineData(Publishing.GitHub)]
-    [InlineData(Publishing.MkDocs)]
     [InlineData(Publishing.None)]
     public void A_target_with_no_area_paths_states_no_area(string target)
     {

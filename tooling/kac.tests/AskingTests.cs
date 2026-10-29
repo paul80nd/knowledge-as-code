@@ -199,7 +199,16 @@ public class AskingTests
         var problem = Resolve(Flagged() with { Publishing = "confluence" }).Problem;
 
         Assert.Contains("'confluence' is not a target", problem);
-        Assert.Contains("azure-devops-wiki, github, mkdocs, none", problem);
+        Assert.Contains("azure-devops, azure-devops-wiki, github, none.", problem);
+    }
+
+    [Fact]
+    public void A_publishing_target_nothing_addresses_is_refused()
+    {
+        var problem = Resolve(Flagged() with { Publishing = "mkdocs" }).Problem;
+
+        Assert.Contains("'mkdocs' is not a target", problem);
+        Assert.Contains("azure-devops, azure-devops-wiki, github, none.", problem);
     }
 
     [Fact]

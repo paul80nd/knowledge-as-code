@@ -35,6 +35,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   read as a working product. `kac new` writes both. `kac update` leaves a template you already hold alone, so copy
   the wording by hand where you want it.
 
+### Removed
+
+- **`publishing-target` no longer takes `mkdocs`.** `kac` accepted the value and built nothing for it, so a corpus
+  naming it exported without links and could not tell it had asked for an unbuilt target. Now
+  `kac new --publishing mkdocs` refuses the flag, and `validate` reports `descriptor-target` against a `.corpus.yaml`
+  naming it. Each message lists the targets that work: `azure-devops`, `azure-devops-wiki`, `github` and `none`. A
+  corpus on `mkdocs` writes `none` instead, and its export changes only in the `target` it states.
+
 ## 0.43.0 - 2026-10-28
 
 ### Changed

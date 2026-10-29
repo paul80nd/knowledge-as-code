@@ -12,7 +12,6 @@ public class DescriptorTargetTests
     [InlineData(Publishing.AzureDevOps)]
     [InlineData(Publishing.AzureDevOpsWiki)]
     [InlineData(Publishing.GitHub)]
-    [InlineData(Publishing.MkDocs)]
     [InlineData(Publishing.None)]
     public void Every_target_a_corpus_can_publish_to_is_silent(string target)
         => Assert.Empty(Targets(new CorpusDescriptor { PublishingTarget = target }));
@@ -21,12 +20,13 @@ public class DescriptorTargetTests
     [InlineData("gihtub")]
     [InlineData("GitHub")]
     [InlineData("gitlab")]
+    [InlineData("mkdocs")]
     public void A_publishing_target_kac_cannot_address_names_what_it_takes(string target)
     {
         var message = Assert.Single(Targets(new CorpusDescriptor { PublishingTarget = target })).Message;
 
         Assert.Contains($"publishing-target '{target}' is not a target kac can publish to.", message);
-        Assert.Contains("azure-devops, azure-devops-wiki, github, mkdocs, none.", message);
+        Assert.Contains("azure-devops, azure-devops-wiki, github, none.", message);
     }
 
     [Theory]
@@ -38,7 +38,6 @@ public class DescriptorTargetTests
 
     [Theory]
     [InlineData(Publishing.AzureDevOpsWiki)]
-    [InlineData(Publishing.MkDocs)]
     [InlineData("GitHub")]
     public void A_tracker_target_that_files_nowhere_names_what_it_takes(string target)
     {
@@ -51,9 +50,10 @@ public class DescriptorTargetTests
     [Fact]
     public void A_framework_target_is_held_to_the_same_values_and_named_apart()
     {
-        var message = Assert.Single(Targets(new CorpusDescriptor { FrameworkTarget = Publishing.MkDocs })).Message;
+        var descriptor = new CorpusDescriptor { FrameworkTarget = Publishing.AzureDevOpsWiki };
+        var message = Assert.Single(Targets(descriptor)).Message;
 
-        Assert.Contains("framework.target 'mkdocs'", message);
+        Assert.Contains("framework.target 'azure-devops-wiki'", message);
     }
 
     [Fact]

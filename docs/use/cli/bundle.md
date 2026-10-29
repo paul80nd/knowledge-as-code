@@ -80,8 +80,8 @@ skills the plugin ships:
 bundle: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml and export again to set one.
 ```
 
-A corpus publishing to `mkdocs` or `none` has no tracker until you add the block. [`validate`](validate.md) says
-nothing about it, because a corpus that never bundles never files.
+A corpus publishing to `none` has no tracker until you add the block. [`validate`](validate.md) says nothing about it,
+because a corpus that never bundles never files.
 
 ## Examples
 

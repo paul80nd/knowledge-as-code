@@ -42,7 +42,7 @@ public class PublishingTests
 
     [Theory]
     [InlineData(Publishing.None, GitHubBase, Sha)]    // publishes nowhere
-    [InlineData(Publishing.MkDocs, GitHubBase, Sha)]  // a target nothing addresses yet
+    [InlineData("mkdocs", GitHubBase, Sha)]           // a target validate refuses
     [InlineData(Publishing.GitHub, null, Sha)]        // a target, and no base to build on
     [InlineData(Publishing.GitHub, GitHubBase, null)] // no ref, so no stable address
     public void A_corpus_the_tool_cannot_address_resolves_to_nothing(
