@@ -12,6 +12,12 @@ goes-here: A problem with a known, verified resolution
 detail: >
   Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
 
+versus:
+  runbooks: >
+    Is something in production broken while you read this? Broken in production is a runbook, read under pressure.
+    A problem that stops only your own work, such as a failing build or a failed install, is a fix, even where
+    finding its cause takes more than one check.
+
 lineage:
   prior-art: >
     ITIL Problem Management, the *known error* construct, and

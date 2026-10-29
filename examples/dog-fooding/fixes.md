@@ -40,8 +40,8 @@ export until the status moves.
 
 Other boundaries:
 
-* **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. A fix has one known
-  resolution.
+* **[Runbook](runbooks.md).** If something in production is broken while you read it, it is a runbook. A problem that
+  stops only your own work, such as a failing build, is a fix, even where finding its cause takes more than one check.
 * **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the
   resolution is a rule, and it belongs in a standard.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
@@ -49,8 +49,8 @@ Other boundaries:
 
 ## Level of detail and cadence
 
-One fix matches one symptom to one verified resolution, usually one or two steps a reader can run. A problem that needs
-a diagnosis tree and an escalation path is a runbook.
+One fix matches one symptom to one verified resolution, usually a few steps a reader can run. A problem breaking
+something in production is a runbook, however few its steps.
 
 A fix changes when somebody verifies it again, or when the resolution stops working. A reader who applies a fix and
 sees the symptom clear has verified it again. They add a `verified` entry, or move the `at` on the one they have. New
