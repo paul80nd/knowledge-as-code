@@ -134,7 +134,7 @@ fields:
     description: The interfaces this service offers, with the contract for each.
     notes: >
       A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
-      states a bare repository name and no convention derives a path from one. The range belongs to the
+      states a repository's name and no convention derives a path from one. The range belongs to the
       estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
       <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.
 

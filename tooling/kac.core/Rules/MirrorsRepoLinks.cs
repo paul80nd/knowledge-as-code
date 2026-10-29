@@ -34,7 +34,7 @@ public sealed class MirrorsRepoLinks : ICorpusRule
                     continue;
                 }
 
-                // A link to the repository a misfit means goes unreported, so the misfit is reported once.
+                // A link to a repository of a misfit's name is not reported as unstated as well.
                 misfits.Add(parts[^1]);
                 ctx.Warn(doc, Reports,
                     $"'{Repos}: {entry}' does not fit `repos-base`, which {kind}. Write it as '{form}'.",
@@ -78,6 +78,8 @@ public sealed class MirrorsRepoLinks : ICorpusRule
     {
         public static RepoBase Read(string root)
         {
+            // Escaped once here, so a base written with a space still suggests a link that works in Markdown.
+            root = Uri.TryCreate(root, UriKind.Absolute, out var uri) ? uri.AbsoluteUri : root;
             root = root.TrimEnd('/');
             return (RepoBase?)AzureDevOps.Parse(root) ?? new AnyHost(root);
         }
@@ -119,9 +121,12 @@ public sealed class MirrorsRepoLinks : ICorpusRule
 
         public override string[]? Named(string target, IReadOnlyDictionary<string, string[]> declared)
         {
-            if (!target.StartsWith(root + "/", StringComparison.OrdinalIgnoreCase)) return null;
+            var end = target.IndexOfAny(['#', '?']);
+            var link = Uri.UnescapeDataString(end < 0 ? target : target[..end]);
+            var prefix = Uri.UnescapeDataString(root) + "/";
+            if (!link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return null;
 
-            var segments = Segments(target[(root.Length + 1)..]);
+            var segments = link[prefix.Length..].Split('/', StringSplitOptions.RemoveEmptyEntries);
             if (segments.Length == 0) return null;
 
             // A link reaching inside a repository runs on past its name, so the entry it names is the longest declared

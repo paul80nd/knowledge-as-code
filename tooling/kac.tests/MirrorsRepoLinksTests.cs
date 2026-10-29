@@ -129,7 +129,7 @@ public class MirrorsRepoLinksTests
             reposBase: "https://dev.azure.com/Acme"));
 
     [Fact]
-    public void An_organisation_base_suggests_the_link_to_the_project_s_repository_percent_encoded()
+    public void An_organisation_base_suggests_a_link_into_the_project_percent_encoded()
     {
         var found = Assert.Single(Check(
             repos: ["Proj X/My Repo"],
@@ -177,10 +177,14 @@ public class MirrorsRepoLinksTests
 
     [Fact]
     public void A_project_base_passes_over_a_link_into_another_project()
-        => Assert.Single(Check(
+    {
+        var found = Assert.Single(Check(
             repos: ["My Repo"],
             section: "* **Repository**: [`My Repo`](https://dev.azure.com/acme/Platform/_git/My%20Repo)\n",
             reposBase: "https://dev.azure.com/acme/Proj%20X"));
+
+        Assert.StartsWith("'repos: My Repo' is not linked", found.Message);
+    }
 
     [Fact]
     public void A_git_base_resolves_a_repository_beneath_it()
@@ -207,10 +211,32 @@ public class MirrorsRepoLinksTests
 
     [Fact]
     public void A_link_into_another_organisation_is_passed_over()
-        => Assert.Single(Check(
+    {
+        var found = Assert.Single(Check(
             repos: ["Proj X/My Repo"],
             section: "* **Repository**: [`My Repo`](https://dev.azure.com/other/Proj%20X/_git/My%20Repo)\n",
             reposBase: "https://dev.azure.com/acme"));
+
+        Assert.StartsWith("'repos: Proj X/My Repo' is not linked", found.Message);
+    }
+
+    [Fact]
+    public void A_base_written_with_a_space_suggests_a_link_percent_encoded()
+    {
+        var found = Assert.Single(Check(
+            repos: ["My Repo"],
+            section: "* **Repository**: the payments repository.\n",
+            reposBase: "https://dev.azure.com/acme/Proj X"));
+
+        Assert.Contains("Link it as https://dev.azure.com/acme/Proj%20X/_git/My%20Repo,", found.Message);
+    }
+
+    [Fact]
+    public void A_base_on_another_host_is_compared_percent_decoded()
+        => Assert.Empty(Check(
+            repos: ["lending"],
+            section: "* **Repository**: [`lending`](https://git.example.com/my%20estate/lending)\n",
+            reposBase: "https://git.example.com/My Estate"));
 
     [Fact]
     public void A_bare_entry_against_an_organisation_base_is_reported_with_the_form_it_needs()
