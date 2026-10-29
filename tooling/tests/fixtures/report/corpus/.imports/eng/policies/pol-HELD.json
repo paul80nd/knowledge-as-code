@@ -1,0 +1,18 @@
+{
+  "type": "policies",
+  "path": "policies/held.md",
+  "fields": {
+    "id": "pol-HELD",
+    "title": "Keeping what we are asked to keep",
+    "status": "active",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Purpose": "What we hold, and for how long.",
+    "Scope": "Every store this organisation runs.",
+    "Exceptions": "None."
+  },
+  "links": {
+    "human": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/policies/held.md"
+  }
+}

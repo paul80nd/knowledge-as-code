@@ -248,6 +248,65 @@ public class ReportsTests
     public void The_imported_bullet_names_each_producer_and_leaves_its_version_to_sources()
         => Assert.Contains("* `eng`, example-engineering.", Declining(Glossary()));
 
+    [Fact]
+    public void An_inherited_rule_links_its_record_to_the_page_its_producer_published_and_leaves_the_part_unlinked()
+        => Assert.Contains("| `HOLD` | MUST | [`gp:std-OLD`][gp:std-OLD]`.STAY` |",
+            Inheriting(rules: true, linked: true));
+
+    [Fact]
+    public void An_inherited_policy_s_heading_links_its_page_and_its_clause_cells_stay_bare_keys()
+    {
+        var body = Inheriting(linked: true);
+
+        Assert.Contains("\n### [gp:pol-OLD][gp:pol-OLD]\n", body);
+        Assert.Contains("| `HOLD` | MUST | [`gp:std-OLD`][gp:std-OLD] | [`gp:dev-OPEN`][gp:dev-OPEN] |", body);
+    }
+
+    [Fact]
+    public void Each_record_cited_is_defined_once_at_the_foot_of_the_report()
+        => Assert.EndsWith(
+            $"belong to whoever confirms this report.\n\n[gp:ctl-RUN]: {GpPage("ctl-RUN")}\n"
+            + $"[gp:dev-OPEN]: {GpPage("dev-OPEN")}\n[gp:pol-OLD]: {GpPage("pol-OLD")}\n"
+            + $"[gp:std-OLD]: {GpPage("std-OLD")}\n",
+            Inheriting(rules: true, controls: true, linked: true));
+
+    [Fact]
+    public void A_local_record_links_to_its_file_from_the_folder_a_report_is_filed_in()
+    {
+        var body = Plan("coverage", reports: true).Body;
+
+        Assert.Contains("| `STORE` | MUST | [`std-SEC`][std-SEC] |", body);
+        Assert.Contains("| [`pol-SCRT`][pol-SCRT] | 4 | 1 | 3 |", body);
+        Assert.Contains("| `SHARED` | MUST NOT |  |  |  | [`pol-KEYS`][pol-KEYS]`.SHARED` | uncovered | |", body);
+        Assert.Contains("\n[std-SEC]: ../standards/sec.md\n", body);
+    }
+
+    [Fact]
+    public void A_framework_report_links_each_policy_and_the_policy_of_each_clause()
+        => Assert.Contains(
+            "| A.5.17 | 2 | [`pol-SCRT`][pol-SCRT]`.STORE`, [`pol-SCRT`][pol-SCRT]`.ROTATE` "
+            + "| [`pol-SCRT`][pol-SCRT] | |",
+            Plan("frameworks", reports: true).Body);
+
+    [Fact]
+    public void A_report_citing_no_page_ends_on_its_last_section()
+        => Assert.EndsWith("belong to whoever confirms this report.\n", Coverage());
+
+    [Fact]
+    public void An_import_stating_no_page_is_cited_bare_and_named_in_the_limits()
+    {
+        var body = Inheriting();
+
+        Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` | `gp:dev-OPEN` |", body);
+        Assert.Contains("\n### gp:pol-OLD\n", body);
+        Assert.Contains("Nothing imported from `eng` states the page it was published at, so its ids are not linked.",
+            body);
+    }
+
+    [Fact]
+    public void An_import_stating_its_pages_is_not_named_in_the_limits()
+        => Assert.DoesNotContain("Nothing imported from", Inheriting(linked: true));
+
     private static string Coverage() => Plan("coverage").Body;
 
     private static InheritedCorpus Glossary() => Imported("glossary",
@@ -355,9 +414,10 @@ public class ReportsTests
     private static string Control(string id, string verifies, string status = "active", string mechanism = "ci") =>
         $"---\nid: {id}\nstatus: {status}\nverifies: {verifies}\nmechanism: {mechanism}\n---\n\n# {id}\n";
 
-    private static string Inheriting(string inForce = "active", bool rules = false, bool controls = false)
+    private static string Inheriting(string inForce = "active", bool rules = false, bool controls = false,
+        bool linked = false)
     {
-        var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules, controls)], Stamp);
+        var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules, controls, linked)], Stamp);
         Assert.NotNull(plan);
         return plan.Body;
     }
@@ -365,9 +425,11 @@ public class ReportsTests
     /// <summary>
     /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
     /// wrote, in the folder eng filed it under. With <paramref name="controls"/>, three controls verify gp's standard:
-    /// one running, one <c>not-enforced</c> and one planned.
+    /// one running, one <c>not-enforced</c> and one planned. With <paramref name="linked"/>, every record gp wrote
+    /// states the page gp published it at.
     /// </summary>
-    private static InheritedCorpus Grandparent(string inForce, bool rules = false, bool controls = false) =>
+    private static InheritedCorpus Grandparent(string inForce, bool rules = false, bool controls = false,
+        bool linked = false) =>
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
             null,
@@ -383,7 +445,7 @@ public class ReportsTests
                             "clause":"Stay put."}
                             """.ReplaceLineEndings("")
                     ],
-                    []),
+                    [Gp("pol-OLD", "", linked)]),
                 new InheritedType("standards", 1, "standards", rules ? "standards/rules.jsonl" : null,
                     "record", "part", "id", null,
                     new Dictionary<string, string>(StringComparer.Ordinal),
@@ -396,38 +458,48 @@ public class ReportsTests
                                 """.ReplaceLineEndings("")
                         ]
                         : [],
-                    [
-                        new InheritedRecord("gp", "std-OLD.json",
-                            """{"fields":{"id":"std-OLD","implements":["pol-OLD.HOLD"]}}""")
-                    ]),
+                    [Gp("std-OLD", ""","implements":["pol-OLD.HOLD"]""", linked)]),
                 new InheritedType("deviations", 1, "deviations", null, null, null, null, null,
                     new Dictionary<string, string>(StringComparer.Ordinal),
                     [],
                     [
-                        new InheritedRecord("gp", "dev-OPEN.json",
-                            """{"fields":{"id":"dev-OPEN","status":"active","departs-from":["pol-OLD.HOLD"]}}"""),
-                        new InheritedRecord("gp", "dev-SHUT.json",
-                            """{"fields":{"id":"dev-SHUT","status":"closed","departs-from":["pol-OLD.HOLD"]}}""")
+                        Gp("dev-OPEN", ""","status":"active","departs-from":["pol-OLD.HOLD"]""", linked),
+                        Gp("dev-SHUT", ""","status":"closed","departs-from":["pol-OLD.HOLD"]""", linked)
                     ],
                     InForce: inForce),
                 new InheritedType("controls", 1, "controls", null, null, null, null, null,
                     new Dictionary<string, string>(StringComparer.Ordinal),
                     [],
-                    controls ? [GpControl("RUN", "active", "ci"), GpControl("NONE", "active", "not-enforced"),
-                        GpControl("SOON", "planned", "ci")] : [],
+                    controls
+                        ?
+                        [
+                            GpControl("RUN", "active", "ci", linked),
+                            GpControl("NONE", "active", "not-enforced", linked),
+                            GpControl("SOON", "planned", "ci", linked)
+                        ]
+                        : [],
                     InForce: "active")
             ]);
 
-    private static InheritedRecord GpControl(string key, string status, string mechanism) =>
-        new("gp", $"ctl-{key}.json",
-            $$$"""
-               {"fields":{"id":"ctl-{{{key}}}","status":"{{{status}}}","verifies":["std-OLD"],
-               "mechanism":"{{{mechanism}}}"}}
-               """.ReplaceLineEndings(""));
+    private static InheritedRecord GpControl(string key, string status, string mechanism, bool linked) =>
+        Gp($"ctl-{key}", $",\"status\":\"{status}\",\"verifies\":[\"std-OLD\"],\"mechanism\":\"{mechanism}\"",
+            linked);
 
-    private static ReportPlan Plan(string name)
+    /// <summary>
+    /// A record gp wrote, filed under gp. <paramref name="fields"/> follows the id inside <c>fields</c>, so it opens
+    /// with a comma. With <paramref name="linked"/>, it states the page gp published it at.
+    /// </summary>
+    private static InheritedRecord Gp(string id, string fields, bool linked)
     {
-        var plan = Reports.Plan(name, Corpus(), [], Stamp);
+        var links = linked ? $"{{\"human\":\"{GpPage(id)}\"}}" : "null";
+        return new InheritedRecord("gp", $"{id}.json", $"{{\"fields\":{{\"id\":\"{id}\"{fields}}},\"links\":{links}}}");
+    }
+
+    private static string GpPage(string id) => $"https://example.com/gp/{id}.md";
+
+    private static ReportPlan Plan(string name, bool reports = false)
+    {
+        var plan = Reports.Plan(name, Corpus(reports: reports), [], Stamp);
         Assert.NotNull(plan);
         return plan;
     }
@@ -577,8 +649,11 @@ public class ReportsTests
         Registered against it.
         """;
 
-    /// <summary>With <paramref name="rules"/>, the standards type is declared as the schema declares it.</summary>
-    private static LoadedCorpus Corpus(bool rules = false)
+    /// <summary>
+    /// With <paramref name="rules"/>, the standards type is declared as the schema declares it. With
+    /// <paramref name="reports"/>, the schema declares the report type, whose folder a local link climbs out of.
+    /// </summary>
+    private static LoadedCorpus Corpus(bool rules = false, bool reports = false)
     {
         var types = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
         {
@@ -586,6 +661,8 @@ public class ReportsTests
             ["standards"] = rules ? RuleType() : Refers("standards", "std", "standard", "implements"),
             ["deviations"] = Refers("deviations", "dev", "deviation", "departs-from", inForce: "active")
         };
+
+        if (reports) types["reports"] = new TypeSchema { Key = "reports", TypeName = "report", Folder = "reports" };
 
         var schema = new Schema { ByFolder = types };
 

@@ -1,0 +1,44 @@
+{
+  "formatVersion": 4,
+  "corpus": "example-engineering",
+  "shortcode": "eng",
+  "contentVersion": "0.4.1",
+  "mechanismVersion": 5,
+  "commit": "1111111111111111111111111111111111111111",
+  "dirty": false,
+  "generatedAt": "2026-01-01T00:00:00Z",
+  "about": {
+    "displayName": "Example Engineering",
+    "description": "A corpus this fixture consumes, which publishes a page for each record.",
+    "author": null,
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/{path}#{anchor}",
+    "base": "https://github.com/example/upstream",
+    "pathPrefix": null,
+    "ref": "1111111111111111111111111111111111111111"
+  },
+  "sources": [],
+  "types": [
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 1,
+      "parts": 1,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      },
+      "inForce": "active"
+    }
+  ]
+}

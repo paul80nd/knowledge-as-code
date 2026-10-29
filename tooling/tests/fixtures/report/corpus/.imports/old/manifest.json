@@ -1,0 +1,44 @@
+{
+  "formatVersion": 4,
+  "corpus": "example-archive",
+  "shortcode": "old",
+  "contentVersion": "1.0.0",
+  "mechanismVersion": 5,
+  "commit": "3333333333333333333333333333333333333333",
+  "dirty": false,
+  "generatedAt": "2026-01-01T00:00:00Z",
+  "about": {
+    "displayName": "Example Archive",
+    "description": "A corpus this fixture consumes, which publishes nowhere a link can address.",
+    "author": null,
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "none",
+    "humanTemplate": null,
+    "base": null,
+    "pathPrefix": null,
+    "ref": null
+  },
+  "sources": [],
+  "types": [
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 1,
+      "parts": 1,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      },
+      "inForce": "active"
+    }
+  ]
+}

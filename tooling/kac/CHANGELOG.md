@@ -34,6 +34,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   whose status is not `live` opens with that status and what a customer can do today, so its first sentence does not
   read as a working product. `kac new` writes both. `kac update` leaves a template you already hold alone, so copy
   the wording by hand where you want it.
+- **`kac report` links every record id it cites to that record's page now.** A report named each record as bare code,
+  so a reader could not open an inherited clause it listed. Each id is now a link, and a cited part follows it as code,
+  as ``[`eng:pol-A11Y`][eng:pol-A11Y]`.UPFRONT` ``. A local record links by its path from `reports/`, and an imported
+  one to the page its producer published. An import publishing no page stays bare code, and `## Limits` names it. The
+  link definitions sit at the foot. Regenerate a report you keep as a record.
 
 ### Removed
 

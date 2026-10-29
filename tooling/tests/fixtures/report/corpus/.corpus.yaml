@@ -1,3 +1,17 @@
 # The report's `sources` names the corpus and the version it answered at, so the fixture declares both.
 corpus: report-fixture
 content-version: 1.2.3
+
+# Restored beside this file. `eng` states the page of each record it exports, and `old` publishes nowhere a
+# link can address.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.4.0
+    source: ../engineering/.dist/package
+    resolved: "0.4.1"
+  - corpus: example-archive
+    shortcode: old
+    version: ^1.0.0
+    source: ../archive/.dist/package
+    resolved: "1.0.0"

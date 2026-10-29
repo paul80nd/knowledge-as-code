@@ -111,8 +111,14 @@ internal static class Runner
                 problems.Add("the file does not end on one newline, as every other record here does");
             if (written.Contains('\r', StringComparison.Ordinal))
                 problems.Add("the file ends a line with a carriage return, so it differs from the Linux build");
-            if (!written.Contains("| `WRITTEN` | MUST | `std-COVER.NAMED` |", StringComparison.Ordinal))
+            if (!written.Contains("| `WRITTEN` | MUST | [`std-COVER`][std-COVER]`.NAMED` |", StringComparison.Ordinal))
                 problems.Add("the covered clause did not reach the file");
+            if (!written.Contains("\n[std-COVER]: ../standards/coverage.md\n", StringComparison.Ordinal))
+                problems.Add("the file defines no link from reports/ to the standard it cites");
+            if (!written.Contains("\n### [eng:pol-HELD][eng:pol-HELD]\n", StringComparison.Ordinal))
+                problems.Add("the imported policy's heading does not link the page its producer published");
+            if (!written.Contains("Nothing imported from `old` states the page", StringComparison.Ordinal))
+                problems.Add("the limits do not name the import that states no page");
 
             if (refuseExit != 1) problems.Add($"a second --out over the same path exited {refuseExit}, not 1");
             if (!refuseErr.Contains("already exists", StringComparison.Ordinal))

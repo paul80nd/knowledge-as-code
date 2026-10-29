@@ -10,18 +10,13 @@ public sealed record ImportedRecord(
     string Scope,
     string Id,
     string Type,
-    string Path,
     bool KeepsParts,
     IReadOnlyList<string> Parts);
 
-/// <summary>
-/// <c>Link</c> is the producer's own template: one built from this corpus's publishing would resolve to nothing.
-/// </summary>
 public sealed record Import(
     string Shortcode,
     string Corpus,
     string Version,
-    string? Link,
     IReadOnlyList<ImportedRecord> Records);
 
 /// <summary>
@@ -106,7 +101,6 @@ public static class Imports
             shortcode,
             JsonRead.Str(manifest["corpus"]) ?? shortcode,
             JsonRead.Str(manifest["contentVersion"]) ?? "",
-            JsonRead.Str(JsonRead.Object(manifest["publishing"])?["humanTemplate"]),
             records);
     }
 
@@ -147,9 +141,7 @@ public static class Imports
                 // The parts file names an inherited record by its scoped id.
                 var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
 
-                found.Add(new ImportedRecord(
-                    scope, id, type, JsonRead.Str(record?["path"]) ?? "", keepsParts,
-                    parts.GetValueOrDefault(key, [])));
+                found.Add(new ImportedRecord(scope, id, type, keepsParts, parts.GetValueOrDefault(key, [])));
             }
         }
     }

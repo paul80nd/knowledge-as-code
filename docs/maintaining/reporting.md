@@ -18,6 +18,9 @@ proving each behaviour. [`report`](../use/cli/report.md) owns the full statement
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
 * Two runs over an unchanged corpus write the same report.
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
+* It links every record id it cites to that record's page, and defines each link once at the foot of the report. An
+  import stating no page is cited as bare code, and `## Limits` names it.
+  [Links to each record](../use/cli/report.md#links-to-each-record)
 * It stamps `generated`, and writes `status: draft`, an empty `verified`, and an empty `id` and `owner`.
   [The provenance frontmatter](../use/cli/report.md#the-provenance-frontmatter)
 * It lists this corpus first in `sources`, then each corpus it imports, with the `content-version` each answered at.
@@ -43,6 +46,9 @@ Each refusal exits `1` and writes nothing.
 [`Report.feature`][Report.feature]:
 
 * A coverage report marks each clause covered or uncovered and leaves the judgement blank
+* A report links each record it cites, and defines each link once at its foot
+* A report cites an import stating no page as bare code, and names it in its limits
+* Every link a report kept as a record writes resolves
 * A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
 * A coverage row leaves out a deviation that is no longer in force
 * A frameworks report counts the clauses citing each reference
