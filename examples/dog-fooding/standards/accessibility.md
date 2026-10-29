@@ -78,6 +78,8 @@ _**Covers:** `eng:pol-A11Y.UPFRONT`_
 - The assessment **MUST** name what falls short, or say that nothing found does.
 - The assessment **MUST** name the version it was made against.
 - A pull request moving a pin to a new major or minor version **MUST** include a new assessment.
+- A pull request moving a pin below 0.1.0 to any new version **MUST** include a new assessment, because below 0.1.0
+  every release may change behaviour.
 - We **MUST NOT** adopt a component the assessment finds short without a recorded deviation.
 
 _**Covers:** `eng:pol-A11Y.VENDOR`_
@@ -191,6 +193,8 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 
 ## Changelog
 
+- 2026-10-29: a pin below 0.1.0 needs a new assessment at every version it moves to, because every release there may
+  change behaviour.
 - 2026-10-25: a message a pipeline parses may also go to the CI platform's annotation or pull request comment, which
   `kac validate` writes under CI for the platform to read.
 - 2026-10-25: Zensical builds the site, so the theme whose colour schemes a change should keep is Zensical's.
