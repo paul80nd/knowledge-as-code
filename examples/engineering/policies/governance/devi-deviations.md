@@ -67,8 +67,8 @@ Some commitments admit no deviation at all, and no record makes any of them acce
 
 ## Notes
 
-No standard implements this directly. Standards cite it wherever they have an exception clause, and so do the
-[controls](../../controls.md) that check those clauses are honoured.
+Standards cite this policy wherever they have an exception clause, and so do the [controls](../../controls.md) that
+check those clauses are honoured.
 
 This policy says nothing about where a deviation is recorded. That belongs to the process that records it, so changing
 where we file deviations does not change what we committed to.
