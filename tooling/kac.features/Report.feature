@@ -137,7 +137,7 @@ Scenario: A report's frontmatter states the run that wrote it and leaves the res
   And the report at "reports/clause-coverage.md" leaves "owner" empty
   And the report at "reports/clause-coverage.md" leaves "verified" empty
   And the report at "reports/clause-coverage.md" names these sources:
-    | resource       | version |
+    | resource            | version |
     | report-fixture      | 1.2.3   |
     | example-engineering | 0.4.1   |
     | example-archive     | 1.0.0   |

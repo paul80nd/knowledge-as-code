@@ -299,8 +299,26 @@ public class ReportsTests
 
         Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` | `gp:dev-OPEN` |", body);
         Assert.Contains("\n### gp:pol-OLD\n", body);
-        Assert.Contains("Nothing imported from `eng` states the page it was published at, so its ids are not linked.",
+        Assert.Contains("Nothing imported from `gp` states the page it was published at, so its ids are not linked.",
             body);
+    }
+
+    [Fact]
+    public void A_corpus_further_up_the_chain_stating_no_page_is_named_beside_an_import_that_states_its_own()
+    {
+        var eng = Grandparent("active");
+        var held = new InheritedRecord("eng", "pol-HELD.json",
+            """{"fields":{"id":"pol-HELD"},"links":{"human":"https://example.com/eng/pol-HELD.md"}}""");
+        var mixed = eng with
+        {
+            Types = [.. eng.Types.Select(t => t.Type == "policies" ? t with { Records = [.. t.Records, held] } : t)]
+        };
+
+        var plan = Reports.Plan("coverage", Corpus(), [mixed], Stamp);
+        Assert.NotNull(plan);
+
+        Assert.Contains("Nothing imported from `gp` states the page it was published at", plan.Body);
+        Assert.DoesNotContain("`eng` states the page", plan.Body);
     }
 
     [Fact]

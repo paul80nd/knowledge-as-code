@@ -229,7 +229,7 @@ public static class Reports
         const string listed = " The controls index of each corpus lists every control it wrote.";
 
         var body = new StringBuilder();
-        Limits(body, corpus, inherited,
+        Limits(body, corpus, inherited, pages,
             "A clause uncovered here may well be covered in a corpus consuming this one, and every "
             + "consumer answers for its own coverage.",
             "No column here says a clause is verified. `Controls` lists each control naming a rule in "
@@ -268,7 +268,7 @@ public static class Reports
         var pages = Pages.For(corpus, inherited);
 
         var body = new StringBuilder();
-        Limits(body, corpus, inherited,
+        Limits(body, corpus, inherited, pages,
             "An `Alignment` cell stays in the corpus that wrote it, so the citations counted below are "
             + "the ones written here. A reference an imported policy cites belongs to that producer's "
             + "own report.",
@@ -559,7 +559,7 @@ public static class Reports
     /// What the report can and cannot see, stated in the report. Each report passes its own two paragraphs.
     /// </summary>
     private static void Limits(
-        StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
+        StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, Pages pages,
         string reach, string closing)
     {
         var name = corpus.Descriptor.Name ?? Unnamed;
@@ -578,13 +578,7 @@ public static class Reports
                 body.AppendLine($"* `{source.Shortcode}`, {source.Corpus ?? "unnamed"}.");
             body.AppendLine();
 
-            // A producer whose publishing target has no address exports no page for any record.
-            var unlinked = inherited
-                .Where(s => s.Types.SelectMany(t => t.Records).ToList() is { Count: > 0 } records
-                            && records.All(r => Page(r).Page is null))
-                .Select(s => $"`{s.Shortcode}`")
-                .ToList();
-
+            var unlinked = pages.Unlinked.Select(s => $"`{s}`").ToList();
             if (unlinked.Count > 0)
             {
                 var names = unlinked.Count == 1
@@ -713,10 +707,13 @@ public static class Reports
     /// <summary>
     /// The page of every record a report can cite, keyed by the id the report cites it by, and the ones it has cited
     /// so far. A record with no page is cited as bare code. <c>docs/use/cli/report.md</c> says where each link leads.
+    /// <c>Unlinked</c> lists each corpus that wrote inherited records and stated a page for none of them.
     /// </summary>
-    private sealed class Pages(Dictionary<string, string> addresses)
+    private sealed class Pages(Dictionary<string, string> addresses, IReadOnlyList<string> unlinked)
     {
         private readonly SortedDictionary<string, string> cited = new(StringComparer.Ordinal);
+
+        public IReadOnlyList<string> Unlinked => unlinked;
 
         /// <summary>
         /// A local page is relative to the folder a report record is filed in. A schema declaring no report type
@@ -736,20 +733,31 @@ public static class Reports
                         found.TryAdd(id, up + doc.Rel.Replace('\\', '/'));
             }
 
+            // Keyed by the corpus that wrote each record: a chain can pass on a producer that publishes nowhere inside
+            // an import that publishes its own pages.
+            var producers = new List<(string Producer, bool Linked)>();
+
             foreach (var source in inherited)
             foreach (var type in source.Types)
             foreach (var record in type.Records)
-                if (Page(record) is ({ } id, { } page))
-                    found.TryAdd(Exporter.Scoped(id, record.Producer), page);
+            {
+                var (id, page) = Published(record);
+                producers.Add((record.Producer, page is not null));
+                if (id is not null && page is not null) found.TryAdd(Exporter.Scoped(id, record.Producer), page);
+            }
 
-            return new Pages(found);
+            return new Pages(found,
+            [
+                .. producers.GroupBy(p => p.Producer, StringComparer.Ordinal)
+                    .Where(g => !g.Any(p => p.Linked)).Select(g => g.Key)
+            ]);
         }
 
         /// <summary>The link covers the record alone, and a cited part follows it as code.</summary>
         public string Cite(string id)
         {
             var citation = Citation.Read(id);
-            if (!Linked(citation.Whole)) return $"`{id}`";
+            if (!TryCite(citation.Whole)) return $"`{id}`";
 
             var link = $"[`{citation.Whole}`][{citation.Whole}]";
             return citation.Part is null ? link : $"{link}`.{citation.Part}`";
@@ -757,7 +765,7 @@ public static class Reports
 
         public string Cite(IReadOnlyList<string> ids) => string.Join(", ", ids.Select(Cite));
 
-        public string Heading(string record) => Linked(record) ? $"[{record}][{record}]" : record;
+        public string Heading(string record) => TryCite(record) ? $"[{record}][{record}]" : record;
 
         /// <summary>One definition per record the report cited, written at its foot.</summary>
         public void Define(StringBuilder body)
@@ -765,21 +773,22 @@ public static class Reports
             foreach (var (label, page) in cited) body.AppendLine($"[{label}]: {page}");
         }
 
-        private bool Linked(string record)
+        /// <summary>False where the record has no page. True records it for <c>Define</c>.</summary>
+        private bool TryCite(string record)
         {
             if (!addresses.TryGetValue(record, out var page)) return false;
             cited[record] = page;
             return true;
         }
-    }
 
-    /// <summary>
-    /// The id an exported record states and the page its producer published it at. Either may be null.
-    /// </summary>
-    private static (string? Id, string? Page) Page(InheritedRecord record)
-    {
-        var json = JsonRead.Parse(record.Content);
-        return (JsonRead.Str(JsonRead.Object(json?["fields"])?["id"]),
-            JsonRead.Str(JsonRead.Object(json?["links"])?["human"]));
+        /// <summary>
+        /// The id an exported record states and the page its producer published it at. Either may be null.
+        /// </summary>
+        private static (string? Id, string? Page) Published(InheritedRecord record)
+        {
+            var json = JsonRead.Parse(record.Content);
+            return (JsonRead.Str(JsonRead.Object(json?["fields"])?["id"]),
+                JsonRead.Str(JsonRead.Object(json?["links"])?["human"]));
+        }
     }
 }

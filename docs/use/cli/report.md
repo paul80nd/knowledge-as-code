@@ -59,8 +59,8 @@ so a rule reads ``[`std-CI`][std-CI]`.PERMS` ``. In the clause tables, the `###`
 * A record this corpus holds links by its path from the `reports/` folder. `link-resolves` checks each link once the
   report is kept as a record.
 * An imported record links to the page its producer published, which its export states as `links.human`.
-* An import whose producer publishes nowhere a link can address states no page. Its ids stay bare code, and
-  `## Limits` names the import.
+* A corpus that publishes nowhere a link can address states no page for its records. Their ids stay bare code, and
+  `## Limits` names that corpus, whether you import it directly or through a chain.
 
 Each link is defined once, at the foot of the report.
 
