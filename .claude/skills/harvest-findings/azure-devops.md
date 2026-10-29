@@ -24,9 +24,21 @@ the project alone as its area path.
 **`--resource` in every `az rest` call is the application id of Azure DevOps.** It tells `az` which token to sign the
 call with.
 
-**Pass the query string in `--uri-parameters`, and end the URL at its path.** On Windows `az` runs as `az.cmd`, and
-`cmd.exe` cuts a URL at its `&` even inside quotes. Single-quote `'$expand=relations'`, because a shell expands
-`$expand` otherwise.
+## Running a command
+
+**Run each command as it is written here, in whichever shell you use.** Replace the placeholders and change nothing
+else. Every command is one line, and runs unchanged in sh, Git Bash and PowerShell. On Windows `az` runs as `az.cmd`,
+so `cmd.exe` reads each argument after your shell does. Four rules keep a command working in every one of them.
+
+| Rule                                                            | What breaks otherwise                                            |
+|-----------------------------------------------------------------|------------------------------------------------------------------|
+| End a URL at its path, and pass the query in `--uri-parameters` | `cmd.exe` cuts a URL at its `&`, even inside quotes              |
+| Single-quote `'$expand=relations'`                              | sh and PowerShell both expand `$expand` inside double quotes     |
+| Single-quote a file argument, as `'@<path>'`                    | PowerShell reads a bare `@` as its splatting operator            |
+| Read a field out of the JSON a command returns                  | A `--query` naming `"System.Tags"` needs shell-specific escaping |
+
+**Keep a command on one line where you add to it.** A trailing `\` continues a line in sh, and PowerShell refuses the
+whole command.
 
 ## Signing in
 
@@ -49,10 +61,8 @@ Azure creates any tag it is given, so a backlog here has no unmarked finding and
 first read returns ids. The third returns the titles, which is enough to spot a duplicate.
 
 ```bash
-az boards query --org https://dev.azure.com/<org> --project "<project>" \
-  --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.AreaPath] UNDER '<area path>' AND [System.Tags] CONTAINS 'kac:finding' AND [System.Tags] NOT CONTAINS 'kac:triaged' AND [System.State] NOT IN ('Closed', 'Done', 'Removed')"
-az boards query --org https://dev.azure.com/<org> --project "<project>" \
-  --wiql "SELECT [System.Id], [System.Title], [System.Tags] FROM WorkItems WHERE [System.AreaPath] UNDER '<area path>' AND [System.Tags] CONTAINS 'kac:triaged'"
+az boards query --org https://dev.azure.com/<org> --project "<project>" --wiql "SELECT [System.Id] FROM WorkItems WHERE [System.AreaPath] UNDER '<area path>' AND [System.Tags] CONTAINS 'kac:finding' AND [System.Tags] NOT CONTAINS 'kac:triaged' AND [System.State] NOT IN ('Closed', 'Done', 'Removed')"
+az boards query --org https://dev.azure.com/<org> --project "<project>" --wiql "SELECT [System.Id], [System.Title], [System.Tags] FROM WorkItems WHERE [System.AreaPath] UNDER '<area path>' AND [System.Tags] CONTAINS 'kac:triaged'"
 ```
 
 * **`UNDER` takes in the areas below it too.**
@@ -96,7 +106,7 @@ Write the comment as a JSON string. Put a backslash before each backslash and ea
 break as `\n` and each tab as `\t`.
 
 ```bash
-az rest --method post --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workItems/<id>/comments' --uri-parameters format=markdown api-version=7.1-preview.4 --resource 499b84ac-1321-427f-aa17-267ca6975798 --headers Content-Type=application/json --body @<path>
+az rest --method post --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workItems/<id>/comments' --uri-parameters format=markdown api-version=7.1-preview.4 --resource 499b84ac-1321-427f-aa17-267ca6975798 --headers Content-Type=application/json --body '@<path>'
 ```
 
 `format=markdown` stores the comment as Markdown, so a backtick, a quotation mark and a fence all survive. Go back to
@@ -107,8 +117,7 @@ the section that sent you here.
 Move it to the other address's area path. `System.AreaPath` is a plain field, so `az boards` sets it:
 
 ```bash
-az boards work-item update --org https://dev.azure.com/<org> --id <id> \
-  --fields "System.AreaPath=<the other address's area path>"
+az boards work-item update --org https://dev.azure.com/<org> --id <id> --fields "System.AreaPath=<the other address's area path>"
 ```
 
 Then comment why it moved, and the corpus whose area it moved to, as [Write a comment](#write-a-comment) does. Where
@@ -116,14 +125,20 @@ Azure refuses the area, write no comment. Go back to [Read the addresses](SKILL.
 
 ## `triage` step 8: label, and comment the reason
 
-**Azure replaces the whole tag field.** Read the tags the work item has, immediately before you write, and write them
-back with the new ones on the end. Writing only the new ones drops `kac:finding`, and the issue leaves every query that
-would have found it again.
+**Write back every tag the work item has, with the new ones on the end.** Then the write keeps `kac:finding` whether
+Azure merges the tags you send or replaces them. A finding without `kac:finding` leaves every query that would find it
+again.
+
+Read the tags immediately before you write. Take `fields."System.Tags"` from the JSON this call returns:
 
 ```bash
-az boards work-item show --org https://dev.azure.com/<org> --id <id> --query "fields.\"System.Tags\""
-az boards work-item update --org https://dev.azure.com/<org> --id <id> \
-  --fields "System.Tags=<the tags that command printed>; kac:triaged; kac:route-record"
+az rest --method get --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workitems/<id>' --uri-parameters api-version=7.1 --resource 499b84ac-1321-427f-aa17-267ca6975798
+```
+
+Then write them back with the two new ones:
+
+```bash
+az boards work-item update --org https://dev.azure.com/<org> --id <id> --fields "System.Tags=<the tags you read>; kac:triaged; kac:route-record"
 ```
 
 Then post the comment, as [Write a comment](#write-a-comment) does. Go back to
@@ -135,8 +150,7 @@ Read the work item with the `az rest` call in [step 1](#triage-step-1-read-the-q
 the links.
 
 * **A linked pull request is a relation whose `attributes.name` is `Pull Request`.** Its `rel` is `ArtifactLink`, and
-  its `url` ends with the pull request's id, after the last `%2F`. Add
-  `--query "relations[?attributes.name=='Pull Request'].url"` to list only those.
+  its `url` ends with the pull request's id, after the last `%2F`. Read `relations` from the JSON the call returns.
 * **`fields."System.State"` of `Closed`, `Done` or `Removed` is a closed finding.**
 * **The tags are the labels.** Read `kac:triaged` and the route from `fields."System.Tags"`.
 
@@ -157,14 +171,12 @@ Copy `<project>` as `base` gives it. Go back to [step 3](SKILL.md#3-write-the-re
 decode the project.
 
 ```bash
-az repos pr create --org https://dev.azure.com/<org> --project "<project>" --repository "<repo>" \
-  --source-branch <branch> --title "<the record, in one line>" --description @<path> \
-  --work-items <id> --transition-work-items true
+az repos pr create --org https://dev.azure.com/<org> --project "<project>" --repository "<repo>" --source-branch <branch> --title "<the record, in one line>" --description '@<path>' --work-items <id> --transition-work-items true
 ```
 
 * **`--work-items <id>` links the finding**, and `--transition-work-items true` moves it on when somebody completes the
   pull request. That link settles the finding, so the body needs no `Closes` line.
-* **`@<path>` reads the description from the file.** `az` loads any argument starting with `@` from that file. Where
+* **`'@<path>'` reads the description from the file.** `az` loads any argument starting with `@` from that file. Where
   it cannot read the file it sends the text `@<path>` instead, so check the `description` in the response.
 * **Keep the body under 4,000 characters.** Azure DevOps refuses a longer pull request description.
 * **The target is the repository's default branch.** Add `--target-branch <branch>` only where the corpus merges
