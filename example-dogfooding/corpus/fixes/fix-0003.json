@@ -36,6 +36,6 @@
     "Why it happens": "A golden records what the tool emits for a scenario: the generated files, the export, and the check and message of every finding. Every type page's generated tables move with `.schema/`, so a schema change moves the `generate` scenarios. The suite is a gate on purpose, and it only works where somebody reads the diff before accepting it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/dog-fooding/fixes/goldens-disagree.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5cb4b7171b05fdf0c09136026ef499dcd3d36940/examples/dog-fooding/fixes/goldens-disagree.md"
   }
 }

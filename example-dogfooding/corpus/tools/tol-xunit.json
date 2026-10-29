@@ -29,9 +29,9 @@
   "sections": {
     "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature documents through the same runner. `kac.goldens` runs `kac` as a process over each fixture and compares what it wrote with the committed goldens, one test case per fixture. One `dotnet test --project <path>` command covers any of the three.\n\nAll three projects reference xUnit as `xunit.v3`, which makes each project a Microsoft.Testing.Platform app. `global.json` sets `test.runner` to `Microsoft.Testing.Platform`, so `dotnet test` runs each project as that app. A trait filter is an argument to the app: `--filter-trait \"Kind=Repository\"` selects the repository tests, and `--filter-not-trait` skips them. In `kac.goldens`, `--filter-trait \"Scenario=<name>\"` selects one fixture.\n\n`xunit.v3` brings in `Microsoft.Testing.Extensions.Telemetry`, which sends usage data to Microsoft unless told not to. Both workflows set `TESTINGPLATFORM_TELEMETRY_OPTOUT` and `DOTNET_CLI_TELEMETRY_OPTOUT`, so CI sends none. A contributor's machine sends it unless one of the two is set there.",
     "Licence and obligations": "`xunit.v3` is Apache-2.0. The Microsoft.Testing.Platform packages it brings in are MIT, which is why this entry names both. Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes them: the packages are test-only, and no published artefact includes them.",
-    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/dog-fooding/services/kac.md) is tested with it."
+    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/5cb4b7171b05fdf0c09136026ef499dcd3d36940/examples/dog-fooding/services/kac.md) is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/dog-fooding/tools/testing/xunit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5cb4b7171b05fdf0c09136026ef499dcd3d36940/examples/dog-fooding/tools/testing/xunit.md"
   }
 }
