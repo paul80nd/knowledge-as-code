@@ -22,7 +22,11 @@ path with `\`. An `area` of `kac-it-swdev/subteam` is `<project>\kac-it-swdev\su
 the project alone as its area path.
 
 **`--resource` in every `az rest` call is the application id of Azure DevOps.** It tells `az` which token to sign the
-call with. Single-quote each `az rest` URL, because a shell expands `$expand` and splits on `&` otherwise.
+call with.
+
+**Pass the query string in `--uri-parameters`, and end the URL at its path.** On Windows `az` runs as `az.cmd`, and
+`cmd.exe` cuts a URL at its `&` even inside quotes. Single-quote `'$expand=relations'`, because a shell expands
+`$expand` otherwise.
 
 ## Signing in
 
@@ -59,7 +63,7 @@ az boards query --org https://dev.azure.com/<org> --project "<project>" \
 Read each work item the first query returned, and the one issue you were given, through the REST API:
 
 ```bash
-az rest --method get --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workitems/<id>?$expand=relations&api-version=7.1' --resource 499b84ac-1321-427f-aa17-267ca6975798
+az rest --method get --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workitems/<id>' --uri-parameters '$expand=relations' api-version=7.1 --resource 499b84ac-1321-427f-aa17-267ca6975798
 ```
 
 The body is `fields."System.Description"`. `fields."System.Tags"` has the tags, as one string split by `; `.
@@ -67,7 +71,9 @@ The body is `fields."System.Description"`. `fields."System.Tags"` has the tags, 
 **Read the format before you read the block.** `multilineFieldsFormat."System.Description"` says how the body is
 stored.
 
-* **`Markdown`, in upper or lower case:** the body is the Markdown `raise-finding` wrote. Read the block as it is.
+* **`Markdown`, in upper or lower case:** the body is the Markdown `raise-finding` wrote, with its HTML escaped. Azure
+  stores a `>` as `&gt;`, so `provenance: >` arrives as `provenance: &gt;`. Decode the entities the HTML case lists,
+  in its order, and then read the block.
 * **Absent, or anything else:** the body is HTML. An item filed by hand, or before `raise-finding` marked its body
   Markdown, arrives this way. Read the text out of it: start a line at each `<br>`, `</p>`, `</div>` and `</li>`, drop
   every other tag, and decode `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;` and then `&amp;`. The fences may be gone, so
@@ -90,7 +96,7 @@ Write the comment as a JSON string. Put a backslash before each backslash and ea
 break as `\n` and each tab as `\t`.
 
 ```bash
-az rest --method post --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workItems/<id>/comments?format=markdown&api-version=7.1-preview.4' --resource 499b84ac-1321-427f-aa17-267ca6975798 --headers Content-Type=application/json --body @<path>
+az rest --method post --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workItems/<id>/comments' --uri-parameters format=markdown api-version=7.1-preview.4 --resource 499b84ac-1321-427f-aa17-267ca6975798 --headers Content-Type=application/json --body @<path>
 ```
 
 `format=markdown` stores the comment as Markdown, so a backtick, a quotation mark and a fence all survive. Go back to
