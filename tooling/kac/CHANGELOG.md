@@ -17,6 +17,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac validate` warns on a deviation from a clause that binds nobody.** A departure from a `SHOULD`, a `COULD` or a
+  `MAY` takes a reason in the change, and no deviation. `departure-needs-none` now warns where `departs-from` names a
+  policy clause stating no `MUST` or `MUST NOT`, or a standard's rule none of whose bullets states one. An inherited
+  clause is judged on the `level` its export states. A `closed` deviation is silent. Drop such an entry, or name the
+  clause that binds.
+
 ### Changed
 
 - **`kac report coverage` lists only the controls that check something now.** The `Controls` column named every

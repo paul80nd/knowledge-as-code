@@ -182,6 +182,8 @@ public static class ChecksTable
             "A target stating `alert-after` binds a service that raises an alert or a ticket, "
             + "through any offering between.",
             null),
+        ("departure-needs-none", [new("departure-needs-none")],
+            "Each clause or rule in `departs-from` states a MUST or a MUST NOT, and so needs a deviation.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null),
         ("dependency-criticality", [new("dependency-criticality")],

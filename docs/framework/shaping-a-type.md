@@ -239,6 +239,14 @@ departure left standing is the state worth seeing. Two checks warn on it instead
 
 A `closed` record is silent, because the departure is over.
 
+**`departs-from` names a clause that binds.** Departing from an advisory modal, such as a policy's `COULD` or a
+standard's `MAY`, takes a reason in the change, and no deviation. `departure-needs-none` warns on a draft or active
+record naming a clause that states no `MUST` or `MUST NOT`, or a rule none of whose bullets does. It reads an imported
+clause's `level` from the export it came in.
+
+Some clauses admit no deviation at all. `pol-DEVI` lists them in prose, under its `Exceptions` section. No field states
+that list, so no check reads it. Whoever accepts the risk reads that list first.
+
 **In the export:** every section but `Related` travels, and `owner` with them, the only type where it does.
 `assigned-to` stays behind, because a consumer reads who carries the risk.
 

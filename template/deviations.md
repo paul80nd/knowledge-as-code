@@ -98,6 +98,7 @@ this type's records.
 | Check                     | Level   | What it verifies                                                                                      |
 |---------------------------|---------|-------------------------------------------------------------------------------------------------------|
 | `ref-resolves`            | error   | An id in a field that references another document names one that exists, of the type the field names. |
+| `departure-needs-none`    | warning | Each clause or rule in `departs-from` states a MUST or a MUST NOT, and so needs a deviation.          |
 | `review-after-acceptance` | error   | The review date falls after the day the risk was accepted.                                            |
 | `not-open-ended`          | warning | The record does not claim the departure is permanent or open-ended.                                   |
 | `expiry`                  | warning | An active deviation is still inside its review date.                                                  |

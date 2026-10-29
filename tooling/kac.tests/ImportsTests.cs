@@ -57,6 +57,37 @@ public class ImportsTests
     }
 
     [Fact]
+    public void A_clause_level_is_read_from_its_line()
+    {
+        var files = Files();
+        files["eng/policies/clauses.jsonl"] =
+            """{"record":"pol-SCRT","part":"STORE","level":"MUST NOT"}""" + "\n"
+            + """{"record":"pol-SCRT","part":"ROTATE","level":"SHOULD"}""" + "\n";
+
+        var record = Assert.Single(Assert.Single(Loaded(files).Imports).Records);
+
+        Assert.Equal(["MUST NOT"], record.Levels["STORE"]);
+        Assert.Equal(["SHOULD"], record.Levels["ROTATE"]);
+    }
+
+    [Fact]
+    public void A_rule_takes_the_level_of_each_bullet_beneath_it()
+    {
+        var files = Files();
+        files["eng/policies/clauses.jsonl"] =
+            """{"record":"pol-SCRT","part":"STORE","obligations":[{"level":"SHOULD","text":"a"},"""
+            + """{"level":null,"text":"b"},{"level":"MAY","text":"c"}]}""" + "\n";
+
+        var record = Assert.Single(Assert.Single(Loaded(files).Imports).Records);
+
+        Assert.Equal(["SHOULD", null, "MAY"], record.Levels["STORE"]);
+    }
+
+    [Fact]
+    public void A_line_stating_no_level_leaves_its_part_unread()
+        => Assert.False(Assert.Single(Assert.Single(Loaded().Imports).Records).Levels.ContainsKey("STORE"));
+
+    [Fact]
     public void A_type_declaring_no_parts_file_keeps_no_parts()
     {
         var import = Assert.Single(Loaded(Files(partsFile: null)).Imports);

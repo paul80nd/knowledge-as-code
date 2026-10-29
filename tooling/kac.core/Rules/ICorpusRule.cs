@@ -43,4 +43,10 @@ public sealed record CorpusRuleContext(
     Action<Doc, CheckId, string, int?> Warn)
 {
     public IEnumerable<Doc> Records => Docs.Where(d => d.Type == Type);
+
+    /// <summary>The whole schema, for a rule judging a record of another type, or one imported.</summary>
+    public Schema Schema { get; init; } = new();
+
+    /// <summary>What <c>.imports/</c> holds. Pass it to a <c>Resolver</c> with <c>ById</c> to read across it.</summary>
+    public ImportGraph Imports { get; init; } = ImportGraph.None;
 }

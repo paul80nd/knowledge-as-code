@@ -42,6 +42,9 @@ public static class Exporter
     /// <summary>A line without it is this corpus's own, as a bare <c>pol-VURM</c> is in a citation.</summary>
     public const string ShortcodeKey = "shortcode";
 
+    /// <summary>The key a rule's bullet states its modal under, and the one <c>.schema/</c> gives a clause's.</summary>
+    public const string LevelKey = "level";
+
     /// <summary>
     /// <c>type</c> narrows what is written, never what is read. Two runs from one tree write identical bytes but for
     /// the timestamp. <c>inherited</c> is what <c>.imports/</c> holds. <c>docs/reference/export.md</c> says what
@@ -1001,7 +1004,7 @@ public static class Exporter
                 ? null
                 : new JsonArray([.. part.Bullets.Select(b => (JsonNode?)new JsonObject
                 {
-                    ["level"] = JsonValue.Create(b.Level),
+                    [LevelKey] = JsonValue.Create(b.Level),
                     ["text"] = JsonValue.Create(b.Text)
                 })]),
             PartLineSource.PartSeeAlso => part.SeeAlso is null
@@ -1125,14 +1128,10 @@ public static class Exporter
         return (Absent(lead), asides);
     }
 
-    /// <summary>
-    /// The modal is a bold run naming a declared level whole, so <c>MUST NOT</c> is never read as <c>MUST</c>.
-    /// </summary>
     private static IReadOnlyList<Bullet> Bullets(Doc doc, PartRow part, List<Edit> edits, PartSpec spec) =>
     [
         .. Md.BulletSources(doc.Ast, (from, to) => Rewritten(doc.Text, from, to, edits), part.BodyStart, part.BodyEnd)
-            .Select(b => new Bullet(
-                b.Bold.FirstOrDefault(r => spec.Levels.Contains(r, StringComparer.Ordinal)), b.Markdown))
+            .Select(b => new Bullet(spec.BulletLevel(b.Bold), b.Markdown))
     ];
 
     private sealed record Bullet(string? Level, string Text);

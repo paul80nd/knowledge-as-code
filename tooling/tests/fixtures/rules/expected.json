@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 72,
+    "validated": 75,
     "templates": 18,
     "skipped": 0,
     "errors": 38,
-    "warnings": 57,
+    "warnings": 58,
     "infos": 0
   },
   "findings": [
@@ -77,6 +77,13 @@
       "severity": "warning",
       "check": "classification-in-date",
       "message": "this document's `review-by` has passed. Check the classification and the retention against the store, then set `review-by` to the next day someone looks at it."
+    },
+    {
+      "file": "deviations/departure-needs-none.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "departure-needs-none",
+      "message": "`departs-from` names 'pol-ADVS.PREFIX', a clause stating SHOULD and no MUST or MUST NOT, so departing from it needs no deviation. Drop the entry and give the reason in the change that departs, or name the clause that binds."
     },
     {
       "file": "deviations/draft-review-date-passed.md",

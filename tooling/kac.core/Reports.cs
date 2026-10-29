@@ -111,7 +111,7 @@ public static class Reports
 
     /// <summary>The keys a clause line states its wording and its level under.</summary>
     private const string ClauseKey = "clause";
-    private const string LevelKey = "level";
+    private const string LevelKey = Exporter.LevelKey;
 
     /// <summary>
     /// What a report calls a corpus whose descriptor states no <c>corpus:</c>. Only a printed report meets it.

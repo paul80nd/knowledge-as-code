@@ -186,6 +186,9 @@ rules:
     message: >
       this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active` with a
       new `review-by`, set a new date, or delete the record if nothing departs from the rule.
+  - id: departs-only-from-what-binds
+    description: Each clause or rule in `departs-from` states a MUST or a MUST NOT.
+    severity: warning
   - id: high-risk-review-window
     description: A deviation rated high is reviewed within six months of acceptance.
     severity: warning

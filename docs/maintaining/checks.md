@@ -20,14 +20,15 @@ A rule needs C# when one fixed message cannot tell the author what the code coul
 Cost comes second. It argues for turning a class into an `expr:` only where one fixed message already says everything
 the class would.
 
-| Rule                         | What its message names                                                                        |
-|------------------------------|-----------------------------------------------------------------------------------------------|
-| `y-statement-present`        | the moves missing from a Y-statement, where an expression could only say it is not one        |
-| `alternatives-have-verdicts` | the Alternatives Considered bullet with no verdict                                            |
-| `terms-are-alphabetical`     | the glossary term out of order, and the term it belongs before                                |
-| `no-dependency-cycles`       | the route of a dependency loop, reported once against the lowest id on it                     |
-| `dependency-criticality`     | the record cited, and the grade of each end, reading the ranking from `ordered: true`         |
-| `mirrors-repo-links`         | a repository in `repos:` with no link, or a link with no entry, built from [`repos-base`][rb] |
+| Rule                           | What its message names                                                                        |
+|--------------------------------|-----------------------------------------------------------------------------------------------|
+| `y-statement-present`          | the moves missing from a Y-statement, where an expression could only say it is not one        |
+| `alternatives-have-verdicts`   | the Alternatives Considered bullet with no verdict                                            |
+| `terms-are-alphabetical`       | the glossary term out of order, and the term it belongs before                                |
+| `no-dependency-cycles`         | the route of a dependency loop, reported once against the lowest id on it                     |
+| `dependency-criticality`       | the record cited, and the grade of each end, reading the ranking from `ordered: true`         |
+| `mirrors-repo-links`           | a repository in `repos:` with no link, or a link with no entry, built from [`repos-base`][rb] |
+| `departs-only-from-what-binds` | the clause a deviation cites and the modals it states, read from the export for an import     |
 
 [rb]: ../use/corpus-descriptor.md#repos-base
 
