@@ -68,7 +68,8 @@ adopters, so a field the trial needs can have no record here yet.
 
 ## Runs
 
-| Run                                      | Commit      | What it is                                                    |
-|------------------------------------------|-------------|---------------------------------------------------------------|
-| [2026-10-27](runs/2026-10-27.md)         | `375411d43` | the measurement                                               |
-| [2026-10-27 fit](runs/2026-10-27-fit.md) | `76bc68189` | whether an example corpus has a place for each unused surface |
+| Run                                                | Commit      | What it is                                                    |
+|----------------------------------------------------|-------------|---------------------------------------------------------------|
+| [2026-10-27](runs/2026-10-27.md)                   | `375411d43` | the measurement                                               |
+| [2026-10-27 fit](runs/2026-10-27-fit.md)           | `76bc68189` | whether an example corpus has a place for each unused surface |
+| [2026-10-29 adopting](runs/2026-10-29-adopting.md) | `ff4b98f7e` | the adopting corpus, read with `--corpus` (#1206)             |
