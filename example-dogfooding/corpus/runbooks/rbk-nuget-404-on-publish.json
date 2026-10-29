@@ -10,15 +10,18 @@
     "applies-to": [
       "svc-kac"
     ],
-    "last-rehearsed": "never",
+    "last-rehearsed": {
+      "at": "2026-10-29",
+      "by": "claude-code/opus-5.5",
+      "method": "tabletop"
+    },
     "rehearsal-frequency": "per-release",
     "requires-tools": [
       "`curl` and `jq`",
       "The .NET SDK, for `dotnet tool install`"
     ],
     "requires-access": [
-      "Actions, to read a run log and re-run a job on paul80nd/knowledge-as-code",
-      "The required reviewer on the nuget.org environment"
+      "Actions, to read a run log on paul80nd/knowledge-as-code"
     ],
     "tags": [
       "nuget",
@@ -30,6 +33,6 @@
     "Impact": "Nobody can install `kac` at the new version. An installation already on an older version keeps working."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5cb4b7171b05fdf0c09136026ef499dcd3d36940/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ff4b98f7e832260c4bde38430bf3d834389bc50c/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
   }
 }
