@@ -24,13 +24,13 @@
     ]
   },
   "sections": {
-    "Target": "RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/payments/services/payment-ledger.md). Both figures are read against each failure.",
+    "Target": "RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/payments/services/payment-ledger.md). Both figures are read against each failure.",
     "Why this number": "Five minutes is a chosen figure. The PSP's settlement file lists every authorisation it took, so the reconciliation can rebuild any gap shorter than a day. Five minutes is how much repair finance accepts after a failure, and no failover has tested it.\n\nThe hour is a figure the quarterly restore has already met. `Current actual` records the last one at 38 minutes, so the target commits to what the procedure does today and not to an improvement nobody has planned.",
-    "How it is measured": "A quarterly restore into an isolated environment measures both figures. The recovery time runs from the decision to restore to the ledger serving queries. The recovery point compares the last entry in the restored data with the last entry the source held.\n\nA failover to the geo-replica loses whatever the replica had not yet received, and nothing measures that lag. [pmt-0001](https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/payments/postmortems/0001-refused-authorised-payments.md) lost 11 minutes that way. Until its action to alert on replica lag lands, a failover can breach this target and nothing reports it.",
+    "How it is measured": "A quarterly restore into an isolated environment measures both figures. The recovery time runs from the decision to restore to the ledger serving queries. The recovery point compares the last entry in the restored data with the last entry the source held.\n\nA failover to the geo-replica loses whatever the replica had not yet received, and nothing measures that lag. [pmt-0001](https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/payments/postmortems/0001-refused-authorised-payments.md) lost 11 minutes that way. Until its action to alert on replica lag lands, a failover can breach this target and nothing reports it.",
     "What a breach costs": "Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger has no entry for it. Until the repair runs, the ledger understates what was taken.",
     "What we do about a breach": "No alert fires, because the figure is read at a restore and not continuously. The repair is the reconciliation, which rebuilds the missing entries from the PSP's settlement file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/payments/nfrs/0002-ledger-recovery-point.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/payments/nfrs/0002-ledger-recovery-point.md"
   }
 }

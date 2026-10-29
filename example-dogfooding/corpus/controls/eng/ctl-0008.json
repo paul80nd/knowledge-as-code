@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-NETTST.COVER](https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/engineering/standards/platform/dotnet/testing.md#cover-coverage-is-collected-by-the-build) says a build \"**MUST** collect coverage from its test run and publish\n  the report\".\n* It says a build \"**SHOULD** write the report in Cobertura format: with `--collect:\"XPlat Code Coverage\"` under\n  VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with\n  `Microsoft.Testing.Extensions.CodeCoverage` referenced\".",
+    "What it checks": "* [std-NETTST.COVER](https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/engineering/standards/platform/dotnet/testing.md#cover-coverage-is-collected-by-the-build) says a build \"**MUST** collect coverage from its test run and publish\n  the report\".\n* It says a build \"**SHOULD** write the report in Cobertura format: with `--collect:\"XPlat Code Coverage\"` under\n  VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with\n  `Microsoft.Testing.Extensions.CodeCoverage` referenced\".",
     "How it works": "Nothing runs. The check this rule needs is a pipeline step after `dotnet test`. It fails where the run wrote no Cobertura report:\n\n```sh\nfind . -path '*/TestResults/*' -name '*cobertura.xml' | grep -q .\n```\n\nThe search matches both forms the `SHOULD` names. VSTest writes `TestResults/<guid>/coverage.cobertura.xml`, and Microsoft.Testing.Platform writes `TestResults/<guid>.cobertura.xml`. A build using another collector, as the `SHOULD` allows, changes the path the step searches for.\n\nThe step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and could only search it for the collector flag.",
     "Coverage and gaps": "A reviewer reading the pipeline definition is the only thing that notices a missing collector today.\n\nThe check proves a report was written. It does not prove the report was published, or that each test project is excluded from its own figure."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/engineering/controls/0008-dotnet-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/engineering/controls/0008-dotnet-coverage.md"
   }
 }

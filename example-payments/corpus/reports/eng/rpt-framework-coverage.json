@@ -7,20 +7,20 @@
     "title": "Framework coverage",
     "status": "active",
     "generated": {
-      "at": "2026-10-21T19:25:00Z",
+      "at": "2026-10-29T09:51:00Z",
       "by": "claude-code/opus-5.5",
       "report": "frameworks",
-      "tool": "kac/0.36.0"
+      "tool": "kac/0.43.0"
     },
     "sources": [
       {
         "resource": "example-engineering",
-        "version": "0.45.0"
+        "version": "0.45.1"
       }
     ],
     "verified": [
       {
-        "at": "2026-10-21T19:35:00Z",
+        "at": "2026-10-29T09:52:00Z",
         "by": "human:paul.law"
       }
     ],
@@ -31,6 +31,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1e01dd225ad020065fa2beed733fbe9a25ce4070/examples/engineering/reports/framework-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/engineering/reports/framework-coverage.md"
   }
 }
