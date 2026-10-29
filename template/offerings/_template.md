@@ -45,7 +45,10 @@ at least one. A corpus that declined `nfrs` is not asked for any.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
-One or two sentences on what a customer gets from this.
+Where the status is not `live`, open with the status and what a customer can do today, as "This is planned, and no
+customer can reach it yet." Then one or two sentences on what a customer gets from this.
+
+_(A reader who lands on the first sentence takes it as what works today.)_
 
 ## What it does
 

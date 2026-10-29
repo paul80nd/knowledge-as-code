@@ -19,7 +19,8 @@ tags: [ holds, payments ]
 
 `Offering: ofr-reservations` `BUILDING`
 
-A borrower places a hold on an item held at another branch, pays the fee it attracts, and collects it when it arrives.
+This is being built, and no borrower can reach it yet. It is for a borrower who wants to place a hold on an item held
+at another branch, pay the fee it attracts, and collect the item when it arrives.
 
 ## What it does
 
