@@ -1,0 +1,41 @@
+{
+  "type": "fixes",
+  "path": "fixes/goldens-disagree.md",
+  "trust": "unverified",
+  "fields": {
+    "id": "fix-0003",
+    "title": "The golden suite reports a diff nobody meant",
+    "status": "draft",
+    "symptom-keywords": [
+      "ci",
+      "committed generated files do not match the generator",
+      "github_actions",
+      "golden",
+      "kac.goldens",
+      "kac_update_goldens",
+      "no golden",
+      "passes locally",
+      "snapshot",
+      "the export no longer writes"
+    ],
+    "applies-to": [
+      "svc-kac"
+    ],
+    "verified": null,
+    "review-by": "2027-04-29",
+    "tags": [
+      "goldens",
+      "testing"
+    ]
+  },
+  "sections": {
+    "Symptom": "`dotnet test --project tooling/kac.goldens` reports `failed kac.goldens.GoldenTests.Scenario(name: \"<name>\")`. Under it is a line opening `FAIL` and naming the scenario. What differs follows on the same line or on the indented lines under it. For example:\n\n* `committed generated files do not match the generator.`, on the `FAIL` line itself\n* `the export no longer writes <path>: what a consumer reads has changed`\n* `the export writes <path>, which the committed copy does not hold: a new file for a consumer`\n* `<path> differs from the committed export: <the first difference>`\n* `no expectation for <what> at <file>. run with KAC_UPDATE_GOLDENS=1, then read the diff`\n\nThe suite can also print `MISSING <name>: no golden.` Two variants share the cause: one of `kac.goldens` and `kac.tests` passes while the other fails, and the branch is green on your machine and red in CI.",
+    "Environment": "A checkout of this repository with a .NET 10 SDK, on a branch that changed `.schema/`, `tooling/`, or what `kac export` or `kac pack` writes. CI sets `GITHUB_ACTIONS` and compares the branch with the pull request's base.",
+    "Cause": "The tool on this branch emits output that differs from the committed golden. A change to `.schema/`, to what the export writes, or to a check or its message moves a golden. Where only CI fails, the local run differed from CI's: it ran without `GITHUB_ACTIONS`, or against an `origin/main` older than the pull request's base.",
+    "Resolution": "**Do not set `KAC_UPDATE_GOLDENS` before you have read what changed.** Regenerating a golden accepts whatever the tool now emits, and the export golden is a contract a consumer reads.\n\nRun each command from the root of the repository.\n\n1. Run the failing scenario on its own, the way CI runs it. The filter matches the whole name.\n\n   ```sh\n   GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens --filter-trait \"Scenario=<name>\"\n   ```\n\n   A failed scenario prints one line opening `FAIL` or `MISSING`. Where only `kac.tests` failed, run `dotnet test --project tooling/kac.tests`, and change what the failing test's message says. Where the scenario passes here, fetch `main` and run the unit layer against it, as CI does. Each failing test's message says what to change.\n\n   ```sh\n   git fetch origin main\n   KAC_BASE_REF=origin/main dotnet test --project tooling/kac.tests\n   ```\n\n2. Where a line under `FAIL` says `the export no longer writes`, restore that path in the tool and leave the golden\n   alone. A consumer that reads that path breaks.\n3. Confirm your branch changed `.schema/`, what `kac export` or `kac pack` writes, or a check or a message in\n   `tooling/`. A diff from none of these is not one your change made.\n4. Regenerate the scenario that failed.\n\n   ```sh\n   GITHUB_ACTIONS=true KAC_UPDATE_GOLDENS=1 dotnet test --project tooling/kac.goldens --output Detailed --filter-trait \"Scenario=<name>\"\n   ```\n\n   It prints one line opening `UPDATE` under the scenario. The run passes even where that line says `WARNING: export failed` or `WARNING: still stale after regen`, so read the line for `WARNING`.\n\n5. Read the diff, and list the files the update added.\n\n   ```sh\n   git diff tooling/tests/fixtures/\n   git status --short tooling/tests/fixtures/\n   ```\n\n6. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you\n   have just accepted. Add the case that would have caught it before you regenerate again.\n7. Run all three test layers, one at a time. Each prints `Test run summary: Passed!`.\n\n   ```sh\n   dotnet test --project tooling/kac.tests\n   dotnet test --project tooling/kac.features\n   GITHUB_ACTIONS=true dotnet test --project tooling/kac.goldens\n   ```\n\n8. Run `dotnet run --project ../../tooling/kac -- generate` in each corpus you changed under `examples/`, and in\n   `template/` with `../tooling/kac` as the project.\n9. Say in the commit message why the golden moved.\n\nIt worked when all three layers pass and the diff contains only lines you can account for. To undo step 4, run `git checkout -- tooling/tests/fixtures/`, which also discards any other uncommitted change there. List the files it leaves with `git clean -n tooling/tests/fixtures/`, and delete each one you did not write.\n\nRaise an issue on this repository for the tool's owner where any of these happens:\n\n* The export dropped a path and you cannot restore it.\n* Step 3 finds no change of yours behind the diff.\n* An update prints a `WARNING`.\n* The three layers disagree and you cannot tell which is right.\n* CI fails while the unit layer passes here against `origin/main`. Attach the job's log.",
+    "Why it happens": "A golden records what the tool emits for a scenario: the generated files, the export, and the check and message of every finding. Every type page's generated tables move with `.schema/`, so a schema change moves the `generate` scenarios. The suite is a gate on purpose, and it only works where somebody reads the diff before accepting it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/dog-fooding/fixes/goldens-disagree.md"
+  }
+}

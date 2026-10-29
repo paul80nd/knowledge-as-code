@@ -1,12 +1,12 @@
-example-dogfooding 0.92.0 travels with this session as data, exported 2026-10-29.
+example-dogfooding 0.93.0 travels with this session as data, exported 2026-10-29.
 controls. 15 records: A merge waits for the validate job, Every job in kac.yml sits behind the gate, Every workflow passes actionlint, Every YAML file passes yamllint, Every corpus holds the file the template sends it and 10 more.
 controls (from eng). 9 records: Nothing checks that an image is named by digest, Nothing checks that a running service reports its commit, Nothing checks that an alert names an owner and a first action, Nothing checks that a skipped test cites a deviation, Nothing checks that an interface change carries a version and a notice and 4 more.
 deviations. 12 records: The reasoning behind a decision lives in the commit that made it, A consumer of the export gets no notice period, A generated file keeps no record of the run that wrote it, Everything here runs on GitHub, and nothing says how it would leave, There is no incident process, so everything is handled informally and 7 more.
-fixes. 2 records: pip cannot find the linter versions the lint job pins and An .editorconfig key edited from a shell changes nothing in the IDE.
+fixes. 4 records: pip cannot find the linter versions the lint job pins, An .editorconfig key edited from a shell changes nothing in the IDE, The golden suite reports a diff nobody meant and kac restore cannot find the version the lock names.
 processes. 9 records: Add a record to a corpus, Add a knowledge type, Change a skill or a hook, Change the schema, Change the tool and 4 more.
 reports. 1 record: Clause coverage.
 reports (from eng). 1 record: Framework coverage.
-runbooks. 3 records: The golden suite reports a diff nobody meant, nuget.org answers 404 for a version it has already accepted and kac restore cannot find the version the lock names.
+runbooks. 1 record: nuget.org answers 404 for a version it has already accepted.
 services. 4 records: Corpus package feed, Documentation site, kac and Plugin marketplace.
 standards. 43 entries across 6 records: The documentation site and kac are usable without sight, a mouse or colour, Every check and every publish runs from a workflow in this repository, Configuration is committed, pinned and explained, The plugin carries the corpus, and a skill answers from what travelled, Prose reads the same way whoever wrote it and A version stamp says what it versions, and a move says what changed.
 standards (from eng). 42 entries across 13 records: An interface is described by a contract in the repository, A container image is pinned by digest and runs as a non-root user, C# follows the runtime team's conventions, and the compiler enforces them, One artefact is built once and promoted to production, A dependency is pinned, screened and named in the inventory and 8 more.

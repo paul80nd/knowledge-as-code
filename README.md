@@ -28,6 +28,6 @@ one and ask it questions. The estates they describe are invented and govern nobo
 | `example-libraries` | `0.31.0` |
 | `example-engineering` | `0.45.1` |
 | `example-payments` | `0.41.1` |
-| `example-dogfooding` | `0.92.0` |
+| `example-dogfooding` | `0.93.0` |
 
-Built from [`8d79e9202a4b987e1dbc1c600543f5a0d15dab89`](https://github.com/paul80nd/knowledge-as-code/commit/8d79e9202a4b987e1dbc1c600543f5a0d15dab89).
+Built from [`1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914`](https://github.com/paul80nd/knowledge-as-code/commit/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914).

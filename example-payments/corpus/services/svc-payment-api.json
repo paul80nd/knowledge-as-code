@@ -32,12 +32,12 @@
     ]
   },
   "sections": {
-    "What it does": "Accepts a request with an order, an amount and a card token. Calls the PSP to authorise it. Writes the outcome to [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/8d79e9202a4b987e1dbc1c600543f5a0d15dab89/examples/payments/services/payment-ledger.md). Capture and refund follow the same path.\n\n**The browser sends the card details to the PSP.** The checkout page collects them in a frame the PSP serves, and the browser posts them to the PSP directly. This service receives the token the PSP returned. The application settings show the PSP's publishable key and no card storage of any kind.",
+    "What it does": "Accepts a request with an order, an amount and a card token. Calls the PSP to authorise it. Writes the outcome to [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/payments/services/payment-ledger.md). Capture and refund follow the same path.\n\n**The browser sends the card details to the PSP.** The checkout page collects them in a frame the PSP serves, and the browser posts them to the PSP directly. This service receives the token the PSP returned. The application settings show the PSP's publishable key and no card storage of any kind.",
     "Where it lives": "* **Repository**: [`payment-api`](https://git.example.com/example-payments/payment-api)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-payment-api-<env>`",
-    "Dependencies": "* **[svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/8d79e9202a4b987e1dbc1c600543f5a0d15dab89/examples/payments/services/payment-ledger.md)**: every authorisation, capture and refund is written there before this service replies to its\n  caller. Configured as `Services__Ledger`.\n\nThe PSP is not in this catalogue. It is a third party, called at `api.psp.example.com` and configured as `Psp__BaseUrl`.",
-    "Data": "None of its own. It keeps a card token for one request and stores nothing. [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/8d79e9202a4b987e1dbc1c600543f5a0d15dab89/examples/payments/services/payment-ledger.md) records what happened to a payment."
+    "Dependencies": "* **[svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/payments/services/payment-ledger.md)**: every authorisation, capture and refund is written there before this service replies to its\n  caller. Configured as `Services__Ledger`.\n\nThe PSP is not in this catalogue. It is a third party, called at `api.psp.example.com` and configured as `Psp__BaseUrl`.",
+    "Data": "None of its own. It keeps a card token for one request and stores nothing. [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/payments/services/payment-ledger.md) records what happened to a payment."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d79e9202a4b987e1dbc1c600543f5a0d15dab89/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c1f61c99b1d6cc34da4c46e3f4dd1e8b3c4f914/examples/payments/services/payment-api.md"
   }
 }
