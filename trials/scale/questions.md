@@ -18,7 +18,7 @@ clause of an imported policy, or across a cross-reference between records. The `
 | 1   | Where is the API contract for the Gorse application's payment ledger published?                                                                       | out |
 | 2   | Who owns the Fir application's accepted departure from the rule that operating knowledge must not live in one person's head, and when is it reviewed? | out |
 | 3   | How fast must a card authorisation in the Hazel application return, and how long does a breach last before it alerts?                                 | out |
-| 4   | Only one engineer knows how to restore the Alder ledger, and she is always reachable. Is that acceptable here?                                        | in  |
+| 4   | Only one engineer knows how to restore the Alder ledger, and they are always reachable. Is that acceptable here?                                      | in  |
 | 5   | After the Damson checkout refused payments the card had already authorised, what recovery target was set for its ledger?                              | out |
 | 6   | A customer of the Elder checkout sees two pending amounts on their statement for one order. Has this been solved before, and what do I do?            | out |
 | 7   | How long does the Birch application keep a borrower linked to a returned loan, and does anything enforce that?                                        | in  |
