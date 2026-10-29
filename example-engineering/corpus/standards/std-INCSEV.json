@@ -31,6 +31,6 @@
     "Conformance checklist": "- [ ] Every incident record states the severity it was declared at.\n- [ ] Every sev1 and sev2 paged the on-call engineer.\n- [ ] Every sev1 and sev2 names its incident lead.\n- [ ] Every sev1 posted its status at least every 30 minutes, and every sev2 at least every 2 hours.\n- [ ] Every lowered severity has its reason in the incident record.\n- [ ] Every sev1 and sev2, and every personal data breach, has a postmortem stating the highest severity reached."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8ea1b5a5f9f175b28a13b15fe1ccd03249bf34af/examples/engineering/standards/common/incident-severity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d79e9202a4b987e1dbc1c600543f5a0d15dab89/examples/engineering/standards/common/incident-severity.md"
   }
 }
