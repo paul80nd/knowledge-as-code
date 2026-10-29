@@ -4,4 +4,4 @@
 
 | ID                       | Title                                                                                  | Severity | Status | Last rehearsed |
 |--------------------------|----------------------------------------------------------------------------------------|----------|--------|----------------|
-| rbk-nuget-404-on-publish | [nuget.org answers 404 for a version it has already accepted](nuget-404-on-publish.md) | sev3     | active | never          |
+| rbk-nuget-404-on-publish | [nuget.org answers 404 for a version it has already accepted](nuget-404-on-publish.md) | sev3     | active | 2026-10-29     |
