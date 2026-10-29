@@ -29,6 +29,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   by hand meant editing both, and nothing caught a bullet left behind. The bullet now states the shortcode and the
   corpus, so `sources` is the one place the version is written, and a raise leaves the body untouched. Delete the
   version from the bullet of a report you keep as a record.
+- **The deviation and offering templates ask for two things they left out.** A deviation's `How it closes` asks what
+  closing it costs, in staff time and anything that has to be bought, as prose and with no new field. An offering
+  whose status is not `live` opens with that status and what a customer can do today, so its first sentence does not
+  read as a working product. `kac new` writes both. `kac update` leaves a template you already hold alone, so copy
+  the wording by hand where you want it.
 
 ## 0.43.0 - 2026-10-28
 
