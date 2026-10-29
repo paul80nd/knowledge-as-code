@@ -134,6 +134,13 @@ edit to the policy. Under `validate --since`, `clause-id-kept` compares each pol
 revision with its state now. It fails where a clause id the policy had there has gone. A reworded clause, a new clause
 and a new title pass. A clause that has to go takes a new policy, and this one is retired.
 
+**Two policies binding one obligation give it one clause id, and each signposts the other.** The signpost closes the
+clause, as `([pol-ACCS].DUTIES states the general duty)`. You write both ends, and `kac validate` checks they agree.
+`part-ref` fails a signpost to a clause that does not exist. `pair-one-way` fails a clause that a clause of the same
+id signposts, where it does not signpost back. `shared-id-unsignposted` warns on an id two policies use with no
+signpost either way, because two authors may pick one word by coincidence. A scoped signpost, such as
+`[eng:pol-ACCS].DUTIES`, reaches a corpus that cannot write the other end, so it forms no pair.
+
 **In the export:** each clause travels as its own entry with its `level`, beside `Scope`, `Exceptions` and the opening
 paragraph of `Purpose`, and no alignment travels: [`frameworks.jsonl`](../reference/export.md#frameworksjsonl) sends
 that edge from the framework's end, with the standing beside it.

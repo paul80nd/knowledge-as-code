@@ -25,5 +25,5 @@ This fixture only.
 
 | Id      | Clause                                          | Alignment |
 |---------|-------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `slug-length` and nothing else |           |
+| `MEXP`  | **MUST** trigger `slug-length` and nothing else |           |
 

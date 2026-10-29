@@ -25,5 +25,5 @@ compare against different halves of the filename.
 
 | Id      | Clause                                          | Alignment |
 |---------|-------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `identity-id` and nothing else |           |
+| `RECV`  | **MUST** trigger `identity-id` and nothing else |           |
 

@@ -27,6 +27,6 @@ Every service in the estate.
 | Id      | Clause                                              | Alignment                 |
 |---------|-----------------------------------------------------|---------------------------|
 | `PLACE` | **MUST** place a framework before a clause cites it. | [ISO 27001:2022].A.5.1    |
-| `AGAIN` | **MUST NOT** be told the same thing twice.           | [ISO 27001:2022].A.5.2    |
+| `TWICE` | **MUST NOT** be told the same thing twice.           | [ISO 27001:2022].A.5.2    |
 
 [ISO 27001:2022]: ../frameworks.md#unplaced

@@ -25,5 +25,5 @@ wrong-case branch, which `know-identity-case.md` covers.
 
 | Id      | Clause                                              | Alignment |
 |---------|-----------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `identity-status` and nothing else |           |
+| `ENVS`  | **MUST** trigger `identity-status` and nothing else |           |
 

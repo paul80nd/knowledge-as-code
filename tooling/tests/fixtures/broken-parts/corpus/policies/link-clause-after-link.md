@@ -25,6 +25,6 @@ This fixture only. It exercises `part-ref` where the citation is a link and a pa
 
 | Id      | Clause                                       | Alignment |
 |---------|----------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |
+| `LINK`  | **MUST** trigger `part-ref` and nothing else |           |
 
 [pol-CREF]: cref-unknown-clause.md

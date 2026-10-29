@@ -25,5 +25,5 @@ This fixture only. It exists so `identity-type` is exercised — the check that 
 
 | Id      | Clause                                            | Alignment |
 |---------|---------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `identity-type` and nothing else |           |
+| `TRUS`  | **MUST** trigger `identity-type` and nothing else |           |
 

@@ -17,7 +17,8 @@ public static class CorpusRules
         new FeatureFileRepo(),
         new MirrorsRepoLinks(),
         new RedefinitionsAreLinked(),
-        new ReportStale()
+        new ReportStale(),
+        new SharedIdsSignposted()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, ICorpusRule> ByRuleId =

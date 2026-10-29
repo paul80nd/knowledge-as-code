@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 22,
+    "validated": 27,
     "templates": 3,
     "skipped": 0,
-    "errors": 23,
-    "warnings": 2,
+    "errors": 25,
+    "warnings": 3,
     "infos": 0
   },
   "findings": [
@@ -44,6 +44,13 @@
       "message": "'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry."
     },
     {
+      "file": "policies/back-pair-not-returned.md",
+      "line": 27,
+      "severity": "error",
+      "check": "pair-one-way",
+      "message": "clause 'PAIRED' shares its id with pol-ONEW.PAIRED, which signposts it, and does not signpost that clause back. Close this clause with ([pol-ONEW].PAIRED and what the reader gains there)."
+    },
+    {
       "file": "policies/blnk-empty-clause-section.md",
       "line": 24,
       "severity": "error",
@@ -69,14 +76,14 @@
       "line": 28,
       "severity": "warning",
       "check": "clause-compound",
-      "message": "clause 'CLEAN' carries a second 'MUST': one obligation per clause, or the citation is ambiguous."
+      "message": "clause 'CMPD' carries a second 'MUST': one obligation per clause, or the citation is ambiguous."
     },
     {
       "file": "policies/coln-colon-separator.md",
       "line": 16,
       "severity": "error",
       "check": "part-ref",
-      "message": "'pol-COLN:CLEAN' separates the two halves with a colon. Write 'pol-COLN.CLEAN'."
+      "message": "'pol-COLN:COLN' separates the two halves with a colon. Write 'pol-COLN.COLN'."
     },
     {
       "file": "policies/cref-unknown-clause.md",
@@ -140,6 +147,20 @@
       "severity": "error",
       "check": "part-ref",
       "message": "'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist."
+    },
+    {
+      "file": "policies/rept-repeated-id.md",
+      "line": 27,
+      "severity": "warning",
+      "check": "shared-id-unsignposted",
+      "message": "clause 'INVENT' shares its id with pol-TWIN.INVENT, and neither clause signposts the other. Where they state one obligation, close each with a signpost to the other. Where they do not, give one of them another id."
+    },
+    {
+      "file": "policies/sign-signpost-unknown-clause.md",
+      "line": 27,
+      "severity": "error",
+      "check": "part-ref",
+      "message": "'pol-CREF.GONE' cites a clause 'GONE' that policies/cref-unknown-clause.md does not carry."
     },
     {
       "file": "policies/span-id-not-code.md",

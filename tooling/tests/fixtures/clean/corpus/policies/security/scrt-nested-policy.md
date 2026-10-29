@@ -25,4 +25,4 @@ This fixture only. It sits beside a policy filed flat, so the golden pins both a
 | Id      | Clause                                                       | Alignment |
 |---------|--------------------------------------------------------------|-----------|
 | `NEST`  | **MUST** stay free of findings from one folder down          |           |
-| `LOCAL` | **MUST NOT** link anywhere, for the reason `pol-VURM` gives  |           |
+| `NOLINK` | **MUST NOT** link anywhere, for the reason `pol-VURM` gives |           |

@@ -161,6 +161,10 @@ rules:
     # `postures:` lists the standings that oblige a summary, in the words `frameworks.md` files them under.
     # The corpus decides that list, and `kac` reads it.
 
+  - id: shared-ids-signposted
+    description: Two clauses sharing an id in different policies each signpost the other.
+    severity: error
+
   - id: review-not-before-active
     description: '`review-by` is at or after `active-from`.'
     severity: error

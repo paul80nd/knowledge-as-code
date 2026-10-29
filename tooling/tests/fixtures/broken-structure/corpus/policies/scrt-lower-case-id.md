@@ -24,5 +24,5 @@ This fixture only.
 
 | Id      | Clause                                        | Alignment |
 |---------|-----------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `id-format` and nothing else |           |
+| `SCRT`  | **MUST** trigger `id-format` and nothing else |           |
 

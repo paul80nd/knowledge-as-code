@@ -25,4 +25,4 @@ This fixture only. It exists so `clause-compound` is exercised.
 
 | Id      | Clause                                                                          | Alignment |
 |---------|---------------------------------------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `clause-compound`, and **MUST** do nothing else while doing it |           |
+| `CMPD`  | **MUST** trigger `clause-compound`, and **MUST** do nothing else while doing it |           |

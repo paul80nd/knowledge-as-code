@@ -25,4 +25,4 @@ This fixture only. It exists so `part-ref` is exercised where the document resol
 
 | Id      | Clause                                       | Alignment |
 |---------|----------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |
+| `CREF`  | **MUST** trigger `part-ref` and nothing else |           |

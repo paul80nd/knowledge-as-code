@@ -66,6 +66,12 @@ public class PartRow
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? CellLinks;
 
     /// <summary>
+    /// Each part citation the Clause cell writes as a link, such as <c>pol-ACCS.DUTIES</c>, as <c>part-ref</c> reads
+    /// it. Empty for a heading.
+    /// </summary>
+    public IReadOnlyList<Citation> Signposts = [];
+
+    /// <summary>
     /// The body of a part written as a heading: up to the next part, the end of its section or the end of the document.
     /// Both zero for a table row, whose body is the row.
     /// </summary>
@@ -233,7 +239,7 @@ public partial class Doc
         ReadIdentity(ast, doc);
 
         // Citations are collected whatever the document's type, because a part is rarely cited from its own type.
-        if (type?.Parts is { } parts) ReadParts(ast, doc, parts);
+        if (type?.Parts is { } parts) ReadParts(ast, doc, parts, schema);
         foreach (var code in ast.Descendants<CodeInline>())
         {
             if (code.Content is not { } content) continue;
@@ -505,7 +511,7 @@ public partial class Doc
     [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
     private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 
-    private static void ReadParts(MarkdownDocument ast, Doc doc, PartSpec spec)
+    private static void ReadParts(MarkdownDocument ast, Doc doc, PartSpec spec, Schema schema)
     {
         var inSection = false;
 
@@ -536,7 +542,7 @@ public partial class Doc
             if (!inSection || spec.Source != PartSpec.Table) continue;
             if (block is not Markdig.Extensions.Tables.Table table) continue;
 
-            ReadTable(doc, table);
+            ReadTable(doc, table, schema);
             return;
         }
 
@@ -591,7 +597,7 @@ public partial class Doc
     /// <summary>
     /// Every row gives a <c>PartRow</c>, however malformed, so "no table here" is the only thing the parser decides.
     /// </summary>
-    private static void ReadTable(Doc doc, Markdig.Extensions.Tables.Table table)
+    private static void ReadTable(Doc doc, Markdig.Extensions.Tables.Table table, Schema schema)
     {
         doc.PartTableLine = table.Line + 1;
         foreach (var row in table.OfType<Markdig.Extensions.Tables.TableRow>())
@@ -621,7 +627,17 @@ public partial class Doc
                     : null,
                 Line = row.Line + 1,
                 Cells = Cells(doc.PartTableHeaders, cells),
-                CellLinks = Links(doc.PartTableHeaders, cells)
+                CellLinks = Links(doc.PartTableHeaders, cells),
+                Signposts = clause is null
+                    ? []
+                    :
+                    [
+                        .. clause.Descendants<LinkInline>()
+                            .Select(l => LinkCitation(l, schema))
+                            .OfType<string>()
+                            .Where(c => PartCitationRegex().IsMatch(c))
+                            .Select(Citation.Read)
+                    ]
             });
         }
 

@@ -589,6 +589,21 @@ checks:
       clause as it renders and as it is written, with whitespace collapsed on both sides, so a quotation wrapped
       across two lines still compares equal. A quoted span on a line carrying no citation is left alone.
 
+  pair-one-way:
+    severity: error
+    description: A clause signposted by a clause of the same id in another policy signposts that clause back.
+    notes: >
+      A signpost is a `[pol-X].ID` link in the clause text, and one naming a clause that does not exist is
+      `part-ref`'s. A scoped signpost reaches a corpus that cannot write the other end, so it makes no pair. See
+      <https://paul80nd.github.io/knowledge-as-code/maintaining/architecture/#where-a-reverse-edge-is-published>.
+
+  shared-id-unsignposted:
+    severity: warning
+    description: A clause id used in two policies is signposted from at least one of them.
+    notes: >
+      Reported once for each two policies, against the one whose id sorts first. Two policies may reach for one word
+      by coincidence, so a repeated id is a warning, and renaming either clause settles it.
+
   entry-shape:
     severity: error
     description: Each entry of a list whose entries are objects is a mapping.
