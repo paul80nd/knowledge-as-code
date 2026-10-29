@@ -82,6 +82,20 @@ A check that needs C# is a class under `tooling/kac.core/Rules/`, or a core chec
 
 [Checks in C#](checks.md) says when a rule needs a class and how to add one.
 
+## Where a reverse edge is published
+
+Where a reverse edge is read decides which surface publishes it. A record states the edges from it to other records,
+and a reverse edge lists the records that point at it. A surface is the file or command output where a reader finds that
+list. A plugin is a corpus packaged for Claude Code.
+
+| Where it is read                      | Surface                   | How it is published                                                                                 |
+|---------------------------------------|---------------------------|-----------------------------------------------------------------------------------------------------|
+| Within one corpus                     | A `reciprocal:` field     | The schema edge declares it. The author writes both ends, and `validate` checks they agree.         |
+| By an agent with the plugin installed | A [view](plugin.md#views) | `bundle` renders it from the export. For example, the review view lists the controls for each rule. |
+| Across corpora                        | A [report](reporting.md)  | `kac report` reads `.imports/`. For example, `coverage` lists what discharges each policy clause.   |
+
+The export adds no file or field for a reverse edge.
+
 ## Where to go next
 
 [Build, test and release](build-test-release.md) builds `kac` from a clone and runs every test layer.

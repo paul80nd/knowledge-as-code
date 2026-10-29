@@ -25,6 +25,13 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet test --projec
   `knowledge-as-code/taxonomy.md` and `lineage.md`. Several `message:` values are pinned verbatim in
   `tooling/tests/fixtures/`. Reword one of these and the golden suite fails until the fixture is regenerated.
 
+* **Moving a type's `export.version` makes its `plugin.json` pins stale.** A component pins the shape it reads as
+  `<type>@N`, under `requires:` or `optional:`. The pins are in `template/.plugin/.claude-plugin/plugin.json` and in
+  `.plugin/.claude-plugin/plugin.json` in each corpus under `examples/`. Move every pin on the type in the same change.
+  Then run `dotnet test --project tooling/kac.tests` with `KAC_UPDATE_DOCS=1`, which rewrites the pins in
+  `docs/use/skills.md`. The unit, feature and golden layers pass with a stale pin. Only `kac bundle` refuses one, so CI
+  fails at its bundle step.
+
 ## Writing a rule
 
 * **Read the field declaration and the `sections:` block first.** The rule may already be answered by a `reciprocal:`, a
@@ -45,12 +52,13 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet test --projec
 
 The site states the rest. Each row links the section that states it.
 
-| Before you                                    | Read                                                                                               |
-|-----------------------------------------------|----------------------------------------------------------------------------------------------------|
-| declare a rule nothing implements yet         | [A rule with no `severity:`](../docs/reference/held-to.md#a-rule-with-no-severity)                 |
-| write an `expr:` the grammar will not take    | [Adding a fact](../docs/maintaining/checks.md#adding-a-fact)                                       |
-| write a rule one fixed message cannot explain | [When a rule needs C#](../docs/maintaining/checks.md#when-a-rule-needs-c)                          |
-| report several faults under one id            | [The three places that must agree](../docs/maintaining/checks.md#the-three-places-that-must-agree) |
-| move a threshold                              | [The calibrated windows](../docs/maintaining/checks.md#the-calibrated-windows)                     |
-| move a text rule's pattern into C#            | [Decisions](../docs/maintaining/checks.md#decisions)                                               |
-| write a `notes:`                              | [What a `notes:` contains](../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains)      |
+| Before you                                    | Read                                                                                                       |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| declare a rule nothing implements yet         | [A rule with no `severity:`](../docs/reference/held-to.md#a-rule-with-no-severity)                         |
+| write an `expr:` the grammar will not take    | [Adding a fact](../docs/maintaining/checks.md#adding-a-fact)                                               |
+| write a rule one fixed message cannot explain | [When a rule needs C#](../docs/maintaining/checks.md#when-a-rule-needs-c)                                  |
+| report several faults under one id            | [The three places that must agree](../docs/maintaining/checks.md#the-three-places-that-must-agree)         |
+| move a threshold                              | [The calibrated windows](../docs/maintaining/checks.md#the-calibrated-windows)                             |
+| move a text rule's pattern into C#            | [Decisions](../docs/maintaining/checks.md#decisions)                                                       |
+| publish what points at a record               | [Where a reverse edge is published](../docs/maintaining/architecture.md#where-a-reverse-edge-is-published) |
+| write a `notes:`                              | [What a `notes:` contains](../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains)              |
