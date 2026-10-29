@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "Our systems emit telemetry (logs, metrics and traces) as they run, and somebody watches it.",
-    "Scope": "All production systems we operate, and the lower environments where validating a change means understanding how it behaves.\n\n_Boundary: this policy sets how long telemetry is kept, which is long enough to investigate. Where telemetry contains personal data, [pol-DATA](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/policies/security/data-data-protection.md#clauses) sets the lifetime and the shorter of the two applies. [pol-DATA](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/policies/security/data-data-protection.md#clauses) and [pol-SCRT](https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/policies/security/scrt-secrets-management.md#clauses) govern what is written into telemetry at all._",
+    "Scope": "All production systems we operate, and the lower environments where validating a change means understanding how it behaves.\n\n_Boundary: this policy sets how long telemetry is kept, which is long enough to investigate. Where telemetry contains personal data, [pol-DATA](https://github.com/paul80nd/knowledge-as-code/blob/f8c34ec1d9a282677cda83f6a58b54b1df5c5a81/examples/engineering/policies/security/data-data-protection.md#clauses) sets the lifetime and the shorter of the two applies. [pol-DATA](https://github.com/paul80nd/knowledge-as-code/blob/f8c34ec1d9a282677cda83f6a58b54b1df5c5a81/examples/engineering/policies/security/data-data-protection.md#clauses) and [pol-SCRT](https://github.com/paul80nd/knowledge-as-code/blob/f8c34ec1d9a282677cda83f6a58b54b1df5c5a81/examples/engineering/policies/security/scrt-secrets-management.md#clauses) govern what is written into telemetry at all._",
     "Exceptions": "The depth of monitoring is proportionate to how critical the system is. The commitment to monitor at all is not. Where a system seems too unimportant to monitor, question whether it should exist."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/engineering/policies/operations/obsv-observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f8c34ec1d9a282677cda83f6a58b54b1df5c5a81/examples/engineering/policies/operations/obsv-observability.md"
   }
 }

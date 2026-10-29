@@ -25,6 +25,6 @@
     "Prerequisites": "* `docs/maintaining/checks.md`, which states the test for expression against class and the two rule interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.\n* The fact table in `docs/reference/expressions.md`, which lists what an expression can already read.\n* Writing C# and its unit tests, which steps 2 to 4 need.\n* Reading a failing Reqnroll scenario, which step 13 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a6e3914cdf629d46f6a858d73849c6a8f2123de8/examples/dog-fooding/processes/change-the-tool.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f8c34ec1d9a282677cda83f6a58b54b1df5c5a81/examples/dog-fooding/processes/change-the-tool.md"
   }
 }
