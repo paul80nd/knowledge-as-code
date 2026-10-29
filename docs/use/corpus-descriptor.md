@@ -129,12 +129,11 @@ repository's own URL, with no `/blob` on the end. `export` adds that segment alo
 shows a numeric page id. `export` refuses a base with one in it and builds no links. A link to a wiki page is not
 pinned to a commit, so a person following it reads whatever the wiki has now. The commit travels in the manifest.
 
-**`mkdocs`** is accepted, and nothing addresses it yet, so an export from a corpus on it has no links.
-
 **`none`** means the corpus is not published. Its export has no links and says so in its manifest. It is the one value
 that needs no `publishing:` block.
 
-[`validate`](cli/validate.md) refuses any other value, and names these five in the message.
+[`validate`](cli/validate.md) refuses any other value, and its message lists the values it takes. It refuses `mkdocs`,
+because `export` cannot build a link to a page on an MkDocs site.
 
 ### `publishing`
 
@@ -231,7 +230,7 @@ and [`new`](cli/new.md) and [`update`](cli/update.md) never write it.
 | `github`            | the repository, which is its own issue list |
 | `azure-devops`      | the project holding the repository          |
 | `azure-devops-wiki` | the project holding the wiki                |
-| `mkdocs` and `none` | none                                        |
+| `none`              | none                                        |
 
 Write `base` alone where your backlog moved inside the platform you publish on, and the client follows from
 `publishing-target`. Write `target` alone where the corpus has no tracker, and nothing states a base.

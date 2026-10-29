@@ -141,7 +141,7 @@ plugin, which is your corpus packaged for Claude Code.
 !!! note "Set a tracker before you publish a plugin"
 
     The plugin's `raise-finding` and `request-deviation` skills file an issue about your corpus on its tracker. A corpus
-    published to `mkdocs` or `none` has no tracker, so they print the issue for you to file instead. Add a
+    published to `none` has no tracker, so they print the issue for you to file instead. Add a
     [`tracker`](corpus-descriptor.md#tracker) block to `.corpus.yaml` naming where your issues go:
 
     ```yaml

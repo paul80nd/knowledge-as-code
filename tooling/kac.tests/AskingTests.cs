@@ -193,13 +193,15 @@ public class AskingTests
     public void A_corpus_may_adopt_no_type_at_all()
         => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Resolved().Types);
 
-    [Fact]
-    public void A_publishing_target_the_tool_cannot_act_on_is_refused()
+    [Theory]
+    [InlineData("confluence")]
+    [InlineData("mkdocs")]
+    public void A_publishing_target_the_tool_cannot_act_on_is_refused(string target)
     {
-        var problem = Resolve(Flagged() with { Publishing = "confluence" }).Problem;
+        var problem = Resolve(Flagged() with { Publishing = target }).Problem;
 
-        Assert.Contains("'confluence' is not a target", problem);
-        Assert.Contains("azure-devops-wiki, github, mkdocs, none", problem);
+        Assert.Contains($"'{target}' is not a target", problem);
+        Assert.Contains("azure-devops, azure-devops-wiki, github, none.", problem);
     }
 
     [Fact]

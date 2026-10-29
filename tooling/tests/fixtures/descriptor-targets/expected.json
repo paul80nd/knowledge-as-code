@@ -13,7 +13,7 @@
       "line": null,
       "severity": "error",
       "check": "descriptor-target",
-      "message": "publishing-target 'gihtub' is not a target kac can publish to. Write one of: azure-devops, azure-devops-wiki, github, mkdocs, none."
+      "message": "publishing-target 'gihtub' is not a target kac can publish to. Write one of: azure-devops, azure-devops-wiki, github, none."
     },
     {
       "file": ".corpus.yaml",

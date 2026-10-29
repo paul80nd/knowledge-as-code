@@ -80,7 +80,7 @@ wrote. A verdict says where the observation belongs, never whether it is right.
 | `framework.target`       | the same three values                                                  |
 | `framework.base`         | where a problem with `kac`, the schema or a skill is reported          |
 | `framework.area`         | the area path that problem is filed under                              |
-| `publishing-target`      | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
+| `publishing-target`      | one of `github`, `azure-devops`, `azure-devops-wiki`, `none`           |
 | `publishing.base`        | the repository holding the records                                     |
 | `publishing.path-prefix` | the folder inside it the corpus sits in                                |
 | `consumes[].corpus`      | the name of one corpus this one consumes                               |
@@ -95,7 +95,6 @@ issue list of its own, so there is nothing to state. Read the block where it is 
 | `github`            | `github`, at `publishing.base` |
 | `azure-devops`      | `azure-devops`, at the project |
 | `azure-devops-wiki` | `azure-devops`, at the project |
-| `mkdocs`            | none                           |
 | `none`              | none                           |
 
 **An Azure DevOps base is cut back to the project.** One project holds one backlog and many repositories, so the
@@ -424,8 +423,8 @@ platform file reads the linked pull requests and the state alongside the labels.
 The tracker and the repository are two addresses, and on Azure DevOps they differ.
 
 **Read `publishing-target` first.** Only `github` and `azure-devops` address a repository a pull request can open
-against, and `publishing.base` names it. `azure-devops-wiki` addresses a wiki, `mkdocs` a documentation site, and
-`none` nothing at all. Refuse the last three, print the record, and say where the corpus is published from instead.
+against, and `publishing.base` names it. `azure-devops-wiki` addresses a wiki, and `none` nothing at all. Refuse both,
+print the record, and say where the corpus is published from instead.
 
 **`publishing.path-prefix` is the folder the corpus sits in**, where the repository holds more than the corpus.
 

@@ -21,7 +21,7 @@ author:
   name:
   url:
 
-# How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
+# How this corpus is published. One of: azure-devops | azure-devops-wiki | github | none.
 publishing-target: none
 
 # Where this estate's code repositories are addressed from. A `repos` entry on a service is appended to it.

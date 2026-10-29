@@ -73,6 +73,12 @@ Scenario: An owner the pattern refuses is refused
   Then it refuses
   And the folder holds nothing new
 
+Scenario: A publishing target nothing builds links for is refused
+  Given a git repository
+  When I create a corpus there publishing to "mkdocs"
+  Then it refuses
+  And the folder holds nothing new
+
 Scenario: A new corpus pins the kac that created it
   Given a git repository
   When I create a corpus there with kac "0.99.0+5fa039b0"

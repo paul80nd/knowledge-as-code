@@ -282,7 +282,6 @@ public class NewTests
 
     [Theory]
     [InlineData(Publishing.None, null)]
-    [InlineData(Publishing.MkDocs, "https://acme.github.io/corpus")]
     [InlineData(Publishing.GitHub, null)]
     public void A_corpus_with_no_tracker_to_file_on_is_told_how_to_set_one(string target, string? published)
         => Assert.Equal(

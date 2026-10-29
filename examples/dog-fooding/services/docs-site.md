@@ -29,8 +29,7 @@ A page's content can come from outside `docs/`. `docs/changelog.md` is a snippet
 release changes the site without any file under `docs/` changing. Taken from the header comment in
 `.github/workflows/publish-docs.yml`.
 
-Every page lives under `docs/`. The site is not a corpus: `publishing-target: mkdocs` in a corpus descriptor is a
-separate feature, and this build does not exercise it. Taken from the header comment in `mkdocs.yml`.
+Every page lives under `docs/`. The site is not a corpus, and `kac` refuses `mkdocs` as a `publishing-target`.
 
 ## Where it lives
 

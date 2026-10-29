@@ -31,7 +31,6 @@ public class BaseFromTests
 
     [Theory]
     [InlineData(Publishing.AzureDevOpsWiki)]
-    [InlineData(Publishing.MkDocs)]
     [InlineData(Publishing.None)]
     public void No_other_target_is_derived(string target)
         => Assert.Null(Publishing.BaseFrom(target, "git@github.com:acme/corpus.git"));
