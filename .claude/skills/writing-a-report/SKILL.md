@@ -76,8 +76,8 @@ more edits:
 1. Where your corpus exports reports, move its `content-version` by a patch. The raise changed one of its records.
 2. Raise the first entry to the version you just set.
 
-**A raise leaves `verified` as it is.** It edits frontmatter alone, so the prose is exactly what the last verifier
-read.
+**A raise leaves `verified` as it is.** It leaves the report's body untouched, so the prose is exactly what the last
+verifier read.
 
 **The merge, in order:**
 

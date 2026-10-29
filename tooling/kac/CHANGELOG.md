@@ -27,8 +27,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac report` leaves the imported version out of `## Limits` now.** The `Imported:` bullet stated each consumed
   corpus at its `content-version`, and `sources` stated the same version in the frontmatter. Raising an imported entry
   by hand meant editing both, and nothing caught a bullet left behind. The bullet now states the shortcode and the
-  corpus alone, so `sources` is the one place the version is written, and a raise edits the frontmatter alone. Delete
-  the version from the bullet of a report you keep as a record.
+  corpus, so `sources` is the one place the version is written, and a raise leaves the body untouched. Delete the
+  version from the bullet of a report you keep as a record.
 
 ## 0.43.0 - 2026-10-28
 

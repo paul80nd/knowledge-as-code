@@ -98,8 +98,8 @@ entry is human-reviewed. [`export`](export.md) ships the tier as `trust`.
 Edit `sources[].version` by hand where you have checked that the report is still true at a newer `content-version`. You
 keep every verdict.
 
-Each version is written in `sources` alone, so a raise edits the frontmatter and nothing else. `verified` and
-`generated` stay as they are.
+Each version is written in `sources` alone, so a raise edits the report's frontmatter and leaves its body alone.
+`verified` and `generated` stay as they are.
 
 `validate` warns where a version falls behind its corpus. A verification taken before `generated.at` counts toward no
 trust tier.
