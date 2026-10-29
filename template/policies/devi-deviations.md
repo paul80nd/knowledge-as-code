@@ -58,8 +58,8 @@ This is the policy the rest of the set leans on, seeded so that a corpus has som
 day. Rewrite the parts that are not true of your organisation, name your own undeviable commitments under Exceptions,
 and agree it in your own name. Until you do, it stands as `draft`.
 
-No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
-[controls](../controls.md) that check those clauses are honoured.
+Standards cite this policy wherever they have an exception clause, and so do the [controls](../controls.md) that check
+those clauses are honoured.
 
 This policy says nothing about where a deviation is recorded. That belongs to the [process](../processes.md) that
 carries it, so that changing where we file deviations does not change what we committed to.
