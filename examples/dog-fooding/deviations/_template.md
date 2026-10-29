@@ -81,8 +81,10 @@ _(A deviation with nothing here is an unmanaged risk. Say so if that is the trut
 
 ## How it closes
 
-What has to be true for this to end, and who does it. Where closing means re-accepting the risk instead, say what that
-review has to weigh.
+What has to be true for this to end, and who does it. Say what closing it costs: the staff time, and anything that has
+to be bought. Where closing means re-accepting the risk instead, say what that review has to weigh.
+
+_(A deviation nobody has priced is one nobody can choose to close.)_
 
 ## Scope
 

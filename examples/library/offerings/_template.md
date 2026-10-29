@@ -40,7 +40,10 @@ label and not the address, because a section travels and its link definitions do
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
-One or two sentences on what a customer gets from this.
+Where the status is not `live`, open with the status and what a customer can do today, as "This is planned, and no
+customer can reach it yet." Then one or two sentences on what a customer gets from this.
+
+_(A reader who lands on the first sentence takes it as what works today.)_
 
 ## What it does
 
