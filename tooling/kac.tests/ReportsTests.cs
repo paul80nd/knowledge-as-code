@@ -437,7 +437,8 @@ public class ReportsTests
     {
         var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules, controls, linked)], Stamp);
         Assert.NotNull(plan);
-        return plan.Body;
+        // Body keeps the \r\n AppendLine writes on Windows, and only Text normalises it.
+        return plan.Body.ReplaceLineEndings("\n");
     }
 
     /// <summary>
