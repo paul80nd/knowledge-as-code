@@ -5,14 +5,13 @@ tier: procedural
 status: active
 applies-to: [ svc-kac ]
 severity: sev3
-last-rehearsed: never
+last-rehearsed: { at: "2026-10-29", by: claude-code/opus-5.5, method: tabletop }
 rehearsal-frequency: per-release
 requires-tools:
   - "`curl` and `jq`"
   - The .NET SDK, for `dotnet tool install`
 requires-access:
-  - Actions, to read a run log and re-run a job on paul80nd/knowledge-as-code
-  - The required reviewer on the nuget.org environment
+  - Actions, to read a run log on paul80nd/knowledge-as-code
 owner: human:paul.law
 tags: [ nuget, publishing ]
 ---
@@ -47,10 +46,10 @@ Nobody can install `kac` at the new version. An installation already on an older
 
 **Did the `Publish to nuget.org` step report success?**
 
-* **Yes** → nuget.org accepted the version and has not finished listing it. Go to [Resolution](#resolution).
+* **Yes** → nuget.org accepted the version and has not finished listing it. Continue.
 * **No** → this runbook does not cover it. Read the step's own error, then [escalate](#escalation).
 
-**Has it been less than fifteen minutes since that step succeeded?**
+**Has it been less than an hour since that step succeeded?**
 
 * **Yes** → wait. Go to [Resolution](#resolution).
 * **No** → [escalate](#escalation).
@@ -69,8 +68,10 @@ that push from failing, but it does not make the version appear.
 
    It prints one version per line, oldest first.
 
-3. Confirm the version is in that list.
-4. From a directory that is not a corpus, install it:
+3. Find the version in that list. If it is missing, wait fifteen more minutes and repeat step 2. A version can take
+   thirty minutes to list.
+4. If the version is still missing an hour after the publish step succeeded, [escalate](#escalation).
+5. From a directory that is not a corpus, install it:
 
    ```sh
    dotnet tool install --global KnowledgeAsCode.Tool --version <version>
@@ -100,8 +101,8 @@ Confirmed when `kac --version` opens with the version you published. If a step d
 ## Afterwards
 
 * No postmortem. The delay is a known property of the registry.
-* Where the wait ran past an hour, record how long it took in the escalation issue. The fifteen minutes above can then
-  be corrected.
+* Where the wait ran past an hour, record how long it took in the escalation issue. The hour above can then be
+  corrected.
 
 ## Related
 
