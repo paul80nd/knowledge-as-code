@@ -142,6 +142,10 @@ public sealed class CreationSteps(Workspace ws)
     [When(@"I create a corpus there owned by ""(.*)""")]
     public void WhenICreateACorpusThereOwnedBy(string owner) => ws.Exit = Creation.Create(_folder, owner: owner);
 
+    [When(@"I create a corpus there publishing to ""(.*)""")]
+    public void WhenICreateACorpusTherePublishingTo(string target) =>
+        ws.Exit = Creation.Create(_folder, publishing: target);
+
     [When(@"I create a corpus there built by ""(.*)""")]
     public void WhenICreateACorpusThereBuiltBy(string ci) => ws.Exit = Creation.Create(_folder, ci: ci);
 

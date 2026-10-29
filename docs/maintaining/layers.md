@@ -99,6 +99,7 @@ Each refusal exits `1` and writes nothing.
 * A corpus created with --yes is seeded with records its author owns
 * An owner given as a flag is written into the seeded records
 * An owner the pattern refuses is refused
+* A publishing target nothing builds links for is refused
 * A new corpus pins the kac that created it
 * An update leaves the tool manifest to the corpus
 * A corpus built by GitHub is sent the GitHub starter alone
