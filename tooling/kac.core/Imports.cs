@@ -150,13 +150,14 @@ public static class Imports
                 var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
 
                 var carried = parts.GetValueOrDefault(key, []);
+                var levels = new Dictionary<string, IReadOnlyList<string?>>(StringComparer.Ordinal);
+
+                foreach (var (part, stated) in carried)
+                    if (stated is not null) levels.TryAdd(part, stated);
 
                 found.Add(new ImportedRecord(scope, id, type, keepsParts, [.. carried.Select(p => p.Id)])
                 {
-                    Levels = carried
-                        .Where(p => p.Levels is not null)
-                        .GroupBy(p => p.Id, StringComparer.Ordinal)
-                        .ToDictionary(g => g.Key, g => g.First().Levels ?? [], StringComparer.Ordinal)
+                    Levels = levels
                 });
             }
         }
@@ -186,21 +187,20 @@ public static class Imports
     }
 
     /// <summary>
-    /// <c>level</c> is the key the exporter writes on a bullet, and the key every type declaring <c>part.level</c>
-    /// gives it. A line stating neither form returns null.
+    /// A clause's level is a top-level <c>level</c> key. A rule's are its bullets, found as the array whose every entry
+    /// states one, since the manifest names no key for the bullets. Null where the line states neither.
     /// </summary>
     private static IReadOnlyList<string?>? LevelsIn(JsonObject line)
     {
-        if (line.ContainsKey(LevelKey)) return [JsonRead.Str(line[LevelKey])];
+        const string key = Exporter.LevelKey;
+        if (line.ContainsKey(key)) return [JsonRead.Str(line[key])];
 
         var bullets = line
             .Select(p => p.Value as JsonArray)
-            .FirstOrDefault(a => a is { Count: > 0 } && a.All(b => b is JsonObject o && o.ContainsKey(LevelKey)));
+            .FirstOrDefault(a => a is { Count: > 0 } && a.All(b => b is JsonObject o && o.ContainsKey(key)));
 
-        return bullets?.Select(b => JsonRead.Str(b?[LevelKey])).ToList();
+        return bullets?.Select(b => JsonRead.Str(b?[key])).ToList();
     }
-
-    private const string LevelKey = "level";
 
     public static ImportGraph Load(string corpusRoot, IReadOnlyList<Consumed> declared)
     {

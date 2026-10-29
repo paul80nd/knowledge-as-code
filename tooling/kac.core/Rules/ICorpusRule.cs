@@ -47,10 +47,6 @@ public sealed record CorpusRuleContext(
     /// <summary>The whole schema, for a rule judging a record of another type, or one imported.</summary>
     public Schema Schema { get; init; } = new();
 
+    /// <summary>What <c>.imports/</c> holds. Pass it to a <c>Resolver</c> with <c>ById</c> to read across it.</summary>
     public ImportGraph Imports { get; init; } = ImportGraph.None;
-
-    private Resolver? _resolver;
-
-    /// <summary>Resolves a citation as <c>ref-resolves</c> does, through <c>ById</c> and the imports.</summary>
-    public Resolver Resolver => _resolver ??= new Resolver(ById, Imports);
 }

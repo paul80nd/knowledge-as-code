@@ -200,14 +200,20 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public string? ModalNamed(string text) => ModalsLongestFirst.FirstOrDefault(m => Names(text, m));
 
     /// <summary>
-    /// The modals a part states: its opening modal for a table row, and one per bullet for a heading, read from the
-    /// bullet's bold runs. A null entry is a bullet naming none.
+    /// The modal a bullet states: a bold run naming a declared level whole, so <c>MUST NOT</c> is never read as
+    /// <c>MUST</c>. Null where no bold run does. The exporter reads a bullet's <c>level</c> through this.
+    /// </summary>
+    public string? BulletLevel(IEnumerable<string> bold) =>
+        bold.FirstOrDefault(r => _levels.Contains(r, StringComparer.Ordinal));
+
+    /// <summary>
+    /// The modals a part states, as its export line gives them: its opening modal for a table row, and one per bullet
+    /// for a heading. A null entry is a bullet stating none.
     /// </summary>
     public IReadOnlyList<string?> LevelsOf(Doc doc, PartRow part) =>
         Source == Table
             ? [Modal(part.Text)]
-            : [.. Md.Bullets(doc.Ast, part.BodyStart, part.BodyEnd)
-                .Select(b => b.Bold.Select(ModalNamed).FirstOrDefault(m => m is not null))];
+            : [.. Md.Bullets(doc.Ast, part.BodyStart, part.BodyEnd).Select(b => BulletLevel(b.Bold))];
 
     private static bool Names(string text, string modal)
     {

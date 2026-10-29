@@ -49,7 +49,8 @@ public class DepartsOnlyFromWhatBindsTests
     {
         var found = Assert.Single(Run("eng:pol-DEVI.DEBT"));
 
-        Assert.StartsWith("`departs-from` names 'eng:pol-DEVI.DEBT', a clause stating SHOULD and no MUST", found.Message);
+        Assert.StartsWith(
+            "`departs-from` names 'eng:pol-DEVI.DEBT', a clause stating SHOULD and no MUST", found.Message);
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class DepartsOnlyFromWhatBindsTests
         => Assert.Empty(Run("eng:pol-DEVI.CLOSE"));
 
     [Fact]
-    public void A_departure_from_no_stated_rule_is_left_alone()
+    public void The_literal_none_is_left_alone()
         => Assert.Empty(Run("none"));
 
     [Fact]

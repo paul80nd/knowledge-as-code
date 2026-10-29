@@ -19,6 +19,8 @@ public sealed class DepartsOnlyFromWhatBinds : ICorpusRule
 
     public void Check(CorpusRuleContext ctx)
     {
+        var resolver = new Resolver(ctx.ById, ctx.Imports);
+
         foreach (var doc in ctx.Records)
         {
             if (string.Equals(doc.FrontScalar("status"), Closed, StringComparison.Ordinal)) continue;
@@ -28,7 +30,7 @@ public sealed class DepartsOnlyFromWhatBinds : ICorpusRule
                 var citation = Citation.Read(entry);
                 if (citation.Part is not { } part) continue;
 
-                var landed = ctx.Resolver.Resolve(citation);
+                var landed = resolver.Resolve(citation);
                 if (landed.How is not (Landing.Local or Landing.Imported)) continue;
                 if (!landed.Carries(part)) continue;
                 if (landed.Type(ctx.Schema)?.Parts is not { Binding.Count: > 0 } spec) continue;
