@@ -27,7 +27,7 @@ mis-cased only where it is read is flagged there alone.
 
 | Id      | Clause                                                         | Alignment |
 |---------|----------------------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `label-canonical` five times and nothing else |           |
+| `INTC`  | **MUST** trigger `label-canonical` five times and nothing else |           |
 
 [ADR-0004]: /adrs/0004-missing-consequences.md
 [pol-CATS]: cats-category-written.md

@@ -23,5 +23,5 @@ which `agnt-identity-malformed.md` covers.
 
 | Id      | Clause                                       | Alignment |
 |---------|----------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `identity` and nothing else |           |
+| `OBSV`  | **MUST** trigger `identity` and nothing else |           |
 

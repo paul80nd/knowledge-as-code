@@ -25,4 +25,4 @@ This fixture only. It exists so `clause-table` is exercised on its header branch
 
 | Ref     | Obligation                                       |
 |---------|--------------------------------------------------|
-| `CLEAN` | **MUST** trigger `clause-table` and nothing else |
+| `HEAD`  | **MUST** trigger `clause-table` and nothing else |

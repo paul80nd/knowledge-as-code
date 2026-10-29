@@ -13,8 +13,13 @@ the golden has one finding, or one per instance of its fault.
   and a list nested inside a rule, for `part-modal` and `part-nested`. A rule heading opening with no id, for
   `part-id-format`.
 
-Both the table and the heading sources reach `part-id-unique`. `part-ref` fires five ways: a citation of a document
-that does not exist, of a clause or a term its document does not have, one written as a part id beside a link, and one
-separated by a colon.
+Both the table and the heading sources reach `part-id-unique`. `part-ref` fires six ways: a citation of a document
+that does not exist, of a clause or a term its document does not have, one written as a part id beside a link, one
+separated by a colon, and a signpost inside a clause naming a clause that does not exist.
+
+Two faults take a pair of policies sharing a clause id, and each reports on one of the pair. `pol-ONEW` signposts
+`pol-BACK`, and `pair-one-way` reports `pol-BACK` for not signposting back. `pol-REPT` and `pol-TWIN` signpost
+neither way, and `shared-id-unsignposted` reports `pol-REPT`, whose id sorts first. Every other policy here gives its
+clause an id of its own, so no two repeat one by accident.
 
 `Parts.feature` reads this corpus for what `validate` promises about each of the three sources.

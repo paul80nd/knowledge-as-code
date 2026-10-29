@@ -29,6 +29,7 @@ the class would.
 | `dependency-criticality`       | the record cited, and the grade of each end, reading the ranking from `ordered: true`         |
 | `mirrors-repo-links`           | a repository in `repos:` with no link, or a link with no entry, built from [`repos-base`][rb] |
 | `departs-only-from-what-binds` | the clause a deviation cites and the modals it states, read from the export for an import     |
+| `shared-ids-signposted`        | the clause sharing an id, and which of the two clauses lacks the signpost                     |
 
 [rb]: ../use/corpus-descriptor.md#repos-base
 

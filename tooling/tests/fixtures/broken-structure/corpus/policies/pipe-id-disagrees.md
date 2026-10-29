@@ -23,5 +23,5 @@ This fixture only.
 
 | Id      | Clause                                                  | Alignment |
 |---------|---------------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `id-matches-filename` and nothing else |           |
+| `PIPE`  | **MUST** trigger `id-matches-filename` and nothing else |           |
 

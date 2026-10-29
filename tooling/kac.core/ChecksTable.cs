@@ -103,6 +103,10 @@ public static class ChecksTable
         // Shown wherever the rule is declared, which `Applies` decides from the registry.
         ("clause-quoted-faithfully", [new("clause-quoted-faithfully")],
             "A span quoted beside a clause citation is still in the clause it cites.", null),
+        ("pair-one-way", [new("pair-one-way")],
+            "A clause signposted by a clause of the same id in another policy signposts that clause back.", null),
+        ("shared-id-unsignposted", [new("shared-id-unsignposted")],
+            "A clause id used in two policies is signposted from at least one of them.", null),
         ("link-resolves", [new("link-resolves"), new("fragment-resolves")],
             "Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.",
             null),

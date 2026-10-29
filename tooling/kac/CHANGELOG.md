@@ -24,6 +24,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   policy clause stating no `MUST` or `MUST NOT`, or a standard's rule none of whose bullets states one. An inherited
   clause is judged on the `level` its export states. A `closed` deviation is silent. Drop such an entry, or name the
   clause that binds.
+- **`kac validate` checks that two clauses sharing an id signpost each other.** Two policies binding one obligation
+  give it one clause id, and each clause closes with a `[pol-X].ID` signpost to the other. `pair-one-way` now fails a
+  clause that a clause of the same id signposts, where it does not signpost back. `shared-id-unsignposted` warns on an
+  id two policies use with no signpost either way, once for the two. A scoped signpost and a `retired` policy form no
+  pair. `part-ref` already fails a signpost to a clause that does not exist. Add the missing signpost, or give one
+  clause another id.
 
 ### Changed
 

@@ -25,4 +25,4 @@ This fixture only. It exists so `clause-modal` is exercised where no modal opens
 
 | Id      | Clause                                          | Alignment |
 |---------|-------------------------------------------------|-----------|
-| `CLEAN` | We will trigger `clause-modal` and nothing else |           |
+| `MODA`  | We will trigger `clause-modal` and nothing else |           |

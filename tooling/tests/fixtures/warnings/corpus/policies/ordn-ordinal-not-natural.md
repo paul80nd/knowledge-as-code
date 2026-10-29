@@ -27,7 +27,7 @@ This fixture only.
 
 | Id       | Clause                                                                 | Alignment |
 |----------|------------------------------------------------------------------------|-----------|
-| `ORDER`  | **MUST** treat a byte-wise sort of numbered references as out of order | [ISO 27001:2022].A.8.29 |
+| `ORDINAL` | **MUST** treat a byte-wise sort of numbered references as out of order | [ISO 27001:2022].A.8.29 |
 | `ACCEPT` | **MUST NOT** accept it merely because it is consistent                 | [ISO 27001:2022].A.8.7  |
 
 [ISO 27001:2022]: ../frameworks.md#iso-27001

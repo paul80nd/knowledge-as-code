@@ -130,6 +130,9 @@ full statement of each one.
 * A citation is held to the clause it names, and to the document that carries it
 * A part id written beside a link is resolved as a citation
 * A citation separated by a colon is told the form to write
+* A signpost in a clause reaches the clause it names
+* Two clauses sharing an id signpost each other
+* A clause id repeated in another policy with no signpost is reported once for the two
 * Terms are addressed by the anchor their heading slugs to
 * A term declared by a heading is held to carrying something under it
 * Every bullet under a rule heading is held to a modal in bold capitals

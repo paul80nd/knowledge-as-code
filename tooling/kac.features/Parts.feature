@@ -60,7 +60,7 @@ Scenario: A second modal in one row is two obligations sharing an id
   When I validate the corpus
   Then the findings for "policies/cmpd-two-obligations.md" are exactly:
     | severity | line | check           | message                                                                                          |
-    | warning  |   28 | clause-compound | clause 'CLEAN' carries a second 'MUST': one obligation per clause, or the citation is ambiguous. |
+    | warning  |   28 | clause-compound | clause 'CMPD' carries a second 'MUST': one obligation per clause, or the citation is ambiguous. |
 
 Scenario: A citation is held to the clause it names, and to the document that carries it
   When I validate the corpus
@@ -80,8 +80,28 @@ Scenario: A part id written beside a link is resolved as a citation
 Scenario: A citation separated by a colon is told the form to write
   When I validate the corpus
   Then the findings for "policies/coln-colon-separator.md" are exactly:
-    | line | check    | message                                                                         |
-    |   16 | part-ref | 'pol-COLN:CLEAN' separates the two halves with a colon. Write 'pol-COLN.CLEAN'. |
+    | line | check    | message                                                                       |
+    |   16 | part-ref | 'pol-COLN:COLN' separates the two halves with a colon. Write 'pol-COLN.COLN'. |
+
+Scenario: A signpost in a clause reaches the clause it names
+  When I validate the corpus
+  Then the findings for "policies/sign-signpost-unknown-clause.md" are exactly:
+    | line | check    | message                                                                                    |
+    |   27 | part-ref | 'pol-CREF.GONE' cites a clause 'GONE' that policies/cref-unknown-clause.md does not carry. |
+
+Scenario: Two clauses sharing an id signpost each other
+  When I validate the corpus
+  Then the findings for "policies/back-pair-not-returned.md" are exactly:
+    | severity | line | check        | message                                                                                                                                                                            |
+    | error    |   27 | pair-one-way | clause 'PAIRED' shares its id with pol-ONEW.PAIRED, which signposts it, and does not signpost that clause back. Close this clause with ([pol-ONEW].PAIRED and what the reader gains there). |
+  And no findings are reported for "policies/onew-signposts-its-pair.md"
+
+Scenario: A clause id repeated in another policy with no signpost is reported once for the two
+  When I validate the corpus
+  Then the findings for "policies/rept-repeated-id.md" are exactly:
+    | severity | line | check                  | message                                                                                                                                                                                     |
+    | warning  |   27 | shared-id-unsignposted | clause 'INVENT' shares its id with pol-TWIN.INVENT, and neither clause signposts the other. Where they state one obligation, close each with a signpost to the other. Where they do not, give one of them another id. |
+  And no findings are reported for "policies/twin-repeats-an-id.md"
 
 Scenario: Terms are addressed by the anchor their heading slugs to
   When I validate the corpus
@@ -127,7 +147,7 @@ Scenario: A parts section holding no headings is told what belongs there
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 22 documents and 0 skipped
+  Then validation reports 27 documents and 0 skipped
   And the findings are exactly:
     | file                                  | severity | line | check            | message                                                                                                                        |
     | glossary/dupe-two-terms-alike.md      | error    |   27 | part-id-unique   | two terms here address as 'identity-line': a citation of it names both and reaches neither.                                    |
@@ -135,11 +155,12 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | glossary/holl-empty-term.md           | error    |   32 | part-empty       | term 'Placeholder' has nothing under it. Write it or delete the heading.                                                       |
     | glossary/none-terms-section-empty.md  | error    |   21 | part-none        | the '## Terms' section holds no terms. Write each one as an H3 heading.                                                        |
     | glossary/tref-unknown-term.md         | error    |   25 | part-ref         | 'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry.      |
+    | policies/back-pair-not-returned.md    | error    |   27 | pair-one-way     | clause 'PAIRED' shares its id with pol-ONEW.PAIRED, which signposts it, and does not signpost that clause back. Close this clause with ([pol-ONEW].PAIRED and what the reader gains there). |
     | policies/blnk-empty-clause-section.md | error    |   24 | clause-table     | the '## Clauses' section holds no table. Write one row per obligation, headed 'Id \| Clause \| Alignment'.                     |
     | policies/bold-binding-not-bold.md     | error    |   27 | clause-modal     | 'MUST' binds. Write it bold, `**MUST**`.                                                                                       |
     | policies/case-lower-clause-id.md      | error    |   27 | clause-id-format | clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$.                                                                         |
-    | policies/cmpd-two-obligations.md      | warning  |   28 | clause-compound  | clause 'CLEAN' carries a second 'MUST': one obligation per clause, or the citation is ambiguous.                               |
-    | policies/coln-colon-separator.md      | error    |   16 | part-ref         | 'pol-COLN:CLEAN' separates the two halves with a colon. Write 'pol-COLN.CLEAN'.                                                |
+    | policies/cmpd-two-obligations.md      | warning  |   28 | clause-compound  | clause 'CMPD' carries a second 'MUST': one obligation per clause, or the citation is ambiguous.                                |
+    | policies/coln-colon-separator.md      | error    |   16 | part-ref         | 'pol-COLN:COLN' separates the two halves with a colon. Write 'pol-COLN.COLN'.                                                  |
     | policies/cref-unknown-clause.md       | error    |   16 | part-ref         | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.                               |
     | policies/dupe-repeated-id.md          | error    |   28 | part-id-unique   | two clauses here address as 'SAME': a citation of it names both and reaches neither.                                           |
     | policies/empt-no-rows.md              | error    |   25 | clause-table     | the clause table has no rows: a record that binds nothing binds nobody.                                                        |
@@ -149,6 +170,8 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/nota-clauses-as-bullets.md   | error    |   24 | clause-table     | the '## Clauses' section holds no table. Write one row per obligation, headed 'Id \| Clause \| Alignment'.                     |
     | policies/ordr-out-of-order.md         | warning  |   28 | clause-order     | clause 'SECND' is a 'MUST' but follows a 'MUST NOT'. Group the table MUST, MUST NOT, SHOULD, COULD.                            |
     | policies/refs-unknown-document.md     | error    |   16 | part-ref         | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.                                                                         |
+    | policies/rept-repeated-id.md          | warning  |   27 | shared-id-unsignposted | clause 'INVENT' shares its id with pol-TWIN.INVENT, and neither clause signposts the other. Where they state one obligation, close each with a signpost to the other. Where they do not, give one of them another id. |
+    | policies/sign-signpost-unknown-clause.md | error |   27 | part-ref         | 'pol-CREF.GONE' cites a clause 'GONE' that policies/cref-unknown-clause.md does not carry.                                     |
     | policies/span-id-not-code.md          | error    |   28 | clause-id-format | clause id 'CLEAN' is not a code span. Write it as `CLEAN`.                                                                     |
     | standards/moda-rules-that-bind-nobody.md | error |   24 | part-modal       | rule 'A service reads its secrets from the vault.' has no modal, so nothing says how hard it binds. Write one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY in bold, or move the line to prose. |
     | standards/moda-rules-that-bind-nobody.md | error |   30 | part-modal       | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |

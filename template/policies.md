@@ -114,6 +114,8 @@ this type's records.
 | `clauses`                              | error   | The clause section is a table of `Id \| Clause` rows, each id a code span and each clause opening with its modal.   |
 | `clause-order / clause-compound`       | warning | Clause rows are grouped by binding level, and no row states a second modal.                                         |
 | `part-id-unique / part-ref`            | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.               |
+| `pair-one-way`                         | error   | A clause signposted by a clause of the same id in another policy signposts that clause back.                        |
+| `shared-id-unsignposted`               | warning | A clause id used in two policies is signposted from at least one of them.                                           |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `alignment-unlinked`                   | error   | Every framework an `Alignment` cell cites is written as a link the corpus resolves.                                 |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |

@@ -27,4 +27,4 @@ Every service in the estate.
 | Id      | Clause                                      | Alignment              |
 |---------|---------------------------------------------|------------------------|
 | `WRITE` | **MUST** define the label a clause cites.   | [UK GDPR].Art.5(1)(e)  |
-| `AGAIN` | **MUST NOT** be told the same thing twice.  | [UK GDPR].Art.32(1)(d) |
+| `REPEAT` | **MUST NOT** be told the same thing twice. | [UK GDPR].Art.32(1)(d) |
