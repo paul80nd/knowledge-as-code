@@ -245,6 +245,11 @@ public class ReportsTests
         => Assert.Contains("| **Total** | **0** | **0** | **0** |", Declining(Imported("glossary",
             """{"id":"gl-CORE.TERM","record":"gl-CORE","part":"TERM","title":"Term","definition":"A word."}""")));
 
+    [Fact]
+    public void The_imported_bullet_names_each_producer_and_leaves_its_version_to_sources()
+        => Assert.Contains("* `eng`, example-engineering.\n", Declining(Imported("glossary",
+            """{"id":"gl-CORE.TERM","record":"gl-CORE","part":"TERM","title":"Term","definition":"A word."}""")));
+
     private static string Coverage() => Plan("coverage").Body;
 
     /// <summary>One producer publishing one type, whose parts file is the single line given.</summary>

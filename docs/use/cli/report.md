@@ -98,14 +98,8 @@ entry is human-reviewed. [`export`](export.md) ships the tier as `trust`.
 Edit `sources[].version` by hand where you have checked that the report is still true at a newer `content-version`. You
 keep every verdict.
 
-Which entry you raise decides what else you edit:
-
-| You raise         | You also edit                                                                                   |
-|-------------------|-------------------------------------------------------------------------------------------------|
-| the first entry   | nothing. `verified` stays as it is                                                              |
-| an imported entry | the `Imported:` bullet under `## Limits`, which repeats the version, and a new `verified` entry |
-
-Neither raise moves `generated`. Nothing checks the `Imported:` bullet against the frontmatter.
+Each version is written in `sources` alone, so a raise edits the frontmatter and nothing else. `verified` and
+`generated` stay as they are.
 
 `validate` warns where a version falls behind its corpus. A verification taken before `generated.at` counts toward no
 trust tier.

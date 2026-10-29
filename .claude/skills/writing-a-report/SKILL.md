@@ -70,18 +70,14 @@ who answered the judgement cells, and a raise answers none of them. So `generate
 the version `sources` now lists.
 
 **Which entry you raise decides what else you edit.** `sources` lists the corpus the report answers for first, then
-one entry per corpus it imports. `kac report` writes the imported entries into the `Imported:` bullet under
-`## Limits`, and nothing checks that bullet against the frontmatter. So raising an imported entry takes three more
-edits:
+one entry per corpus it imports. Each version is written in `sources` alone, so raising an imported entry takes two
+more edits:
 
-1. Edit the bullet to the same version by hand.
-2. Where your corpus exports reports, move its `content-version` by a patch. The raise changed one of its records.
-3. Raise the first entry to the version you just set.
+1. Where your corpus exports reports, move its `content-version` by a patch. The raise changed one of its records.
+2. Raise the first entry to the version you just set.
 
-**Sign the raise that changed the body.** Add a `verified` entry stating who checked the comparison.
-`no-self-verification` rejects the actor named in `generated.by`, so ask somebody else to check it and write their
-name. Raising the first entry edits frontmatter alone: the prose is exactly what the last verifier read, and the list
-stays as it is.
+**A raise leaves `verified` as it is.** It edits frontmatter alone, so the prose is exactly what the last verifier
+read.
 
 **The merge, in order:**
 

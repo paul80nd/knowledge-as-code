@@ -564,9 +564,9 @@ public static class Reports
         {
             body.AppendLine("Imported:");
             body.AppendLine();
+            // The version stays in `sources` alone, so the body cannot disagree with the frontmatter.
             foreach (var source in inherited)
-                body.AppendLine($"* `{source.Shortcode}`, {source.Corpus ?? "unnamed"}, at "
-                                + $"{source.ContentVersion ?? "an unstated version"}.");
+                body.AppendLine($"* `{source.Shortcode}`, {source.Corpus ?? "unnamed"}.");
             body.AppendLine();
         }
 
