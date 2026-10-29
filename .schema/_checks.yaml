@@ -800,6 +800,15 @@ checks:
       rule; `log` and `none` are not. One service the schema does not oblige to state the field leaves the whole
       target unjudged, as does a target reaching no service at all.
 
+  departure-needs-none:
+    severity: warning
+    description: Each clause or rule a deviation departs from states a binding modal.
+    notes: >
+      A rule passes where any one of its bullets binds. An imported part is judged by the `level` its export
+      publishes. A part with any bullet stating no modal is passed over, and so is a `closed` deviation. Whether a
+      clause admits no deviation at all is prose in a policy's Exceptions section, which nothing reads. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#deviations>.
+
   dependency-cycle:
     severity: warning
     description: The records' `depends-on` edges form no loop.

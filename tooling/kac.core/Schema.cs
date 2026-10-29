@@ -199,6 +199,16 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     /// </summary>
     public string? ModalNamed(string text) => ModalsLongestFirst.FirstOrDefault(m => Names(text, m));
 
+    /// <summary>
+    /// The modals a part states: its opening modal for a table row, and one per bullet for a heading, read from the
+    /// bullet's bold runs. A null entry is a bullet naming none.
+    /// </summary>
+    public IReadOnlyList<string?> LevelsOf(Doc doc, PartRow part) =>
+        Source == Table
+            ? [Modal(part.Text)]
+            : [.. Md.Bullets(doc.Ast, part.BodyStart, part.BodyEnd)
+                .Select(b => b.Bold.Select(ModalNamed).FirstOrDefault(m => m is not null))];
+
     private static bool Names(string text, string modal)
     {
         for (var i = text.IndexOf(modal, StringComparison.Ordinal);

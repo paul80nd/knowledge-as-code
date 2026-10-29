@@ -77,7 +77,7 @@ public static class Validator
         var byId = CheckCorpus(schema, corpus.Docs, findings, corpus.Imports);
 
         CheckCorpusRules(schema, corpus.Docs, byId, tree, Versions(corpus.Descriptor),
-            corpus.Descriptor.ReposBase, findings);
+            corpus.Descriptor.ReposBase, corpus.Imports, findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
@@ -794,7 +794,8 @@ public static class Validator
     /// does not run.
     /// </summary>
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
-        Tree tree, IReadOnlyDictionary<string, string> versions, string? reposBase, List<Finding> f)
+        Tree tree, IReadOnlyDictionary<string, string> versions, string? reposBase, ImportGraph imports,
+        List<Finding> f)
     {
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
@@ -803,7 +804,11 @@ public static class Validator
 
             var ctx = new CorpusRuleContext(docs, byId, tree, t, rule, versions, reposBase,
                 (at, c, m, l) => Report(Sev.Error, at, c, m, l),
-                (at, c, m, l) => Report(Sev.Warning, at, c, m, l));
+                (at, c, m, l) => Report(Sev.Warning, at, c, m, l))
+            {
+                Schema = schema,
+                Imports = imports
+            };
 
             var problems = implementation.Misconfigured(ctx).ToList();
             foreach (var problem in problems)

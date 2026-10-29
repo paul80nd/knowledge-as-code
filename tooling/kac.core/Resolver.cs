@@ -58,6 +58,18 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
             : Found.Parts.Any(p => string.Equals(p, part, StringComparison.Ordinal));
 
     /// <summary>
+    /// The modals one part states, as <c>ImportedRecord.Levels</c> gives them, read from the file for a local record.
+    /// Null where the record has no such part, or states no level for it.
+    /// </summary>
+    public IReadOnlyList<string?>? Levels(string part)
+    {
+        if (Local is not { } local) return Found.Levels.GetValueOrDefault(part);
+
+        var row = local.Parts.FirstOrDefault(p => string.Equals(p.Id, part, StringComparison.Ordinal));
+        return row is null ? null : local.Type?.Parts?.LevelsOf(local, row);
+    }
+
+    /// <summary>
     /// The type this record is, as the schema names it, and null where nothing in the schema covers it.
     /// </summary>
     public TypeSchema? Type(Schema schema) =>
@@ -73,13 +85,13 @@ public sealed class Resolver
     /// <summary>
     /// Case-insensitive throughout, as <c>byId</c> and <c>id-unique</c> are, so a mis-cased import still resolves.
     /// </summary>
-    private readonly Dictionary<string, Doc> _local;
+    private readonly IReadOnlyDictionary<string, Doc> _local;
     private readonly Dictionary<string, ImportedRecord> _imported = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _scopes = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _shortcodes = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pending;
 
-    public Resolver(Dictionary<string, Doc> local, ImportGraph imports)
+    public Resolver(IReadOnlyDictionary<string, Doc> local, ImportGraph imports)
     {
         _local = local;
         _pending = new HashSet<string>(imports.NotRestored, StringComparer.OrdinalIgnoreCase);

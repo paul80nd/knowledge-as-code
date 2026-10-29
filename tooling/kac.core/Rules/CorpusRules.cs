@@ -13,6 +13,7 @@ public static class CorpusRules
         new ClauseQuotedFaithfully(),
         new DecisionsCiteNoDescriptiveRecord(),
         new DependencyCriticality(),
+        new DepartsOnlyFromWhatBinds(),
         new FeatureFileRepo(),
         new MirrorsRepoLinks(),
         new RedefinitionsAreLinked(),

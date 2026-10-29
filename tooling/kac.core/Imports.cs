@@ -11,7 +11,15 @@ public sealed record ImportedRecord(
     string Id,
     string Type,
     bool KeepsParts,
-    IReadOnlyList<string> Parts);
+    IReadOnlyList<string> Parts)
+{
+    /// <summary>
+    /// The modals each part states, keyed by part id: one for a clause, one per bullet for a rule. A null entry is a
+    /// bullet whose level the producer could not read. A part whose line states no level at all is absent.
+    /// </summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string?>> Levels { get; init; } =
+        new Dictionary<string, IReadOnlyList<string?>>(StringComparer.Ordinal);
+}
 
 public sealed record Import(
     string Shortcode,
@@ -110,7 +118,7 @@ public static class Imports
     /// </summary>
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,
-        Dictionary<string, List<string>> parts,
+        Dictionary<string, List<(string Id, IReadOnlyList<string?>? Levels)>> parts,
         Func<string, IReadOnlyList<string>?> names,
         Func<string, IReadOnlyList<string>?> folders,
         Func<string, string?> read)
@@ -141,7 +149,15 @@ public static class Imports
                 // The parts file names an inherited record by its scoped id.
                 var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
 
-                found.Add(new ImportedRecord(scope, id, type, keepsParts, parts.GetValueOrDefault(key, [])));
+                var carried = parts.GetValueOrDefault(key, []);
+
+                found.Add(new ImportedRecord(scope, id, type, keepsParts, [.. carried.Select(p => p.Id)])
+                {
+                    Levels = carried
+                        .Where(p => p.Levels is not null)
+                        .GroupBy(p => p.Id, StringComparer.Ordinal)
+                        .ToDictionary(g => g.Key, g => g.First().Levels ?? [], StringComparer.Ordinal)
+                });
             }
         }
     }
@@ -149,9 +165,10 @@ public static class Imports
     /// <summary>
     /// A line this build cannot read is skipped: the producer's own build holds its export to its shape.
     /// </summary>
-    private static Dictionary<string, List<string>> PartsIn(string? text, string recordKey, string partKey)
+    private static Dictionary<string, List<(string Id, IReadOnlyList<string?>? Levels)>> PartsIn(
+        string? text, string recordKey, string partKey)
     {
-        var parts = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        var parts = new Dictionary<string, List<(string, IReadOnlyList<string?>?)>>(StringComparer.OrdinalIgnoreCase);
         if (text is null) return parts;
 
         foreach (var line in text.Split('\n'))
@@ -162,11 +179,28 @@ public static class Imports
             if (JsonRead.Str(part[partKey]) is not { } id) continue;
 
             if (!parts.TryGetValue(record, out var carried)) parts[record] = carried = [];
-            carried.Add(id);
+            carried.Add((id, LevelsIn(part)));
         }
 
         return parts;
     }
+
+    /// <summary>
+    /// <c>level</c> is the key the exporter writes on a bullet, and the key every type declaring <c>part.level</c>
+    /// gives it. A line stating neither form returns null.
+    /// </summary>
+    private static IReadOnlyList<string?>? LevelsIn(JsonObject line)
+    {
+        if (line.ContainsKey(LevelKey)) return [JsonRead.Str(line[LevelKey])];
+
+        var bullets = line
+            .Select(p => p.Value as JsonArray)
+            .FirstOrDefault(a => a is { Count: > 0 } && a.All(b => b is JsonObject o && o.ContainsKey(LevelKey)));
+
+        return bullets?.Select(b => JsonRead.Str(b?[LevelKey])).ToList();
+    }
+
+    private const string LevelKey = "level";
 
     public static ImportGraph Load(string corpusRoot, IReadOnlyList<Consumed> declared)
     {
