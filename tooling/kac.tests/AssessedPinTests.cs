@@ -2,8 +2,8 @@ using System.Text.RegularExpressions;
 using kac.core;
 using YamlDotNet.RepresentationModel;
 
-// std-A11Y asks for a new assessment wherever a pin moves its major or minor. `ctl-0014` says what this proves and
-// what it leaves to a reviewer.
+// std-A11Y asks for a new assessment wherever a pin moves its major or minor, and below 0.1.0 wherever it moves at
+// all. `ctl-0014` says what this proves and what it leaves to a reviewer.
 
 namespace kac.tests;
 
@@ -82,15 +82,24 @@ public partial class AssessedPinTests
 
             foreach (var pin in found)
             {
-                var line = MajorMinor(pin.Version);
+                // Below 0.1.0 every release may break, as a caret range reads it, so the whole version is the line.
+                var exact = pin.Version.StartsWith("0.0.", StringComparison.Ordinal);
+                var line = exact ? pin.Version : MajorMinor(pin.Version);
 
-                if (!range.EndsWith(".x", StringComparison.Ordinal))
+                if (exact)
+                {
+                    if (range != pin.Version)
+                        faults.Add($"{id} approves {purl} {range}, and {pin.File} pins {pin.Version}. Below 0.1.0 "
+                                   + "the range is the pinned version.");
+                }
+                else if (!range.EndsWith(".x", StringComparison.Ordinal))
                     faults.Add($"{id} approves {purl} with no range ending '.x', and {pin.File} pins {pin.Version}.");
                 else if (!pin.Version.StartsWith(range[..^1], StringComparison.Ordinal))
                     faults.Add($"{id} approves {purl} {range}, and {pin.File} pins {pin.Version}.");
 
-                // A version, so `0.57.x` and `10.57.2` both fail to name `0.57.2`.
-                if (!Regex.IsMatch(body, $@"(?<![\d.]){Regex.Escape(line)}\.\d"))
+                // A version, so `0.57.x`, `10.57.2` and `0.0.720` fail to name `0.57.2` or `0.0.72`.
+                var named = exact ? $@"(?<![\d.]){Regex.Escape(line)}(?!\d)" : $@"(?<![\d.]){Regex.Escape(line)}\.\d";
+                if (!Regex.IsMatch(body, named))
                     faults.Add($"{id} pins {purl} at {pin.Version}, and its {Assessment} section names no "
                                + $"{line} version.");
             }
@@ -193,6 +202,47 @@ public partial class AssessedPinTests
         var faults = Faults("tools/widget.md", InStep.Replace("Widget 0.57.2", named), WidgetAt0572);
 
         Assert.Contains(faults ?? [], f => f.Contains("names no 0.57 version", StringComparison.Ordinal));
+    }
+
+    private static readonly Dictionary<string, IReadOnlyList<Pin>> WidgetAt0072 = new(StringComparer.Ordinal)
+    {
+        ["pkg:nuget/Widget"] = [new Pin("0.0.72", "tooling/kac/kac.csproj")]
+    };
+
+    private static readonly string ExactInStep =
+        InStep.Replace("versions: 0.57.x", "versions: 0.0.72").Replace("Widget 0.57.2", "Widget 0.0.72");
+
+    [Fact]
+    public void A_record_approving_a_pin_below_0_1_0_exactly_reports_nothing() =>
+        Assert.Empty(Faults("tools/widget.md", ExactInStep, WidgetAt0072) ?? ["not read"]);
+
+    [Fact]
+    public void A_range_over_a_pin_below_0_1_0_is_reported()
+    {
+        var faults = Faults("tools/widget.md", ExactInStep.Replace("versions: 0.0.72", "versions: 0.0.x"),
+            WidgetAt0072);
+
+        Assert.Contains(faults ?? [], f => f.Contains("approves pkg:nuget/Widget 0.0.x", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void An_exact_range_naming_another_version_below_0_1_0_is_reported()
+    {
+        var faults = Faults("tools/widget.md", ExactInStep.Replace("versions: 0.0.72", "versions: 0.0.71"),
+            WidgetAt0072);
+
+        Assert.Contains(faults ?? [], f => f.Contains("approves pkg:nuget/Widget 0.0.71", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("Widget 0.0.71")]
+    [InlineData("Widget 0.0.720")]
+    [InlineData("Widget 10.0.72")]
+    public void An_assessment_below_0_1_0_must_name_the_pinned_version(string named)
+    {
+        var faults = Faults("tools/widget.md", ExactInStep.Replace("Widget 0.0.72", named), WidgetAt0072);
+
+        Assert.Contains(faults ?? [], f => f.Contains("names no 0.0.72 version", StringComparison.Ordinal));
     }
 
     [Fact]

@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:pypi/zensical, versions: 0.0.x }
+  - { purl: pkg:pypi/zensical, versions: 0.0.72 }
 homepage: https://zensical.org/
 licence: MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 AND ISC AND W3C
 licence-declared: MIT
@@ -36,9 +36,10 @@ build, so `NavigationTests` in `kac.tests` covers that case.
 
 ## Status
 
-Approved for the 0.0 line, and pinned at 0.0.72 in `docs/requirements.txt`. Zensical publishes a release every few
-days and makes no promise about stability or about how long it reads `mkdocs.yml`. Each Dependabot pull request meets
-the strict build before it merges.
+Approved at 0.0.72 alone, the version `docs/requirements.txt` pins. Zensical publishes a release every few days and
+makes no promise about stability or about how long it reads `mkdocs.yml`. Below 0.1.0 any release may change
+behaviour, so [std-A11Y] asks for a new assessment at each one. Each Dependabot pull request meets the strict build,
+and moves this entry's version with a new assessment, before it merges.
 
 `mkdocs.yml` still builds the site under MkDocs 1.6.1 with Material 9.7.7, in Material's look, so leaving Zensical is a
 change to `docs/requirements.txt` and to the build command in two workflows. The review date falls before Material's

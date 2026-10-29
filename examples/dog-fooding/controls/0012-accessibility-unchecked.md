@@ -45,7 +45,8 @@ contrast, focus and keyboard rules go unchecked. So does every rule under
 [std-A11Y.WORSE].
 
 [ctl-0014] checks two rules under [std-A11Y.ASSESS]: that an assessment
-names the pinned version, and that a pin moving its major or minor brings a new one.
+names the pinned version, and that a pin moving its major or minor brings a new one. Below 0.1.0 any move of the pin
+brings a new one.
 [#967](https://github.com/paul80nd/knowledge-as-code/issues/967) found the second unchecked after Dependabot moved
 `Spectre.Console.Cli` in [#802](https://github.com/paul80nd/knowledge-as-code/pull/802). The other rules under it go
 unchecked.
