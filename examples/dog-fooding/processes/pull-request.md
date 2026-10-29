@@ -21,7 +21,7 @@ This is the last thing you do to whatever you were working on. Every change is m
 ## When to use this
 
 You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only
-way in. Where a build broke, read a [runbook](../runbooks.md).
+way in. Where a build broke, look for a [fix](../fixes.md).
 
 ## Prerequisites
 

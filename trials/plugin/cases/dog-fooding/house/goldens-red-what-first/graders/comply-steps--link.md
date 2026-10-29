@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'runbooks/goldens-disagree\.md'
+pattern: 'fixes/goldens-disagree\.md'
 ---

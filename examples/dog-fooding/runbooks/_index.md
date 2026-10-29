@@ -2,8 +2,6 @@
 
 # Runbook Index (RBK)
 
-| ID                              | Title                                                                                  | Severity | Status | Last rehearsed |
-|---------------------------------|----------------------------------------------------------------------------------------|----------|--------|----------------|
-| rbk-goldens-disagree            | [The golden suite reports a diff nobody meant](goldens-disagree.md)                    | sev3     | active | 2026-10-18     |
-| rbk-nuget-404-on-publish        | [nuget.org answers 404 for a version it has already accepted](nuget-404-on-publish.md) | sev3     | active | never          |
-| rbk-restore-cannot-find-version | [kac restore cannot find the version the lock names](restore-cannot-find-version.md)   | sev3     | active | 2026-10-18     |
+| ID                       | Title                                                                                  | Severity | Status | Last rehearsed |
+|--------------------------|----------------------------------------------------------------------------------------|----------|--------|----------------|
+| rbk-nuget-404-on-publish | [nuget.org answers 404 for a version it has already accepted](nuget-404-on-publish.md) | sev3     | active | never          |
