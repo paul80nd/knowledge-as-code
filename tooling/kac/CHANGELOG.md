@@ -33,6 +33,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`kac validate` resolves a `repos` entry by the form of `repos-base` now.** An entry is `<repo>` or
+  `<group>/<repo>`, spelt as the host spells it, spaces and capitals included. Against an Azure DevOps organisation,
+  `mirrors-repo-links` resolves `<project>/<repo>` to `<base>/<project>/_git/<repo>`. Against a project it resolves
+  `<repo>` to `<base>/_git/<repo>`. It warns on an entry in the other form, and reads `dev.azure.com/{org}` and
+  `{org}.visualstudio.com` as one organisation. It percent-decodes each link and suggests one percent-encoded. Point
+  `repos-base` at the organisation where repositories sit in several projects.
 - **`kac report coverage` lists only the controls that check something now.** The `Controls` column named every
   control verifying a rule in `Covered by`, so a `not-enforced` control read as coverage. It now leaves out a control
   whose `mechanism` is `not-enforced`, and one whose `status` is not its type's `in-force:` value, such as `planned`.

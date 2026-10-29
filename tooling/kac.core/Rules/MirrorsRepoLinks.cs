@@ -15,8 +15,7 @@ public sealed class MirrorsRepoLinks : ICorpusRule
     {
         if (ctx.ReposBase is not { Length: > 0 } root) return;
 
-        // A base written with a trailing slash resolves to the same URL as one written without.
-        var prefix = root.TrimEnd('/') + "/";
+        var host = RepoBase.Read(root);
 
         foreach (var doc in ctx.Records)
         {
@@ -24,43 +23,185 @@ public sealed class MirrorsRepoLinks : ICorpusRule
                 string.Equals(s.Title, Heading, StringComparison.OrdinalIgnoreCase));
             if (section is null) continue;
 
-            var declared = new HashSet<string>(doc.FrontList(Repos), StringComparer.OrdinalIgnoreCase);
-            var linked = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var declared = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+            var misfits = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in doc.FrontList(Repos).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                var parts = entry.Split('/');
+                if (host.Misfit(parts) is not var (kind, form))
+                {
+                    declared.TryAdd(host.Key(parts), parts);
+                    continue;
+                }
 
+                // A link to the repository a misfit means goes unreported, so the misfit is reported once.
+                misfits.Add(parts[^1]);
+                ctx.Warn(doc, Reports,
+                    $"'{Repos}: {entry}' does not fit `repos-base`, which {kind}. Write it as '{form}'.",
+                    doc.FrontStartLine);
+            }
+
+            var linked = new Dictionary<string, (string[] Parts, int Line)>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in doc.Links)
             {
                 if (link.Position < section.BodyStart || link.Position >= section.BodyEnd) continue;
-                if (Named(link.Target, prefix) is not { } name) continue;
-                linked.TryAdd(name, link.Line);
+                if (host.Named(link.Target, declared) is not { } parts) continue;
+                linked.TryAdd(host.Key(parts), (parts, link.Line));
             }
 
-            foreach (var name in declared.Order(StringComparer.OrdinalIgnoreCase))
+            foreach (var (key, parts) in declared.OrderBy(d => Entry(d.Value), StringComparer.OrdinalIgnoreCase))
             {
-                if (linked.ContainsKey(name)) continue;
+                if (linked.ContainsKey(key)) continue;
                 ctx.Warn(doc, Reports,
-                    $"'{Repos}: {name}' is not linked under '{Heading}'. Link it as {prefix}{name}, "
+                    $"'{Repos}: {Entry(parts)}' is not linked under '{Heading}'. Link it as {host.Url(parts)}, "
                     + $"or drop it from `{Repos}`.",
                     doc.FrontStartLine);
             }
 
-            foreach (var (name, line) in linked.OrderBy(l => l.Value))
+            foreach (var (key, (parts, line)) in linked.OrderBy(l => l.Value.Line))
             {
-                if (declared.Contains(name)) continue;
+                if (declared.ContainsKey(key) || misfits.Contains(parts[^1])) continue;
                 ctx.Warn(doc, Reports,
-                    $"'{Heading}' links {prefix}{name}, which `{Repos}` does not state. Add '{name}' to "
-                    + $"`{Repos}`, or link a repository this service is changed in.",
+                    $"'{Heading}' links {host.Url(parts)}, which `{Repos}` does not state. Add '{Entry(parts)}' "
+                    + $"to `{Repos}`, or link a repository this service is changed in.",
                     line);
             }
         }
     }
 
-    private static string? Named(string target, string prefix)
-    {
-        if (!target.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return null;
+    private static string Entry(string[] parts) => string.Join('/', parts);
 
-        var rest = target[prefix.Length..];
-        var end = rest.IndexOfAny(['/', '#', '?']);
-        var name = end < 0 ? rest : rest[..end];
-        return name.Length == 0 ? null : name;
+    /// <summary>
+    /// Where a corpus's <c>repos-base</c> points, and how an entry and a link resolve against it.
+    /// </summary>
+    private abstract class RepoBase
+    {
+        public static RepoBase Read(string root)
+        {
+            root = root.TrimEnd('/');
+            return (RepoBase?)AzureDevOps.Parse(root) ?? new AnyHost(root);
+        }
+
+        /// <summary>The key an entry and a link to its repository share, compared case-insensitively.</summary>
+        public abstract string Key(string[] parts);
+
+        /// <summary>The link an entry resolves to, percent-encoded a segment at a time.</summary>
+        public abstract string Url(string[] parts);
+
+        /// <summary>The entry a link names, or null where it points outside the base.</summary>
+        public abstract string[]? Named(string target, IReadOnlyDictionary<string, string[]> declared);
+
+        /// <summary>
+        /// What the base is and the form an entry takes against it, where the entry does not take that form.
+        /// </summary>
+        public virtual (string Kind, string Form)? Misfit(string[] parts) => null;
+
+        protected static string Encode(IEnumerable<string> parts) =>
+            string.Join('/', parts.Select(Uri.EscapeDataString));
+
+        /// <summary>The path segments of a link, cut at its query and its fragment, each percent-decoded.</summary>
+        protected static string[] Segments(string path)
+        {
+            var end = path.IndexOfAny(['#', '?']);
+            if (end >= 0) path = path[..end];
+            return path.Split('/', StringSplitOptions.RemoveEmptyEntries).Select(Uri.UnescapeDataString).ToArray();
+        }
+    }
+
+    /// <summary>
+    /// A host with no form of its own: an entry resolves to <c>&lt;base&gt;/&lt;entry&gt;</c> as written.
+    /// </summary>
+    private sealed class AnyHost(string root) : RepoBase
+    {
+        public override string Key(string[] parts) => Entry(parts);
+
+        public override string Url(string[] parts) => $"{root}/{Encode(parts)}";
+
+        public override string[]? Named(string target, IReadOnlyDictionary<string, string[]> declared)
+        {
+            if (!target.StartsWith(root + "/", StringComparison.OrdinalIgnoreCase)) return null;
+
+            var segments = Segments(target[(root.Length + 1)..]);
+            if (segments.Length == 0) return null;
+
+            // A link reaching inside a repository runs on past its name, so the entry it names is the longest declared
+            // prefix, and a link no entry names is read in the form this record's entries take.
+            if (segments.Length > 1 && declared.ContainsKey(Entry(segments[..2]))) return segments[..2];
+            if (declared.ContainsKey(segments[0])) return segments[..1];
+
+            var width = segments.Length > 1 && declared.Values.Any(e => e.Length > 1) ? 2 : 1;
+            return segments[..width];
+        }
+    }
+
+    /// <summary>
+    /// An Azure DevOps organisation, project or <c>_git</c> address, read from the host and the path. One
+    /// organisation answers on <c>dev.azure.com/{org}</c> and on <c>{org}.visualstudio.com</c>, so a link on either
+    /// host is read against the same base.
+    /// </summary>
+    private sealed class AzureDevOps(string root, AzureDevOps.Level level, string organisation, string? project)
+        : RepoBase
+    {
+        public enum Level { Organisation, Project, Git }
+
+        private const string Git = "_git";
+        private const string Host = "dev.azure.com";
+        private const string LegacyHost = ".visualstudio.com";
+
+        public static AzureDevOps? Parse(string root)
+        {
+            if (Address(root) is not var (at, path)) return null;
+
+            return path switch
+            {
+                [] => new AzureDevOps(root, Level.Organisation, at, null),
+                [var p] when !IsGit(p) => new AzureDevOps(root, Level.Project, at, p),
+                [var p, var g] when IsGit(g) && !IsGit(p) => new AzureDevOps(root, Level.Git, at, p),
+                _ => null
+            };
+        }
+
+        public override string Key(string[] parts) =>
+            level == Level.Organisation ? Entry(parts) : $"{project}/{Entry(parts)}";
+
+        public override (string Kind, string Form)? Misfit(string[] parts) => level switch
+        {
+            Level.Organisation when parts.Length != 2 => ("is an Azure DevOps organisation", "<project>/<repo>"),
+            not Level.Organisation when parts.Length != 1 => ("names an Azure DevOps project", "<repo>"),
+            _ => null
+        };
+
+        public override string Url(string[] parts) => level switch
+        {
+            Level.Organisation => $"{root}/{Encode(parts[..^1])}/{Git}/{Encode(parts[^1..])}",
+            Level.Project => $"{root}/{Git}/{Encode(parts)}",
+            _ => $"{root}/{Encode(parts)}"
+        };
+
+        public override string[]? Named(string target, IReadOnlyDictionary<string, string[]> declared)
+        {
+            if (Address(target) is not var (at, path)) return null;
+            if (!string.Equals(at, organisation, StringComparison.OrdinalIgnoreCase)) return null;
+            if (path is not [var p, var g, var repo, ..] || !IsGit(g)) return null;
+
+            if (level == Level.Organisation) return [p, repo];
+            return string.Equals(p, project, StringComparison.OrdinalIgnoreCase) ? [repo] : null;
+        }
+
+        /// <summary>The organisation an address is in and the decoded path below it, or null on another host.</summary>
+        private static (string Organisation, string[] Path)? Address(string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) return null;
+
+            var path = Segments(uri.AbsolutePath);
+            if (string.Equals(uri.Host, Host, StringComparison.OrdinalIgnoreCase))
+                return path is [var org, .. var rest] ? (org, rest) : null;
+
+            return uri.Host.EndsWith(LegacyHost, StringComparison.OrdinalIgnoreCase)
+                ? (uri.Host[..^LegacyHost.Length], path)
+                : null;
+        }
+
+        private static bool IsGit(string segment) => string.Equals(segment, Git, StringComparison.OrdinalIgnoreCase);
     }
 }

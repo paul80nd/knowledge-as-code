@@ -1,0 +1,8 @@
+# An Azure DevOps project's `_git` path, so each `repos` entry is a repository beneath it.
+corpus: fixture-corpus
+repos-base: https://dev.azure.com/acme/Proj%20X/_git
+
+# The ranges the services below draw on, which the schema leaves to the corpus.
+enums:
+  component-type: [api]
+  platform: [dotnet-web]

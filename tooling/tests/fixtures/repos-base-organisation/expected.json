@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "validated": 3,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 0,
+    "warnings": 2,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": "services/ledger.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'repos: ledger' does not fit `repos-base`, which is an Azure DevOps organisation. Write it as '<project>/<repo>'."
+    },
+    {
+      "file": "services/settlement.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'repos: Proj X/Settlement Api' is not linked under 'Where it lives'. Link it as https://dev.azure.com/Acme/Proj%20X/_git/Settlement%20Api, or drop it from `repos`."
+    }
+  ]
+}

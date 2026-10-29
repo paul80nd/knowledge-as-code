@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "validated": 3,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 0,
+    "warnings": 1,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": "services/settlement.md",
+      "line": 26,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'Where it lives' links https://github.com/Acme/Settlement%20Jobs, which `repos` does not state. Add 'Acme/Settlement Jobs' to `repos`, or link a repository this service is changed in."
+    }
+  ]
+}

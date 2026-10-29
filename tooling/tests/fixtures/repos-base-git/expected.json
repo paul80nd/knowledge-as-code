@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "validated": 2,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 0,
+    "warnings": 1,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": "services/ledger.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'repos: Proj X/Ledger' does not fit `repos-base`, which names an Azure DevOps project. Write it as '<repo>'."
+    }
+  ]
+}

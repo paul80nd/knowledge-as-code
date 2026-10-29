@@ -1,0 +1,8 @@
+# An Azure DevOps organisation, so each `repos` entry names its project as well as its repository.
+corpus: fixture-corpus
+repos-base: https://dev.azure.com/Acme
+
+# The ranges the services below draw on, which the schema leaves to the corpus.
+enums:
+  component-type: [api]
+  platform: [dotnet-web]
