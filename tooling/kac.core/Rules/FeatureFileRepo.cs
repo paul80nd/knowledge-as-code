@@ -27,14 +27,17 @@ public sealed class FeatureFileRepo : ICorpusRule
 
             if (repos.Count == 0) continue;
 
+            var entries = repos.Select(repo => repo.Split('/')).ToList();
+
             foreach (var path in doc.FrontList(Paths))
             {
                 var segments = path.Split('/');
-                if (repos.Any(repo => Opens(segments, repo))) continue;
+                if (entries.Any(entry => Opens(segments, entry))) continue;
 
-                // The message quotes as many segments as the widest entry takes.
-                var width = Math.Min(segments.Length, repos.Max(repo => repo.Split('/').Length));
-                var opening = string.Join('/', segments[..width]);
+                // A second segment is a repository only after a group some entry names, and a folder anywhere else.
+                var grouped = segments.Length > 1 && entries.Any(entry =>
+                    entry.Length > 1 && string.Equals(entry[0], segments[0], StringComparison.OrdinalIgnoreCase));
+                var opening = string.Join('/', segments[..(grouped ? 2 : 1)]);
 
                 var known = string.Join(", ", repos.Order(StringComparer.OrdinalIgnoreCase));
                 ctx.Warn(doc, Reports,
@@ -49,12 +52,9 @@ public sealed class FeatureFileRepo : ICorpusRule
     /// Whether a path opens with every part of a <c>repos</c> entry, so <c>&lt;group&gt;/&lt;repo&gt;</c> takes two
     /// segments and <c>&lt;repo&gt;</c> one.
     /// </summary>
-    private static bool Opens(string[] segments, string repo)
-    {
-        var parts = repo.Split('/');
-        return parts.Length <= segments.Length
-               && parts.Zip(segments).All(p => string.Equals(p.First, p.Second, StringComparison.OrdinalIgnoreCase));
-    }
+    private static bool Opens(string[] segments, string[] entry) =>
+        entry.Length <= segments.Length
+        && entry.Zip(segments).All(p => string.Equals(p.First, p.Second, StringComparison.OrdinalIgnoreCase));
 
     private static HashSet<string> Repositories(CorpusRuleContext ctx, Doc doc, FieldSpec services)
     {

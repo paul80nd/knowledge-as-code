@@ -99,6 +99,18 @@ public class FeatureFileRepoTests
             services: ["svc-lending", "svc-catalogue"],
             repos: [("svc-lending", ["lending"]), ("svc-catalogue", ["Proj X/My Repo"])]));
 
+    [Theory]
+    [InlineData("qa-pack/features/renewal.feature", "qa-pack")]
+    [InlineData("Proj X/Other/renewal.feature", "Proj X/Other")]
+    [InlineData("Proj X", "Proj X")]
+    public void The_opening_a_message_quotes_takes_a_second_segment_only_after_a_known_group(
+        string path, string opening)
+        => Assert.Contains($"starts in '{opening}'",
+            Assert.Single(Check(
+                paths: [path],
+                services: ["svc-lending", "svc-catalogue"],
+                repos: [("svc-lending", ["lending"]), ("svc-catalogue", ["Proj X/My Repo"])])).Message);
+
     [Fact]
     public void A_record_whose_services_state_no_repository_is_passed_over()
         => Assert.Empty(Check(
