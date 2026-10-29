@@ -82,7 +82,7 @@ public partial class AssessedPinTests
 
             foreach (var pin in found)
             {
-                // Below 0.1.0 every release may break, as a caret range reads it, so the whole version is the line.
+                // Below 0.1.0 the whole version is the line.
                 var exact = pin.Version.StartsWith("0.0.", StringComparison.Ordinal);
                 var line = exact ? pin.Version : MajorMinor(pin.Version);
 
