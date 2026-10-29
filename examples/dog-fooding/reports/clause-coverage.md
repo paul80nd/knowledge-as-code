@@ -10,7 +10,7 @@ generated:
   report: coverage
   tool: kac/0.43.0
 sources:
-  - { resource: example-dogfooding, version: "0.91.2" }
+  - { resource: example-dogfooding, version: "0.91.3" }
   - { resource: example-engineering, version: "0.45.0" }
 verified:
   - { at: 2026-10-29T09:25:00Z, by: human:paul.law }

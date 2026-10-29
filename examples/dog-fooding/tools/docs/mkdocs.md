@@ -24,8 +24,8 @@ repository root.
 
 ## What we use it for
 
-The site documents `kac`, and MkDocs was chosen because it is what tool documentation uses. The site is not a corpus, so
-`publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.
+The site documents `kac`, and MkDocs was chosen because it is what tool documentation uses. The site is not a corpus,
+and `kac` refuses `mkdocs` as a `publishing-target`.
 
 Under MkDocs, `strict: true` in `mkdocs.yml` turned a dead link into a failed build. MkDocs reported a page the
 navigation does not list at INFO only, so `NavigationTests` in `kac.tests` covers that case.
