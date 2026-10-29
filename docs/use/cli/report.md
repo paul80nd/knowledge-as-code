@@ -40,11 +40,12 @@ Each coverage row arrives with four values read from the corpus:
 * the rules whose `Covers` line cites the clause, as `std-CI.PERMS`, or a standard whose `implements:` lists it where
   none of its rules does
 * the deviations in force whose `departs-from:` cites it
-* the controls whose `verifies:` names one of those rules
+* the controls in force whose `verifies:` names one of those rules, and whose `mechanism` is not `not-enforced`
 * any clause elsewhere in the corpus sharing its key
 
-A deviation is in force while its `status` is the value its type declares in `in-force:`, which is `active`. A `draft`
-or `closed` deviation is left out, and `## Limits` says so.
+A deviation or a control is in force while its `status` is the value its type declares in `in-force:`, which is
+`active`. A `draft` or `closed` deviation is left out, and so is a `planned` or `retired` control. A `not-enforced`
+control is left out too, because it checks nothing. `## Limits` says so.
 
 A shared key is a candidate pair: one obligation written from both sides as two clauses with one key. `report` lists
 the match and never decides it. Two runs over an unchanged corpus print the same report.
@@ -139,7 +140,7 @@ kac report coverage
 ```
 
 Each policy then gets a section of its own, one row per clause. The rows give the rules covering it, the deviations
-departing from it, the controls checking those rules, and any clause elsewhere sharing its key.
+departing from it, the controls in force checking those rules, and any clause elsewhere sharing its key.
 
 ### A frameworks report
 

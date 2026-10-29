@@ -32,7 +32,9 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     ---
     id: ctl-0001
     type: control
+    status: active
     verifies: [std-COVER.NAMED]
+    mechanism: ci
     ---
 
     # The coverage check

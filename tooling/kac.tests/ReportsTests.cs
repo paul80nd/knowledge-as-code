@@ -195,12 +195,41 @@ public class ReportsTests
             RuleCoverage(whole: true));
 
     [Fact]
+    public void A_not_enforced_control_is_left_out_of_the_rule_it_names()
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |",
+            RuleCoverage(control: Control("ctl-0004", "std-VLT.VAULT", mechanism: "not-enforced")));
+
+    [Fact]
+    public void A_planned_control_is_left_out_until_it_is_in_force()
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |",
+            RuleCoverage(control: Control("ctl-0004", "std-VLT.VAULT", status: "planned")));
+
+    [Fact]
+    public void An_inherited_control_in_force_is_named_beside_the_clause()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` | `gp:dev-OPEN` | `gp:ctl-RUN` |",
+            Inheriting(controls: true));
+
+    [Fact]
+    public void An_inherited_not_enforced_control_is_left_out()
+        => Assert.DoesNotContain("ctl-NONE", Inheriting(controls: true));
+
+    [Fact]
+    public void An_inherited_planned_control_is_left_out()
+        => Assert.DoesNotContain("ctl-SOON", Inheriting(controls: true));
+
+    [Fact]
     public void An_inherited_rule_covering_a_clause_is_named_with_its_producer()
         => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD.STAY` |", Inheriting(rules: true));
 
     [Fact]
     public void A_coverage_report_states_that_a_control_vouches_for_the_rule_it_names()
         => Assert.Contains("`Controls` lists each control naming a rule in `Covered by`", Coverage());
+
+    [Fact]
+    public void A_coverage_report_states_that_it_lists_only_a_control_in_force_that_checks_something()
+        => Assert.Contains("The `Controls` column lists a control only while its `status` is `active` and its "
+                           + "`mechanism` is not `not-enforced`. The controls index of each corpus lists every "
+                           + "control it wrote.", RuleCoverage());
 
     [Fact]
     public void A_consumer_that_declines_the_clause_type_reports_the_clauses_it_inherits()
@@ -250,16 +279,16 @@ public class ReportsTests
     }
 
     /// <summary>
-    /// A standard whose two rules each cover one clause, a control naming each rule, and with <paramref name="whole"/>
-    /// a third naming the standard whole.
+    /// A standard whose two rules each cover one clause, a control naming each rule, with <paramref name="whole"/> a
+    /// third naming the standard whole, and with <paramref name="control"/> one more as given.
     /// </summary>
-    private static string RuleCoverage(bool whole = false)
+    private static string RuleCoverage(bool whole = false, string? control = null)
     {
         var types = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
         {
             ["policies"] = PolicyType(),
             ["standards"] = RuleType(),
-            ["controls"] = Refers("controls", "ctl", "control", "verifies")
+            ["controls"] = Refers("controls", "ctl", "control", "verifies", inForce: "active")
         };
         var schema = new Schema { ByFolder = types };
 
@@ -291,10 +320,11 @@ public class ReportsTests
         var sources = new List<(string, string)>
         {
             ("policies/scrt.md", Policy), ("standards/vault.md", vault),
-            ("controls/0001-vault.md", "---\nid: ctl-0001\nverifies: std-VLT.VAULT\n---\n\n# One\n"),
-            ("controls/0002-revoke.md", "---\nid: ctl-0002\nverifies: std-VLT.REVOKE\n---\n\n# Two\n")
+            ("controls/0001-vault.md", Control("ctl-0001", "std-VLT.VAULT")),
+            ("controls/0002-revoke.md", Control("ctl-0002", "std-VLT.REVOKE"))
         };
-        if (whole) sources.Add(("controls/0003-whole.md", "---\nid: ctl-0003\nverifies: std-VLT\n---\n\n# Three\n"));
+        if (whole) sources.Add(("controls/0003-whole.md", Control("ctl-0003", "std-VLT")));
+        if (control is not null) sources.Add(("controls/0004-extra.md", control));
 
         var docs = sources.Select(s => Doc.Parse(s.Item1, s.Item2, schema)).OfType<Doc>().ToList();
         Assert.Equal(sources.Count, docs.Count);
@@ -316,18 +346,22 @@ public class ReportsTests
         return plan.Body;
     }
 
-    private static string Inheriting(string inForce = "active", bool rules = false)
+    private static string Control(string id, string verifies, string status = "active", string mechanism = "ci") =>
+        $"---\nid: {id}\nstatus: {status}\nverifies: {verifies}\nmechanism: {mechanism}\n---\n\n# {id}\n";
+
+    private static string Inheriting(string inForce = "active", bool rules = false, bool controls = false)
     {
-        var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules)], Stamp);
+        var plan = Reports.Plan("coverage", Corpus(rules), [Grandparent(inForce, rules, controls)], Stamp);
         Assert.NotNull(plan);
         return plan.Body;
     }
 
     /// <summary>
     /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
-    /// wrote, in the folder eng filed it under.
+    /// wrote, in the folder eng filed it under. With <paramref name="controls"/>, three controls verify gp's standard:
+    /// one running, one <c>not-enforced</c> and one planned.
     /// </summary>
-    private static InheritedCorpus Grandparent(string inForce, bool rules = false) =>
+    private static InheritedCorpus Grandparent(string inForce, bool rules = false, bool controls = false) =>
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
             null,
@@ -369,8 +403,21 @@ public class ReportsTests
                         new InheritedRecord("gp", "dev-SHUT.json",
                             """{"fields":{"id":"dev-SHUT","status":"closed","departs-from":["pol-OLD.HOLD"]}}""")
                     ],
-                    InForce: inForce)
+                    InForce: inForce),
+                new InheritedType("controls", 1, "controls", null, null, null, null, null,
+                    new Dictionary<string, string>(StringComparer.Ordinal),
+                    [],
+                    controls ? [GpControl("RUN", "active", "ci"), GpControl("NONE", "active", "not-enforced"),
+                        GpControl("SOON", "planned", "ci")] : [],
+                    InForce: "active")
             ]);
+
+    private static InheritedRecord GpControl(string key, string status, string mechanism) =>
+        new("gp", $"ctl-{key}.json",
+            $$$"""
+               {"fields":{"id":"ctl-{{{key}}}","status":"{{{status}}}","verifies":["std-OLD"],
+               "mechanism":"{{{mechanism}}}"}}
+               """.ReplaceLineEndings(""));
 
     private static ReportPlan Plan(string name)
     {
