@@ -11,6 +11,7 @@ its method and every run, so you can run it again after a large change and compa
 | [Plugin](plugin/README.md)               | Whether a corpus's plugin makes an agent's code follow the corpus's rules    |
 | [Process level](process-level/README.md) | Whether a process written as outcomes draws fewer findings asking for a step |
 | [Review](review/README.md)               | Whether the plugin's reviewer cites the rule a change breaks                 |
+| [Scale](scale/README.md)                 | What `kac` and its plugin cost on an estate of eight applications            |
 | [Surfaces](surfaces/README.md)           | How large each surface of `kac` and this repository is, and what reaches it  |
 | [Use cases](use-cases/README.md)         | The use cases for each moment of the work, and the case that measures each   |
 
