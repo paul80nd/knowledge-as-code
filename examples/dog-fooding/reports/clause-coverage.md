@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.43.0
 sources:
-  - { resource: example-dogfooding, version: "0.92.0" }
+  - { resource: example-dogfooding, version: "0.93.0" }
   - { resource: example-engineering, version: "0.45.1" }
 verified:
-  - { at: 2026-10-29T09:54:00Z, by: human:paul.law }
+  - { at: 2026-10-29T11:20:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -266,7 +266,7 @@ where the rule and the practice differ.
 
 | Clause    | Level    | Covered by                                                                                                                             | Deviations                                           | Controls | Pair candidate                           | Verdict      | Note                                                                                                                                                      |
 |-----------|----------|----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|----------|------------------------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `PROCESS` | MUST     |                                                                                                                                        | [`dev-no-incident-process`][dev-no-incident-process] |          |                                          | Gap          | The runbooks cover three failures, and nothing says who decides in the rest.                                                                              |
+| `PROCESS` | MUST     |                                                                                                                                        | [`dev-no-incident-process`][dev-no-incident-process] |          |                                          | Gap          | One runbook covers one failure, and nothing says who decides in the rest.                                                                                 |
 | `DECLARE` | MUST     |                                                                                                                                        |                                                      |          |                                          | Gap          | Nothing states what makes an event here an incident, or who decides.                                                                                      |
 | `HARM`    | MUST     |                                                                                                                                        |                                                      |          |                                          | Out of scope | No personal data, so no breach to assess.                                                                                                                 |
 | `AVERTED` | MUST     |                                                                                                                                        |                                                      |          |                                          | Gap          | Nothing records a risk caught before it became a fault.                                                                                                   |
@@ -314,7 +314,7 @@ where the rule and the practice differ.
 | `HEADS`   | MUST NOT |                                                                                                    | [`dev-one-maintainer`][dev-one-maintainer]                       |                                                |                | Gap     | One maintainer, and nothing tests what only they know.                                           |
 | `COPY`    | MUST NOT | [`std-PLUGIN`][std-PLUGIN]`.FROZEN`, [`std-PLUGIN`][std-PLUGIN]`.TRACKER`                          |                                                                  | [`ctl-0009`][ctl-0009]                         |                | Covered | A skill quotes what the export contains, and links the record for the rest.                      |
 | `BEHAVE`  | SHOULD   |                                                                                                    |                                                                  |                                                |                | Gap     | `tooling/kac.features` states behaviour as scenarios the tests run, and no standard asks for it. |
-| `RUNBOOK` | SHOULD   |                                                                                                    |                                                                  |                                                |                | Gap     | Three runbooks cover three failures here, and no standard asks for one.                          |
+| `RUNBOOK` | SHOULD   |                                                                                                    |                                                                  |                                                |                | Gap     | One runbook covers one failure here, and no standard asks for one.                               |
 
 ### [eng:pol-MEXP][eng:pol-MEXP]
 

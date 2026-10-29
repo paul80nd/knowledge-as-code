@@ -27,13 +27,12 @@ tags: [ incidents, response, runbooks ]
 
 `Deviation: dev-no-incident-process` `ACTIVE`
 
-Three runbooks cover three failures. Every other failure is whatever the maintainer decides on the day, and nobody is
-told.
+One runbook covers one failure. Every other failure is whatever the maintainer decides on the day, and nobody is told.
 
 ## What we are doing instead
 
-[`../runbooks/`](../runbooks/) has a runbook for each of three failures somebody has met. Outside those three, there is
-no declaration, no severity, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.
+[`../runbooks/`](../runbooks/) has a runbook for the one failure somebody has met. Outside it, there is no
+declaration, no severity, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.
 `eng:std-INCSEV` states the severity scale, and nothing here applies it.
 
 `.github/SECURITY.md` gives the route in for a vulnerability, and says a report is acknowledged within about a week.

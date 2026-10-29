@@ -3,7 +3,7 @@ name: golden-red-in-ci
 max_turns: 40
 timeout_seconds: 600
 allowed_tools: [Read, Glob, Grep, Skill]
-tags: [house, rbk-goldens-disagree]
+tags: [house, fix-0003]
 ---
 
 CI is red on my branch and I can't see why, because the golden suite passes on my machine. The job log says:

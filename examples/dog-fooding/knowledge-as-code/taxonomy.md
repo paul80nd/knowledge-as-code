@@ -139,6 +139,10 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
+**Fix vs Runbook.** Is something in production broken while you read this? Broken in production is a runbook, read under
+pressure. A problem that stops only your own work, such as a failing build, is a fix, even where finding its cause takes
+more than one check.
+
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
 

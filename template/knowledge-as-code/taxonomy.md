@@ -254,6 +254,10 @@ deployable component. If it is about a single component, it is a service.
 **Explanation vs Standard.** An explanation helps you understand. A standard tells you what to do. If it says you
 **MUST** do something, it is a standard however much context surrounds it.
 
+**Fix vs Runbook.** Is something in production broken while you read this? Broken in production is a runbook, read under
+pressure. A problem that stops only your own work, such as a failing build, is a fix, even where finding its cause takes
+more than one check.
+
 **Offering vs Service.** An offering is what a customer gets. A service is something the organisation deploys. One
 offering usually spans several services. One service usually contributes to several offerings.
 

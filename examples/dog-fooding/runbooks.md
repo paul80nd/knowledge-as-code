@@ -26,8 +26,8 @@ the recovery has never been run, while there is still time to run it.
 
 Two other types sit close enough to confuse:
 
-* **Fix**: a known problem with a known resolution, usually one or two steps, no urgency. If it needs a
-  diagnosis tree and an escalation path, it is a runbook.
+* **Fix**: a known problem with a verified resolution, while nothing in production is broken. A problem that stops
+  only your own work, such as a failing build, is a fix, even where finding its cause takes more than one check.
 * **Postmortem**: an account of an incident that happened. A runbook gives instructions for an
   incident that has not happened yet. A good postmortem frequently produces a runbook.
 
