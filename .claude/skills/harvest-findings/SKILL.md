@@ -149,7 +149,8 @@ without `kac:triaged`, so nothing is triaged twice. A finding bounced to another
 | `kac:route-none`      | a duplicate, a record here already covers it, or it is below the record's level |
 | `kac:route-unclear`   | triaged, and a person has to decide                                             |
 
-**Apply exactly one route label.** A finding matching two routes is `kac:route-unclear`, and the comment says which two.
+**Apply exactly one route label.** A finding that fits two or more of step 6's items 2 to 5 is `kac:route-unclear`, and
+the comment names each route it fits.
 
 **`kac:route-unclear` is a verdict, not a failure.** Reach for it wherever choosing between the others would be a guess.
 An issue left untriaged is an issue nobody sees again.
@@ -279,19 +280,23 @@ the page it was seeded with.
 
 ### 6. Choose the route
 
-Work down this list and take the first that fits.
+**Check item 1 first.** A finding that fits it is `kac:route-none`, whatever else it fits.
+
+**Then check every one of items 2 to 5.** A finding that fits exactly one takes that route. A finding that fits two or
+more is `kac:route-unclear`, and the comment names each route it fits.
 
 1. **It duplicates another finding, a record here already answers it, or step 5 settled it.** `kac:route-none`.
 2. **Its `corpus` names an entry under `consumes:`, or its subject is a record with that entry's shortcode.**
    `kac:route-misfiled`.
 3. **It reports `kac`, the schema, the template, the plugin or a skill.** `kac:route-framework`. `looks-like:
    framework` says so where the block has it.
-4. **Step 5 redirected it outside the corpus, and no record here changes.** `kac:route-none`.
-5. **It says a record here is wrong or missing, or step 5 narrowed or redirected it.** `kac:route-record`.
-6. **Anything else.** `kac:route-unclear`.
+4. **Step 5 redirected it outside the corpus, no record here changes, and item 3 does not fit.** `kac:route-none`.
+5. **A record here changes**, because the finding says one is wrong or missing, or because step 5 narrowed or
+   redirected it. `kac:route-record`.
+6. **It fits none of items 1 to 5.** `kac:route-unclear`.
 
-**A finding asking for a type this corpus declined is `kac:route-unclear`, whichever item above it matched.** Adopting a
-type is a decision a person takes, so say in the comment which type it would need.
+**A finding asking for a type this corpus declined is `kac:route-unclear`, whichever of items 2 to 5 it fits.**
+Adopting a type is a decision a person takes, so say in the comment which type it would need.
 
 **A misfiled finding is not always on the wrong tracker.** Compare that corpus's tracker in
 `.imports/<shortcode>/manifest.json` with this corpus's, target, base and area, as
@@ -335,7 +340,8 @@ Three sentences is plenty. The route, why, and what happens next.
 * **Say what step 5 decided** where it narrowed, redirected or settled the finding: the step, rule or part the draft
   refines, the type the record belongs to, the file outside the corpus the detail goes to, or the section that settles
   it.
-* **Name both routes** where you chose `kac:route-unclear` because two fitted, and say what a person has to decide.
+* **Name each route that fitted** where you chose `kac:route-unclear` because two or more did, and say what a person
+  has to decide.
 * **Say nothing about whether the claim is true.** You did not check it.
 
 **Do not repeat the route as machine-readable data.** The label is the data. A second copy in the comment is a second
