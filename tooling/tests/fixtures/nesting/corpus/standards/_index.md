@@ -2,7 +2,9 @@
 
 # Standard Index (STD)
 
-## Common
+## In force
+
+### Common
 
 | ID       | Title                                                        | Status | Derived from | Review by  |
 |----------|--------------------------------------------------------------|--------|--------------|------------|

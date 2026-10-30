@@ -2,6 +2,8 @@
 
 # Fix Index
 
+## In force
+
 | ID       | Title                                                                                                | Applies to | Status | Review by  |
 |----------|------------------------------------------------------------------------------------------------------|------------|--------|------------|
 | fix-0001 | [pip cannot find the linter versions the lint job pins](pip-cannot-install-yamllint.md)              |            | active | 2027-03-09 |

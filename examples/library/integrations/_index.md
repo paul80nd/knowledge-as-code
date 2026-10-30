@@ -2,6 +2,8 @@
 
 # Integration Index (ITG)
 
+## In force
+
 | ID                     | Title                                       | Vendor                     | Criticality | Their SLA                                                                            | Status |
 |------------------------|---------------------------------------------|----------------------------|-------------|--------------------------------------------------------------------------------------|--------|
 | itg-bibliographic-data | [Bibliographic Data](bibliographic-data.md) | Pennine Bibliographic Data | supporting  | 99.5% monthly availability on the API                                                | active |

@@ -2,6 +2,8 @@
 
 # Service Index (SVC)
 
+## In force
+
 | ID                | Title                             | Component type | Platform       | Criticality | Monitoring output | Status | Owner             |
 |-------------------|-----------------------------------|----------------|----------------|-------------|-------------------|--------|-------------------|
 | svc-catalogue-api | [Catalogue API](catalogue-api.md) | api            | dotnet         | critical    | alert             | live   | human:robin.hale  |

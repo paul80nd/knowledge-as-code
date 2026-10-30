@@ -25,15 +25,16 @@ do-not-edit banner. A type with no records yet gets an index saying so, rather t
 folder gets no index at all.
 
 **An index lists the records in force first.** A record is in force where its `status` is the value its type names
-in `in-force:`. Every other record follows under a `## Not in force` heading. A type whose records are all in force
-gets no such heading. No record moves, so no link to one breaks.
+in `in-force:`. Where any record is not in force, the index heads the records in force `## In force` and the rest
+`## Not in force`. An index whose records are all in force has neither heading. No record moves, so no link to one
+breaks.
 
 **An index heads a table per folder.** A type that declares a field with `from: sub-path` reads that field out of the
 folders below the type, and the index groups its rows on it.
 [Discovery](../use/discovery.md#from-sub-path) says how the value is read. Only the first folder heads a table, so
 `standards/platform/dotnet/testing.md` joins the Platform table instead of opening one of its own. A type whose records
-all sit directly in its folder gets a single table and no headings. Under `## Not in force` each folder heads a table
-of its own, one heading level down.
+all sit directly in its folder gets a single table and no headings. Under `## In force` and `## Not in force`, each
+folder heads its table one level down, at `###`.
 
 **A column heading is its field name in sentence case, with an initialism in capitals.** `review-by` heads Review by,
 and `their-sla` heads Their SLA. `kac` recognises `id` and `sla`. A field whose initialism is neither of those heads a

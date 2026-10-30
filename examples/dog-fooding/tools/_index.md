@@ -2,7 +2,9 @@
 
 # Tool Index (TOL)
 
-## Build
+## In force
+
+### Build
 
 | ID                  | Title                                       | Status   | Review by  | Licence                                                                                                                                                                                              |
 |---------------------|---------------------------------------------|----------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -12,13 +14,13 @@
 | tol-spectre-console | [Spectre.Console](build/spectre-console.md) | approved | 2027-08-21 | MIT                                                                                                                                                                                                  |
 | tol-yamldotnet      | [YamlDotNet](build/yamldotnet.md)           | approved | 2027-08-03 | MIT                                                                                                                                                                                                  |
 
-## Docs
+### Docs
 
 | ID           | Title                        | Status   | Review by  | Licence                                                      |
 |--------------|------------------------------|----------|------------|--------------------------------------------------------------|
 | tol-zensical | [Zensical](docs/zensical.md) | approved | 2027-04-25 | MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 AND ISC AND W3C |
 
-## Lint
+### Lint
 
 | ID             | Title                            | Status   | Review by  | Licence          |
 |----------------|----------------------------------|----------|------------|------------------|
@@ -26,20 +28,20 @@
 | tol-yamllint   | [yamllint](lint/yamllint.md)     | approved | 2027-09-02 | GPL-3.0-or-later |
 | tol-zizmor     | [zizmor](lint/zizmor.md)         | approved | 2027-10-23 | MIT              |
 
-## Release
+### Release
 
 | ID     | Title                       | Status   | Review by  | Licence |
 |--------|-----------------------------|----------|------------|---------|
 | tol-gh | [GitHub CLI](release/gh.md) | approved | 2027-08-20 | MIT     |
 
-## Testing
+### Testing
 
 | ID           | Title                           | Status   | Review by  | Licence            |
 |--------------|---------------------------------|----------|------------|--------------------|
 | tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 2027-08-04 | BSD-3-Clause       |
 | tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 2027-08-04 | Apache-2.0 AND MIT |
 
-## Workflows
+### Workflows
 
 | ID               | Title                                             | Status   | Review by  | Licence                                               |
 |------------------|---------------------------------------------------|----------|------------|-------------------------------------------------------|

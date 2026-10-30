@@ -2,6 +2,8 @@
 
 # Deviation Index (DEV)
 
+## In force
+
 | ID                                 | Title                                                                                                   | Status | Risk   | Departs from                                                                                                                                    | Review by  | Owner          |
 |------------------------------------|---------------------------------------------------------------------------------------------------------|--------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------|------------|----------------|
 | dev-generated-output-ungoverned    | [A generated file keeps no record of the run that wrote it](generated-output-ungoverned.md)             | active | low    | eng:pol-DERV.RUNLOG                                                                                                                             | 2027-03-07 | human:paul.law |

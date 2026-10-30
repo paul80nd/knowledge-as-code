@@ -35,17 +35,23 @@ public static class Generator
             inForce is null || string.Equals(d.FrontScalar(Status), inForce, StringComparison.Ordinal));
         List<Doc> current = [.. split[true]], lapsed = [.. split[false]];
 
-        var sections = new List<string>();
-        if (current.Count > 0) sections.Add(Grouped(t, located, current, "##"));
-        if (lapsed.Count > 0) sections.Add($"## {NotInForce}\n\n{Grouped(t, located, lapsed, "###")}");
+        // An index with nothing out of force takes no heading for what is in force.
+        var body = lapsed.Count == 0
+            ? Grouped(t, located, current, "##")
+            : string.Join("\n\n", new (string Heading, List<Doc> Rows)[]
+                {
+                    (InForceHeading, current), (NotInForceHeading, lapsed)
+                }
+                .Where(half => half.Rows.Count > 0)
+                .Select(half => $"## {half.Heading}\n\n{Grouped(t, located, half.Rows, "###")}"));
 
-        return $"{Banner}\n\n# {title}\n\n{string.Join("\n\n", sections)}\n";
+        return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
 
     private const string Status = "status";
 
-    /// <summary>The heading over every record whose status is not its type's <c>in-force:</c> value.</summary>
-    private const string NotInForce = "Not in force";
+    /// <summary>The headings over the records whose status is, and is not, their type's <c>in-force:</c> value.</summary>
+    private const string InForceHeading = "In force", NotInForceHeading = "Not in force";
 
     /// <summary>
     /// A table per folder, each under a heading at <paramref name="level"/>. The records no folder holds lead, under

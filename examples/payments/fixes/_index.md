@@ -2,6 +2,8 @@
 
 # Fix Index
 
+## In force
+
 | ID       | Title                                                                                          | Applies to                          | Status | Review by  |
 |----------|------------------------------------------------------------------------------------------------|-------------------------------------|--------|------------|
 | fix-0001 | [One order shows two authorisations on the cardholder's statement](duplicate-authorisation.md) | svc-payment-api, svc-payment-ledger | active | 2027-03-09 |

@@ -2,6 +2,8 @@
 
 # Offering Index (OFR)
 
+## In force
+
 | ID            | Title                                          | Status | Implemented by                                                   |
 |---------------|------------------------------------------------|--------|------------------------------------------------------------------|
 | ofr-borrowing | [Borrow and return an item](borrowing.md)      | live   | svc-catalogue-api, svc-catalogue-web, svc-lending, svc-notices   |

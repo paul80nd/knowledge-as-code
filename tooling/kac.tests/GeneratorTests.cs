@@ -273,17 +273,17 @@ public class GeneratorTests
         ]);
 
     [Fact]
-    public void IndexPage_lists_a_record_not_in_force_under_its_own_heading_after_the_rest()
+    public void IndexPage_heads_the_records_in_force_and_then_the_rest_where_both_are_present()
     {
         var (t, docs) = Statused("retired", "active");
 
         var page = Generator.IndexPage(new Schema(), t, docs);
 
-        Assert.Contains("\n## Not in force\n", page);
-        Assert.True(page.IndexOf("rbk-1", StringComparison.Ordinal)
-                    < page.IndexOf("## Not in force", StringComparison.Ordinal));
-        Assert.True(page.IndexOf("## Not in force", StringComparison.Ordinal)
-                    < page.IndexOf("rbk-0", StringComparison.Ordinal));
+        var order = new[] { "\n## In force\n", "rbk-1", "\n## Not in force\n", "rbk-0" }
+            .Select(text => page.IndexOf(text, StringComparison.Ordinal))
+            .ToList();
+        Assert.DoesNotContain(-1, order);
+        Assert.Equal(order.Order(), order);
     }
 
     [Fact]
@@ -330,7 +330,22 @@ public class GeneratorTests
     }
 
     [Fact]
-    public void IndexPage_groups_the_records_not_in_force_by_folder_a_level_below_their_heading()
+    public void IndexPage_heads_each_folder_at_the_second_level_where_every_record_is_in_force()
+    {
+        var schema = Located("active");
+        List<Doc> docs =
+        [
+            Required.Parsed("policies/security/one.md", "---\nid: pol-0000\nstatus: active\n---\n\n# One\n", schema)
+        ];
+
+        var page = Generator.IndexPage(new Schema(), schema.ByFolder["policies"], docs);
+
+        Assert.Contains("\n## Security\n", page);
+        Assert.DoesNotContain("In force", page);
+    }
+
+    [Fact]
+    public void IndexPage_groups_both_halves_by_folder_a_level_below_their_headings()
     {
         var schema = Located("active");
         var t = schema.ByFolder["policies"];
@@ -349,7 +364,7 @@ public class GeneratorTests
         var cut = page.IndexOf("\n## Not in force\n", StringComparison.Ordinal);
         Assert.True(cut > 0);
         var (inForce, rest) = (page[..cut], page[cut..]);
-        Assert.Contains("\n## Security\n", inForce);
+        Assert.Contains("\n## In force\n\n### Security\n", inForce);
         Assert.DoesNotContain("Delivery", inForce);
         Assert.Contains("\n### Delivery\n", rest);
         Assert.Contains("\n### Security\n", rest);

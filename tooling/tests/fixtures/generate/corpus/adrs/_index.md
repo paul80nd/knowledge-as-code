@@ -2,6 +2,8 @@
 
 # ADR Index
 
+## In force
+
 | ID       | Title                                    | Status   | Decided on |
 |----------|------------------------------------------|----------|------------|
 | adr-0001 | [First decision](0001-first-decision.md) | accepted | 2026-06-12 |
