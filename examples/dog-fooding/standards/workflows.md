@@ -6,7 +6,7 @@ status: active
 implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.BRANCH,
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
   eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE, eng:pol-SCRT.STORE,
-  eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
+  eng:pol-TRUS.MALWARE, eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
 verified-by: [ ctl-actionlint, ctl-changelog-tests, ctl-content-version-tests, ctl-merge-gate, ctl-workflow-gate-tests,
   ctl-zizmor ]
 applies-to:
@@ -103,6 +103,13 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 
+### SCAN: A publishing workflow scans what it publishes
+
+- A publishing workflow **MUST** scan what it publishes for malicious content before it publishes it.
+- A publishing workflow **MUST** fail before it publishes where that scan reports a finding.
+
+_**Covers:** `eng:pol-TRUS.MALWARE`_
+
 ### RELEASE: A version moves by hand and publishes once
 
 - A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in the
@@ -169,6 +176,8 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 - [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
+- [ ] Every publishing workflow scans what it publishes for malicious content, and fails before it publishes on a
+  finding.
 - [ ] Every observable change to `kac` here has its line under `## Unreleased`.
 - [ ] A pull request moving `<Version>` has the branch owner's decision behind it, and has renamed `## Unreleased`.
 - [ ] Every corpus whose export changed has moved its `content-version`.
@@ -201,6 +210,9 @@ it. `ChangelogTests` fails a version with no section, so the tag step always has
 The tool's publish runs the three test layers again against the merge commit, because the gate read the pull request's
 head and `main` moved after that.
 
+No publishing workflow here scans what it publishes. [dev-package-unscanned] records that departure from the scan
+rule, and what would close it.
+
 ## Sources and further reading
 
 - **Normative.** [OpenSSF Scorecard] defines `Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow`, the
@@ -214,6 +226,7 @@ head and `main` moved after that.
 
 ## Changelog
 
+- 2026-10-30: a publishing workflow scans what it publishes for malicious content, and fails on a finding.
 - 2026-10-30: the `validate` job fails when a job it needs fails, and runs with `if: always()` to do it.
 - 2026-10-21: a checkout sets `persist-credentials: false`, and a step needing git write access supplies the token
   itself.
@@ -241,5 +254,6 @@ say why in the change.
 [actionlint]: https://github.com/rhysd/actionlint
 [ctl-content-version-tests]: ../controls/content-version-tests.md
 [ctl-zizmor]: ../controls/zizmor.md
+[dev-package-unscanned]: ../deviations/package-unscanned.md
 [std-VERS]: versioning.md
 [zizmor]: https://docs.zizmor.sh/audits/#artipacked

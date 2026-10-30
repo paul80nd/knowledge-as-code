@@ -5,12 +5,12 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-30T12:57:00Z
+  at: 2026-10-30T13:13:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.44.0
 sources:
-  - { resource: example-dogfooding, version: "0.98.0" }
+  - { resource: example-dogfooding, version: "0.99.0" }
   - { resource: example-engineering, version: "0.48.0" }
 verified:
   - { at: 2026-10-30T10:46:00Z, by: human:paul.law }
@@ -81,9 +81,9 @@ where the rule and the practice differ.
 | [`eng:pol-SCRT`][eng:pol-SCRT] | 12      | 5       | 7         |
 | [`eng:pol-SECD`][eng:pol-SECD] | 8       | 2       | 6         |
 | [`eng:pol-SUPL`][eng:pol-SUPL] | 6       | 1       | 5         |
-| [`eng:pol-TRUS`][eng:pol-TRUS] | 15      | 7       | 8         |
+| [`eng:pol-TRUS`][eng:pol-TRUS] | 15      | 8       | 7         |
 | [`eng:pol-VURM`][eng:pol-VURM] | 9       | 4       | 5         |
-| **Total**                      | **276** | **96**  | **180**   |
+| **Total**                      | **276** | **97**  | **179**   |
 
 ## Clauses
 
@@ -410,20 +410,20 @@ where the rule and the practice differ.
 
 ### [eng:pol-SCRT][eng:pol-SCRT]
 
-| Clause    | Level    | Covered by                                                                                                    | Deviations | Controls | Pair candidate                         | Verdict             | Note                                                                     |
-|-----------|----------|---------------------------------------------------------------------------------------------------------------|------------|----------|----------------------------------------|---------------------|--------------------------------------------------------------------------|
-| `STORE`   | MUST     | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.STORE`                                        |            |          |                                        | Covered             | Every credential comes from the store or from an exchange.               |
-| `LEDGER`  | MUST     |                                                                                                               |            |          |                                        | Gap                 | One secret and a publishing identity, and nothing lists them.            |
-| `ENCRYPT` | MUST     |                                                                                                               |            |          |                                        | Out of scope        | The store is GitHub's, and encrypting it is GitHub's to do.              |
-| `ROTATE`  | MUST     | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.ROTATE`                                       |            |          |                                        | Covered             | A job exchanges its identity for a short-lived key.                      |
-| `KEYS`    | MUST     |                                                                                                               |            |          |                                        | Out of scope        | There is no key or certificate here to manage through a lifecycle.       |
-| `LEAKED`  | MUST     | [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE`                                                                  |            |          |                                        | Covered             | A pipeline runs a secret scanner over the history. No job here does.     |
-| `EMBED`   | MUST NOT | [`std-CONFIG`][std-CONFIG]`.COMMIT`, [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE` |            |          |                                        | Covered             | No secret is in a workflow, a configuration file or an artefact.         |
-| `REUSE`   | MUST NOT |                                                                                                               |            |          | [`eng:pol-ENVS`][eng:pol-ENVS]`.REUSE` | Covered by its pair | Covered through `eng:pol-ENVS.REUSE`, the same duty from the other side. |
-| `LOGS`    | MUST NOT | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE`                                      |            |          | [`eng:pol-DATA`][eng:pol-DATA]`.LOGS`  | Covered             | A step passes a secret through `env:` and never prints one.              |
-| `APART`   | MUST NOT |                                                                                                               |            |          |                                        | Out of scope        | There is no encryption key here, so none is transferred.                 |
-| `WATCH`   | SHOULD   |                                                                                                               |            |          |                                        | Out of scope        | Nothing here emits a security event, so there is no use to watch.        |
-| `ZEROSEC` | COULD    |                                                                                                               |            |          |                                        | Gap                 | Trusted publishing removed the last static key, and no standard says so. |
+| Clause    | Level    | Covered by                                                                                                    | Deviations | Controls                                     | Pair candidate                         | Verdict             | Note                                                                                                         |
+|-----------|----------|---------------------------------------------------------------------------------------------------------------|------------|----------------------------------------------|----------------------------------------|---------------------|--------------------------------------------------------------------------------------------------------------|
+| `STORE`   | MUST     | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.STORE`                                        |            |                                              |                                        | Covered             | Every credential comes from the store or from an exchange.                                                   |
+| `LEDGER`  | MUST     |                                                                                                               |            |                                              |                                        | Gap                 | One secret and a publishing identity, and nothing lists them.                                                |
+| `ENCRYPT` | MUST     |                                                                                                               |            |                                              |                                        | Out of scope        | The store is GitHub's, and encrypting it is GitHub's to do.                                                  |
+| `ROTATE`  | MUST     | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.ROTATE`                                       |            |                                              |                                        | Covered             | A job exchanges its identity for a short-lived key.                                                          |
+| `KEYS`    | MUST     |                                                                                                               |            |                                              |                                        | Out of scope        | There is no key or certificate here to manage through a lifecycle.                                           |
+| `LEAKED`  | MUST     | [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE`                                                                  |            | [`ctl-secret-scanning`][ctl-secret-scanning] |                                        | Covered             | GitHub secret scanning reads the repository and its history, and alerts on a finding. No job fails on one.   |
+| `EMBED`   | MUST NOT | [`std-CONFIG`][std-CONFIG]`.COMMIT`, [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE` |            | [`ctl-secret-scanning`][ctl-secret-scanning] |                                        | Covered             | No secret is in a workflow, a configuration file or an artefact. Secret scanning alerts on one committed.    |
+| `REUSE`   | MUST NOT |                                                                                                               |            |                                              | [`eng:pol-ENVS`][eng:pol-ENVS]`.REUSE` | Covered by its pair | Covered through `eng:pol-ENVS.REUSE`, the same duty from the other side.                                     |
+| `LOGS`    | MUST NOT | [`std-CI`][std-CI]`.CREDS`, [`eng:std-SECRET`][eng:std-SECRET]`.NOWHERE`                                      |            | [`ctl-secret-scanning`][ctl-secret-scanning] | [`eng:pol-DATA`][eng:pol-DATA]`.LOGS`  | Covered             | A step passes a secret through `env:` and never prints one. Secret scanning reads the repository and no log. |
+| `APART`   | MUST NOT |                                                                                                               |            |                                              |                                        | Out of scope        | There is no encryption key here, so none is transferred.                                                     |
+| `WATCH`   | SHOULD   |                                                                                                               |            |                                              |                                        | Out of scope        | Nothing here emits a security event, so there is no use to watch.                                            |
+| `ZEROSEC` | COULD    |                                                                                                               |            |                                              |                                        | Gap                 | Trusted publishing removed the last static key, and no standard says so.                                     |
 
 ### [eng:pol-SECD][eng:pol-SECD]
 
@@ -460,7 +460,7 @@ where the rule and the practice differ.
 | `PATCH`   | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | Dependabot proposes an update weekly, and no standard states the cadence.                                                  |
 | `LICENCE` | MUST     | [`eng:std-DEPS`][eng:std-DEPS]`.ADOPT`                                                                                                        |                                                  | [`ctl-licence-review`][ctl-licence-review]                                                             |                                        | Covered             | A reviewer checks a new tool record's licence against the allowed list before adoption.                                    |
 | `OBLIGE`  | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | Every dependency's licence is checked once at adoption, and nothing revisits it while `kac` ships.                         |
-| `MALWARE` | MUST     |                                                                                                                                               | [`dev-package-unscanned`][dev-package-unscanned] |                                                                                                        |                                        | Gap                 | Nothing scans the packages this repository publishes.                                                                      |
+| `MALWARE` | MUST     | [`std-CI`][std-CI]`.SCAN`                                                                                                                     | [`dev-package-unscanned`][dev-package-unscanned] |                                                                                                        |                                        | Covered             | `std-CI.SCAN` asks a publishing workflow to scan what it publishes for malware, and none does yet.                         |
 | `RUNMAL`  | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Out of scope        | Nothing here runs a system of its own. Every job runs on a GitHub-hosted runner that GitHub rebuilds.                      |
 | `SOURCE`  | MUST     | [`std-CONFIG`][std-CONFIG]`.PIN`, [`std-CI`][std-CI]`.PINNED`, [`eng:std-CONT`][eng:std-CONT]`.BASE`, [`eng:std-DEPS`][eng:std-DEPS]`.SOURCE` |                                                  | [`ctl-zizmor`][ctl-zizmor]                                                                             |                                        | Covered             | An action is pinned to a commit, and a package comes from nuget.org.                                                       |
 | `REPO`    | MUST     | [`std-CI`][std-CI]`.RELEASE`, [`eng:std-DEPS`][eng:std-DEPS]`.SOURCE`                                                                         |                                                  | [`ctl-changelog-tests`][ctl-changelog-tests], [`ctl-content-version-tests`][ctl-content-version-tests] |                                        | Covered             | Every artefact is a version on a registry that keeps it.                                                                   |
@@ -498,6 +498,7 @@ beside it, belong to whoever confirms this report.
 [ctl-licence-review]: ../controls/licence-review.md
 [ctl-merge-gate]: ../controls/merge-gate.md
 [ctl-publish-round-trip]: ../controls/publish-round-trip.md
+[ctl-secret-scanning]: ../controls/secret-scanning.md
 [ctl-tool-test-layers]: ../controls/tool-test-layers.md
 [ctl-update-check]: ../controls/update-check.md
 [ctl-workflow-gate-tests]: ../controls/workflow-gate-tests.md
