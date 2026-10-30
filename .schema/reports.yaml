@@ -20,7 +20,7 @@ versus:
     works. If the answer would still be true with every record deleted, it is an explanation.
 
 lineage:
-  prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys"
+  prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md) v0.2, the generated-document provenance keys"
   alignment: >
     `generated` records one production event with OKF's `by` and `at`. `verified` keeps a list of confirmation
     events with the same two keys. Every actor takes one of OKF's three forms, which

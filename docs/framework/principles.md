@@ -110,6 +110,17 @@ An organisation that stops running `kac` keeps a wiki. The generated indexes sto
 So a corpus that only ever uses `kac` as a validator still keeps what it was worth: knowledge written down, and kept
 correct while it ran.
 
+## A record is an Open Knowledge Format document
+
+A record is also a document in the [Open Knowledge Format][okf] (OKF), so `kac` conforms as an OKF producer of
+records. OKF asks each document for YAML frontmatter that parses and a non-empty `type`. Every record has both, and
+`validate` fails a record that lacks either. A corpus as a whole is not an OKF bundle, because its type pages and
+framework pages have no frontmatter.
+
+`kac` takes OKF's optional parts where they serve a corpus: the `generated` and `verified` provenance keys, the forms
+an actor takes, `sources`, and the trust tiers the export derives. The schema states where a type departs from OKF,
+and why. `kac` does not read OKF bundles.
+
 ## Where the design departs from prior art, it says why
 
 Each type is built on established practice, and each one states where it differs. Every type's schema declares a
@@ -180,5 +191,6 @@ The validator fails a one-sided link because it can see both ends of it, and an 
 is a single place the record could be. A session clones the repository and has the whole graph, with nobody to ask for
 the rest of it. [One corpus or several](../use/one-corpus-or-several.md) says when to split.
 
+[okf]: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md
 [std-plugin]: https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/plugin.md#reason-a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives
 [wfa]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents

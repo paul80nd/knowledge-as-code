@@ -67,7 +67,7 @@ Each link is defined once, at the foot of the report.
 ### The provenance frontmatter
 
 A run writes three keys, following the
-[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md):
+[Open Knowledge Format](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md):
 
 ```yaml
 generated:
