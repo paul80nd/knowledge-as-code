@@ -145,6 +145,7 @@ public class ContentVersionTests
             var bundled = Written(plan);
             var wasPlan = Bundler.Plan(new BundleSource([.. tree.SelectMany(file => Before(before, changed, file))],
                 export));
+            // A merge-base tree that cannot be bundled compares against nothing, so every changed file counts.
             var was = wasPlan.Problems.Count > 0 ? [] : Written(wasPlan);
             var reached = changed
                 .Select(edit => $"{Dist.PluginDir}/{edit.File.Path}")
@@ -180,10 +181,12 @@ public class ContentVersionTests
             .Concat(Diff.Untracked())
             .ToList();
 
-    /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched, with that path.</summary>
-    private static IEnumerable<(BundleFile File, string RepoPath)> Edited(
-        IReadOnlySet<string> touched, string dir, IReadOnlyList<BundleFile> tree) =>
-        tree.Select(file => (File: file, RepoPath: $"{dir}/{file.Path}"))
+    /// <summary>A plugin file the branch touched, and its path from the repository root.</summary>
+    private sealed record Edit(BundleFile File, string RepoPath);
+
+    /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched.</summary>
+    private static IEnumerable<Edit> Edited(IReadOnlySet<string> touched, string dir, IReadOnlyList<BundleFile> tree) =>
+        tree.Select(file => new Edit(file, $"{dir}/{file.Path}"))
             .Where(edit => touched.Contains(edit.RepoPath));
 
     /// <summary>What a bundle plan writes, by path under <c>Dist.Root</c>.</summary>
@@ -193,11 +196,9 @@ public class ContentVersionTests
     /// <summary>
     /// <c>file</c> as it stood at <c>before</c> where the branch changed it, and nothing where it did not exist then.
     /// </summary>
-    private static IEnumerable<BundleFile> Before(
-        string before, IReadOnlyList<(BundleFile File, string RepoPath)> changed, BundleFile file)
+    private static IEnumerable<BundleFile> Before(string before, IReadOnlyList<Edit> changed, BundleFile file)
     {
-        var edit = changed.FirstOrDefault(c => ReferenceEquals(c.File, file));
-        if (edit.File is null)
+        if (changed.FirstOrDefault(c => ReferenceEquals(c.File, file)) is not { } edit)
         {
             yield return file;
             yield break;
