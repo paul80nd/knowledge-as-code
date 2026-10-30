@@ -39,7 +39,7 @@ dotnet tool run kac validate
   "isRoot": true,
   "tools": {
     "knowledgeascode.tool": {
-      "version": "0.43.0",
+      "version": "0.44.0",
       "commands": [
         "kac"
       ],
