@@ -28,7 +28,7 @@ lineage:
     troubleshooting template](https://www.thegooddocsproject.dev/template/troubleshooting) asks for three of them, as
     *Symptoms*, *Causes* and *Solutions*. ITIL requires a documented cause, which KCS marks optional, and this type
     requires it. `verified` is the [Open Knowledge
-    Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s list of confirmation
+    Format](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)'s list of confirmation
     events. The export reads it into OKF's three trust tiers, so a fix verified by non-`human:` actors alone, a
     `process:` among them, is `machine-confirmed`
   divergence: >
