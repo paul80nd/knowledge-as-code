@@ -117,14 +117,14 @@ write the issue where they say one belongs. The record itself lands in
 it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
 sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. In a lane with an epic, the epic is `1`
 and its stories count up from `2` in delivery order. An issue left off the board is one the developer never sees.
+[`issue-tracker.md`](.claude/agents-config/issue-tracker.md#project-board) has the ids and the commands.
 
 **The board runs by stage, and each stage lane has one epic.** A lane's name starts with its stage: `1` before the
 trial, `2` the trial, `3` the route to v1 and `4` future functionality. The stages run in that order. Every issue in a
 stage lane is a sub-issue of that lane's epic alone, and the epic closes when its lane drains.
 
 **A finding goes to `Intake`.** Triage then moves it into the stage lane it is worth delivering with, or into
-`4 Future functionality`. Neither `Intake` nor `4 Future functionality` has an epic. `addSubIssue` takes a GraphQL node
-id for both issues, and `replaceParent: true` moves an issue from another epic.
+`4 Future functionality`. Neither `Intake` nor `4 Future functionality` has an epic.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
