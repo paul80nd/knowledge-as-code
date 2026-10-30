@@ -50,8 +50,8 @@ three section keys are always present, because this type requires all three.
 | `fields.title`               | string                   | what the control checks, in one line                                                               |
 | `fields.status`              | string                   | `active`, `planned` or `retired`                                                                   |
 | `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty                                                |
-| `fields.mechanism`           | string                   | how the check happens, in the five values below                                                    |
-| `fields.frequency`           | string, or null          | how often it runs, in the seven values below                                                       |
+| `fields.mechanism`           | string                   | how the check happens, in the six values below                                                     |
+| `fields.frequency`           | string, or null          | how often it runs, in the eight values below                                                       |
 | `fields.last-verified`       | object, string, or null  | the last manual run: `at` and `by` are strings, and `method` is always null. Or the string `never` |
 | `fields.evidence`            | string, or null          | where the proof of a run lives                                                                     |
 | `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`                                                    |
@@ -62,17 +62,19 @@ three section keys are always present, because this type requires all three.
 | `path`                       | string                   | where the record sits in its own repository                                                        |
 | `links`                      | object                   | the built link to that record, under `human`                                                       |
 
-`mechanism` takes one of five values:
+`mechanism` takes one of six values:
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
+* **`local-hook`.** A pre-commit check or a Claude Code hook runs it on a developer's machine. The developer can
+  bypass it, so say the rule still needs a person to check it.
 * **`review-checklist`.** A person checks it while reviewing a change.
 * **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says who last did and when.
 * **`runtime-alert`.** A running system reports it.
 * **`not-enforced`.** The rule is written, and nothing checks it. The author recorded that gap, so report it as the
   honest state it is.
 
-`frequency` takes one of seven values: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
-`annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
+`frequency` takes one of eight values: `continuous`, `per-commit`, `per-pr`, `per-deploy`, `daily`, `monthly`,
+`quarterly` or `annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
 
 **Give `last-verified` beside any answer from a `manual` control**: who ran the check, from `by`, and the day, from
 `at`. It is set on that mechanism alone, because no log records a manual run, and a day long past or `never` is a

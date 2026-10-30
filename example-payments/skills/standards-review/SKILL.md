@@ -77,8 +77,8 @@ is `ci` or `runtime-alert`. For each such control, read its record and its two s
 * **`sections.Coverage and gaps`**, a string of markdown, says where the control stops. Check what it leaves.
 
 Every other control leaves the rule with you. `review-checklist` and `manual` mean a person checks the rule while
-reviewing, and that person is you. `not-enforced` means nothing checks it. A control at any other status checks
-nothing today.
+reviewing, and that person is you. `local-hook` runs on a developer's machine, and the developer can bypass it.
+`not-enforced` means nothing checks it. A control at any other status checks nothing today.
 
 **A prefix on a control's id names the corpus that wrote it.** `eng:ctl-0004` is at
 `${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-0004.json`, and a bare `ctl-0004` is at
