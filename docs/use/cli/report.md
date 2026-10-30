@@ -102,8 +102,8 @@ agent with its version as `kac/0.25.0`. `generated-by-a-known-actor` checks it.
 * No entry is the actor in `generated.by`. `no-self-verification` is the rule, and it reports as
   `self-verification`.
 
-The entries decide the report's trust tier. No entry is unverified, agents alone are machine-confirmed, and one `human:`
-entry is human-reviewed. [`export`](export.md) ships the tier as `trust`.
+The entries decide the report's trust tier. No entry is unverified, non-`human:` actors alone are machine-confirmed, and
+one `human:` entry is human-reviewed. [`export`](export.md) ships the tier as `trust`.
 
 `id` and `owner` arrive empty. Fill both in before you commit the file, and `kac validate` reports either one you miss.
 

@@ -629,10 +629,10 @@ public static class Exporter
     private const string MomentKey = "at";
 
     /// <summary>
-    /// The Open Knowledge Format's three tiers: no entries is <c>unverified</c>, agents alone <c>machine-confirmed</c>,
-    /// and one <c>human:</c> actor <c>human-reviewed</c>. Null where the export declares no <c>verified</c>. A
-    /// verification taken before <c>generated.at</c> is left out. See docs/use/cli/report.md. One mapping is the
-    /// one-entry case.
+    /// The Open Knowledge Format's three tiers: no entries is <c>unverified</c>, non-<c>human:</c> actors alone
+    /// <c>machine-confirmed</c>, and one <c>human:</c> actor <c>human-reviewed</c>. Null where the export declares no
+    /// <c>verified</c>. A verification taken before <c>generated.at</c> is left out. See docs/use/cli/report.md. One
+    /// mapping is the one-entry case.
     /// </summary>
     private static string? Trust(Doc doc, ExportSpec export)
     {

@@ -46,11 +46,12 @@ exporter derives it from the `verified` field:
 | `verified` contains          | `trust`             |
 |------------------------------|---------------------|
 | nothing                      | `unverified`        |
-| agents alone                 | `machine-confirmed` |
+| non-`human:` actors alone    | `machine-confirmed` |
 | at least one `human:` actor  | `human-reviewed`    |
 
-Only the `human:` prefix reads as a person. A verification taken before `generated.at` is left out. The three tiers are
-the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s.
+Only the `human:` prefix reads as a person, so a `process:` actor alone leaves a record `machine-confirmed`. A
+verification taken before `generated.at` is left out. The three tiers are the
+[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s.
 
 A type whose `fields:` does not name `verified` carries `trust` as `null`. `reports` and `fixes` name it.
 

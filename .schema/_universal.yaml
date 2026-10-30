@@ -3,7 +3,8 @@
 
 notes: >
   Some fields are absent on purpose. `title` is the H1. Git supplies `created` and `updated`.
-  `lifecycle` follows from `tier`.
+  `lifecycle` follows from `tier`. The Open Knowledge Format's `stale_after` is absent too. It is the instant content
+  goes stale, and the `review-by` a type declares is a date that prompts a review.
 
 fields:
 
@@ -38,7 +39,8 @@ fields:
     values: []          # supplied by each type
     description: The record's current state, from the values this type sets.
     notes: >
-      Each type names the value that says a record is in force, in `in-force:` beside its own `values:`.
+      Each type names the value that says a record is in force, in `in-force:` beside its own `values:`. The field has
+      no default, where the Open Knowledge Format reads an absent `status` as `stable`.
 
   owner:
     required: true
