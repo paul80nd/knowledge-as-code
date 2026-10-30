@@ -25,15 +25,18 @@ lineage:
     `generated` records one production event with OKF's `by` and `at`. `verified` keeps a list of confirmation
     events with the same two keys. Every actor takes one of OKF's three forms, which
     `generated-by-a-known-actor` and `verified-by-a-known-actor` enforce. `sources[].resource` is OKF's one
-    required key on a source. `status: draft` is OKF's draft. The export ships `verified`, the field OKF
-    derives its trust tier from
+    required key on a source. `status: draft` is OKF's draft. The export reads `verified` into OKF's three trust
+    tiers, so a report verified by non-`human:` actors alone, a `process:` among them, is `machine-confirmed`
   divergence: >
     OKF puts no version on a source. This type does, because a reader needs to know which content the report is true
     of. `verified` is required once a report leaves `draft`, an actor appears once in the list, and
     `no-self-verification` refuses the actor `generated.by` names. OKF has none of the three: it admits a second entry
-    for an actor already listed, and leaves verification to the publisher. `status` takes `active` and `stale` where
-    OKF takes `stable` and `deprecated`. Staleness is read from each source's `content-version` rather than OKF's
-    `stale_after` instant, because a report goes out of date when the corpus moves and not when a clock passes
+    for an actor already listed, and leaves verification to the publisher. OKF also lets a producer write `verified`
+    as one `{ by, at }` mapping, keeps it independent of `generated.at`, and reads an absent `status` as `stable`. Here
+    `validate` refuses the mapping, the trust tier leaves out a verification taken before `generated.at`, and `status`
+    is required and takes `active` and `stale` for OKF's `stable` and `deprecated`. Staleness is read
+    from each source's `content-version` rather than OKF's `stale_after` instant, because a report goes out of date
+    when the corpus moves and not when a clock passes
 collision: >
   A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
   survives every record being deleted. A report does not.

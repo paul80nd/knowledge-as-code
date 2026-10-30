@@ -14,6 +14,10 @@ public class TrustTierTests
         => Assert.Equal("machine-confirmed", Trust("  - { at: 2026-09-08T11:00:00Z, by: sweep/1.0.0 }\n"));
 
     [Fact]
+    public void Processes_alone_make_the_record_machine_confirmed()
+        => Assert.Equal("machine-confirmed", Trust("  - { at: 2026-09-08T11:00:00Z, by: process:nightly-sweep }\n"));
+
+    [Fact]
     public void One_person_among_agents_still_makes_it_human_reviewed()
         => Assert.Equal("human-reviewed", Trust(
             "  - { at: 2026-09-08T11:00:00Z, by: sweep/1.0.0 }\n"

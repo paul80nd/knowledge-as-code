@@ -45,8 +45,8 @@ use. That is what people search for.
   belongs here. A `role:` does not: a post cannot read an answer. Write an actor once: where somebody checks the
   answer again, move the `at` on the line they have, because git keeps every earlier state of the file.
 
-  Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
-  `human:` line makes it human-reviewed.
+  Read the list to see how far the fix has been taken on trust. Non-`human:` actors alone leave it machine-confirmed,
+  and one `human:` line makes it human-reviewed.
 * **`status`**: write `draft` where nobody has verified the resolution yet.
 * **`applies-to`**: service ids, which a reader follows to the service. The `Environment` section says in prose which
   machines, tooling and versions the fix matches.

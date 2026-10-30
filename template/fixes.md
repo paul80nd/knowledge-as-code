@@ -27,7 +27,7 @@ stays in the tracker.
 
 **Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
 resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
-see how far the fix has been taken: agents alone leave it machine-confirmed, and one `human:` line makes it
+see how far the fix has been taken: non-`human:` actors alone leave it machine-confirmed, and one `human:` line makes it
 human-reviewed. An export carries that reading as `trust`, derived from the list so that one place names who checked.
 
 **A session never verifies its own fix.** An agent cannot check its own observation. Write the record as a `draft`,

@@ -27,7 +27,10 @@ lineage:
     *Environment*, *Resolution* and *Cause*. The four sections this type requires are those. [The Good Docs Project's
     troubleshooting template](https://www.thegooddocsproject.dev/template/troubleshooting) asks for three of them, as
     *Symptoms*, *Causes* and *Solutions*. ITIL requires a documented cause, which KCS marks optional, and this type
-    requires it
+    requires it. `verified` is the [Open Knowledge
+    Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s list of confirmation
+    events. The export reads it into OKF's three trust tiers, so a fix verified by non-`human:` actors alone, a
+    `process:` among them, is `machine-confirmed`
   divergence: >
     ITIL binds a known error to a formal problem record and an owning practice. A fix here is written from anything
     somebody noticed, and any verification gives it authority. ITIL expects a workaround while a permanent fix is
@@ -36,7 +39,10 @@ lineage:
     gives *Workaround* a field of its own. This type asks for one resolution somebody has verified, so a problem with
     no answer yet stays in the tracker. KCS reviews an article each time somebody uses it, and counts the uses. Here a
     reader who reuses a fix moves `verified`, nothing counts the uses, and `review-by` also sets a date for a fix
-    nobody reuses. `How we found it` is this type's own
+    nobody reuses. `How we found it` is this type's own. `verified` is a list, and `validate` refuses the single
+    `{ by, at }` mapping OKF lets a producer write. `review-by` is a date that prompts a review, where OKF's
+    `stale_after` is the instant the content goes stale. `status` is required, where OKF reads an absent `status` as
+    `stable`
 id:
   prefix: fix
   style: numbered
