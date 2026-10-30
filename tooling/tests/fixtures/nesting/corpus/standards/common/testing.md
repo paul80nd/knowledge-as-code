@@ -2,7 +2,7 @@
 id: std-TEST
 type: standard
 tier: normative
-status: draft
+status: active
 implements:
   - pol-SCRT.NEST
 applies-to:
@@ -13,7 +13,7 @@ owner: human:alex.doe
 
 # Testing, stated once for every platform
 
-`Standard: std-TEST` `DRAFT`
+`Standard: std-TEST` `ACTIVE`
 
 ## Summary
 

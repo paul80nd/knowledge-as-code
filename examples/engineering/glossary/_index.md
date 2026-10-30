@@ -2,6 +2,8 @@
 
 # Glossary Index (GLS)
 
+## Not in force
+
 | ID                    | Title                                     | Narrows | Status | Owner          | Review by  |
 |-----------------------|-------------------------------------------|---------|--------|----------------|------------|
 | gls-engineering       | [Engineering](engineering.md)             |         | draft  | human:paul.law | 2027-09-02 |

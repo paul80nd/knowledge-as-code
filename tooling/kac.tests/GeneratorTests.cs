@@ -9,7 +9,7 @@ public class GeneratorTests
     {
         var t = new TypeSchema { Label = "Control", IdPrefix = "ctl", IndexColumns = ["id", "title"] };
 
-        var page = Generator.IndexPage(t, []);
+        var page = Generator.IndexPage(new Schema(), t, []);
 
         Assert.Contains("# Control Index (CTL)", page);
         Assert.Contains("Nothing here yet", page);
@@ -30,7 +30,7 @@ public class GeneratorTests
         var doc = Required.Parsed("integrations/mail.md",
             "---\nid: itg-mail\ntheir-sla: 99.9% monthly\nreview-by: \"2027-01-01\"\n---\n\n# Mail\n", new Schema());
 
-        var page = Generator.IndexPage(t, [doc]);
+        var page = Generator.IndexPage(new Schema(), t, [doc]);
 
         Assert.Contains("| ID ", page);
         Assert.Contains("| Their SLA ", page);
@@ -63,7 +63,7 @@ public class GeneratorTests
         var doc = Required.Parsed("runbooks/a.md", $"---\nid: rbk-a\nlast-rehearsed: {value}\n---\n\n# A\n",
             new Schema());
 
-        var page = Generator.IndexPage(Walked(), [doc]);
+        var page = Generator.IndexPage(new Schema(), Walked(), [doc]);
 
         Assert.Contains(cell, page);
         Assert.DoesNotContain("alex.doe", page);
@@ -74,7 +74,7 @@ public class GeneratorTests
     {
         var t = new TypeSchema { Label = "ADR", IdPrefix = "adr", IndexColumns = ["id", "title"] };
 
-        Assert.Contains("# ADR Index\n", Generator.IndexPage(t, []));
+        Assert.Contains("# ADR Index\n", Generator.IndexPage(new Schema(), t, []));
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public class GeneratorTests
         var doc = Required.Parsed("standards/common/build-gates.md",
             "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema());
 
-        var page = Generator.IndexPage(t, [doc]);
+        var page = Generator.IndexPage(new Schema(), t, [doc]);
 
         Assert.Contains("(common/build-gates.md)", page);
     }
@@ -104,7 +104,7 @@ public class GeneratorTests
     {
         var t = new TypeSchema { Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id"] };
 
-        var page = Generator.IndexPage(t, Rows(("rbk-b", "sev1"), ("rbk-a", "sev3")));
+        var page = Generator.IndexPage(new Schema(), t, Rows(("rbk-b", "sev1"), ("rbk-a", "sev3")));
 
         Assert.True(page.IndexOf("rbk-a", StringComparison.Ordinal)
                     < page.IndexOf("rbk-b", StringComparison.Ordinal));
@@ -118,7 +118,7 @@ public class GeneratorTests
             Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "severity"], IndexSort = ["severity", "id"]
         };
 
-        var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
+        var page = Generator.IndexPage(new Schema(), t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
 
         // severity first, then id within it. So the sev1 pair leads, in id order, and sev3 follows.
         Assert.True(page.IndexOf("rbk-b", StringComparison.Ordinal)
@@ -136,7 +136,7 @@ public class GeneratorTests
             IndexSort = ["severity", "id"], IndexOrder = Generator.Descending
         };
 
-        var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
+        var page = Generator.IndexPage(new Schema(), t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
 
         Assert.True(page.IndexOf("rbk-a", StringComparison.Ordinal)
                     < page.IndexOf("rbk-c", StringComparison.Ordinal));
@@ -146,9 +146,9 @@ public class GeneratorTests
 
     /// <summary>
     /// A type deriving a field from where its records sit. The schema is built rather than loaded so each test below
-    /// can file records wherever it wants to.
+    /// can file records wherever it wants to. A null <paramref name="inForce"/> leaves every record in force.
     /// </summary>
-    private static Schema Located() => new()
+    private static Schema Located(string? inForce = null) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
@@ -161,7 +161,8 @@ public class GeneratorTests
                 IndexColumns = ["id", "title", "category"],
                 Fields = new Dictionary<string, FieldSpec>
                 {
-                    ["category"] = new() { Name = "category", From = "sub-path" }
+                    ["category"] = new() { Name = "category", From = "sub-path" },
+                    ["status"] = new() { Name = "status", Type = "enum", InForce = inForce }
                 }
             }
         }
@@ -182,7 +183,7 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("security/one.md", "delivery/two.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.Contains("## Delivery\n", page);
         Assert.Contains("## Security\n", page);
@@ -195,7 +196,7 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("platform/node/one.md", "platform/two.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.Contains("## Platform\n", page);
         Assert.DoesNotContain("## Node", page);
@@ -206,7 +207,7 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("security/one.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.DoesNotContain("Category", page);
     }
@@ -216,7 +217,7 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("platform/node/one.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.Contains("Category", page);
         Assert.Contains("platform/node", page);
@@ -227,7 +228,7 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("one.md", "two.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.DoesNotContain("## ", page);
         Assert.DoesNotContain("Category", page);
@@ -240,7 +241,7 @@ public class GeneratorTests
         var doc = Required.Parsed("standards/common/build-gates.md",
             "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema());
 
-        var page = Generator.IndexPage(t, [doc]);
+        var page = Generator.IndexPage(new Schema(), t, [doc]);
 
         Assert.DoesNotContain("## ", page);
     }
@@ -250,10 +251,123 @@ public class GeneratorTests
     {
         var (t, docs) = Filed("security/one.md", "loose.md");
 
-        var page = Generator.IndexPage(t, docs);
+        var page = Generator.IndexPage(new Schema(), t, docs);
 
         Assert.True(page.IndexOf("pol-0001", StringComparison.Ordinal)
                     < page.IndexOf("## Security", StringComparison.Ordinal));
+    }
+
+    /// <summary>A runbook type in force at <c>active</c>, with one record per status given.</summary>
+    private static (TypeSchema Type, List<Doc> Docs) Statused(params string[] statuses) =>
+        (new TypeSchema
+        {
+            Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "status"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["status"] = new() { Name = "status", Type = "enum", InForce = "active" }
+            }
+        },
+        [
+            .. statuses.Select((s, i) => Required.Parsed($"runbooks/r{i}.md",
+                $"---\nid: rbk-{i}\nstatus: {s}\n---\n\n# Record {i}\n", new Schema()))
+        ]);
+
+    [Fact]
+    public void IndexPage_heads_the_records_in_force_and_then_the_rest_where_both_are_present()
+    {
+        var (t, docs) = Statused("retired", "active");
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        var order = new[] { "\n## In force\n", "rbk-1", "\n## Not in force\n", "rbk-0" }
+            .Select(text => page.IndexOf(text, StringComparison.Ordinal))
+            .ToList();
+        Assert.DoesNotContain(-1, order);
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void IndexPage_lists_a_record_stating_no_status_as_not_in_force()
+    {
+        var (t, docs) = Statused("active");
+        docs.Add(Required.Parsed("runbooks/bare.md", "---\nid: rbk-bare\n---\n\n# Bare\n", new Schema()));
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        Assert.True(page.IndexOf("## Not in force", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-bare", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void IndexPage_opens_on_the_not_in_force_heading_where_no_record_is_in_force()
+    {
+        var (t, docs) = Statused("retired");
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        Assert.Contains("(RBK)\n\n## Not in force\n\n| ID ", page);
+    }
+
+    [Fact]
+    public void IndexPage_heads_nothing_where_every_record_is_in_force()
+    {
+        var (t, docs) = Statused("active", "active");
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        Assert.DoesNotContain("## ", page);
+    }
+
+    [Fact]
+    public void IndexPage_heads_nothing_where_the_type_declares_no_in_force_value()
+    {
+        var (_, docs) = Statused("retired", "draft");
+        var t = new TypeSchema { Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "status"] };
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        Assert.DoesNotContain("## ", page);
+    }
+
+    [Fact]
+    public void IndexPage_heads_each_folder_at_the_second_level_where_every_record_is_in_force()
+    {
+        var schema = Located("active");
+        List<Doc> docs =
+        [
+            Required.Parsed("policies/security/one.md", "---\nid: pol-0000\nstatus: active\n---\n\n# One\n", schema)
+        ];
+
+        var page = Generator.IndexPage(new Schema(), schema.ByFolder["policies"], docs);
+
+        Assert.Contains("\n## Security\n", page);
+        Assert.DoesNotContain("In force", page);
+    }
+
+    [Fact]
+    public void IndexPage_groups_both_halves_by_folder_a_level_below_their_headings()
+    {
+        var schema = Located("active");
+        var t = schema.ByFolder["policies"];
+        List<Doc> docs =
+        [
+            .. new (string Rel, string Status)[]
+                {
+                    ("security/one.md", "active"), ("security/two.md", "retired"), ("delivery/three.md", "retired")
+                }
+                .Select((r, i) => Required.Parsed($"policies/{r.Rel}",
+                    $"---\nid: pol-{i:0000}\nstatus: {r.Status}\n---\n\n# Record {i}\n", schema))
+        ];
+
+        var page = Generator.IndexPage(new Schema(), t, docs);
+
+        var cut = page.IndexOf("\n## Not in force\n", StringComparison.Ordinal);
+        Assert.True(cut > 0);
+        var (inForce, rest) = (page[..cut], page[cut..]);
+        Assert.Contains("\n## In force\n\n### Security\n", inForce);
+        Assert.DoesNotContain("Delivery", inForce);
+        Assert.Contains("\n### Delivery\n", rest);
+        Assert.Contains("\n### Security\n", rest);
     }
 
     [Fact]

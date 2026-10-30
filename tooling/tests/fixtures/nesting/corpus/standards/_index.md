@@ -2,13 +2,17 @@
 
 # Standard Index (STD)
 
-## Common
+## In force
+
+### Common
 
 | ID       | Title                                                        | Status | Derived from | Review by  |
 |----------|--------------------------------------------------------------|--------|--------------|------------|
-| std-TEST | [Testing, stated once for every platform](common/testing.md) | draft  |              | 2031-08-05 |
+| std-TEST | [Testing, stated once for every platform](common/testing.md) | active |              | 2031-08-05 |
 
-## Platform
+## Not in force
+
+### Platform
 
 | ID       | Title                                       | Category      | Status | Derived from | Review by  |
 |----------|---------------------------------------------|---------------|--------|--------------|------------|

@@ -9,8 +9,9 @@ statement of each one.
 
 * It rebuilds each adopted type's `_index.md` whole from the frontmatter in the type's folder.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
-* An index has a do-not-edit banner, and takes its columns and its sort from the schema's `index` block. It heads a
-  table for each folder a `from: sub-path` field reads, and says so where the type has no records.
+* An index has a do-not-edit banner, and takes its columns and its sort from the schema's `index` block. Where a record
+  is not in force, it heads the records in force `## In force` and the rest `## Not in force`. It heads a table for
+  each folder a `from: sub-path` field reads, and says so where the type has no records.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It writes the type pages' blocks, the framework pages' blocks and the README's `types-index` block.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
@@ -51,6 +52,7 @@ statement of each one.
 * A type adopted with no folder is not created
 * An index takes its columns and its order from the schema, under a banner
 * An index heads a table for each folder below the type
+* An index heads the records in force and the records not in force apart
 * A type with no records gets an index saying so
 * A type page lists the universal fields it refines, and only the checks its type can trip
 * The metadata page lists the universal checks once

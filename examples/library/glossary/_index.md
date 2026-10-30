@@ -2,6 +2,8 @@
 
 # Glossary Index (GLS)
 
+## Not in force
+
 | ID                    | Title                                     | Narrows               | Status | Owner             | Review by  |
 |-----------------------|-------------------------------------------|-----------------------|--------|-------------------|------------|
 | gls-example-libraries | [Example Libraries](example-libraries.md) |                       | draft  | human:robin.hale  | 2027-08-12 |

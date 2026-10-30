@@ -74,7 +74,8 @@ public static class GeneratedFiles
             if (!tree.HasFolder(t.Folder)) continue;
             var rel = $"{t.Folder}/{Artefact.Index}";
             var records = byType.TryGetValue(t.Folder, out var found) ? found : [];
-            plan.Add(new GeneratedFile(rel, tree.Exists(rel) ? tree.Read(rel) : null, Generator.IndexPage(t, records)));
+            plan.Add(new GeneratedFile(
+                rel, tree.Exists(rel) ? tree.Read(rel) : null, Generator.IndexPage(schema, t, records)));
         }
 
         // Every block a file carries, spliced into one text and written once, so two blocks in one file cannot

@@ -2,8 +2,15 @@
 
 # Offering Index (OFR)
 
-| ID               | Title                                              | Status   | Implemented by                                                   |
-|------------------|----------------------------------------------------|----------|------------------------------------------------------------------|
-| ofr-borrowing    | [Borrow and return an item](borrowing.md)          | live     | svc-catalogue-api, svc-catalogue-web, svc-lending, svc-notices   |
-| ofr-discovery    | [Find a title in the collection](discovery.md)     | live     | svc-catalogue-api, svc-catalogue-web, svc-covers-cdn, svc-search |
-| ofr-reservations | [Reserve an item and pay the fee](reservations.md) | building | svc-catalogue-web, svc-lending, svc-notices, svc-reservations    |
+## In force
+
+| ID            | Title                                          | Status | Implemented by                                                   |
+|---------------|------------------------------------------------|--------|------------------------------------------------------------------|
+| ofr-borrowing | [Borrow and return an item](borrowing.md)      | live   | svc-catalogue-api, svc-catalogue-web, svc-lending, svc-notices   |
+| ofr-discovery | [Find a title in the collection](discovery.md) | live   | svc-catalogue-api, svc-catalogue-web, svc-covers-cdn, svc-search |
+
+## Not in force
+
+| ID               | Title                                              | Status   | Implemented by                                                |
+|------------------|----------------------------------------------------|----------|---------------------------------------------------------------|
+| ofr-reservations | [Reserve an item and pay the fee](reservations.md) | building | svc-catalogue-web, svc-lending, svc-notices, svc-reservations |
