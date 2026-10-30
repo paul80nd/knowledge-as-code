@@ -1,0 +1,33 @@
+{
+  "type": "controls",
+  "path": "controls/yamllint.md",
+  "trust": null,
+  "fields": {
+    "id": "ctl-yamllint",
+    "title": "Every YAML file passes yamllint",
+    "status": "active",
+    "verifies": [
+      "std-CONFIG.YAML"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "last-verified": null,
+    "evidence": "The `lint` job's log on the pull request, under the step \"Check every YAML file\".",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-09-22",
+    "tags": [
+      "linting",
+      "yaml"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-CONFIG.YAML](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/standards/configuration.md#yaml-the-shape-of-a-yaml-file-is-yamllints-to-decide) says a YAML file \"**MUST** pass `yamllint --strict`\n  under the `.yamllint` at this repository's root\".",
+    "How it works": "The `lint` job installs yamllint at the version `.github/requirements.txt` pins, then runs `yamllint --strict .` from the root. `.yamllint` extends yamllint's `default` ruleset and sets the four rules this repository changes. `--strict` fails the build on `comments`, `comments-indentation` and `truthy`, which the default ruleset reports as warnings.\n\n`.yamllint` reads `.gitignore`, so the run covers the files a fresh checkout has and skips anything the tool rebuilds.",
+    "Coverage and gaps": "yamllint checks shape. A reviewer judges three things: whether a value is correct, whether a comment gives a reason, and whether that reason is true.\n\nyamllint covers one of the five rules [std-CONFIG](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/standards/configuration.md) states, and [ctl-update-check](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/update-check.md) covers a second. The other three have no check of their own. Dependabot moves the pin in `.github/requirements.txt`, so a yamllint release arrives as a pull request."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/yamllint.md"
+  }
+}

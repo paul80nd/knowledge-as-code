@@ -1,0 +1,34 @@
+{
+  "type": "controls",
+  "path": "controls/prose-unchecked.md",
+  "trust": null,
+  "fields": {
+    "id": "ctl-prose-unchecked",
+    "title": "Nothing checks prose against the house style",
+    "status": "active",
+    "verifies": [
+      "std-PROSE.DIFFERS"
+    ],
+    "mechanism": "not-enforced",
+    "frequency": null,
+    "last-verified": null,
+    "evidence": null,
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-10-19",
+    "tags": [
+      "documentation",
+      "prose",
+      "writing"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-PROSE.DIFFERS](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/standards/prose.md#differs-where-this-repository-differs-from-microsoft) says an em dash \"**MUST NOT** appear\".\n* It says prose \"**MUST** wrap at 120 columns, counted in characters\".\n* It says spelling \"**MUST** be British\".",
+    "How it works": "Nothing runs. The checks these rules need are one job over the Markdown lines a pull request adds:\n\n* `grep -nP '\\x{2014}'` fails on an em dash.\n* A line-length check fails a line over 120 characters. It counts characters and not bytes, and skips table rows, link\n  definitions, fenced blocks and frontmatter.\n* A spell checker set to British English, such as cspell with `language: en-GB`, fails a word its dictionary does not\n  know.",
+    "Coverage and gaps": "A reviewer reading the diff is the only thing that notices any of these today.\n\nThe checks would read Markdown, so an em dash in a workflow message or a YAML comment passes them, and `.github/dependabot.yml` has one. They read no commit message and no pull request body, which [std-PROSE.COMMITS](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/standards/prose.md#commits-commit-messages-and-pull-requests) governs. Most of the other rules ask for a judgement: one idea per sentence, a literal verb, no figure of speech. A pattern finds the words and not the meaning.\n\nOne rule has a check elsewhere. `clause-quoted-faithfully`, in the `kac validate` run [ctl-corpus-validation](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/corpus-validation.md) describes, reports a quotation that no longer matches its clause."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/prose-unchecked.md"
+  }
+}

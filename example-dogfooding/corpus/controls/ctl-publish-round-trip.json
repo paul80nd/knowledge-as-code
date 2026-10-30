@@ -1,0 +1,36 @@
+{
+  "type": "controls",
+  "path": "controls/publish-round-trip.md",
+  "trust": null,
+  "fields": {
+    "id": "ctl-publish-round-trip",
+    "title": "Every corpus publishes, installs and is read back",
+    "status": "active",
+    "verifies": [
+      "eng:std-GATES.BUILD",
+      "std-PLUGIN.DECLARE",
+      "std-PLUGIN.TYPES"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "last-verified": null,
+    "evidence": "The `corpora`, `round-trip` and `import-round-trip` job logs on the pull request.",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-09-22",
+    "tags": [
+      "export",
+      "packaging",
+      "plugin"
+    ]
+  },
+  "sections": {
+    "What it checks": "* `eng:std-GATES.BUILD` says a push \"**MUST** trigger a build and the test\n  suite, without anyone asking for it\".\n* `std-PLUGIN.TYPES` says a skill \"**MUST** name the parts file of the\n  type its component declares, and no other type's\".\n* `std-PLUGIN.DECLARE` says every skill directory and hook directory\n  in the plugin tree \"**MUST** appear under `metadata.components`\".",
+    "How it works": "Three jobs share the work. `corpora` runs `export` and `pack` in each of the four corpora. `round-trip` runs `export` and `bundle` in each, on Ubuntu, and in `payments` on Windows too. `bundle` fails on a directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then `claude plugin validate --strict` runs over the assembled plugin and over its marketplace. `tooling/tests/bundled-components.sh` follows it. It fails a component `bundle.json` kept that is missing from the tree, or one it trimmed that is present. A component is a skill or hook directory, or a view's file. It also fails where `.claude-plugin/` contains anything but `plugin.json`.\n\nIn every cell but `dog-fooding`, `round-trip` then installs the plugin. It runs `bundled-components.sh` over the installed copy, then asks each skill in it the questions that skill describes. Where the build index ships, it checks that the build-index hook pushes at most 10,000 characters, and runs the installed script twice for one session to check that it prints once. It logs how long a later call takes on a small input and on a 200 KB one, and fails on neither.\n\n`import-round-trip` publishes from `engineering`, consumes it from `payments`, renames a clause upstream, and asserts the downstream build fails and reports that clause.\n\nThe `tool` job adds the empty case. It bundles a corpus that adopted no type, then runs `claude plugin validate --strict` over the plugin and its marketplace. It asserts that nothing reading a type shipped, and that `raise-finding`, the one standalone skill, survived. No job installs that plugin.",
+    "Coverage and gaps": "`round-trip` checks the `dog-fooding` plugin and installs none, because it is the same shape as `payments`. On Windows it runs `payments` alone, which takes the shell, the paths and the import path together.\n\n`round-trip` reads one sentence of each skill. It greps `SKILL.md` for the parts file the component requires, and fails a skill that names another type's. Nothing else `std-PLUGIN` asks of the wording is checked here. Two of its rules are checked by [ctl-tool-test-layers](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/tool-test-layers.md) instead, which is where the unit tests that read a skill's prose run.\n\n`harvest-findings` travels into a corpus's working tree rather than into a plugin, so no job here reaches it. Every check above reads an assembled bundle, and that skill is in none. The clause saying no plugin may declare a component that triages findings has no control either.\n\nNothing here runs the publishing workflows. CI proves that a package and a plugin assemble. Whether nuget.org, GitHub Packages or the `marketplace` branch accepts either is answered after the merge.\n\nThe Claude Code CLI installs at `latest` in every one of these jobs, so a release of it can fail the gate with no change here."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/controls/publish-round-trip.md"
+  }
+}

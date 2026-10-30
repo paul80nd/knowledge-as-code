@@ -29,9 +29,9 @@
   "sections": {
     "What we use it for": "`kac.core` references it. The checks that read a document body run on what it produces, so `h1`, `identity`, `sections`, `link-resolves` and `undefined-label` all read the same parse.",
     "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with source and binary redistributions. A NuGet package states the licence expression in its own metadata, so publishing `kac` needs nothing further.",
-    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/dog-fooding/services/kac.md) uses it."
+    "Where it is used": "* [svc-kac](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/services/kac.md) uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/dog-fooding/tools/build/markdig.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/tools/build/markdig.md"
   }
 }

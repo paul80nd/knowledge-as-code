@@ -7,7 +7,7 @@
     "title": "Clause coverage",
     "status": "active",
     "generated": {
-      "at": "2026-10-29T11:54:00Z",
+      "at": "2026-10-30T10:45:00Z",
       "by": "claude-code/opus-5.5",
       "report": "coverage",
       "tool": "kac/0.43.0"
@@ -15,16 +15,16 @@
     "sources": [
       {
         "resource": "example-dogfooding",
-        "version": "0.96.1"
+        "version": "0.97.0"
       },
       {
         "resource": "example-engineering",
-        "version": "0.47.0"
+        "version": "0.48.0"
       }
     ],
     "verified": [
       {
-        "at": "2026-10-29T11:55:00Z",
+        "at": "2026-10-30T10:46:00Z",
         "by": "human:paul.law"
       }
     ],
@@ -35,6 +35,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/dog-fooding/reports/clause-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/dog-fooding/reports/clause-coverage.md"
   }
 }

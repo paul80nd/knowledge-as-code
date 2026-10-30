@@ -16,7 +16,7 @@ Status: draft.
 
 Cite as `std-API.VERSION`.
 
-Controls: `ctl-0005` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
+Controls: `ctl-api-version-and-notice` Nothing checks that an interface change carries a version and a notice (`not-enforced`, active).
 
 - A published interface **MUST** have a version a consumer can pin to.
 - An HTTP interface **SHOULD** put its major version in the path, as `/v2/`, unless the contract states another scheme.
@@ -57,7 +57,7 @@ Status: draft.
 
 Cite as `std-CONT.TAG`.
 
-Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
+Controls: `ctl-image-pinned-by-digest` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A pipeline **MUST** tag an image with the build's own version.
 - A registry **MUST** refuse a second push to a tag that already exists.
@@ -67,7 +67,7 @@ Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enfor
 
 Cite as `std-CONT.BASE`.
 
-Controls: `ctl-0001` Nothing checks that an image is named by digest (`not-enforced`, active).
+Controls: `ctl-image-pinned-by-digest` Nothing checks that an image is named by digest (`not-enforced`, active).
 
 - A Dockerfile **MUST** take its base image from the organisation's registry.
 - A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
@@ -93,7 +93,7 @@ Status: draft.
 
 Cite as `std-CSSTY.SUPPR`.
 
-Controls: `ctl-0009` Nothing checks that a suppression is local and justified (`not-enforced`, active).
+Controls: `ctl-suppression-justified` Nothing checks that a suppression is local and justified (`not-enforced`, active).
 
 - A suppression **MUST** sit on the member it applies to, with a `Justification` giving the reason.
 - A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
@@ -168,7 +168,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -176,7 +176,7 @@ Controls: none.
 
 Cite as `std-DEPLOY.ONCE`.
 
-Controls: `ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
+Controls: `ctl-health-reports-commit` Nothing checks that a running service reports its commit (`not-enforced`, active).
 
 - A pipeline **MUST** build the artefact once, and promote that build to every environment.
 - An artefact **MUST** record the commit it was built from, so a running version identifies the change it came from.
@@ -231,7 +231,7 @@ Status: draft.
 
 Cite as `std-GATES.BLOCK`.
 
-Controls: `ctl-0004` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
+Controls: `ctl-skip-cites-deviation` Nothing checks that a skipped test cites a deviation (`not-enforced`, active).
 
 - Branch policy **MUST** block a merge while any required check is failing.
 - A team **MUST NOT** merge over a failing check without a recorded deviation.
@@ -332,7 +332,7 @@ Controls: none.
 
 Cite as `std-NETTST.COVER`.
 
-Controls: `ctl-0008` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
+Controls: `ctl-dotnet-coverage` Nothing checks that a .NET build collects coverage (`not-enforced`, active).
 
 - A build **MUST** collect coverage from its test run and publish the report.
 - A build **SHOULD** write the report in Cobertura format: with `--collect:"XPlat Code Coverage"` under VSTest, or with `--coverage --coverage-output-format cobertura` under Microsoft.Testing.Platform, with `Microsoft.Testing.Extensions.CodeCoverage` referenced.
@@ -350,7 +350,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -383,7 +383,7 @@ Controls: none.
 
 Cite as `std-OBS.ALERT`.
 
-Controls: `ctl-0003` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
+Controls: `ctl-alert-owner-and-action` Nothing checks that an alert names an owner and a first action (`not-enforced`, active).
 
 - A service **MUST** publish availability and latency objectives.
 - A service **MUST** alert when it is on course to miss one of those objectives.
@@ -398,7 +398,7 @@ Cite as `std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/1c4d0e4438ae6f38ed3ba032dbe47fefd9303949/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## std-PR: A pull request carries its reasoning and one accountable approval
 
@@ -417,7 +417,7 @@ Controls: none.
 
 Cite as `std-PR.AGENT`.
 
-Controls: `ctl-0007` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
+Controls: `ctl-pr-names-agent` Nothing checks that a pull request names the agent that produced it (`not-enforced`, active).
 
 - A pull request containing agent-produced work **MUST** name the agent, the model and the prompt or task that produced it.
 - Agent-produced work **MUST** have the approval of a named person, who owns the change afterwards.
@@ -461,7 +461,7 @@ Controls: none.
 
 Cite as `std-SECRET.NOWHERE`.
 
-Controls: `ctl-0006` Nothing checks a repository for a committed secret (`not-enforced`, active).
+Controls: `ctl-secret-scanner` Nothing checks a repository for a committed secret (`not-enforced`, active).
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test fixture.
 - A build **MUST NOT** embed a secret in an artefact or an image.
