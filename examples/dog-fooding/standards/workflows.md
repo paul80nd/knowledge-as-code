@@ -34,6 +34,9 @@ step, which is [zizmor]'s `artipacked` audit. [actionlint] decides the rest of h
 
 - A check that can block a merge **MUST** run in `.github/workflows/kac.yml` on a pull request into `main`.
 - `kac.yml` **MUST** name every one of its jobs in the `needs:` of its `validate` job.
+- The `validate` job **MUST** fail when any job in its `needs:` fails.
+- The `validate` job **MUST** declare `if: always()`, because GitHub skips a job whose dependency failed and counts
+  a skipped required check as passing.
 - The branch rule on `main` **MUST** name `validate` as the check a merge waits for.
 - A job **MUST NOT** declare `continue-on-error`.
 - A workflow **MUST** pass `actionlint`, which also puts every `run:` block through shellcheck.
@@ -158,6 +161,8 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 
 - [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
+- [ ] `validate` fails when any job in its `needs:` fails.
+- [ ] `validate` declares `if: always()`.
 - [ ] Every `uses:` in `.github/workflows/` and `template/.github/workflows/` names a commit SHA.
 - [ ] Every checkout sets `persist-credentials: false`, and every step needing git write access supplies the token.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
@@ -180,10 +185,11 @@ the branch owner decides whether to release before the pull request opens, and a
 until they do. What each of these numbers means, and what a producer's move obliges of the corpora consuming it, are
 [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a workflow publishes it.
 
-`WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
-outside the gate is invisible. The `lint` job runs `actionlint` over every workflow, and then zizmor over every workflow
-and each `dependabot.yml`. [ctl-zizmor] says which rules zizmor checks. Nothing checks a permission nobody uses, or a
-secret written into a script body. A reviewer catches both.
+`WorkflowGateTests` reads `kac.yml`. It fails a job that `validate` does not name, a `validate` without
+`if: always()`, and a `validate` with no step reading `needs.*.result`. Its header comment says why a job outside the
+gate is invisible. The `lint` job runs `actionlint` over every workflow, and then zizmor over every workflow and each
+`dependabot.yml`. [ctl-zizmor] says which rules zizmor checks. Nothing checks a permission nobody uses, or a secret
+written into a script body. A reviewer catches both.
 
 A checkout keeping its credential lets every later step push with the job's token, a test run or a package restore
 included. The one `git push` here, to the `marketplace` branch, takes the token in its own step, so the restores and
@@ -208,6 +214,7 @@ head and `main` moved after that.
 
 ## Changelog
 
+- 2026-10-30: the `validate` job fails when a job it needs fails, and runs with `if: always()` to do it.
 - 2026-10-21: a checkout sets `persist-credentials: false`, and a step needing git write access supplies the token
   itself.
 - 2026-10-21: the pinning rule covers `template/.github/workflows/`, which holds the starter every new corpus built on

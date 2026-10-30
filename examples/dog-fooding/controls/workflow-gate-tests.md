@@ -24,6 +24,8 @@ A job the gate does not list still runs and reports. It blocks no merge.
 
 * [std-CI.GATE] says `kac.yml` "**MUST** name every one of its jobs in the
   `needs:` of its `validate` job".
+* It says the `validate` job "**MUST** fail when any job in its `needs:` fails".
+* It says the `validate` job "**MUST** declare `if: always()`".
 * `eng:std-GATES.BLOCK` says branch policy "**MUST** block a merge while any required check is
   failing". The test checks the half of that `kac.yml` decides: that `validate` fails when a job it needs fails.
 
