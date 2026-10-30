@@ -44,6 +44,8 @@ this repository keeps about itself, and each cites the standard its steps stand 
 | change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)           |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)               |
 
+**A `CLAUDE.md` or a playbook has no process.**
+
 **A page that moves takes its URL with it.** A file under `template/` or `.schema/` citing the old URL is an overlay
 file, and every corpus holds a copy. Rewrite each citation, then run what
 [four trees](../../../CLAUDE.md#four-trees-hold-the-same-file) says that file owes.
@@ -64,6 +66,7 @@ rather than by which folder holds them.
 | a comment, a feature document, a test name, or the changelog                                      | `writing-in-the-tool` |
 | the root `README.md`, `PACKAGE.md`, or the documentation site                                     | `writing-the-docs`    |
 | a skill or a hook under `.plugin/`, whose rules are `std-PLUGIN`                                  | `writing-for-agents`  |
+| a `CLAUDE.md`, or a playbook under `.claude/skills/i-want-to/`                                    | `writing-for-agents`  |
 | a `plugin.json` under `.plugin/`                                                                  | nothing more          |
 | a commit message or a pull request body                                                           | nothing more          |
 
