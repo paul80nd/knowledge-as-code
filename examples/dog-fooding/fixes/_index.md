@@ -13,5 +13,6 @@
 
 | ID                              | Title                                                                                | Applies to | Status | Review by  |
 |---------------------------------|--------------------------------------------------------------------------------------|------------|--------|------------|
+| fix-gh-refuses-a-job-log        | [gh refuses to print a failing CI job's log](gh-refuses-a-job-log.md)                |            | draft  | 2027-04-30 |
 | fix-goldens-disagree            | [The golden suite reports a diff nobody meant](goldens-disagree.md)                  | svc-kac    | draft  | 2027-04-29 |
 | fix-restore-cannot-find-version | [kac restore cannot find the version the lock names](restore-cannot-find-version.md) |            | draft  | 2027-04-29 |
