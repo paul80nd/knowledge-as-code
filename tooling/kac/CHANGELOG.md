@@ -25,6 +25,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   naming the folder, and you can move the corpus or stop git ignoring it. A corpus force-added with `git add -f` is
   read, and prints no such line. `kac validate --json` prints no such line either, so its output stays one JSON
   document.
+- **`kac update --add-type` adopts several types in one run.** It took one type and refused a working tree holding what
+  the previous run wrote, so adopting a set of types cost a commit for each. Name them comma-separated, as
+  `kac new --types` takes them: `kac update --add-type policies,controls`. Each arrives with its schema, root page and
+  template, and you review them as one diff. A name the template does not declare, or one already adopted, refuses the
+  whole run. `update` still refuses a working tree with uncommitted changes.
 
 ### Changed
 

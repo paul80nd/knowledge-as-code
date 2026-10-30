@@ -368,18 +368,27 @@ public static class Update
             return Refuse("update: this corpus states no `types:`, so there is no list to change. Declare "
                           + "what it has adopted first.");
 
-        if (add is { } adding)
+        if (add is not null)
         {
-            if (!declared.Contains(adding, StringComparer.Ordinal))
-                return Refuse($"update: this template declares no type called '{adding}'. It declares "
+            var adding = Adding(add);
+
+            if (adding.Where(t => !declared.Contains(t, StringComparer.Ordinal)).ToList() is { Count: > 0 } unknown)
+                return Refuse($"update: this template declares no type called "
+                              + $"{string.Join(" or ", unknown.Select(t => $"'{t}'"))}. It declares "
                               + $"{string.Join(", ", declared)}.");
 
-            if (held.Contains(adding, StringComparer.Ordinal))
-                return Refuse($"update: '{adding}' is already adopted, so there is nothing to add.");
+            if (adding.Where(t => held.Contains(t, StringComparer.Ordinal)).ToList() is { Count: > 0 } already)
+                return Refuse(adding.Count == 1
+                    ? $"update: '{already[0]}' is already adopted, so there is nothing to add."
+                    : $"update: this corpus already adopts {Series(already)}. Name only the types it does not "
+                      + "adopt.");
 
             return Accept(new Adoption(
-                [.. held.Append(adding).OrderBy(t => t, StringComparer.Ordinal)], [],
-                $"update: adopted {adding}. Its schema, root page and template arrived with this run."));
+                [.. held.Concat(adding).OrderBy(t => t, StringComparer.Ordinal)], [],
+                adding.Count == 1
+                    ? $"update: adopted {adding[0]}. Its schema, root page and template arrived with this run."
+                    : $"update: adopted {Series(adding)}. Their schemas, root pages and templates arrived with "
+                      + "this run."));
         }
 
         // Unreachable with `drop` unset. Asked again so the compiler knows.
@@ -407,6 +416,19 @@ public static class Update
         static AdoptionAsked Accept(Adoption adoption) => new(adoption, null);
         static AdoptionAsked Refuse(string message) => new(null, message);
     }
+
+    /// <summary>
+    /// The types <c>--add-type</c> names, comma-separated as <c>new --types</c> takes them, each once and in order.
+    /// </summary>
+    public static IReadOnlyList<string> Adding(string add) =>
+    [
+        .. add.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
+    ];
+
+    private static string Series(IReadOnlyList<string> items) =>
+        items.Count == 1 ? items[0] : string.Join(", ", items.Take(items.Count - 1)) + " and " + items[^1];
 
     /// <summary>
     /// Read off the listing, not loaded, so the count is right even where the schema no longer loads. An underscore

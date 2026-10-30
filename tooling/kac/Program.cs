@@ -375,8 +375,9 @@ internal sealed class UpdateSettings : KacSettings
     [Description("How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.")]
     public string? Policy { get; init; }
 
-    [CommandOption("--add-type <TYPE>")]
-    [Description("Adopt a type the template declares, and write its schema, root page and template.")]
+    [CommandOption("--add-type <TYPES>")]
+    [Description("Adopt types the template declares, comma-separated, and write each one's schema, root page and "
+                 + "template.")]
     public string? AddType { get; init; }
 
     [CommandOption("--drop-type <TYPE>")]

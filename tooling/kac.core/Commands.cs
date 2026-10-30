@@ -896,9 +896,12 @@ public static class Commands
                 + "file is how to decline one.");
 
         // Said rather than repaired: the pages already here hold the corpus's own words.
-        if (added is not null)
-            Note($"update: {added} arrives linking to the types this corpus holds. The pages already "
-                 + $"here name {added} without linking to it, and they are yours to change.");
+        if (added is not null && kac.core.Update.Adding(added) is { } adding)
+            Note(adding.Count == 1
+                ? $"update: {adding[0]} arrives linking to the types this corpus holds. The pages already "
+                  + $"here name {adding[0]} without linking to it, and they are yours to change."
+                : $"update: {Series(adding)} arrive linking to the types this corpus holds. The pages already "
+                  + "here name each one without linking to it, and they are yours to change.");
         if (received.Owned.Count > 0) NoGitAuthor("update", author);
         Owned("update", author.Owner, received.Owned);
         Unlinked("update", received.Unlinked);
@@ -928,8 +931,8 @@ public static class Commands
 
         var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();
         if (offered.Count > 0)
-            Account($"update: this template also declares {string.Join(", ", offered)}. Take one with "
-                    + "kac update --add-type <name>.");
+            Account($"update: this template also declares {string.Join(", ", offered)}. Take any of them with "
+                    + "kac update --add-type <name>,<name>.");
     }
 
     /// <summary>

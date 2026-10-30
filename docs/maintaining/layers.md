@@ -43,7 +43,8 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 * `--check` reports an overlay file the corpus holds that the template sends nothing to.
   [`--check`](../use/layers.md#-check)
 * It reports a type the corpus has not adopted, and adopts nothing. [`update`](../use/cli/update.md#known-limits)
-* `--add-type` writes the type's page, template and schema, and adds it to `types:`.
+* `--add-type` writes each named type's page, template and schema, and adds it to `types:`. It takes several types,
+  comma-separated.
   [A type adopted, or given up](../use/cli/update.md#a-type-adopted-or-given-up)
 * It writes the author as the `owner` of each record it seeds.
   [A seeded record's owner](../use/layers.md#a-seeded-records-owner)
@@ -131,6 +132,7 @@ Each refusal exits `1` and writes nothing.
 * A check runs over a tree with uncommitted changes
 * A type the corpus has not adopted is not adopted by an update
 * An update adding a type writes its page and template, and adopts it
+* An update adding several types adopts each of them in one run
 * An update adding a type writes its author as the owner of the records it seeds
 * An update dropping a type whose folder holds no record deletes its page
 * An update dropping a type whose folder holds a record is refused

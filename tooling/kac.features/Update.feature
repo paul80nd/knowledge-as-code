@@ -136,6 +136,15 @@ Scenario: An update adding a type writes its page and template, and adopts it
   And the updated corpus holds ".schema/policies.yaml"
   And the updated corpus adopts "policies"
 
+Scenario: An update adding several types adopts each of them in one run
+  Given a corpus to update, adopting "adrs,glossary"
+  When I update the corpus adding "policies,tools"
+  Then it succeeds
+  And the updated corpus holds "policies.md"
+  And the updated corpus holds ".schema/tools.yaml"
+  And the updated corpus adopts "policies"
+  And the updated corpus adopts "tools"
+
 Scenario: An update adding a type writes its author as the owner of the records it seeds
   Given a corpus to update, adopting "adrs,glossary"
   And the corpus to update is worked on by "sam.lee@example.com"
