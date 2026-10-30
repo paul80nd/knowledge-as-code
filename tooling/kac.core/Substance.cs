@@ -27,8 +27,8 @@ public static class Substance
 
     /// <summary>
     /// Empty where <paramref name="after"/> says what <paramref name="before"/> said. The frontmatter comes first, then
-    /// the body. A frontmatter value or a link's text that swaps an id in <paramref name="renamed"/> for the id it maps
-    /// to says what it said.
+    /// the body. A frontmatter value other than <c>id</c>, or a link's text, that swaps an id in
+    /// <paramref name="renamed"/> for the id it maps to says what it said.
     /// </summary>
     public static IReadOnlyList<Change> Changes(Doc before, Doc after,
         IReadOnlyDictionary<string, string>? renamed = null)
@@ -74,7 +74,9 @@ public static class Substance
         foreach (var key in now.Keys.Concat(was.Keys.Where(k => !now.ContainsKey(k))))
         {
             if (Movable.Contains(key)) continue;
-            if (was.TryGetValue(key, out var a) && now.TryGetValue(key, out var b) && Same(a, b, renamed)) continue;
+            // A decided record's own id stays fixed, so only its citations of a renamed record may swap.
+            if (was.TryGetValue(key, out var a) && now.TryGetValue(key, out var b)
+                && Same(a, b, key == "id" ? NoneRenamed : renamed)) continue;
 
             changes.Add(new Change($"`{key}`", line));
         }

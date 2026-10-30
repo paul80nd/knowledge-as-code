@@ -99,7 +99,8 @@ A change in substance is anything except these:
 * **`status`, `superseded-by`, `review-by` and `accepts`.** Any other frontmatter field that moves is a change in
   substance.
 * **A renamed `id`.** A frontmatter value, or the whole text of a link, may swap a renamed record's old `id` for its
-  new one. The same swap anywhere else in the prose, or a swap for any other `id`, is a change in substance.
+  new one. The same swap anywhere else in the prose, or a swap for any other `id`, is a change in substance. So is a
+  change to the record's own `id`, so a decided ADR or a published postmortem keeps its `id`.
 
 `validate` compares the body one `##` section at a time. A section added, removed or renamed is a change in substance.
 

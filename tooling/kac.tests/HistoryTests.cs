@@ -86,6 +86,14 @@ public class HistoryTests
         => Assert.Empty(Run([Nfr("nfrs/0001-latency.md", "nfr-0001")], [Nfr("nfrs/latency.md", "nfr-latency")],
             Moved("nfrs/0001-latency.md", "nfrs/latency.md")));
 
+    [Theory]
+    [InlineData("controls/0001-merge-gate.md", "controls/merge-gate.md", "control", "ctl-0001", "ctl-merge-gate",
+        "active")]
+    [InlineData("services/search.md", "services/search-api.md", "service", "svc-search", "svc-search-api", "live")]
+    public void A_renamed_record_of_a_type_no_history_rule_fixes_reports_nothing(string was, string now, string type,
+        string oldId, string newId, string status)
+        => Assert.Empty(Run([Record(was, type, oldId, status)], [Record(now, type, newId, status)], Moved(was, now)));
+
     [Fact]
     public void A_record_deleted_while_in_force_is_told_to_retire_it_beside_a_new_record_elsewhere()
         => Assert.Equal(new CheckId("retire-not-delete"), Assert.Single(Run(
@@ -104,6 +112,19 @@ public class HistoryTests
             [Nfr("nfrs/0001-latency.md", "nfr-0001")],
             [Nfr("nfrs/latency.md", "nfr-0002"), Nfr("nfrs/0002-refunds.md", "nfr-0002")],
             Moved("nfrs/0001-latency.md", "nfrs/latency.md"))).File);
+
+    [Fact]
+    public void A_decided_record_renamed_is_one_change_in_substance_and_no_deletion()
+    {
+        var before = Adr("adrs/0001-git.md", "accepted", "We keep records in git.");
+        var after = Required.Parsed("adrs/0009-git.md",
+            before.Text.Replace("adr-0001", "adr-0009", StringComparison.Ordinal), Schema);
+
+        var finding = Assert.Single(Run([before], [after], Moved("adrs/0001-git.md", "adrs/0009-git.md")));
+
+        Assert.Equal(new CheckId("immutable-after-accepted"), finding.Check);
+        Assert.Contains("since: `id`.", finding.Message);
+    }
 
     [Fact]
     public void A_published_postmortem_citing_a_renamed_record_by_its_new_id_passes()
@@ -267,6 +288,16 @@ public class HistoryTests
         for (var i = 0; i + 1 < pairs.Length; i += 2) moved[pairs[i]] = pairs[i + 1];
         return moved;
     }
+
+    private static Doc Record(string rel, string type, string id, string status) => Required.Parsed(rel, $"""
+        ---
+        id: {id}
+        type: {type}
+        status: {status}
+        ---
+
+        # A record
+        """, Schema);
 
     private static Doc Fix(string rel, string id) => Required.Parsed(rel, $"""
         ---
