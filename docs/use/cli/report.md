@@ -25,7 +25,8 @@ Two reports are built in. `coverage` lists every policy clause and what discharg
 framework reference the clause tables cite, and the clauses citing each one.
 
 Both read the corpus you are standing in and everything under `.imports/`, the folder [`restore`](restore.md) unpacks a
-consumed corpus into. A corpus that inherits its policies reports on them, whether or not it adopts the `policies` type.
+consumed corpus into. A corpus that inherits policies and standards reports on them, whether or not it adopts the
+`policies` and `standards` types.
 
 ### What the tool fills, and what it leaves open
 
