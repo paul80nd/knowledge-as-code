@@ -177,6 +177,12 @@ one in the pull request.
 * Spell the label exactly as the record spells its id: `adr-0013`, `pol-DEVI`, `svc-billing-api`. `label-canonical`
   checks this. Markdown matches a label case-insensitively, so nothing else would catch `[ADR-0013]`.
 * Use an inline link where the display text is prose.
+* Keep every link inside the corpus, because a corpus travels without the repository around it. `link-resolves`
+  fails a path that leaves the corpus root, even one that resolves on disk. A record under `.imports/` is inside the
+  root. To cite a file outside, name its path in a code span:
+
+      `docs/design/plugin.md` says how that decision is made.
+
 * Put the definitions at the foot of the document, sorted by label. A `## Related` section uses the same labels. A
   fenced or indented block is not read for links.
 * A framework page (`knowledge-as-code.md` and the pages under it) names a type and never links to one. A corpus that
