@@ -54,6 +54,8 @@ kac update --check
 `--check` computes the plan, prints it, and exits non-zero if anything would change. It writes nothing, so it runs over
 a tree in any state:
 
+<!-- transcript: illustration, kac update --check -->
+
 ```text
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 8a048c1.
 update: withheld 61 files for types this corpus has not adopted.
@@ -66,6 +68,8 @@ run:  kac update
 ```
 
 A corpus already in step says so and exits `0`:
+
+<!-- transcript: illustration, kac update --check -->
 
 ```text
 update: in step, 56 files compared.
@@ -86,6 +90,8 @@ there name the new type without linking to it, because each was written while th
 type seeds arrives with you as its owner, as [A seeded record's owner](../layers.md#a-seeded-records-owner) says. The
 run says all three, and lists each arriving line that lost a link:
 
+<!-- transcript: illustration, kac update --add-type policies -->
+
 ```text
 update: policies arrives linking to the types this corpus holds. The pages already here name policies without linking
 to it, and they are yours to change.
@@ -104,6 +110,8 @@ A plain `update` that seeds a page the template has gained lists its lines the s
 
 Dropping is the asymmetric half. `update` refuses while the folder still holds records:
 
+<!-- transcript: illustration, kac update --drop-type tools -->
+
 ```text
 update: tools/ holds 3 records, and deleting a record is deleting knowledge. Delete them yourself and run this
 again, or leave 'tools' adopted.
@@ -114,6 +122,8 @@ The message gives the count and the two ways forward. Deleting records is yours 
 Where the folder is empty, dropping asks first. The page is about to go, and every page still naming it keeps a link
 that no longer resolves:
 
+<!-- transcript: illustration, kac update --drop-type tools -->
+
 ```text
 update: giving up tools deletes its page. Every page still linking to it is left holding a dead link, and `kac
 validate` reports the ones it can reach.
@@ -123,6 +133,8 @@ find.
 
 That question takes no for an answer by default, because the run deletes files. Pass `--yes` to answer it in advance. A
 run with no terminal and no `--yes` refuses rather than guessing:
+
+<!-- transcript: illustration, kac update --drop-type tools -->
 
 ```text
 update: giving up tools needs an answer, and there is no terminal to ask on. Pass --yes to give it up anyway.

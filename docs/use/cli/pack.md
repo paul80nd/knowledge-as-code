@@ -51,10 +51,12 @@ kac pack
 
 `pack` prints the file it wrote, then says what a consumer will receive:
 
+<!-- transcript: examples/engineering, kac pack -->
+
 ```text
-wrote .dist/package/example-engineering.0.16.0.nupkg
-pack: sealed 47 files as example-engineering 0.16.0, cited as 'eng:'.
-pack: 0.16.0 is content-version from .corpus.yaml. A registry never replaces a published version.
+wrote .dist/package/example-engineering.0.48.0.nupkg
+pack: sealed 58 files as example-engineering 0.48.0, cited as 'eng:'.
+pack: 0.48.0 is content-version from .corpus.yaml. A registry never replaces a published version.
 ```
 
 ### The package contents
@@ -62,8 +64,10 @@ pack: 0.16.0 is content-version from .corpus.yaml. A registry never replaces a p
 The package is a zip, so any unzip tool opens it:
 
 ```bash
-unzip -l .dist/package/example-engineering.0.16.0.nupkg
+unzip -l .dist/package/example-engineering.0.48.0.nupkg
 ```
+
+<!-- transcript: examples/engineering, unzip -l .dist/package/example-engineering.0.48.0.nupkg -->
 
 ```text
   Length      Date    Time    Name
@@ -71,13 +75,13 @@ unzip -l .dist/package/example-engineering.0.16.0.nupkg
       419  01-01-1980 00:00   [Content_Types].xml
       283  01-01-1980 00:00   _rels/.rels
       564  01-01-1980 00:00   example-engineering.nuspec
-     3918  01-01-1980 00:00   corpus/adrs/adr-0001.json
-      958  01-01-1980 00:00   corpus/glossary/gls-engineering.json
-     1221  01-01-1980 00:00   corpus/glossary/gls-knowledge-as-code.json
-    14923  01-01-1980 00:00   corpus/glossary/terms.jsonl
-     1459  01-01-1980 00:00   corpus/standards/std-VCS.json
+     2667  01-01-1980 00:00   corpus/adrs/adr-0001.json
+      971  01-01-1980 00:00   corpus/glossary/gls-engineering.json
+     1222  01-01-1980 00:00   corpus/glossary/gls-knowledge-as-code.json
+    24676  01-01-1980 00:00   corpus/glossary/terms.jsonl
+     1495  01-01-1980 00:00   corpus/standards/std-VCS.json
 ---------                     -------
-   208626                     47 files
+   362841                     58 files
 ```
 
 The three files at the root are the envelope a registry reads. Everything under `corpus/` is the export, byte for byte.
@@ -88,7 +92,7 @@ Every entry has the same timestamp, so two runs over one export produce one file
 A registry takes the file over its own API. GitHub Packages reads it from `dotnet nuget push`:
 
 ```bash
-dotnet nuget push .dist/package/example-engineering.0.16.0.nupkg \
+dotnet nuget push .dist/package/example-engineering.0.48.0.nupkg \
   --source https://nuget.pkg.github.com/OWNER/index.json \
   --api-key "$GITHUB_TOKEN"
 ```
@@ -107,6 +111,8 @@ is the pipeline this repository publishes from, and it asks the registry first s
 ### A refusal
 
 A package is named and cited by three facts. `pack` says which one is missing, and exits `1`:
+
+<!-- transcript: illustration, kac pack -->
 
 ```text
 pack: the export declares no shortcode, and a consumer cites what it imports by one. Write `shortcode:` in .corpus.yaml and export again.

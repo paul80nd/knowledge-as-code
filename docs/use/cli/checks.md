@@ -34,6 +34,8 @@ kac checks
 
 One check to a line, with the severity it reports at and what it proves, and a tally at the foot:
 
+<!-- transcript: template, kac checks -->
+
 ```text
   error    schema-unknown-key             Every key in a schema file is one the loader reads.
   error    frontmatter-parses             The frontmatter block is present and parses as a YAML mapping.
@@ -62,6 +64,8 @@ kac checks | grep -i expiry
 ```
 
 The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`:
+
+<!-- transcript: template, kac checks | grep -i expiry -->
 
 ```text
   warning  expiry                         An active deviation is still inside its review date.

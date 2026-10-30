@@ -63,6 +63,8 @@ type to your corpus means adding a YAML file. `kac` itself does not change.
 
 When a record breaks its schema, `kac validate` reports the file, the check and the line, and exits `1`:
 
+<!-- transcript: illustration, kac validate -->
+
 ```text
 services/catalogue-web.md
   error  [link-resolves]  link target 'missing-runbook.md' does not resolve.  (services/catalogue-web.md:76)

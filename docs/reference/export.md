@@ -94,7 +94,7 @@ A run loads the corpus whole, decides which records travel and what of each one 
 
 A corpus that adopted three types, and consumes a corpus with standards of its own:
 
-```text
+```
 .dist/export/
   manifest.json          what this export is, and where it came from
   glossary/

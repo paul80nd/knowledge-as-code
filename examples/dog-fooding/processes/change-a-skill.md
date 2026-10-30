@@ -74,7 +74,8 @@ one says moves neither. One nothing sends moves nothing.
     adding one skill found wrong by grep after it thought it was finished.
     * A skill added or removed affects the component prose in `docs/maintaining/plugin.md`, the sample transcript
       and component counts in `docs/use/cli/bundle.md`, and the `new: wrote N files` line in both
-      `docs/use/cli/new.md` and `docs/use/getting-started.md`.
+      `docs/use/cli/new.md` and `docs/use/getting-started.md`. `DocumentationTests` fails that last line until it
+      matches the `new` fixture.
     * A standalone skill added or removed affects the loop naming them in `.github/workflows/kac.yml`, and the
       prose describing that job in [ctl-publish-round-trip].
     * A skill a corpus receives affects `template/knowledge-as-code/contributing.md`, the copy of it every corpus

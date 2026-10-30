@@ -83,9 +83,11 @@ holds, which records cover them, which skill to ask, and how to report a change 
 * **A type has a line per corpus that wrote some of it.** The installing corpus has one where it wrote any, and each
   corpus it consumes has one carrying its shortcode:
 
+<!-- transcript: examples/payments, kac bundle -->
+
 ```text
 standards. 24 entries across 8 records: Card details reach the PSP and never reach us, One order pays once, …
-standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, …
+standards (from eng). 42 entries across 13 records: An interface is described by a contract in the repository, …
 ```
 
 * **The closing lines name each surviving skill by the role its entry announces.** They open by saying the records

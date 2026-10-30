@@ -40,16 +40,16 @@ and `new` drops each dead link and leaves the type's name standing in the senten
 to a type your corpus does not have, so `new` lists each line it left that way. A corpus adopting `postmortems` alone is
 told:
 
+<!-- transcript: template, kac new --types postmortems -->
+
 ```text
 new: these lines name a type this corpus declined, and the link to it is gone. Read each one:
   frameworks.md:5  policies
   frameworks.md:25  standards
-  postmortems.md:12  adrs
   postmortems.md:20  fixes, runbooks, nfrs
   postmortems.md:21  adrs
-  postmortems.md:32  runbooks
-  postmortems.md:34  fixes
-  postmortems.md:86  nfrs
+  postmortems.md:28  runbooks
+  postmortems.md:30  fixes
 ```
 
 Rewrite each line it lists for your corpus.
@@ -93,6 +93,8 @@ kac new --yes --name my-corpus --ci github
 missing answer exits rather than waiting, because a hung pipeline is worse than a failed one.
 
 `new` prints each file as it writes it, then generates, validates and stages. The tail of a default run:
+
+<!-- transcript: tooling/tests/fixtures/new, kac new --yes --name my-corpus --ci github -->
 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
@@ -143,6 +145,8 @@ writes reads as a diff of its own. A folder that is not yet a repository gets `g
 
 **It refuses a publishing target it cannot build links for**, and exits `1`. `--publishing` takes the values the
 table above lists. `mkdocs` is not one, because `export` cannot address a page on an MkDocs site:
+
+<!-- transcript: template, kac new --publishing mkdocs -->
 
 ```text
 new: --publishing 'mkdocs' is not a target. It is one of azure-devops, azure-devops-wiki, github, none.

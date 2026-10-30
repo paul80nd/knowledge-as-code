@@ -138,13 +138,15 @@ A report printed without `--out` cites a corpus with no `corpus:` as `this corpu
 kac report coverage
 ```
 
+<!-- transcript: examples/dog-fooding, kac report coverage -->
+
 ```text
-| Policy                         | Clauses | Covered | Uncovered |
-|--------------------------------|---------|---------|-----------|
-| [`eng:pol-A11Y`][eng:pol-A11Y] | 11      | 5       | 6         |
-| [`eng:pol-ACCS`][eng:pol-ACCS] | 13      | 2       | 11        |
-| [`eng:pol-AGNT`][eng:pol-AGNT] | 8       | 8       | 0         |
-| **Total**                      | **243** | **92**  | **151**   |
+| Policy | Clauses | Covered | Uncovered |
+|--------|---------|---------|-----------|
+| [`eng:pol-A11Y`][eng:pol-A11Y] | 11 | 5 | 6 |
+| [`eng:pol-ACCS`][eng:pol-ACCS] | 19 | 2 | 17 |
+| [`eng:pol-AGNT`][eng:pol-AGNT] | 8 | 8 | 0 |
+| **Total** | **276** | **96** | **180** |
 ```
 
 Each policy then gets a section of its own, one row per clause. The rows give the rules covering it, the deviations
@@ -157,13 +159,15 @@ definitions close the report.
 kac report frameworks
 ```
 
+<!-- transcript: examples/engineering, kac report frameworks -->
+
 ```text
-| Framework      | Standing    | References | Cited once |
-|----------------|-------------|------------|------------|
-| Azure WAF      | Inspiration | 4          | 0          |
-| DORA metrics   | Inspiration | 4          | 1          |
-| ISO 27001:2022 | Obliged     | 58         | 14         |
-| **Total**      |             | **120**    | **41**     |
+| Framework | Standing | References | Cited once |
+|-----------|----------|------------|------------|
+| Azure WAF | Inspiration | 4 | 0 |
+| DORA metrics | Inspiration | 4 | 1 |
+| ISO 27001:2022 | Obliged | 58 | 9 |
+| **Total** | | **131** | **47** |
 ```
 
 Read `Cited once` before you remove a citation. A reference cited by a single clause loses its last coverage when that
@@ -180,6 +184,8 @@ cite that reference.
 ```sh
 kac report coverage --out reports/clause-coverage.md
 ```
+
+<!-- transcript: illustration, kac report coverage --out reports/clause-coverage.md -->
 
 ```text
 wrote reports/clause-coverage.md
