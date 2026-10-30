@@ -80,7 +80,7 @@ const PAGE_FROM = {
   standards: "payments", adrs: "library", glossary: "library", explanations: "library",
 };
 
-const NUMBERED = new Set(["nfrs", "postmortems", "fixes"]);
+const NUMBERED = new Set(["postmortems"]);
 const PREFIX = {
   services: "svc", integrations: "itg", data: "dat", nfrs: "nfr", offerings: "ofr", runbooks: "rbk", fixes: "fix",
   postmortems: "pmt", deviations: "dev",

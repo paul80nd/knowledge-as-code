@@ -28,9 +28,10 @@ Each application gets a copy of every record of these types:
 | postmortems  | `examples/payments`                           |
 | deviations   | `examples/dog-fooding`                        |
 
-A copy takes its application's name as the first word of its slug, as `svc-cedar-payment-api`. A numbered type counts
-on from the application before, as `nfr-0022`. Every id a copy cites in its own application is rewritten to that
-application's copy, and so are its links, its repositories and its `owner`. Its H1 ends with the application's name.
+A copy takes its application's name as the first word of its slug, as `svc-cedar-payment-api`. A postmortem is numbered,
+and counts on from the application before, as `pmt-0007`. Every id a copy cites in its own application is rewritten to
+that application's copy, and so are its links, its repositories and its `owner`. Its H1 ends with the application's
+name.
 
 The fixed records are written once: the standards of `examples/payments` and `examples/dog-fooding`, and the ADRs,
 glossary and explanations of `examples/library`. A fixed record that cites an application's record cites Alder's copy.
