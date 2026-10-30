@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-TRUS.MALWARE
+  - std-CI.SCAN
 risk: medium
 accepted-on: "2026-10-21"
 review-by: "2027-03-07"
@@ -53,8 +54,8 @@ A consumer installing `kac`, or restoring a corpus package, takes what it contai
 
 ## How it closes
 
-A scan runs over every package before it is published, and fails the job on a finding. This record closes when that
-scan is in the publish workflows.
+Every publishing workflow scans what it publishes and fails on a finding, as [std-CI.SCAN] requires. This record
+closes when that scan runs in each of them.
 
 ## Scope
 
@@ -66,5 +67,6 @@ The `kac` package on nuget.org, the plugin served from the marketplace branch, a
 * [std-CONFIG] governs the pins the packages are built from.
 
 [ctl-corpus-validation]: ../controls/corpus-validation.md
+[std-CI.SCAN]: ../standards/workflows.md#scan-a-publishing-workflow-scans-what-it-publishes
 [std-CONFIG]: ../standards/configuration.md
 [svc-corpus-feed]: ../services/corpus-feed.md
