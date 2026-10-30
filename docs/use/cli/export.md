@@ -85,14 +85,19 @@ corpus of their own keeps the name of whoever wrote it, so each record is filed 
 
 ### A dirty tree
 
-An export records the commit it was built from. Where the tree has uncommitted changes, the run says so and the manifest
-records it:
+An export records the commit it was built from. Where what it reads has uncommitted changes, the run says so and the
+manifest records it:
 
 <!-- transcript: illustration, kac export -->
 
 ```text
 export: built from a dirty working tree, and the manifest says so. The commit it names does not reproduce it.
 ```
+
+An export reads the corpus folder and `.schema/`, wherever `.schema/` sits. A changed tracked file or an untracked file
+in either makes the tree dirty, because a record can link to any file in the corpus. A change outside both, such as
+another folder in the same repository, cannot change the export and does not count. Neither does a file git ignores,
+so a restored `.imports/` that your `.gitignore` lists never makes the tree dirty.
 
 Commit first where you are about to publish the result.
 

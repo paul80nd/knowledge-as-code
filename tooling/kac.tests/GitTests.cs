@@ -22,4 +22,23 @@ public class GitTests
             Files.DeleteTree(dir.FullName);
         }
     }
+
+    [Fact]
+    public void A_path_above_the_repository_is_left_out_of_what_counts_as_dirty()
+    {
+        var dir = Directory.CreateTempSubdirectory("kac-git-");
+        try
+        {
+            var repository = Path.Combine(dir.FullName, "corpus");
+            Directory.CreateDirectory(repository);
+            File.WriteAllText(Path.Combine(repository, "notes.md"), "the body\n");
+            Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
+
+            Assert.False(Git.Dirty(repository, ["../.schema", "notes.md"]));
+        }
+        finally
+        {
+            Files.DeleteTree(dir.FullName);
+        }
+    }
 }

@@ -17,6 +17,20 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac validate` says when git ignores the corpus folder.** `validate` reads the files git lists, so a corpus inside
+  an ignored folder, such as a scratch copy or a vendored folder, found no records. It reported `type-setup` for every
+  type folder and nothing said why. Where git ignores the folder and the run read no record, it now ends with one line
+  naming the folder, and you can move the corpus or stop git ignoring it. A corpus force-added with `git add -f` is
+  read, and prints no such line. `kac validate --json` prints no such line either, so its output stays one JSON
+  document.
+- **`kac update --add-type` adopts several types in one run.** It took one type and refused a working tree holding what
+  the previous run wrote, so adopting a set of types cost a commit for each. Name them comma-separated, as
+  `kac new --types` takes them: `kac update --add-type policies,controls`. Each arrives with its schema, root page and
+  template, and you review them as one diff. A name the template does not declare, or one already adopted, refuses the
+  whole run. `update` still refuses a working tree with uncommitted changes.
+
 ### Changed
 
 - **Every `kac` verb prints a count with its noun in the singular or the plural.** A count of one takes the
@@ -24,6 +38,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `file(s)`. The `kac validate` summary and the `kac checks` tally read `0 errors, 1 warning`. Two notes are reworded
   around their count: `kac export` names the cross-references it carried nothing for, and `kac update` names the files
   the template sends nothing to. A script matching `(s)` in the output needs its pattern changed.
+- **`kac export` counts the tree dirty only for a change in what it reads.** Any change git reported used to count, so
+  in a repository holding more than the corpus, an untracked file in another folder stamped `"dirty": true` into the
+  manifest, and the run warned that the commit does not reproduce the export. It now asks git about the corpus folder
+  and `.schema/`, wherever `.schema/` sits. A changed tracked file or an untracked file there still counts, because a
+  record can link to any file in the corpus. A change anywhere else does not. `kac update` still refuses any change in
+  the working tree, because it writes into it.
 
 ## 0.44.0 - 2026-10-30
 

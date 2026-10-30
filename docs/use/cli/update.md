@@ -3,20 +3,20 @@
 <!-- BEGIN GENERATED: usage-update -->
 
 ```text
-kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>] [--no-color] [--path <PATH>] [--policy <POLICY>] [--ref <REF>] [--yes]
+kac update [--add-type <TYPES>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>] [--no-color] [--path <PATH>] [--policy <POLICY>] [--ref <REF>] [--yes]
 ```
 
-| Option               | What it does                                                                             |
-|----------------------|------------------------------------------------------------------------------------------|
-| `--add-type <TYPE>`  | Adopt a type the template declares, and write its schema, root page and template.        |
-| `--check`            | Report what would change and write nothing. Fails where anything would.                  |
-| `--drop-type <TYPE>` | Give up a type. Refused where its folder still holds records.                            |
-| `--from <URL\|PATH>` | The repository or folder serving the template. Defaults to upstream.url in .corpus.yaml. |
-| `--no-color`         | Turn colour off. NO_COLOR in the environment does the same.                              |
-| `--path <PATH>`      | The folder inside that repository holding manifest.yaml. Defaults to upstream.path.      |
-| `--policy <POLICY>`  | How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.      |
-| `--ref <REF>`        | The branch or tag to take the template from. Defaults to upstream.ref.                   |
-| `--yes`              | Never wait on a credential prompt, for a run with nobody at the keyboard.                |
+| Option               | What it does                                                                                             |
+|----------------------|----------------------------------------------------------------------------------------------------------|
+| `--add-type <TYPES>` | Adopt types the template declares, comma-separated, and write each one's schema, root page and template. |
+| `--check`            | Report what would change and write nothing. Fails where anything would.                                  |
+| `--drop-type <TYPE>` | Give up a type. Refused where its folder still holds records.                                            |
+| `--from <URL\|PATH>` | The repository or folder serving the template. Defaults to upstream.url in .corpus.yaml.                 |
+| `--no-color`         | Turn colour off. NO_COLOR in the environment does the same.                                              |
+| `--path <PATH>`      | The folder inside that repository holding manifest.yaml. Defaults to upstream.path.                      |
+| `--policy <POLICY>`  | How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.                      |
+| `--ref <REF>`        | The branch or tag to take the template from. Defaults to upstream.ref.                                   |
+| `--yes`              | Never wait on a credential prompt, for a run with nobody at the keyboard.                                |
 
 <!-- END GENERATED: usage-update -->
 
@@ -60,7 +60,7 @@ a tree in any state:
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 8a048c1.
 update: withheld 61 files for types this corpus has not adopted.
 update: withheld 3 files for github and azure-devops that this corpus does not hold. Which system builds it is not an update's to decide.
-update: this template also declares controls, data, deviations, explanations, fixes, integrations, nfrs, offerings, policies, postmortems, processes, reports, runbooks, services, tools. Take one with kac update --add-type <name>.
+update: this template also declares controls, data, deviations, explanations, fixes, integrations, nfrs, offerings, policies, postmortems, processes, reports, runbooks, services, tools. Take any of them with kac update --add-type <name>,<name>.
 this corpus is behind its framework. These would change:
 WRITE, framework files this corpus holds differently:
   .schema/adrs.yaml
@@ -81,14 +81,16 @@ Run this in CI to find out that a corpus has fallen behind. It never pushes.
 
 ```bash
 kac update --add-type policies
+kac update --add-type policies,controls,processes
 kac update --drop-type tools
 ```
 
-Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving pages
-link to the types the corpus already has, and name the types it declined without linking to them. The pages already
-there name the new type without linking to it, because each was written while the type was still declined. A record the
-type seeds arrives with you as its owner, as [A seeded record's owner](../layers.md#a-seeded-records-owner) says. The
-run says all three, and lists each arriving line that lost a link:
+Adopting writes each type's schema, its root page and its template, and adds its name to `types:`. Name several types,
+comma-separated, to adopt them in one run and review them as one diff. The arriving pages link to the types the corpus
+already has, and name the types it declined without linking to them. The pages already there name a new type without
+linking to it, because each was written while the type was still declined. A record a type seeds arrives with you as
+its owner, as [A seeded record's owner](../layers.md#a-seeded-records-owner) says. The run says all three, and lists
+each arriving line that lost a link:
 
 <!-- transcript: illustration, kac update --add-type policies -->
 

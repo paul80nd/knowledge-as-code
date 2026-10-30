@@ -13,7 +13,8 @@ export is built to do, and the scenario proving each behaviour. [`export`](../us
 * It deletes `.dist/export/` and writes it again, so a record deleted from the corpus leaves nothing behind.
   [How a run writes it](../reference/export.md#how-a-run-writes-it)
 * It writes only under `.dist/export/`, and never into the corpus. [The tree](../reference/export.md#the-tree)
-* It records the commit and whether the tree was dirty, unknown where git could not say.
+* It records the commit, and whether the corpus folder or `.schema/` has uncommitted changes. It records unknown
+  where git could not say.
   [A dirty tree](../use/cli/export.md#a-dirty-tree)
 * It exports a draft or a lapsed record with its own state. `export.exclude:` withholds either from this corpus's own
   records, and never an inherited one.

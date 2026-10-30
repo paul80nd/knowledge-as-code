@@ -296,7 +296,8 @@ internal sealed class ExportCommand : Command<ExportSettings>
 {
     public override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
-            Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), Git.Dirty(corpus)));
+            Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus),
+                paths => Git.Dirty(corpus, paths)));
 }
 
 internal sealed class BundleCommand : Command<CorpusSettings>
@@ -375,8 +376,9 @@ internal sealed class UpdateSettings : KacSettings
     [Description("How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.")]
     public string? Policy { get; init; }
 
-    [CommandOption("--add-type <TYPE>")]
-    [Description("Adopt a type the template declares, and write its schema, root page and template.")]
+    [CommandOption("--add-type <TYPES>")]
+    [Description("Adopt types the template declares, comma-separated, and write each one's schema, root page and "
+                 + "template.")]
     public string? AddType { get; init; }
 
     [CommandOption("--drop-type <TYPE>")]

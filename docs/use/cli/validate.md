@@ -194,6 +194,21 @@ validate: skipped immutable-after-accepted and retire-not-delete, which compare 
 The name in brackets is a check id, and [`checks`](checks.md) prints what every one of them proves.
 [Troubleshooting](../troubleshooting.md) covers the findings you meet first.
 
+### A corpus in a folder git ignores
+
+`validate` reads the files git lists, so a corpus inside a folder git ignores has no records to read. Each type folder
+then reports `type-setup`, and a link to a page in the corpus does not resolve. Where the run read no record, it ends by
+naming the ignored folder:
+
+<!-- transcript: illustration, kac validate -->
+
+```text
+validated 0 documents and 9 templates, skipped 0 without frontmatter. 34 errors, 15 warnings
+validate: git ignores scratch/library/, so validate reads no record in it. Move the corpus, or stop git ignoring the folder.
+```
+
+A corpus whose records you added to git with `git add -f` is read, and the run prints no such line.
+
 ### A run under GitHub Actions
 
 `validate` prints the same report, then one line per error or warning before the counts. GitHub reads each of these

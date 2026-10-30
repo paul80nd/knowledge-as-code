@@ -97,7 +97,7 @@ public sealed class ExportSteps(Workspace ws)
 
     /// <summary>The time and the commit are fixed, so two runs over one corpus write the same bytes.</summary>
     internal static int Export(string root, string? type = null, bool? dirty = false) =>
-        Commands.Export(root, type, Now, Commit, dirty);
+        Commands.Export(root, type, Now, Commit, _ => dirty);
 
     [When("I export")]
     public void WhenIExport() => ws.Run(root => Export(root));

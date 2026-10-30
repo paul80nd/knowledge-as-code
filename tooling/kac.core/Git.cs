@@ -74,6 +74,21 @@ public static class Git
     public static bool? Dirty(string root) =>
         Run(root, "status", "--porcelain") is { } status ? status.Trim().Length > 0 : null;
 
+    /// <summary>
+    /// Asks about <paramref name="paths"/> alone, each relative to <paramref name="root"/>. A path above the repository
+    /// is left out, because git refuses to answer for it. Null where git could not answer.
+    /// </summary>
+    public static bool? Dirty(string root, IReadOnlyList<string> paths)
+    {
+        if (Prefix(root) is not { } prefix) return null;
+
+        var depth = prefix.Count(c => c == '/');
+        string[] inside = [.. paths.Where(p => p.Split('/').TakeWhile(s => s == "..").Count() <= depth)];
+        if (inside.Length == 0) return false;
+
+        return Run(root, ["status", "--porcelain", "--", .. inside]) is { } status ? status.Trim().Length > 0 : null;
+    }
+
     public static WorkingTree Status(string root) => Dirty(root) switch
     {
         true => WorkingTree.Dirty,
