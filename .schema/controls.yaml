@@ -82,7 +82,7 @@ fields:
     required: false
     required-when: 'mechanism != not-enforced'
     type: enum
-    values: [continuous, per-pr, per-deploy, daily, monthly, quarterly, annual]
+    values: [continuous, per-commit, per-pr, per-deploy, daily, monthly, quarterly, annual]
     description: How often it runs, or `continuous` where the check never stops.
 
   last-verified:

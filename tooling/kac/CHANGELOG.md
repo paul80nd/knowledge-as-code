@@ -30,11 +30,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   id two policies use with no signpost either way, once for the two. A scoped signpost and a `retired` policy form no
   pair. `part-ref` already fails a signpost to a clause that does not exist. Add the missing signpost, or give one
   clause another id.
-- **A control's `mechanism` accepts `local-hook`.** A pre-commit check or a Claude Code hook had no value of its own,
-  so its author chose one that misdescribed it, or `not-enforced`, which the coverage report counts as unchecked.
-  `kac validate` now accepts `local-hook`, and `kac report` counts it as a check. The review view and the
+- **A control accepts `local-hook` as its `mechanism`, and `per-commit` as its `frequency`.** A pre-commit check or a
+  Claude Code hook had no value of its own, so its author chose one that misdescribed it, or `not-enforced`, which the
+  coverage report counts as unchecked. `kac report` counts a `local-hook` control as a check. The review view and the
   `standards-review` skill still leave a rule out of a review only for a `ci` or `runtime-alert` control, because a
-  developer can bypass a hook. Run `kac update` to take the value.
+  developer can bypass a hook. Run `kac update` to take both values.
 
 ### Changed
 

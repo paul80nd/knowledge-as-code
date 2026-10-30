@@ -51,7 +51,7 @@ three section keys are always present, because this type requires all three.
 | `fields.status`              | string                   | `active`, `planned` or `retired`                                                                   |
 | `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty                                                |
 | `fields.mechanism`           | string                   | how the check happens, in the six values below                                                     |
-| `fields.frequency`           | string, or null          | how often it runs, in the seven values below                                                       |
+| `fields.frequency`           | string, or null          | how often it runs, in the eight values below                                                       |
 | `fields.last-verified`       | object, string, or null  | the last manual run: `at` and `by` are strings, and `method` is always null. Or the string `never` |
 | `fields.evidence`            | string, or null          | where the proof of a run lives                                                                     |
 | `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`                                                    |
@@ -73,8 +73,8 @@ three section keys are always present, because this type requires all three.
 * **`not-enforced`.** The rule is written, and nothing checks it. The author recorded that gap, so report it as the
   honest state it is.
 
-`frequency` takes one of seven values: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
-`annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
+`frequency` takes one of eight values: `continuous`, `per-commit`, `per-pr`, `per-deploy`, `daily`, `monthly`,
+`quarterly` or `annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
 
 **Give `last-verified` beside any answer from a `manual` control**: who ran the check, from `by`, and the day, from
 `at`. It is set on that mechanism alone, because no log records a manual run, and a day long past or `never` is a

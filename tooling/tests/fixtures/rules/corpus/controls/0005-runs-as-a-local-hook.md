@@ -6,8 +6,8 @@ status: active
 owner: human:alex.doe
 verifies: [std-ERRORS.WHAT]
 mechanism: local-hook
-frequency: continuous
-evidence: The hook script, `.claude/hooks/status-codes.sh`.
+frequency: per-commit
+evidence: The hook script, `.githooks/pre-commit`.
 review-by: "2030-01-01"
 ---
 
@@ -17,12 +17,12 @@ review-by: "2030-01-01"
 
 ## What it checks
 
-A Claude Code hook checks, on every edit a session makes, that a failure is answered with a status code.
+A pre-commit hook checks, on every commit, that a failure is answered with a status code.
 
 ## How it works
 
-`mechanism` is `local-hook`, `frequency` and `evidence` are filled in, and nothing reports it. That silence is the
-assertion: without `local-hook` in the schema's values, this record fails `enum`.
+`mechanism` is `local-hook`, `frequency` is `per-commit`, `evidence` is filled in, and nothing reports it. That silence
+is the assertion: without either value in the schema, this record fails `enum`.
 
 ## Coverage and gaps
 
