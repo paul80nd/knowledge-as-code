@@ -371,6 +371,8 @@ public static class Update
         if (add is not null)
         {
             var adding = Adding(add);
+            if (adding.Count == 0)
+                return Refuse("update: --add-type names no type. Name one, or several separated by commas.");
 
             if (adding.Where(t => !declared.Contains(t, StringComparer.Ordinal)).ToList() is { Count: > 0 } unknown)
                 return Refuse($"update: this template declares no type called "
@@ -418,7 +420,7 @@ public static class Update
     }
 
     /// <summary>
-    /// The types <c>--add-type</c> names, comma-separated as <c>new --types</c> takes them, each once and in order.
+    /// The types <c>--add-type</c> names, comma-separated as <c>new --types</c> takes them, each once and sorted.
     /// </summary>
     public static IReadOnlyList<string> Adding(string add) =>
     [

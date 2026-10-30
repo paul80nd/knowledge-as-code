@@ -547,6 +547,7 @@ public class UpdateTests
     [InlineData("adrs,nonesuch,elsewhere", null, "declares no type called 'elsewhere' or 'nonesuch'.")]
     [InlineData("policies", null, "'policies' is already adopted")]
     [InlineData("adrs,policies", null, "already adopts policies.")]
+    [InlineData(" , ", null, "names no type")]
     [InlineData(null, "adrs", "not adopted")]
     public void An_adoption_the_corpus_cannot_make_is_refused(string? add, string? drop, string says)
     {

@@ -68,13 +68,13 @@ public class CommandsTests
     [InlineData("", null)]
     public void Validate_names_the_corpus_folder_git_ignores(string ignore, string? said)
     {
-        var repository = Path.Combine(Path.GetTempPath(), "kac-commands-" + Guid.NewGuid().ToString("n")[..12]);
-        var corpus = Path.Combine(repository, "scratch", "corpus");
-        Directory.CreateDirectory(corpus);
-        File.WriteAllText(Path.Combine(repository, ".gitignore"), ignore);
-        File.WriteAllText(Path.Combine(corpus, ".corpus.yaml"), "");
+        var repository = Directory.CreateTempSubdirectory("kac-commands-").FullName;
         try
         {
+            var corpus = Path.Combine(repository, "scratch", "corpus");
+            Directory.CreateDirectory(corpus);
+            File.WriteAllText(Path.Combine(repository, ".gitignore"), ignore);
+            File.WriteAllText(Path.Combine(corpus, ".corpus.yaml"), "");
             Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
 
             Assert.Equal(said, Commands.Ignored(corpus, records: 0));
@@ -108,7 +108,8 @@ public class CommandsTests
     {
         var root = Fixture("export");
 
-        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, _ => null);
+        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+            _ => null);
 
         Assert.Equal(1, exit);
         Assert.False(Directory.Exists(Path.Combine(root, Dist.Export)));
