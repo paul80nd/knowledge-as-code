@@ -89,15 +89,17 @@ reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `
 every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
 The file is optional. A first run on another corpus, or on another machine, finds its own exclusions.
 
-This repository's lists, in `engineering`, `library` and `dog-fooding`, exclude these:
+This repository's lists, in `engineering` and `dog-fooding`, exclude these:
 
 | Case                                      | Why no session can show the rule                                                         |
 |-------------------------------------------|------------------------------------------------------------------------------------------|
 | `engineering/house/billing-new-solution`  | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
 | `engineering/house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
 | `engineering/house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
-| `library/house/notices-down`              | The sandbox blocks the fetch of the record's source, where a session reads `owner`.      |
 | `dog-fooding/house/golden-red-in-ci`      | The sandbox stops `dotnet`, which fails to create a NuGet mutex under `/tmp`.            |
+
+`library/house/notices-down` is not excluded. Its `comply-` grader passes a reply saying that no record names whom to
+page, and the export alone gives a session that answer.
 
 The cases in this repository's [`cases/engineering/`](cases/engineering/) test these rules:
 

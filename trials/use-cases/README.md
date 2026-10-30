@@ -76,9 +76,9 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A symptom that matches a verified fix gets the fix's resolution                           | `plugin/payments/house/two-pending-amounts`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
 | A draft fix is a lead, not a resolution                                                   | `plugin/payments/house/unverified-fix`                  | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
 | A question about a past failure gets the incident's account                               | `plugin/payments/house/has-this-happened-before`        | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
-| A failing service's owner comes from its service record                                   | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A question about whom to page learns that no record names an on-call contact              | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
 | A session that must depart from a MUST requests a deviation, and accepts nothing itself   | `plugin/engineering/house/request-a-deviation`          | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
-| A term the glossary lacks becomes a finding, not a guess                                  | `plugin/library/house/undefined-term`                   | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
+| A term the glossary lacks is offered as a finding, and its meaning marked unconfirmed     | `plugin/library/house/undefined-term`                   | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
 | A new reader tells two of the estate's words apart                                        | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
 | A new reader learns how a part of the estate works from its explanation                   | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
 | A new reader learns what the estate offers, and what is not live yet                      | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
@@ -112,9 +112,9 @@ the condition is in the Intent column.
 | `deviations`   | respect, inside its scope and period                | contribute | A session that must depart from a MUST requests a deviation, and accepts nothing itself   |
 | `deviations`   | respect, inside its scope and period                | assure     | A question about open departures gets each one with its review date                       |
 | `glossary`     | inform                                              | build      | New code takes the estate's word for a concept                                            |
-| `glossary`     | inform                                              | contribute | A term the glossary lacks becomes a finding, not a guess                                  |
+| `glossary`     | inform                                              | contribute | A term the glossary lacks is offered as a finding, and its meaning marked unconfirmed     |
 | `glossary`     | inform                                              | learn      | A new reader tells two of the estate's words apart                                        |
-| `services`     | inform                                              | operate    | A failing service's owner comes from its service record                                   |
+| `services`     | inform                                              | operate    | A question about whom to page learns that no record names an on-call contact              |
 | `data`         | inform                                              | build      | Code storing personal data keeps the retention its data record states                     |
 | `integrations` | inform                                              | design     | A design that would use a retired integration learns its successor                        |
 | `offerings`    | inform                                              | learn      | A new reader learns what the estate offers, and what is not live yet                      |

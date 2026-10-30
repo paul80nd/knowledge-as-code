@@ -133,3 +133,10 @@ The cut and the reading by hand ran as subagents, which the list cost does not i
 #952 changed the graders of five cases this run scored: `returns-api-routes`, `stock-v1-retirement`,
 `order-repository-tests`, `dotnet-ci` and `request-logging`. This run has no workspace left to regrade them against.
 Its kept folders still exist, but each has lost its trace and every file its session wrote. The verdicts above stand.
+
+## The #1246 regrade
+
+#1246 changed `comply-deprecation-header` and `comply-sunset-header` in `stock-v1-retirement`. Each passed where its
+word appeared anywhere in `stock/app.py`. Each now passes only where that file sets the header to a date, or to a
+value the code computes. This run has no workspace of the case left to regrade them against, as the #952 regrade
+found. The verdicts above stand.

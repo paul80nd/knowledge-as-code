@@ -50,11 +50,13 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
     Then in at least 2 of 3 runs the reply cites pmt-0002 and states its cause
 
   @intent:inform @type:services @trial:plugin/library/house/notices-down
-  Scenario: A failing service's owner comes from its service record
-    No baseline: the case is excluded, because the sandbox blocks the fetch of the owner from the record's source.
+  Scenario: A question about whom to page learns that no record names an on-call contact
+    No baseline: the case ran as a pilot only, while it was excluded for needing a fetch of the record's owner.
     In the pilot the plugin reply cited svc-notices and said no record names whom to page.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
+    #1038 kept the services type as it is: a record's owner keeps the record true, and is not an on-call contact.
     Given svc-notices names human:mira.okonjo as its owner
+    And no record names an on-call contact
     And a task reporting that overdue notices stopped going out, and asking who to page
     When the session answers
-    Then in at least 2 of 3 runs the reply names mira.okonjo and cites svc-notices
+    Then in at least 2 of 3 runs the reply says no record names whom to page, and cites svc-notices
