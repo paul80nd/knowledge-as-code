@@ -1,0 +1,44 @@
+{
+  "type": "fixes",
+  "path": "fixes/gh-refuses-a-job-log.md",
+  "trust": "unverified",
+  "fields": {
+    "id": "fix-gh-refuses-a-job-log",
+    "title": "gh refuses to print a failing CI job's log",
+    "status": "draft",
+    "symptom-keywords": [
+      "##[error]",
+      "--allow-escape-sequences",
+      "--log-failed",
+      "actions",
+      "ci",
+      "failing check",
+      "gh",
+      "gh api",
+      "gh run view",
+      "job log",
+      "logs will be available when it is complete",
+      "red check",
+      "run is still in progress",
+      "terminal escape sequences"
+    ],
+    "applies-to": null,
+    "verified": null,
+    "review-by": "2027-04-30",
+    "tags": [
+      "ci",
+      "debugging",
+      "github-cli"
+    ]
+  },
+  "sections": {
+    "Symptom": "You want the `##[error]` line behind a red check on a pull request, and `gh` prints no log.\n\n`gh run view --job <job-id> --log-failed` refuses while any other job in the run is still going:\n\n```text\nrun is still in progress; logs will be available when it is complete\n```\n\n`gh api` against the job's log refuses as soon as its output is not a terminal. It prints this, and writes nothing to the file or the pipe you gave it:\n\n```text\nthe response contains terminal escape sequences; pass --allow-escape-sequences to output it anyway\n```\n\nPiped to `grep`, the call finds no match, which reads as a log with no error in it.",
+    "Environment": "The `gh` CLI, seen on 2.100.0, reading a job of `.github/workflows/kac.yml` on this repository. The job's log contains ANSI colour codes.",
+    "Cause": "`gh run view` fetches logs for a whole run, so it waits until every job has finished. `gh api` reads one job's log straight away. It refuses to print terminal escape sequences unless you pass `--allow-escape-sequences`. The refusal goes to standard error, so a file or a pipe receives no log.",
+    "Resolution": "1. Read the job id from the check's URL, which `gh pr checks <pr>` prints. It is the number after `/job/`.\n2. Fetch that job's log with `gh api`, allow the escape sequences, and strip them with `sed`:\n\n   ```sh\n   gh api --allow-escape-sequences repos/paul80nd/knowledge-as-code/actions/jobs/<job-id>/logs \\\n     | sed 's/\\x1b\\[[0-9;]*m//g' | cut -c30-\n   ```\n\n   `cut -c30-` drops the timestamp at the head of each line.\n\n3. Add `| grep -n '##\\[error\\]'` to go straight to the error line.\n\nThe command prints the log as plain text, and `grep -c $'\\x1b'` over its output counts no escape byte. It works while the rest of the run is still in progress.",
+    "Why it happens": "`gh` guards a terminal against escape sequences an API response could carry, and treats a job log as one of those responses. `gh run view` has no `--allow-escape-sequences` flag, so only `gh api` can pass the guard."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/dog-fooding/fixes/gh-refuses-a-job-log.md"
+  }
+}

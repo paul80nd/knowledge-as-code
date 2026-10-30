@@ -28,12 +28,12 @@
     "tags": null
   },
   "sections": {
-    "What it does": "Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It stores no state and caches nothing. The edge does the caching.\n\n**Every request arrives through the edge.** [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/4656dba48f651672368cc092d7826758c46976e1/examples/library/services/covers-cdn.md) forwards to this service as its origin, and the edge caches the resized result. Nothing calls this service directly.",
+    "What it does": "Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It stores no state and caches nothing. The edge does the caching.\n\n**Every request arrives through the edge.** [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/library/services/covers-cdn.md) forwards to this service as its origin, and the edge caches the resized result. Nothing calls this service directly.",
     "Where it lives": "* **Repository**: [`thumbnailer`](https://git.example.com/example-libraries/thumbnailer)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-thumbnailer-<env>`",
     "Dependencies": "None. It reads blob storage and returns an image.",
-    "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It owns nothing in that container: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/4656dba48f651672368cc092d7826758c46976e1/examples/library/services/covers-cdn.md) records both."
+    "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It owns nothing in that container: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/library/services/covers-cdn.md) records both."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4656dba48f651672368cc092d7826758c46976e1/examples/library/services/thumbnailer.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/library/services/thumbnailer.md"
   }
 }
