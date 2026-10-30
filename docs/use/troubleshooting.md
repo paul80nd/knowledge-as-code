@@ -128,7 +128,7 @@ The five you are most likely to meet:
 The summary counts it:
 
 ```text
-validated 13 document(s) and 8 template(s), skipped 1 without frontmatter. 0 error(s), 0 warning(s)
+validated 13 documents and 8 templates, skipped 1 without frontmatter. 0 errors, 0 warnings
 ```
 
 A document is validated only if it has a YAML frontmatter block. Frontmatter is how a document opts into its type's

@@ -68,11 +68,11 @@ running `generate`, then `validate`, then `git add -A`:
 
 ```text
 new: did not write .github/dependabot.yml, .github/workflows/kac.yml, azure-pipelines.yml: this corpus is built by none.
-new: wrote 126 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
+new: wrote 126 files for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
 new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
-updated 1 of 40 generated file(s).
-validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+updated 1 of 40 generated files.
+validated 3 documents and 18 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.
@@ -122,7 +122,7 @@ A clean `validate` prints the counts and exits `0`. Its second line names the ch
 earlier revision, which run only when you name one with `--since`:
 
 ```text
-validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+validated 13 documents and 8 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
 validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 

@@ -53,7 +53,7 @@ kac pack
 
 ```text
 wrote .dist/package/example-engineering.0.16.0.nupkg
-pack: sealed 47 file(s) as example-engineering 0.16.0, cited as 'eng:'.
+pack: sealed 47 files as example-engineering 0.16.0, cited as 'eng:'.
 pack: 0.16.0 is content-version from .corpus.yaml. A registry never replaces a published version.
 ```
 

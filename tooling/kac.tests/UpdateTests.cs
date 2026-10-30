@@ -409,7 +409,7 @@ public class UpdateTests
             readInPlace: false, _ => false, Anonymous);
 
         Assert.Equal(
-            "update: withheld 3 file(s) for github and azure-devops that this corpus does not hold. Which "
+            "update: withheld 3 files for github and azure-devops that this corpus does not hold. Which "
             + "system builds it is not an update's to decide.",
             Update.CiWithheld(plan));
     }
@@ -560,7 +560,7 @@ public class UpdateTests
         var asked = Adopt(corpus, ["adrs"], drop: "adrs");
 
         Assert.True(asked.Failed);
-        Assert.Contains("holds 2 record(s)", asked.Problem);
+        Assert.Contains("holds 2 records", asked.Problem);
     }
 
     [Fact]

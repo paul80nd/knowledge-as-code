@@ -172,7 +172,8 @@ public static class RuleExpr
                         + $"Known: {string.Join(", ", Functions.Keys.Order(StringComparer.Ordinal))}.");
                 if (call.Args.Count != sig.Args.Length)
                     throw new RuleExprException(
-                        $"'{call.Name}' takes {sig.Args.Length} argument(s), got {call.Args.Count}, in '{source}'.");
+                        $"'{call.Name}' takes {Counted.Of(sig.Args.Length, "argument")}, got {call.Args.Count}, "
+                        + $"in '{source}'.");
                 for (var i = 0; i < call.Args.Count; i++)
                     Expect(TypeOf(call.Args[i], source), sig.Args[i], call.Name, source);
                 return sig.Returns;

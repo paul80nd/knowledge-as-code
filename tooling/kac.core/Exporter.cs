@@ -375,9 +375,11 @@ public static class Exporter
             { Records.Count: > 0 and var n } when n < theirs.StatedRecords =>
                 $"with {n} of the {theirs.StatedRecords} record files its manifest counts",
             { Records.Count: > 0 } => null,
-            { PartLines.Count: > 0 and var n } => $"with {Count(n, "part line")} and no record files",
-            { StatedRecords: > 0 and var n } => $"with no record files, and its manifest counts {Count(n, "record")}",
-            { StatedParts: > 0 and var n } => $"with no record files, and its manifest counts {Count(n, "part line")}",
+            { PartLines.Count: > 0 and var n } => $"with {Counted.Of(n, "part line")} and no record files",
+            { StatedRecords: > 0 and var n } =>
+                $"with no record files, and its manifest counts {Counted.Of(n, "record")}",
+            { StatedParts: > 0 and var n } =>
+                $"with no record files, and its manifest counts {Counted.Of(n, "part line")}",
             _ => null
         };
 
@@ -385,8 +387,6 @@ public static class Exporter
             ? null
             : $"'{theirs.Type}' arrives from {shortcode} {fault}. "
               + $"Re-export and re-pack {shortcode}, then run kac restore.";
-
-        static string Count(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
     }
 
     /// <summary>

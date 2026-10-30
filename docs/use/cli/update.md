@@ -56,8 +56,8 @@ a tree in any state:
 
 ```text
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 8a048c1.
-update: withheld 61 file(s) for types this corpus has not adopted.
-update: withheld 3 file(s) for github and azure-devops that this corpus does not hold. Which system builds it is not an update's to decide.
+update: withheld 61 files for types this corpus has not adopted.
+update: withheld 3 files for github and azure-devops that this corpus does not hold. Which system builds it is not an update's to decide.
 update: this template also declares controls, data, deviations, explanations, fixes, integrations, nfrs, offerings, policies, postmortems, processes, reports, runbooks, services, tools. Take one with kac update --add-type <name>.
 this corpus is behind its framework. These would change:
 WRITE, framework files this corpus holds differently:
@@ -68,7 +68,7 @@ run:  kac update
 A corpus already in step says so and exits `0`:
 
 ```text
-update: in step, 56 file(s) compared.
+update: in step, 56 files compared.
 ```
 
 Run this in CI to find out that a corpus has fallen behind. It never pushes.
@@ -105,7 +105,7 @@ A plain `update` that seeds a page the template has gained lists its lines the s
 Dropping is the asymmetric half. `update` refuses while the folder still holds records:
 
 ```text
-update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. Delete them yourself and run this
+update: tools/ holds 3 records, and deleting a record is deleting knowledge. Delete them yourself and run this
 again, or leave 'tools' adopted.
 ```
 

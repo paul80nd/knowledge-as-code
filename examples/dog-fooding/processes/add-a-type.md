@@ -64,7 +64,7 @@ folder and no page fails `type-setup`. Removing a type reverses these steps.
 17. Change the type count in that page's opening sentence, which spells it as a word. Reword every tracked `.md` and
     `.yaml` file using that word about something else. `No_other_file_states_that_count` fails on each of them.
 18. Change the count in the transcripts in `docs/use/getting-started.md` and `docs/use/cli/new.md`. Both quote
-    `validated 3 document(s) and N template(s)`, where N is the number of types. Nothing checks them.
+    `validated 3 documents and N templates`, where N is the number of types. Nothing checks them.
 19. Write at least one record, even a throwaway. Most type folders here hold none, so their rules have never run
     against anything.
 20. Run `kac generate` in `template/` and in every corpus that adopted the type. It writes the `_index.md` a corpus

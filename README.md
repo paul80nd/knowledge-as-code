@@ -67,7 +67,7 @@ When a record breaks its schema, `kac validate` reports the file, the check and 
 services/catalogue-web.md
   error  [link-resolves]  link target 'missing-runbook.md' does not resolve.  (services/catalogue-web.md:76)
 
-validated 28 document(s) and 9 template(s), skipped 0 without frontmatter. 1 error(s), 0 warning(s)
+validated 28 documents and 9 templates, skipped 0 without frontmatter. 1 error, 0 warnings
 ```
 
 ## Get started

@@ -112,7 +112,7 @@ kac restore
 ```text
 wrote .imports/eng
 restore: example-engineering 0.16.0 as 'eng:'.
-restore: 1 fetched, 0 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
+restore: 1 fetched, 0 already current. 1 resolved version written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 ### A repeat run
@@ -121,7 +121,7 @@ Nothing is fetched twice. If `.imports/<shortcode>/` already contains the resolv
 
 ```text
 restore: example-engineering 0.16.0 as 'eng:'. Already current.
-restore: 0 fetched, 1 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
+restore: 0 fetched, 1 already current. 1 resolved version written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 Where the lock still satisfies the range, `kac` never asks the registry, so two restores of an unchanged `.corpus.yaml`

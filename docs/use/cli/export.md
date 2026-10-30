@@ -45,7 +45,7 @@ wrote .dist/export/glossary/gls-knowledge-as-code.json
 wrote .dist/export/glossary/gls-search.json
 wrote .dist/export/glossary/terms.jsonl
 wrote .dist/export/manifest.json
-export: wrote 5 file(s) for glossary.
+export: wrote 5 files for glossary.
 ```
 
 ### One type

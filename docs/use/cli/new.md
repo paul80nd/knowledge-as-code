@@ -96,11 +96,11 @@ missing answer exits rather than waiting, because a hung pipeline is worse than 
 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
-new: wrote 128 file(s) for my-corpus, taken from /path/to/template.
+new: wrote 128 files for my-corpus, taken from /path/to/template.
 new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
-updated 1 of 40 generated file(s).
-validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+updated 1 of 40 generated files.
+validated 3 documents and 18 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.

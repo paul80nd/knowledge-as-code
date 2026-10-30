@@ -30,7 +30,7 @@ public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string 
         var warnings = shown.Count - errors;
         var summary = new System.Text.StringBuilder()
             .Append($"### {(errors > 0 ? ErrorIcon : WarningIcon)} `kac validate` for {corpus}: ")
-            .Append($"{Counted(errors, "error")}, {Counted(warnings, "warning")}\n\n")
+            .Append($"{Counted.Of(errors, "error")}, {Counted.Of(warnings, "warning")}\n\n")
             .Append("| Severity | File | Check | Message |\n")
             .Append("|----------|------|-------|---------|\n");
 
@@ -42,8 +42,6 @@ public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string 
         }
 
         return summary.ToString();
-
-        static string Counted(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
     }
 
     /// <summary>

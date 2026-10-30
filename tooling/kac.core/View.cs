@@ -86,8 +86,8 @@ public static class View
         var rules = standards.Sum(s => s.Rules.Count);
         var path = source.Included.FirstOrDefault(c => c.View == BuildIndex)?.Path ?? "views/build-index.md";
 
-        return $"{Stating(source, rules)}, under {Count(standards.Count, "standard")}. {Binds} `{path}` inside this "
-               + $"plugin lists every rule by title, under its standard. {ReadFullText(source)}\n";
+        return $"{Stating(source, rules)}, under {Counted.Of(standards.Count, "standard")}. {Binds} `{path}` "
+               + $"inside this plugin lists every rule by title, under its standard. {ReadFullText(source)}\n";
     }
 
     /// <summary>The sentence carrying the leading word, binds, which the index and its pointer share.</summary>
@@ -95,9 +95,7 @@ public static class View
 
     private static string Stating(Source source, int rules) =>
         $"{Corpus(source)}{(source.Manifest.ContentVersion is { } version ? $" {version}" : "")} states "
-        + $"{Count(rules, "rule")} for code in this repository";
-
-    private static string Count(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
+        + $"{Counted.Of(rules, "rule")} for code in this repository";
 
     /// <summary>Opens on what each keyword, status and control means, stated as facts and with no instruction.</summary>
     private static string RenderReview(Source source)

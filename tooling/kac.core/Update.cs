@@ -149,8 +149,9 @@ public static class Update
         if (plan.DeclinedCiSystems.Count == 0) return null;
 
         var systems = CiSystem.All.Where(s => plan.DeclinedCiSystems.Contains(s, StringComparer.Ordinal));
-        return $"update: withheld {plan.DeclinedCiSystems.Count} file(s) for {string.Join(" and ", systems)} that this "
-               + "corpus does not hold. Which system builds it is not an update's to decide.";
+        return $"update: withheld {Counted.Of(plan.DeclinedCiSystems.Count, "file")} for "
+               + $"{string.Join(" and ", systems)} that this corpus does not hold. Which system builds it is not an "
+               + "update's to decide.";
     }
 
     /// <summary>
@@ -394,9 +395,9 @@ public static class Update
         var folder = type.Folder;
         var records = RecordsUnder(corpusFiles, folder);
         if (records.Count > 0)
-            return Refuse($"update: {folder}/ holds {records.Count} record(s), and deleting a record is "
-                          + $"deleting knowledge. Delete them yourself and run this again, or leave "
-                          + $"'{dropping}' adopted.");
+            return Refuse($"update: {folder}/ holds {Counted.Of(records.Count, "record")}, and deleting a record is "
+                          + $"deleting knowledge. Delete {(records.Count == 1 ? "it" : "them")} yourself and run "
+                          + $"this again, or leave '{dropping}' adopted.");
 
         return Accept(new Adoption(
             [.. held.Where(t => !t.Equals(dropping, StringComparison.Ordinal))],

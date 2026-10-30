@@ -154,8 +154,8 @@ public static class Breadcrumb
     /// </summary>
     private static string Line(string type, Contribution held)
     {
-        var records = $"{held.Records} record{(held.Records == 1 ? "" : "s")}";
-        var entries = $"{held.Parts} entr{(held.Parts == 1 ? "y" : "ies")}";
+        var records = Counted.Of(held.Records, "record");
+        var entries = Counted.Of(held.Parts, "entry", "entries");
 
         var body = (held.Parts > 0, held.Records > 0) switch
         {
