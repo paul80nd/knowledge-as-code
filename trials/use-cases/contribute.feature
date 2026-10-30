@@ -28,9 +28,9 @@ Feature: Contribute. A session writing back sends what it learned by the route i
   @intent:inform @type:glossary @trial:plugin/library/house/undefined-term
   Scenario: A term the glossary lacks is offered as a finding, and its meaning marked unconfirmed
     Baseline: against a Then that asked for a drafted finding, the plugin arm met it in 0 of 3 runs.
-    Every plugin reply called its meaning unconfirmed and offered a finding, and no none session did the task.
-    #1041 kept glossary-lookup offering a missing term, so an offered finding meets the Then.
+    Every plugin reply called its meaning unconfirmed and offered a finding. No none session did the task.
     Measured in trials/plugin/runs/2026-10-21-989-contribute.md.
+    #1041 kept glossary-lookup offering a missing term, so an offered finding meets the Then.
     Given gls-example-libraries does not define a term the task uses for a business concept
     And a task asking for code that depends on what that term means
     When the session meets the term
