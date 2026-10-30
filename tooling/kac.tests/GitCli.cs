@@ -37,7 +37,11 @@ internal static class GitCli
         {
             using var p = Process.Start(psi);
             if (p is null) return false;
+            // Drain both streams first: Windows git warns per file on line endings, and an unread pipe blocks it.
+            var stdout = p.StandardOutput.ReadToEndAsync();
+            var stderr = p.StandardError.ReadToEndAsync();
             p.WaitForExit();
+            Task.WaitAll(stdout, stderr);
             return p.ExitCode == 0;
         }
         catch (Win32Exception)
