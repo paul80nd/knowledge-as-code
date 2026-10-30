@@ -94,30 +94,41 @@ without anyone adding a marketplace by hand.
 record one of them asks for. Ask it before you plan a session's work here, because a finding nobody triaged is work
 nobody has seen. Start it from inside a corpus, such as `examples/dog-fooding`, because this root has no `.corpus.yaml`.
 
-**Use the skills, and then raise a finding where they let you down.** This is the one corpus whose subject is the
-repository you are working in, so a session here is the only reader who can tell what it is missing. Raise one for
-whichever of these happened:
-
-* a question one of the skills should have answered and could not
-* a record that is missing, or one whose wording sent you the wrong way
-* a lookup that would have helped, that you only thought of afterwards
-* something the plugin cannot do that would have made it worth reaching for
-* something about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/), which a session
-  meets the same way and by using it
-
-**Load `raise-finding` and let it write the issue.** It writes the body, the provenance and the label in the shape the
-next run reads. Say what you are about to raise in the reply that closes the session, and let the developer answer.
-
 **The clause owner here is the developer you are talking to.** A consumer elsewhere files a deviation request because
 they cannot reach that person. You can, so put the departure to them in the conversation, and let `request-deviation`
 write the issue where they say one belongs. The record itself lands in
 [`examples/dog-fooding/deviations/`](examples/dog-fooding/deviations/) once they have accepted it.
 
-**Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
-it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
-sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. In a lane with an epic, the epic is `1`
-and its stories count up from `2` in delivery order. An issue left off the board is one the developer never sees.
-[`issue-tracker.md`](.claude/agents-config/issue-tracker.md#project-board) has the ids and the commands.
+**The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
+`examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
+changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)
+carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
+skill does.
+
+## Where a skill or a page let you down
+
+A session here is the only reader who can tell what this repository's guidance is missing. **Where the page lives
+decides where you say so.** A lookup or a record comes from the plugin, a read-only copy, so it gets an issue. The
+agent configuration gets one too, because every session meets it the same way. The `CLAUDE.md` files, the playbooks
+under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the writing skills are one edit away, so they get a
+word in the reply that closes the session.
+
+Raise a finding for whichever of these happened:
+
+* a question a lookup should have answered and could not, or a lookup you only thought of afterwards
+* a record that is missing, or one whose wording sent you the wrong way
+* something the plugin cannot do that would have made it worth reaching for
+* something about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/)
+
+**Load `raise-finding` and let it write the issue.** It writes the body, the provenance and the label in the shape the
+next run reads. Say what you are about to raise in the reply that closes the session, and let the developer answer.
+
+**Place what you filed on the board.** `raise-finding` and `request-deviation` file the issue and stop, because a
+corpus elsewhere has no board for them to know about. This repository does: project 3, where each issue takes a
+`Status`, a `Phase` and a `Rank`. The board sorts each `Phase` lane by `Rank`, so an issue without one sits in no order.
+In a lane with an epic, the epic is `1` and its stories count up from `2` in delivery order. An issue left off the board
+is one the developer never sees. [`issue-tracker.md`](.claude/agents-config/issue-tracker.md#project-board) has the ids
+and the commands.
 
 **The board runs by stage, and each stage lane has one epic.** A lane's name starts with its stage: `1` before the
 trial, `2` the trial, `3` the route to v1 and `4` future functionality. The stages run in that order. Every issue in a
@@ -126,31 +137,19 @@ stage lane is a sub-issue of that lane's epic alone, and the epic closes when it
 **A finding goes to `Intake`.** Triage then moves it into the stage lane it is worth delivering with, or into
 `4 Future functionality`. Neither `Intake` nor `4 Future functionality` has an epic.
 
-**The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
-`examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
-changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)
-carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
-skill does.
-
-## Where a page or a skill let you down
-
-The plugin is a read-only copy, so an issue is the only way an agent writes back to it. The guidance is not. The
-`CLAUDE.md` files, the playbooks under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the four writing
-skills all sit in the working tree, one edit from whoever is reading your reply.
-
-Tell the developer, in the reply that closes the session, whichever of these happened:
+Tell the developer in the reply whichever of these happened in a `CLAUDE.md`, a playbook or a writing skill:
 
 * an instruction that sent you the wrong way, or that you had to read twice before you could act on it
-* a question one of those pages should have answered and did not
+* a question one of them should have answered and did not
 * an instruction you would have followed anyway, because Claude Code already asks for it
 * a playbook whose steps did not fit the work, or work no playbook covered
 * a rule in a writing skill that misfired on the surface you were writing
 
-**Say nothing where none of that happened.** Most sessions have nothing to say here. One invented to fill the space
-costs the developer a read and a check, and leaves them nothing.
+Raise no issue for these. The file is in front of you both, so the developer decides on the spot whether the edit is
+worth making.
 
-**Raise no issue either.** The file is in front of you both, so the developer decides on the spot whether the edit is
-worth making, and says so where it is.
+**Say nothing where none of this happened.** Most sessions have nothing to say here. One invented to fill the space
+costs the developer a read and a check, and leaves them nothing.
 
 ## Before you raise a pull request
 
