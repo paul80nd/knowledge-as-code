@@ -36,7 +36,8 @@ lineage:
     verdict, and *Consequences* is required where MADR leaves it optional. A fifth status, `rejected`, keeps a
     proposal the team turned down. A supersession is a pair of fields checked both ways, not a phrase inside the
     status. MADR's *Confirmation* is a separate type here: a standard cites the ADR it distils, and a control checks
-    the standard. MADR's `consulted` and `informed` are not kept
+    the standard. MADR's `consulted` and `informed` are not kept. `deciders` keeps MADR 3's name, where MADR 4 writes
+    `decision-makers`, because the older name is already clear
 id:
   prefix: adr
   style: numbered
