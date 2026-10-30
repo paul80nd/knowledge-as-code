@@ -76,8 +76,7 @@ fields:
     description: How the check runs, or `not-enforced` where nothing checks the rule.
     notes: >
       The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it. `local-hook` is a
-      pre-commit check or a Claude Code hook on a developer's machine. The coverage report counts it as a check, and a
-      review still checks its rules, because a developer can bypass a hook.
+      pre-commit check or a Claude Code hook on a developer's machine.
 
   frequency:
     required: false

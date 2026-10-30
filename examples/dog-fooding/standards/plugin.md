@@ -522,7 +522,8 @@ A reviewer is the one skill whose input is not in the plugin. The change it revi
 and every session reading that history already has a way to do it. So the skill names the change as what differs from
 a fixed point, and leaves the session to read it, the same way a lookup leaves it the search.
 
-A reviewer leaves a rule out only where a check runs without a person. `ci` and `runtime-alert` run by themselves.
+A reviewer leaves a rule out only where a check runs without a person, and nobody can bypass it. `ci` and
+`runtime-alert` run by themselves.
 `review-checklist` and `manual` are a person checking, and in a review that person is the reviewer. `local-hook` runs
 on a developer's machine, and that developer can bypass it, so the reviewer checks its rules as well. A control's
 `verifies` names the rules it checks, and a rule can hold more obligations than the control watches. So the reviewer

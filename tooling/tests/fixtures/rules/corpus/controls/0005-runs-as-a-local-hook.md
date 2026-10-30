@@ -7,7 +7,7 @@ owner: human:alex.doe
 verifies: [std-ERRORS.WHAT]
 mechanism: local-hook
 frequency: continuous
-evidence: The hook script, `.githooks/pre-commit`.
+evidence: The hook script, `.claude/hooks/status-codes.sh`.
 review-by: "2030-01-01"
 ---
 
@@ -17,7 +17,7 @@ review-by: "2030-01-01"
 
 ## What it checks
 
-A pre-commit check on a developer's machine that a failure is answered with a status code.
+A Claude Code hook checks, on every edit a session makes, that a failure is answered with a status code.
 
 ## How it works
 
@@ -26,4 +26,4 @@ assertion: without `local-hook` in the schema's values, this record fails `enum`
 
 ## Coverage and gaps
 
-A developer can skip the hook, so a review still checks the rule.
+A developer can bypass the hook, so a review still checks the rule.
