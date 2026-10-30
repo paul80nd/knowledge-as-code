@@ -13,7 +13,7 @@ public class CommandsTests
         var root = Fixture("export");
 
         var exit = Commands.Export(root, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc),
-            "0123456789abcdef0123456789abcdef01234567", dirty: true);
+            "0123456789abcdef0123456789abcdef01234567", dirty: _ => true);
 
         Assert.Equal(0, exit);
         var manifest = Manifest(root);
@@ -22,12 +22,51 @@ public class CommandsTests
         Assert.True(manifest.GetProperty("dirty").GetBoolean());
     }
 
+    [Theory]
+    [InlineData("corpus/scratch/notes.md", true)]
+    [InlineData("corpus/handover.md", true)]
+    [InlineData("corpus/policies/notes.txt", true)]
+    [InlineData(".schema/notes.txt", true)]
+    [InlineData("_plan/notes.md", false)]
+    [InlineData("tooling/notes.cs", false)]
+    public void Export_counts_the_tree_dirty_only_for_an_untracked_file_where_it_reads(string untracked, bool dirty)
+    {
+        var corpus = Fixture("export", under: "corpus");
+        var repository = Path.GetDirectoryName(corpus) ?? corpus;
+        Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(repository, untracked)) ?? repository);
+        File.WriteAllText(Path.Combine(repository, untracked), "work in progress\n");
+
+        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+            paths => Git.Dirty(corpus, paths));
+
+        Assert.Equal(dirty, Manifest(corpus).GetProperty("dirty").GetBoolean());
+    }
+
+    [Theory]
+    [InlineData("corpus/README.md", true)]
+    [InlineData("corpus/.corpus.yaml", true)]
+    [InlineData("README.md", false)]
+    public void Export_counts_the_tree_dirty_only_for_a_tracked_change_where_it_reads(string tracked, bool dirty)
+    {
+        var corpus = Fixture("export", under: "corpus");
+        var repository = Path.GetDirectoryName(corpus) ?? corpus;
+        File.WriteAllText(Path.Combine(repository, tracked), "");
+        Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
+        File.WriteAllText(Path.Combine(repository, tracked), "# changed\n");
+
+        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+            paths => Git.Dirty(corpus, paths));
+
+        Assert.Equal(dirty, Manifest(corpus).GetProperty("dirty").GetBoolean());
+    }
+
     [Fact]
     public void Export_writes_nothing_for_a_type_the_corpus_has_not_adopted()
     {
         var root = Fixture("export");
 
-        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, null);
+        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, _ => null);
 
         Assert.Equal(1, exit);
         Assert.False(Directory.Exists(Path.Combine(root, Dist.Export)));
@@ -142,15 +181,20 @@ public class CommandsTests
     /// A golden fixture's corpus, assembled the way <c>kac.goldens/Runner.cs</c> assembles it: the real schema above
     /// it, and an empty descriptor to mark it as a corpus where the fixture carries none.
     /// </summary>
-    private static string Fixture(string name)
+    /// <summary>
+    /// The corpus root. Where <paramref name="under"/> is given, the corpus sits in that folder and the schema stays
+    /// at the root above it.
+    /// </summary>
+    private static string Fixture(string name, string? under = null)
     {
         var root = Path.Combine(Path.GetTempPath(), "kac-commands-" + Guid.NewGuid().ToString("n")[..12]);
         Copy(Path.Combine(Repo.Root, ".schema"), Path.Combine(root, ".schema"));
-        Copy(Path.Combine(Repo.Root, "tooling", "tests", "fixtures", name, "corpus"), root);
+        var corpus = under is null ? root : Path.Combine(root, under);
+        Copy(Path.Combine(Repo.Root, "tooling", "tests", "fixtures", name, "corpus"), corpus);
 
-        var descriptor = Path.Combine(root, ".corpus.yaml");
+        var descriptor = Path.Combine(corpus, ".corpus.yaml");
         if (!File.Exists(descriptor)) File.WriteAllText(descriptor, "");
-        return root;
+        return corpus;
     }
 
     private static void Copy(string from, string to)

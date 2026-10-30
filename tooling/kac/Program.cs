@@ -296,7 +296,7 @@ internal sealed class ExportCommand : Command<ExportSettings>
 {
     public override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
-            Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), Git.Dirty(corpus)));
+            Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), paths => Git.Dirty(corpus, paths)));
 }
 
 internal sealed class BundleCommand : Command<CorpusSettings>

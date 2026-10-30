@@ -65,19 +65,21 @@ public static class Commands
         descriptor.Consumes.Count == 0 ? null : Freshness.Read(descriptor.Consumes, registry);
 
     /// <summary>
-    /// Write the corpus to <c>.dist/export/</c>. <paramref name="now"/>, <paramref name="commit"/> and
-    /// <paramref name="dirty"/> are stamped into the manifest as given. <paramref name="commit"/> is null where
-    /// git could not answer, and <paramref name="dirty"/> is null where the tree could not be asked, which the
-    /// manifest records as unknown rather than clean.
+    /// Write the corpus to <c>.dist/export/</c>. <paramref name="now"/> and <paramref name="commit"/> are stamped into
+    /// the manifest as given, and <paramref name="commit"/> is null where git could not answer.
+    /// <paramref name="dirty"/> is asked about the paths the export reads, and answers null where the tree could not be
+    /// asked, which the manifest records as unknown rather than clean.
     /// </summary>
-    public static int Export(string corpusRoot, string? type, DateTime now, string? commit, bool? dirty)
+    public static int Export(string corpusRoot, string? type, DateTime now, string? commit,
+        Func<IReadOnlyList<string>, bool?> dirty)
     {
         var corpus = Corpus.Load(corpusRoot);
         var (inherited, missing) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
         var publishing = Publishing.For(corpus.Descriptor, commit);
+        var changed = dirty(Reads(corpusRoot));
 
         var plan = Exporter.Plan(corpus, publishing, type,
-            new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty),
+            new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, changed),
             inherited, missing);
 
         if (plan.Refused.Count > 0)
@@ -93,7 +95,7 @@ public static class Commands
             Note(
                 "export: no published links. This corpus states no publishing target the tool can address, "
                 + "or no base the target can join to. Records carry their paths and no URLs.");
-        if (dirty is true)
+        if (changed is true)
             Note(
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
                 + "does not reproduce it.");
@@ -123,6 +125,18 @@ public static class Commands
             : $"export: wrote {Counted.Of(written.Count, "file")} for "
               + $"{string.Join(", ", plan.Types.Select(t => t.Type))}.");
         return 0;
+    }
+
+    /// <summary>
+    /// What an export reads, relative to <paramref name="corpusRoot"/>: the corpus folder, and the schema where it
+    /// sits above the corpus. A record may link to any file in the corpus, so every one of them counts.
+    /// </summary>
+    public static IReadOnlyList<string> Reads(string corpusRoot)
+    {
+        var schemaRoot = Schema.FindRoot(corpusRoot) ?? corpusRoot;
+        var schema = Path.GetRelativePath(corpusRoot, Path.Combine(schemaRoot, ".schema")).Replace('\\', '/');
+
+        return schema.StartsWith("../", StringComparison.Ordinal) ? [".", schema] : ["."];
     }
 
     /// <summary>
