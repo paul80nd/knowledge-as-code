@@ -455,10 +455,10 @@ where the rule and the practice differ.
 |-----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------|
 | `INVENT`  | MUST     | [`std-CONFIG`][std-CONFIG]`.PIN`, [`eng:std-DEPS`][eng:std-DEPS]`.SOURCE`                                                                     |                                                  | [`ctl-zizmor`][ctl-zizmor]                                                                             |                                        | Covered             | A pin states an exact version, and `tools/` lists what is chosen.                                                          |
 | `PINNED`  | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | `std-CI` pins every action to a commit, and `std-CONFIG` every other dependency to one version. Neither lists this clause. |
-| `SCREEN`  | MUST     | [`eng:std-DEPS`][eng:std-DEPS]`.ADOPT`                                                                                                        |                                                  |                                                                                                        |                                        | Covered             | A new package is screened before the pull request adding it merges.                                                        |
+| `SCREEN`  | MUST     | [`eng:std-DEPS`][eng:std-DEPS]`.ADOPT`                                                                                                        |                                                  | [`ctl-licence-review`][ctl-licence-review]                                                             |                                        | Covered             | A new package is screened before the pull request adding it merges. `ctl-licence-review` checks its licence alone.         |
 | `SUPPORT` | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | `std-CONFIG` pins every tool to an exact version, and nothing asks whether the vendor still supports it.                   |
 | `PATCH`   | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | Dependabot proposes an update weekly, and no standard states the cadence.                                                  |
-| `LICENCE` | MUST     | [`eng:std-DEPS`][eng:std-DEPS]`.ADOPT`                                                                                                        |                                                  |                                                                                                        |                                        | Covered             | A licence is checked against the allowed list before adoption.                                                             |
+| `LICENCE` | MUST     | [`eng:std-DEPS`][eng:std-DEPS]`.ADOPT`                                                                                                        |                                                  | [`ctl-licence-review`][ctl-licence-review]                                                             |                                        | Covered             | A reviewer checks a new tool record's licence against the allowed list before adoption.                                    |
 | `OBLIGE`  | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Gap                 | Every dependency's licence is checked once at adoption, and nothing revisits it while `kac` ships.                         |
 | `MALWARE` | MUST     |                                                                                                                                               | [`dev-package-unscanned`][dev-package-unscanned] |                                                                                                        |                                        | Gap                 | Nothing scans the packages this repository publishes.                                                                      |
 | `RUNMAL`  | MUST     |                                                                                                                                               |                                                  |                                                                                                        |                                        | Out of scope        | Nothing here runs a system of its own. Every job runs on a GitHub-hosted runner that GitHub rebuilds.                      |
@@ -495,6 +495,7 @@ beside it, belong to whoever confirms this report.
 [ctl-content-version-tests]: ../controls/content-version-tests.md
 [ctl-corpus-validation]: ../controls/corpus-validation.md
 [ctl-docs-build]: ../controls/docs-build.md
+[ctl-licence-review]: ../controls/licence-review.md
 [ctl-merge-gate]: ../controls/merge-gate.md
 [ctl-publish-round-trip]: ../controls/publish-round-trip.md
 [ctl-tool-test-layers]: ../controls/tool-test-layers.md
@@ -513,43 +514,43 @@ beside it, belong to whoever confirms this report.
 [dev-standing-publish-rights]: ../deviations/standing-publish-rights.md
 [dev-vulnerability-route-unstated]: ../deviations/vulnerability-route-unstated.md
 [dev-writing-skills-restate-prose]: ../deviations/writing-skills-restate-prose.md
-[eng:pol-A11Y]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/governance/a11y-accessibility.md
-[eng:pol-ACCS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/accs-access-by-identity.md
-[eng:pol-AGNT]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/governance/agnt-agent-oversight.md
-[eng:pol-AUTV]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/autv-automated-verification.md
-[eng:pol-COST]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md
-[eng:pol-DATA]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/data-data-protection.md
-[eng:pol-DERV]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/derv-derived-data-verification.md
-[eng:pol-DEVI]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/governance/devi-deviations.md
-[eng:pol-ENVS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/envs-environment-separation.md
-[eng:pol-EVER]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/ever-version-control.md
-[eng:pol-INCR]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/operations/incr-incident-response.md
-[eng:pol-INTC]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/intc-interface-contracts.md
-[eng:pol-KNOW]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/governance/know-written-knowledge.md
-[eng:pol-MEXP]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/mexp-minimised-exposure.md
-[eng:pol-MNTN]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/mntn-maintainability.md
-[eng:pol-OBSV]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/operations/obsv-observability.md
-[eng:pol-PERF]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/perf-performance-targets.md
-[eng:pol-PIPE]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/delivery/pipe-pipeline-to-production.md
-[eng:pol-RECV]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/operations/recv-recoverability.md
-[eng:pol-SCRT]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/scrt-secrets-management.md
-[eng:pol-SECD]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/secd-security-by-design.md
-[eng:pol-SUPL]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/supl-supplier-services.md
-[eng:pol-TRUS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/trus-trusted-components.md
-[eng:pol-VURM]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/policies/security/vurm-vulnerability-remediation.md
-[eng:std-API]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/api-contracts.md
-[eng:std-CONT]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/platform/containers.md
-[eng:std-CSSTY]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/platform/dotnet/code-style.md
-[eng:std-DEPLOY]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/deployment.md
-[eng:std-DEPS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/dependencies.md
-[eng:std-GATES]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/build-gates.md
-[eng:std-INCSEV]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/incident-severity.md
-[eng:std-NETTST]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/platform/dotnet/testing.md
-[eng:std-OBS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/observability.md
-[eng:std-PR]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/pull-requests.md
-[eng:std-SECRET]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/secret-handling.md
-[eng:std-TEST]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/testing.md
-[eng:std-VCS]: https://github.com/paul80nd/knowledge-as-code/blob/c48af9fd8a47a887efc5d40a3db13a6b4e31e7b1/examples/engineering/standards/common/version-control.md
+[eng:pol-A11Y]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/governance/a11y-accessibility.md
+[eng:pol-ACCS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/accs-access-by-identity.md
+[eng:pol-AGNT]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/governance/agnt-agent-oversight.md
+[eng:pol-AUTV]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/autv-automated-verification.md
+[eng:pol-COST]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md
+[eng:pol-DATA]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/data-data-protection.md
+[eng:pol-DERV]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/derv-derived-data-verification.md
+[eng:pol-DEVI]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/governance/devi-deviations.md
+[eng:pol-ENVS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/envs-environment-separation.md
+[eng:pol-EVER]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/ever-version-control.md
+[eng:pol-INCR]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/operations/incr-incident-response.md
+[eng:pol-INTC]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/intc-interface-contracts.md
+[eng:pol-KNOW]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/governance/know-written-knowledge.md
+[eng:pol-MEXP]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/mexp-minimised-exposure.md
+[eng:pol-MNTN]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/mntn-maintainability.md
+[eng:pol-OBSV]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/operations/obsv-observability.md
+[eng:pol-PERF]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/perf-performance-targets.md
+[eng:pol-PIPE]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/delivery/pipe-pipeline-to-production.md
+[eng:pol-RECV]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/operations/recv-recoverability.md
+[eng:pol-SCRT]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/scrt-secrets-management.md
+[eng:pol-SECD]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/secd-security-by-design.md
+[eng:pol-SUPL]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/supl-supplier-services.md
+[eng:pol-TRUS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/trus-trusted-components.md
+[eng:pol-VURM]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/policies/security/vurm-vulnerability-remediation.md
+[eng:std-API]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/api-contracts.md
+[eng:std-CONT]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/platform/containers.md
+[eng:std-CSSTY]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/platform/dotnet/code-style.md
+[eng:std-DEPLOY]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/deployment.md
+[eng:std-DEPS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/dependencies.md
+[eng:std-GATES]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/build-gates.md
+[eng:std-INCSEV]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/incident-severity.md
+[eng:std-NETTST]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/platform/dotnet/testing.md
+[eng:std-OBS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/observability.md
+[eng:std-PR]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/pull-requests.md
+[eng:std-SECRET]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/secret-handling.md
+[eng:std-TEST]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/testing.md
+[eng:std-VCS]: https://github.com/paul80nd/knowledge-as-code/blob/00dcc9a498e0ef2ab5fc89f2e97be54f06128403/examples/engineering/standards/common/version-control.md
 [std-A11Y]: ../standards/accessibility.md
 [std-CI]: ../standards/workflows.md
 [std-CONFIG]: ../standards/configuration.md
