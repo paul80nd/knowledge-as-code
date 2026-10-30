@@ -41,7 +41,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac generate` lists the records not in force under their own heading now.** An index listed every record in one
   sort, so a retired policy sat beside the ones that bind. Each `_index.md` now lists the records whose `status` is
   their type's `in-force:` value first, and every other record under `## Not in force`. Below that heading, each
-  category folder heads its table at `###`. No file moves, so no link changes. Run `kac generate` and commit the
+  folder a `from: sub-path` field reads heads its table at `###`. No file moves, so no link changes. Run `kac generate` and commit the
   indexes it rewrites.
 - **`kac validate` resolves a `repos` entry by the form of `repos-base` now.** An entry is `<repo>` or
   `<group>/<repo>`, spelt as the host spells it, spaces and capitals included. Against an Azure DevOps organisation,
