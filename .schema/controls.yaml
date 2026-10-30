@@ -25,9 +25,10 @@ lineage:
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
     internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own: a control may exist
     to record that nothing checks the rule. The corpus keeps the plan and never the result, where OSCAL has an
-    assessment-results model. `verifies` binds both ways, where 800-53A traces one. Only a manual check names who ran
-    it, in `last-verified`, because the mechanism is usually code. Rigour is prose in `Coverage and gaps`, where
-    800-53A grades depth and coverage and the
+    assessment-results model. `evidence` is prose and not an address, where OSCAL's `relevant-evidence` takes an
+    `href`. A link to a build log points to one run. The prose names the job every run comes from. `verifies` binds
+    both ways, where 800-53A traces one. Only a manual check names who ran it, in `last-verified`, because the
+    mechanism is usually code. Rigour is prose in `Coverage and gaps`, where 800-53A grades depth and coverage and the
     [CIS Controls Assessment Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
 collision: >
   In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
