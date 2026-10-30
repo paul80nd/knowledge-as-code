@@ -179,7 +179,7 @@ not list. Three files carry that configuration:
 
 * [`issue-tracker.md`](.claude/agents-config/issue-tracker.md): issues live as GitHub issues on
   `paul80nd/knowledge-as-code`, reached with the `gh` CLI.
-* [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, each label string equal to
-  its name.
+* [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, mapped onto the labels the
+  tracker has.
 * [`domain.md`](.claude/agents-config/domain.md): single-context. The `CLAUDE.md` files describe the domain, and
   `glossary-lookup` stands in for the `GLOSSARY.md` the skills read and write.
