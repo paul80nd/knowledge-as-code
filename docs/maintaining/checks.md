@@ -38,11 +38,11 @@ the class would.
 A rule class is one file under `tooling/kac.core/Rules/`, its own unit tests, and a line in `DocumentRules.All`,
 `CorpusRules.All` or `HistoryRules.All`. Which interface it takes follows from what it reads:
 
-| Interface       | Given                                                                     | Runs from                    | Reports                                       |
-|-----------------|---------------------------------------------------------------------------|------------------------------|-----------------------------------------------|
-| `IDocumentRule` | one document, through a `RuleContext`                                     | `Validator.CheckRules`       | against that document                         |
-| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext`          | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
-| `IHistoryRule`  | one record at two revisions, paired by id, through a `HistoryRuleContext` | `Validator.CheckHistory`     | against the record where it is now            |
+| Interface       | Given                                                                                    | Runs from                    | Reports                                       |
+|-----------------|------------------------------------------------------------------------------------------|------------------------------|-----------------------------------------------|
+| `IDocumentRule` | one document, through a `RuleContext`                                                    | `Validator.CheckRules`       | against that document                         |
+| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext`                         | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
+| `IHistoryRule`  | one record at two revisions, paired by id or as a rename, through a `HistoryRuleContext` | `Validator.CheckHistory`     | against the record where it is now            |
 
 Take the narrower one wherever it will do. A rule handed every record to judge one document reads as though it needs
 them all.
@@ -52,8 +52,9 @@ them all.
 An `IHistoryRule` runs only under `validate --since`. `Baseline.Read` reads each file that differs between that
 revision and the working tree, through the same `Corpus.Load` the working tree takes, so both copies of a record are
 parsed alike. Any other file is the same at both, and pairs with itself. `Validator.CheckHistory` pairs the two
-copies by `id`, and hands a rule only a record whose text differs. `Substance.Changes` lists the parts of a record that
-changed in substance, which is the question both immutability rules ask. A rule on a type's parts compares
+copies by `id`, or as a rename where the `id` changed, and hands a rule only a record whose text differs. The rule
+reads every rename in `HistoryRuleContext.Renamed`. `Substance.Changes` lists the parts of a record that changed in
+substance, which is the question both immutability rules ask. A rule on a type's parts compares
 `Before.Parts` with `After.Parts`, as `PartIdKept` does. It reads the noun and the `in-force:` value from the type it is
 handed, and `HistoryRules.All` constructs it once per type under an id of that type's own: `clause-id-kept` and
 `rule-id-kept`. The golden suite's coverage gate counts check ids as one set, so an id two types shared would stay

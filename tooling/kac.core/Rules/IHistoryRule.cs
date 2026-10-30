@@ -19,10 +19,15 @@ public interface IHistoryRule
 }
 
 /// <summary>
-/// One record at both revisions, paired by id, and reported against where it is now.
+/// One record at both revisions, and reported against where it is now. <c>Validator.CheckHistory</c> says how the two
+/// are paired.
 /// </summary>
 /// <param name="Before">The record at <paramref name="Since"/>, read with the schema of the working tree.</param>
 /// <param name="Since">The revision as the caller spelled it, for a message to name.</param>
 /// <param name="InForce">The type's <c>in-force:</c> value, read through the universal layer. Null where it names none.</param>
+/// <param name="Renamed">
+/// Each record's id at <paramref name="Since"/> to its id now, for every record whose id changed.
+/// </param>
 public sealed record HistoryRuleContext(
-    Doc Before, Doc After, TypeSchema Type, RuleSpec Spec, string Since, string? InForce, Report Report);
+    Doc Before, Doc After, TypeSchema Type, RuleSpec Spec, string Since, string? InForce,
+    IReadOnlyDictionary<string, string> Renamed, Report Report);

@@ -1029,6 +1029,9 @@ internal static class Runner
                     File.Delete(file);
             CopyTree(corpusDir, temp);
 
+            // Staged, as a branch under review has it, so git can report a file that moved.
+            Run(temp, "git", "add", "-A");
+
             var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "validate", "--json", "--since", "HEAD");
             var json = FromFirstBrace(stdout)
                 ?? throw new InvalidOperationException(

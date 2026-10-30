@@ -106,9 +106,9 @@ says what each reports.
 so a reworded part passes whatever the new words commit to. A citation of the id then reaches an obligation its author
 never read.
 
-**Changing the id of a rejected ADR raises no finding.** A record is paired across the two revisions by its id, so a
-new id reads as one record deleted and another added. `retire-not-delete` warns only where the deleted record's status
-was its type's `in-force:` value, and an ADR is in force at `accepted`, not `rejected`.
+**Changing the id of a decided ADR raises no finding.** A record whose id changed pairs as a rename with the record now
+at its path, or where git moved it. `immutable-after-accepted` reads the old id swapped for the new one as no change,
+and `retire-not-delete` reads a rename as no deletion.
 
 **The typo allowance can change what a sentence says.** Each changed word may sit up to two edits from the word it
 replaced, so `not` can become `now` and `12` can become `42` with no finding.
