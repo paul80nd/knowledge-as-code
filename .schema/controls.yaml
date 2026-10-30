@@ -19,8 +19,9 @@ lineage:
     800-53A ties a determination statement to the control item it tests, so a result traces back to the requirement.
     `verifies` is that tie, and `What it checks` quotes the rule. 800-53A puts the method, the expected evidence and
     the objects assessed beside the statement: here, `mechanism`, `evidence` and `applies-to`.
-    [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment `at-frequency`, which `frequency` states. OSCAL
-    names who collected an observation in `origin-actor`, which `last-verified` states as `by` for a manual check
+    [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment `at-frequency`, which `frequency` states. An OSCAL
+    observation names the tool, platform or party behind it in `origins/actors`, which `last-verified` states as `by`
+    for a manual check
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
     internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own: a control may exist

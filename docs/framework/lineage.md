@@ -18,17 +18,18 @@ records that in its own `frameworks.md`, apart from lineage.
 ## What a row says
 
 A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most have three parts, and
-a type with no ancestor has the first alone. The ADR row reads:
+a type with no ancestor has the first alone. The ADR row reads, abridged:
 
 **`prior-art`**, the sources and what each one is. [Nygard, *Documenting Architecture Decisions*][nygard] (2011), the
-ADR as a short record of one decision and what followed from it, and [Zimmermann's Y-statement][ystatement], a
-decision written as one sentence in six moves.
+ADR as a short record of one decision and what followed from it. [Zimmermann's Y-statement][ystatement], a decision
+written as one sentence in six moves.
 
 **`alignment`**, where this framework went the same way. Nygard's Context / Decision / Consequences, his four status
-values, and the rule that a reversed decision is superseded and left standing.
+values, and the rule that a reversed decision is superseded and left standing. A fifth status, `rejected`, keeps a
+proposal the team turned down. [MADR 4][madr] lists the same five values in the same order.
 
-**`divergence`**, where it is notably different. An ADR here affects more than one repository, every alternative
-states a verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
+**`divergence`**, where it is notably different. Nygard scopes a decision to one codebase. An ADR here affects more
+than one repository. Every alternative states a verdict, and *Consequences* is required where MADR leaves it optional.
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework.
@@ -74,6 +75,7 @@ Where a claim is later found wrong, correct the row. Do not soften it.
 [The default types](types.md) is the page for what each type actually holds, once you know where its name came from.
 
 [diataxis]: https://diataxis.fr/
+[madr]: https://adr.github.io/madr/
 [mswsg]: https://learn.microsoft.com/style-guide/welcome/
 [nygard]: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 [ystatement]: https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html
