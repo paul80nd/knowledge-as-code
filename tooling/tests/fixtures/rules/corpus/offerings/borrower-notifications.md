@@ -8,7 +8,7 @@ implemented-by: [svc-notifications]
 feature-files:
   - notifications/features/hold-available.feature
   - qa-pack/features/overdue.feature
-nfrs: [nfr-0001]
+nfrs: [nfr-hedged-measurement]
 ---
 
 # Borrower notifications
@@ -32,11 +32,11 @@ A hold nobody collects is a book nobody reads, and a fine nobody expected is a c
 ## Where the detail lives
 
 * **Implemented by**: [svc-notifications]
-* **Constrained by**: [nfr-0001]
+* **Constrained by**: [nfr-hedged-measurement]
 
 Two links against all the prose above, which is what `hub-not-specification` measures. The second feature
 file names a repository no service here claims, which is what `feature-file-repo` reports. One service
 delivers the whole of this, which is what `spans-more-than-one-service` reports.
 
-[nfr-0001]: ../nfrs/0001-hedged-measurement.md
+[nfr-hedged-measurement]: ../nfrs/hedged-measurement.md
 [svc-notifications]: ../services/notifications.md

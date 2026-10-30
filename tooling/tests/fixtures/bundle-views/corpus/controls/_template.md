@@ -1,5 +1,5 @@
 ---
-id: ctl-{{NNNN}}
+id: ctl-{{slug}}
 type: control
 tier: normative
 status: planned
@@ -11,7 +11,7 @@ owner:
 
 # {{Title}}
 
-`Control: ctl-{{NNNN}}` `PLANNED`
+`Control: ctl-{{slug}}` `PLANNED`
 
 ## What it checks
 

@@ -734,7 +734,7 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
             export: Standards(controls: true)), "views/review.md");
 
-        Assert.Contains("Cite as `std-DEPLOY.COMMIT`.\n\nControls: `ctl-0002` Health reports commit "
+        Assert.Contains("Cite as `std-DEPLOY.COMMIT`.\n\nControls: `ctl-health-reports-commit` Health reports commit "
                         + "(`not-enforced`, active).\n\n- An artefact", review);
         Assert.Equal(2, review.Split("Controls:").Length - 1);
     }
@@ -754,15 +754,15 @@ public class BundlerTests
     {
         (string, string)[] export =
         [
-            .. Standards(controls: true).Where(f => f.Item1 != "controls/ctl-0002.json"),
-            ("controls/ctl-0002.json",
-                """{"fields":{"id":"ctl-0002","title":"Health reports commit","status":"active","verifies":["std-DEPLOY"],"mechanism":"not-enforced"}}""")
+            .. Standards(controls: true).Where(f => f.Item1 != "controls/ctl-health-reports-commit.json"),
+            ("controls/ctl-health-reports-commit.json",
+                """{"fields":{"id":"ctl-health-reports-commit","title":"Health reports commit","status":"active","verifies":["std-DEPLOY"],"mechanism":"not-enforced"}}""")
         ];
 
         var review = Text(Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: export),
             "views/review.md");
 
-        Assert.Contains("Cite as `std-DEPLOY.COMMIT`.\n\nControls: `ctl-0002`", review);
+        Assert.Contains("Cite as `std-DEPLOY.COMMIT`.\n\nControls: `ctl-health-reports-commit`", review);
     }
 
     [Fact]
@@ -839,14 +839,14 @@ public class BundlerTests
         [
             .. Standards(controls: true).Where(f => f.Item1 != "standards/rules.jsonl"),
             ("standards/rules.jsonl", Rules() + "\n" + inherited),
-            ("controls/eng/ctl-0004.json",
-                """{"fields":{"id":"ctl-0004","title":"A skip cites a deviation","status":"active","verifies":["std-GATES.SKIP"],"mechanism":"ci"}}""")
+            ("controls/eng/ctl-skip-cites-deviation.json",
+                """{"fields":{"id":"ctl-skip-cites-deviation","title":"A skip cites a deviation","status":"active","verifies":["std-GATES.SKIP"],"mechanism":"ci"}}""")
         ];
 
         var review = Text(Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: export),
             "views/review.md");
 
-        Assert.Contains("Controls: `eng:ctl-0004` A skip cites a deviation (`ci`, active).", review);
+        Assert.Contains("Controls: `eng:ctl-skip-cites-deviation` A skip cites a deviation (`ci`, active).", review);
     }
 
     [Fact]
@@ -940,8 +940,8 @@ public class BundlerTests
             ?
             [
                 .. files,
-                ("controls/ctl-0002.json",
-                    """{"fields":{"id":"ctl-0002","title":"Health reports commit","status":"active","verifies":["std-DEPLOY.COMMIT"],"mechanism":"not-enforced"}}""")
+                ("controls/ctl-health-reports-commit.json",
+                    """{"fields":{"id":"ctl-health-reports-commit","title":"Health reports commit","status":"active","verifies":["std-DEPLOY.COMMIT"],"mechanism":"not-enforced"}}""")
             ]
             : files;
     }

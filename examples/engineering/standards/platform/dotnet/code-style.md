@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: draft
 implements: [ pol-AUTV.WARN, pol-SECD.CODING ]
-verified-by: [ ctl-0009 ]
+verified-by: [ ctl-suppression-justified ]
 applies-to:
   - all
 review-by: "2027-08-31"

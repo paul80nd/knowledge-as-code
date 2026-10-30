@@ -1,5 +1,5 @@
 ---
-id: fix-{{nnnn}}
+id: fix-{{slug}}
 type: fix
 tier: normative
 status: active
@@ -12,7 +12,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Fix: fix-{{nnnn}}` `ACTIVE`
+`Fix: fix-{{slug}}` `ACTIVE`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds

@@ -4,14 +4,14 @@
 
 ## In force
 
-| ID       | Title                                                                                                | Applies to | Status | Review by  |
-|----------|------------------------------------------------------------------------------------------------------|------------|--------|------------|
-| fix-0001 | [pip cannot find the linter versions the lint job pins](pip-cannot-install-yamllint.md)              |            | active | 2027-03-09 |
-| fix-0002 | [An .editorconfig key edited from a shell changes nothing in the IDE](editorconfig-has-no-effect.md) |            | active | 2027-03-09 |
+| ID                              | Title                                                                                                | Applies to | Status | Review by  |
+|---------------------------------|------------------------------------------------------------------------------------------------------|------------|--------|------------|
+| fix-editorconfig-has-no-effect  | [An .editorconfig key edited from a shell changes nothing in the IDE](editorconfig-has-no-effect.md) |            | active | 2027-03-09 |
+| fix-pip-cannot-install-yamllint | [pip cannot find the linter versions the lint job pins](pip-cannot-install-yamllint.md)              |            | active | 2027-03-09 |
 
 ## Not in force
 
-| ID       | Title                                                                                | Applies to | Status | Review by  |
-|----------|--------------------------------------------------------------------------------------|------------|--------|------------|
-| fix-0003 | [The golden suite reports a diff nobody meant](goldens-disagree.md)                  | svc-kac    | draft  | 2027-04-29 |
-| fix-0004 | [kac restore cannot find the version the lock names](restore-cannot-find-version.md) |            | draft  | 2027-04-29 |
+| ID                              | Title                                                                                | Applies to | Status | Review by  |
+|---------------------------------|--------------------------------------------------------------------------------------|------------|--------|------------|
+| fix-goldens-disagree            | [The golden suite reports a diff nobody meant](goldens-disagree.md)                  | svc-kac    | draft  | 2027-04-29 |
+| fix-restore-cannot-find-version | [kac restore cannot find the version the lock names](restore-cannot-find-version.md) |            | draft  | 2027-04-29 |

@@ -119,9 +119,10 @@ The export reads the same however old it is. Quote `generatedAt` and `commit` fr
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the fix.** `eng:fix-0004` was published by the corpus with shortcode `eng`, and
-a bare `fix-0004` was written here. `eng:fix-0004` is at `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/eng/fix-0004.json`. Look
-the `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
+**A prefix names the corpus that wrote the fix.** `eng:fix-build-times-out` was published by the corpus with shortcode
+`eng`, and a bare `fix-build-times-out` was written here. `eng:fix-build-times-out` is at
+`${CLAUDE_PLUGIN_ROOT}/corpus/fixes/eng/fix-build-times-out.json`. Look the `shortcode` up in `sources` in
+`manifest.json`, and name that corpus in words.
 
 ## Link the fix, and read its source
 
@@ -149,7 +150,7 @@ it was verified against a different cause, and a verified resolution handed over
 
 **Where someone asks which fixes the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/`.** Each file is one fix.
 A file under `corpus/fixes/<shortcode>/` came from a corpus this one consumes, and it counts as fully as one written
-here. Its `fields.id` is bare, so cite it with the prefix, as `eng:fix-0004`.
+here. Its `fields.id` is bare, so cite it with the prefix, as `eng:fix-build-times-out`.
 
 Answer with each fix's id and `fields.title`, so a reader can open each one.
 

@@ -89,16 +89,16 @@ public class RefCheckTests
 
     [Fact]
     public void A_control_citing_a_rule_is_reciprocated_by_its_standard_naming_the_control()
-        => Assert.Empty(Verifies("std-CI.PERMS", "ctl-0001"));
+        => Assert.Empty(Verifies("std-CI.PERMS", "ctl-zizmor"));
 
     [Fact]
     public void A_control_citing_two_rules_of_one_standard_is_reciprocated_by_one_entry()
-        => Assert.Empty(Verifies("[ std-CI.PERMS, std-CI.PIN ]", "ctl-0001"));
+        => Assert.Empty(Verifies("[ std-CI.PERMS, std-CI.PIN ]", "ctl-zizmor"));
 
     [Fact]
     public void A_control_citing_a_standard_whole_is_told_to_name_the_rule()
     {
-        var found = Assert.Single(Verifies("std-CI", "ctl-0001"));
+        var found = Assert.Single(Verifies("std-CI", "ctl-zizmor"));
 
         Assert.Equal("ref-resolves", found.Check.Value);
         Assert.Equal("'verifies' points at 'std-CI' whole, and this field names a rule. Write "
@@ -109,12 +109,12 @@ public class RefCheckTests
     [Fact]
     public void A_control_citing_a_rule_the_standard_does_not_state_is_reported()
         => Assert.Equal("'verifies' points at a rule 'MISSING' that standards/workflows.md does not carry.",
-            Assert.Single(Verifies("std-CI.MISSING", "ctl-0001")).Message);
+            Assert.Single(Verifies("std-CI.MISSING", "ctl-zizmor")).Message);
 
     [Fact]
     public void A_standard_naming_a_control_that_cites_none_of_its_rules_is_not_reciprocated()
     {
-        var found = Assert.Single(Verifies("[]", "ctl-0001"));
+        var found = Assert.Single(Verifies("[]", "ctl-zizmor"));
 
         Assert.Equal("reciprocal", found.Check.Value);
         Assert.Contains("must list 'verifies: std-CI'", found.Message);
@@ -126,7 +126,7 @@ public class RefCheckTests
         var found = Assert.Single(Verifies("std-CI.PERMS", "[]"));
 
         Assert.Equal("reciprocal", found.Check.Value);
-        Assert.Contains("must list 'verified-by: ctl-0001'", found.Message);
+        Assert.Contains("must list 'verified-by: ctl-zizmor'", found.Message);
     }
 
     /// <summary>
@@ -167,8 +167,8 @@ public class RefCheckTests
                 $"---\nid: std-CI\nverified-by: {verifiedBy}\n---\n\n# std-CI\n\n## Rules\n\n"
                 + "### PERMS: A job declares the permission it needs\n\n- A job **MUST** declare it.\n\n"
                 + "### PIN: An action is pinned\n\n- An action **MUST** be pinned.\n", schema),
-            Doc.Parse("controls/0001-zizmor.md",
-                $"---\nid: ctl-0001\nverifies: {verifies}\n---\n\n# ctl-0001\n", schema)
+            Doc.Parse("controls/zizmor.md",
+                $"---\nid: ctl-zizmor\nverifies: {verifies}\n---\n\n# ctl-zizmor\n", schema)
         }.OfType<Doc>().ToList();
 
         // A document that did not parse would quietly shrink the corpus.

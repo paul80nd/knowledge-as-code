@@ -769,7 +769,8 @@ checks:
     description: With `--since`, no record in force at that revision has been deleted.
     notes: >
       A record is in force where its status at the revision was its type's `in-force:` value. The record is found
-      by its id, so a moved file passes. A draft, or a record already retired or superseded, deletes freely. See
+      by its id, or as a rename where its id changed, so a moved or renamed record passes. A draft, or a record
+      already retired or superseded, deletes freely. See
       <https://paul80nd.github.io/knowledge-as-code/use/cli/validate/#comparing-with-a-base-revision>.
 
   diagnosis-dead-end:

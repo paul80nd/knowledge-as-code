@@ -185,24 +185,24 @@ public class ReportsTests
     {
         var body = RuleCoverage();
 
-        Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |", body);
-        Assert.Contains("| `LEAKED` | MUST | `std-VLT.REVOKE` |  | `ctl-0002` |", body);
+        Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-vault` |", body);
+        Assert.Contains("| `LEAKED` | MUST | `std-VLT.REVOKE` |  | `ctl-revoke` |", body);
     }
 
     [Fact]
     public void A_control_naming_a_standard_whole_reaches_every_rule_in_it()
-        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001`, `ctl-0003` |",
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-vault`, `ctl-whole` |",
             RuleCoverage(whole: true));
 
     [Fact]
     public void A_not_enforced_control_is_left_out_of_the_rule_it_names()
-        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |",
-            RuleCoverage(control: Control("ctl-0004", "std-VLT.VAULT", mechanism: "not-enforced")));
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-vault` |",
+            RuleCoverage(control: Control("ctl-extra", "std-VLT.VAULT", mechanism: "not-enforced")));
 
     [Fact]
     public void A_planned_control_is_left_out_until_it_is_in_force()
-        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-0001` |",
-            RuleCoverage(control: Control("ctl-0004", "std-VLT.VAULT", status: "planned")));
+        => Assert.Contains("| `STORE` | MUST | `std-VLT.VAULT` |  | `ctl-vault` |",
+            RuleCoverage(control: Control("ctl-extra", "std-VLT.VAULT", status: "planned")));
 
     [Fact]
     public void An_inherited_control_in_force_is_named_beside_the_clause()
@@ -403,11 +403,11 @@ public class ReportsTests
         var sources = new List<(string, string)>
         {
             ("policies/scrt.md", Policy), ("standards/vault.md", vault),
-            ("controls/0001-vault.md", Control("ctl-0001", "std-VLT.VAULT")),
-            ("controls/0002-revoke.md", Control("ctl-0002", "std-VLT.REVOKE"))
+            ("controls/vault.md", Control("ctl-vault", "std-VLT.VAULT")),
+            ("controls/revoke.md", Control("ctl-revoke", "std-VLT.REVOKE"))
         };
-        if (whole) sources.Add(("controls/0003-whole.md", Control("ctl-0003", "std-VLT")));
-        if (control is not null) sources.Add(("controls/0004-extra.md", control));
+        if (whole) sources.Add(("controls/whole.md", Control("ctl-whole", "std-VLT")));
+        if (control is not null) sources.Add(("controls/extra.md", control));
 
         var docs = sources.Select(s => Doc.Parse(s.Item1, s.Item2, schema)).OfType<Doc>().ToList();
         Assert.Equal(sources.Count, docs.Count);

@@ -38,11 +38,11 @@ lineage:
 
 id:
   prefix: nfr
-  style: numbered
-  width: 4
+  style: slug
+  notes: Named for what the target measures, which is what somebody searches for.
 
 filename:
-  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  pattern: '^[a-z0-9-]+\.md$'
   slug-max: 30
 
 fields:

@@ -1,5 +1,5 @@
 ---
-id: fix-0002
+id: fix-editorconfig-has-no-effect
 type: fix
 tier: normative
 status: active
@@ -15,7 +15,7 @@ tags: [ editorconfig, formatting, rider ]
 
 # An .editorconfig key edited from a shell changes nothing in the IDE
 
-`Fix: fix-0002` `ACTIVE`
+`Fix: fix-editorconfig-has-no-effect` `ACTIVE`
 
 ## Symptom
 

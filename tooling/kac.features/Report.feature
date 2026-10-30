@@ -57,10 +57,10 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
 
     # The door stays open
     """
-  And the corpus has a record "controls/0001-coverage-check.md" reading:
+  And the corpus has a record "controls/coverage-check.md" reading:
     """
     ---
-    id: ctl-0001
+    id: ctl-coverage-check
     type: control
     status: active
     verifies: [std-COVER.NAMED]
@@ -86,7 +86,7 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     """
   When I write the "coverage" report to "reports/clause-coverage.md"
   Then it succeeds
-  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | [`std-COVER`][std-COVER]`.NAMED` |  | [`ctl-0001`][ctl-0001] |  | covered | |"
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | [`std-COVER`][std-COVER]`.NAMED` |  | [`ctl-coverage-check`][ctl-coverage-check] |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | [`dev-open-door`][dev-open-door] |  | [`pol-PAIR`][pol-PAIR]`.OPEN` | uncovered | |"
 
 Scenario: A coverage row leaves out a deviation that is no longer in force

@@ -1,5 +1,5 @@
 ---
-id: fix-0003
+id: fix-drafted-not-yet-verified
 type: fix
 tier: normative
 status: draft
@@ -10,7 +10,7 @@ owner: human:alex.doe
 
 # Drafted and not yet verified
 
-`Fix: fix-0003` `DRAFT`
+`Fix: fix-drafted-not-yet-verified` `DRAFT`
 
 ## Symptom
 
@@ -22,8 +22,8 @@ The migration runner, against the primary database.
 
 ## Cause
 
-Nothing, in itself. It is the other side of `fix-0002`. The status is `draft`, so `verified` is not required and
-this record validates clean without it.
+Nothing, in itself. It is the other side of `fix-verification-not-stated`. The status is `draft`, so `verified` is not
+required and this record validates clean without it.
 
 ## Resolution
 

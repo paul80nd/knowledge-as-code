@@ -35,7 +35,8 @@ runbook can be walked without causing what it is for.
 
 **A record in force is retired, never deleted.** Something outside the corpus may still cite its id. Under
 `validate --since`, `retire-not-delete` warns where a record whose `status` was its type's `in-force:` value at that
-revision has gone. A draft, or a record already retired or superseded, deletes with no finding.
+revision has gone. A draft, or a record already retired or superseded, deletes with no finding. A record renamed with
+a new id, at its path or where git moved it, has not gone.
 
 **A type page states its level of detail and cadence in prose.** The section says what one step, rule or part
 contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a finding,

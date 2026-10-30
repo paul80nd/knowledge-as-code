@@ -45,8 +45,7 @@ lineage:
     `stable`
 id:
   prefix: fix
-  style: numbered
-  width: 4
+  style: slug
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'

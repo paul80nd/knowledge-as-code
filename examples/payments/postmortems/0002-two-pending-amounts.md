@@ -13,8 +13,8 @@ affected:
   - svc-payment-api
   - svc-payment-ledger
 prompted:
-  - fix-0001
-  - nfr-0001
+  - fix-duplicate-authorisation
+  - nfr-authorisation-latency
   - std-IDEM
 owner: human:alex.doe
 tags: [ authorisation, idempotency, psp ]
@@ -44,7 +44,7 @@ afternoon.
 | 2026-08-13 09:30 | Two customers reported two pending amounts for one order.                                                         |
 | 2026-08-13 11:40 | Matching ledger entries on the order reference found 31 orders with a second authorisation.                       |
 | 2026-08-13 14:10 | The later authorisation on each of the 31 orders was voided, and each void was written to the ledger.             |
-| 2026-08-14 10:20 | [fix-0001] was written and verified against the PSP sandbox.                                                      |
+| 2026-08-14 10:20 | [fix-duplicate-authorisation] was written and verified against the PSP sandbox.                                                      |
 
 ## Impact
 
@@ -54,7 +54,7 @@ totalled £1,847. Two customers rang to ask whether they had been charged twice.
 No customer was charged twice. [ofr-card-payment] kept taking payments throughout, at the slower speed.
 
 No latency target covered the authorisation call on the day. The p95 held at about 4.2 seconds for 4 hours 20 minutes,
-and [nfr-0001] was written afterwards to state one.
+and [nfr-authorisation-latency] was written afterwards to state one.
 
 ## Resolution
 
@@ -114,16 +114,16 @@ is never charged. It absorbed this incident as a by-product.
 
 ## Related
 
-* [fix-0001] is the fix this incident produced.
-* [nfr-0001] states the latency target this incident caused to be written.
+* [fix-duplicate-authorisation] is the fix this incident produced.
+* [nfr-authorisation-latency] states the latency target this incident caused to be written.
 * [std-IDEM] is the standard this incident caused to be written.
 
 [ofr-card-payment]: ../offerings/card-payment.md
-[fix-0001]: ../fixes/duplicate-authorisation.md
+[fix-duplicate-authorisation]: ../fixes/duplicate-authorisation.md
 [gh#3402]: https://git.example.com/example-payments/payment-api/issues/3402
 [gh#3404]: https://git.example.com/example-payments/payment-ledger/issues/3404
 [gh#3405]: https://git.example.com/example-payments/payment-api/issues/3405
-[nfr-0001]: ../nfrs/0001-authorisation-latency.md
+[nfr-authorisation-latency]: ../nfrs/authorisation-latency.md
 [std-IDEM]: ../standards/authorisation/idempotency.md
 [std-LEDGER]: ../standards/ledger/entries.md
 [std-PSPOUT]: ../standards/authorisation/psp-timeouts.md

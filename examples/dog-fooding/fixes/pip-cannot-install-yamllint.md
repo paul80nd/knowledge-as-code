@@ -1,5 +1,5 @@
 ---
-id: fix-0001
+id: fix-pip-cannot-install-yamllint
 type: fix
 tier: normative
 status: active
@@ -14,7 +14,7 @@ tags: [ linting, macos, setup ]
 
 # pip cannot find the linter versions the lint job pins
 
-`Fix: fix-0001` `ACTIVE`
+`Fix: fix-pip-cannot-install-yamllint` `ACTIVE`
 
 ## Symptom
 

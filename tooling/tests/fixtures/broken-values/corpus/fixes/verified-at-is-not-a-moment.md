@@ -1,5 +1,5 @@
 ---
-id: fix-0003
+id: fix-verified-at-is-not-a-moment
 type: fix
 tier: normative
 status: active
@@ -13,7 +13,7 @@ owner: human:alex.doe
 
 # A verification moment the calendar does not have
 
-`Fix: fix-0003` `ACTIVE`
+`Fix: fix-verified-at-is-not-a-moment` `ACTIVE`
 
 ## Symptom
 

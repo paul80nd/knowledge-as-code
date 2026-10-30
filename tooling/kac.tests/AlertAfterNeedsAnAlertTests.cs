@@ -154,8 +154,8 @@ public class AlertAfterNeedsAnAlertTests
         var after = delay is null ? "" : $"{AlertAfter.Name}: {delay}\n";
 
         var docs = new List<Doc>();
-        if (Doc.Parse("nfrs/0001-authorisation.md",
-                $"---\nid: nfr-0001\n{binds}{after}---\n\n# A target\n", schema) is { } target)
+        if (Doc.Parse("nfrs/authorisation.md",
+                $"---\nid: nfr-authorisation\n{binds}{after}---\n\n# A target\n", schema) is { } target)
             docs.Add(target);
 
         if (offering is not null

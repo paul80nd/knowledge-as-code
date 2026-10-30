@@ -8,6 +8,9 @@ its place in the working tree, and runs `kac validate --json --since HEAD`.
 * **A moved file passes.** `adr-0005` moved from `0005-old-name.md` to `0005-new-name.md` with its text unchanged, and
   is paired by its id.
 * **`immutable-after-published`.** `pmt-0001` was published at the base, and its `Root cause` now says something else.
+* **A renamed record passes.** `svc-search` moved to `search-api.md` as `svc-search-api`, and git reports the move.
+  `pmt-0002` was published at the base, and its `affected` and a link's text now name `svc-search-api`. Neither
+  reports anything.
 * **`clause-id-kept`.** `pol-KEPT` was active at the base, and its clause `LOCAL` is now `NOLINK`. It also rewords a
   clause, adds one and takes a new title, and none of that reports.
 * **`rule-id-kept`.** `std-KEPT` was active at the base, and its rule `FAST` is gone. Its other rule is reworded, which

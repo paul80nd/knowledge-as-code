@@ -1,5 +1,5 @@
 ---
-id: fix-0001
+id: fix-two-symptoms-one-page
 type: fix
 tier: normative
 status: active
@@ -12,7 +12,7 @@ owner: human:alex.doe
 
 # Two symptoms filed as one page
 
-`Fix: fix-0001` `ACTIVE`
+`Fix: fix-two-symptoms-one-page` `ACTIVE`
 
 ## Symptom
 

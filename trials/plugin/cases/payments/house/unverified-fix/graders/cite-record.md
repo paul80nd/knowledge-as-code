@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'fix-0002'
+pattern: 'fix-refund-breaks-before-midnight'
 ---

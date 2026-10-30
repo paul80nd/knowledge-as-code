@@ -76,7 +76,7 @@ one says moves neither. One nothing sends moves nothing.
       and component counts in `docs/use/cli/bundle.md`, and the `new: wrote N file(s)` line in both
       `docs/use/cli/new.md` and `docs/use/getting-started.md`.
     * A standalone skill added or removed affects the loop naming them in `.github/workflows/kac.yml`, and the
-      prose describing that job in [ctl-0008].
+      prose describing that job in [ctl-publish-round-trip].
     * A skill a corpus receives affects `template/knowledge-as-code/contributing.md`, the copy of it every corpus
       under `examples/` holds, and the overlay note in `manifest.yaml` that names them.
     * A change to what a skill does affects whichever of those describe it.
@@ -122,7 +122,7 @@ it from the working tree to read your change, as this corpus's own `README.md` d
 * [svc-marketplace] is what a bundled skill is published through.
 
 [Skills]: https://paul80nd.github.io/knowledge-as-code/use/skills/
-[ctl-0008]: ../controls/0008-publish-round-trip.md
+[ctl-publish-round-trip]: ../controls/publish-round-trip.md
 [prc-pull-request]: pull-request.md
 [std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved
 [std-PLUGIN]: ../standards/plugin.md

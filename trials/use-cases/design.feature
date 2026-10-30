@@ -27,11 +27,12 @@ Feature: Design. A session choosing an approach meets the decisions, the clauses
   @intent:respect @type:nfrs @trial:plugin/payments/house/authorisation-extra-call
   Scenario: A design touching a path an agreed target binds says how it meets the target
     Baseline: the plugin arm met the threshold in 3 of 3 runs, so the scenario holds.
-    Every run showed the added call cannot fit inside 800ms, cited nfr-0001, and put a revised target to its owner.
-    Given nfr-0001 is agreed, and binds ofr-card-payment to p95 under 800ms
+    Every run showed the added call cannot fit inside 800ms, cited nfr-authorisation-latency, and put a revised target
+    to its owner.
+    Given nfr-authorisation-latency is agreed, and binds ofr-card-payment to p95 under 800ms
     And a task asking for a design that adds a synchronous call to card authorisation
     When the session writes the design
-    Then in at least 2 of 3 runs the design states how it stays under 800ms at p95, or cites nfr-0001 and raises it
+    Then in at least 2 of 3 runs the design states how it stays under 800ms at p95, or cites nfr-authorisation-latency and raises it
 
   @intent:respect @type:tools @trial:plugin/dog-fooding/house/new-command-line-verb
   Scenario: A design that needs a library chooses an approved tool

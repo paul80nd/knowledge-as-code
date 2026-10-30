@@ -38,6 +38,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A control, an NFR and a fix take a slug id now.** Each was numbered, and no reader needs the order they were
+  written in. Rename each record by its filename: drop the number from the head of the filename, and make the id the
+  type's prefix plus what is left. `ctl-0001` in `0001-merge-gate.md` becomes `ctl-merge-gate` in `merge-gate.md`. A
+  fix already files under its slug. Run `kac update` to take the schema, then `kac validate`, which fails on every
+  citation of an old id. Change `{{nnnn}}` to `{{slug}}` in each type's `_template.md` by hand. `kac validate --since`
+  reads each renamed record as the same record. An ADR and a postmortem stay numbered.
+- **`kac validate --since` pairs a renamed record now.** A record whose `id` changed read as one record deleted and
+  another added, so `retire-not-delete` warned, and a published postmortem citing the new id failed
+  `immutable-after-published`. It now pairs with the record of its type at its path, or where git reports it moved,
+  where that record's `id` is new. A frontmatter value or a link's text swapped to that record's new `id` is no change
+  in substance. Any other swap still is, and so is a decided ADR's or a published postmortem's own `id`. Stage or
+  commit a moved file, so git can report it.
 - **`kac generate` lists the records not in force under their own heading now.** An index listed every record in one
   sort, so a retired policy sat beside the ones that bind. Where any record's `status` is not its type's `in-force:`
   value, `_index.md` now lists the records in force under `## In force` and the rest under `## Not in force`. Each

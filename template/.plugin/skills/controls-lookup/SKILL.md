@@ -83,8 +83,8 @@ check that may not have run.
 **Read `Coverage and gaps` before you say a rule is covered.** A control that runs may still miss the half of the rule
 the question is about, and this section is where the author says so.
 
-**Search a bracketed id inside a section**, as `[ctl-0002]`. The export drops the link definitions, so the id alone is
-the cross-reference.
+**Search a bracketed id inside a section**, as `[ctl-secret-scanner]`. The export drops the link definitions, so the
+id alone is the cross-reference.
 
 ## Say what a job is holding up
 
@@ -119,10 +119,11 @@ looked, so say that, and say which corpora you searched.
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the control.** `eng:ctl-0004` was published by the corpus with shortcode `eng`,
-and a bare `ctl-0004` was written here. `eng:ctl-0004` is at `${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-0004.json`.
-The same prefix reaches every id in `verifies`, so a control here may verify `eng:std-GATES.BLOCK`, a rule it
-inherited. Look the `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
+**A prefix names the corpus that wrote the control.** `eng:ctl-secret-scanner` was published by the corpus with
+shortcode `eng`, and a bare `ctl-secret-scanner` was written here. `eng:ctl-secret-scanner` is at
+`${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-secret-scanner.json`. The same prefix reaches every id in `verifies`, so
+a control here may verify `eng:std-GATES.BLOCK`, a rule it inherited. Look the `shortcode` up in `sources` in
+`manifest.json`, and name that corpus in words.
 
 ## Link the control, and read its source
 
@@ -161,7 +162,7 @@ The export reads the same however old it is. Quote `generatedAt` and `commit` fr
 
 **Where someone asks which controls the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/controls/`.** Each file is
 one control. A file under `corpus/controls/<shortcode>/` came from a corpus this one consumes, and it counts as fully
-as one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:ctl-0004`.
+as one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:ctl-secret-scanner`.
 
 Answer with each control's id and `fields.title`, so a reader can open each one.
 

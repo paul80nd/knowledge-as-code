@@ -27,6 +27,13 @@ public class VerificationComparisonTests
             Record("Restart the runner.", Paul),
             Record("Restart the runner.", Paul).Replace("status: active", "status: fixed-upstream")));
 
+    /// <summary>The identity line restates the frontmatter's id and status, which nobody verifies as prose.</summary>
+    [Fact]
+    public void An_id_renamed_on_the_identity_line_is_left_alone()
+        => Assert.False(Verification.Unverified(
+            Record("Restart the runner.", Paul),
+            Record("Restart the runner.", Paul).Replace("fix-runner", "fix-runner-stalls")));
+
     [Fact]
     public void A_record_nobody_had_verified_is_left_alone()
         => Assert.False(Verification.Unverified(

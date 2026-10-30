@@ -46,8 +46,8 @@ produces, so the cost was a confusing difference and not a broken release.
 ## What compensates
 
 * The publish workflow was the only thing that built what shipped, and its run log recorded the commit and the SDK.
-* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus
-  it created, so a build that cannot run is caught before it ships.
+* [ctl-corpus-validation] packs the tool and installs it on every pull request. That copy runs `kac new` and validates
+  the corpus it created, so a build that cannot run is caught before it ships.
 * nuget.org never lets a published version be replaced, so a rebuild cannot overwrite what people already have.
 
 ## How it closes
@@ -66,7 +66,7 @@ Every build of `kac`: the publish workflow, CI, and a contributor's own machine.
 * [tol-dotnet-sdk] records the SDK the workflows install.
 * [tol-setup-dotnet] is the action that installs it.
 
-[ctl-0007]: ../controls/0007-corpus-validation.md
+[ctl-corpus-validation]: ../controls/corpus-validation.md
 [std-CONFIG]: ../standards/configuration.md
 [tol-dotnet-sdk]: ../tools/build/dotnet-sdk.md
 [tol-setup-dotnet]: ../tools/workflows/setup-dotnet.md

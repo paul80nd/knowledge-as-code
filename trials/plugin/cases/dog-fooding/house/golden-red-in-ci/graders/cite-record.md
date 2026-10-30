@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'fix-0003'
+pattern: 'fix-goldens-disagree'
 ---

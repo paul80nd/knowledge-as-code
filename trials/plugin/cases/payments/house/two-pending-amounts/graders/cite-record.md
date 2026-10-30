@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'fix-0001'
+pattern: 'fix-duplicate-authorisation'
 ---

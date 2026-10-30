@@ -68,6 +68,6 @@ documents those:
 
 ## Open question
 
-**ID styles are assigned per type.** Numbered where documents accrete in sequence and the number helps you navigate.
-Slug where the thing has a stable natural name. Mnemonic where a small, heavily cited set benefits from an id that says
-something. Nothing derives the split, so it is worth a review pass.
+**ID styles are assigned per type.** Numbered where a record is of something that happened, and the number gives the
+order. Slug where the thing has a stable natural name. Mnemonic where a small, heavily cited set benefits from an id
+that says something. Nothing derives the split, so it is worth a review pass.

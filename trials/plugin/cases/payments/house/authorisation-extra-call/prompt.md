@@ -3,7 +3,7 @@ name: authorisation-extra-call
 max_turns: 30
 timeout_seconds: 300
 allowed_tools: [Read, Glob, Grep, Skill]
-tags: [house, nfr-0001]
+tags: [house, nfr-authorisation-latency]
 ---
 
 Finance wants every card authorisation screened for fraud before we send it to the PSP. The screening vendor takes

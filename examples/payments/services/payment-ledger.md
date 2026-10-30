@@ -12,7 +12,7 @@ interfaces:
   - type: openapi
     contract: https://git.example.com/example-payments/payment-ledger/blob/main/contract/openapi.yaml
 nfrs:
-  - nfr-0002
+  - nfr-ledger-recovery-point
 owner: human:paul.law
 tags: [ audit, ledger, reconciliation ]
 ---
@@ -61,7 +61,7 @@ here, so nothing in this corpus describes the schema. The repository's own migra
 
 * **Criticality**: `critical`. [svc-payment-api] writes here before it replies, so a ledger that is down stops payment.
   A PSP that is down has the same effect.
-* **NFRs**: [nfr-0002] states how much of the ledger a recovery may lose.
+* **NFRs**: [nfr-ledger-recovery-point] states how much of the ledger a recovery may lose.
 
-[nfr-0002]: ../nfrs/0002-ledger-recovery-point.md
+[nfr-ledger-recovery-point]: ../nfrs/ledger-recovery-point.md
 [svc-payment-api]: payment-api.md

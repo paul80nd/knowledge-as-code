@@ -7,7 +7,8 @@ implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:p
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
   eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE, eng:pol-SCRT.STORE,
   eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
-verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006, ctl-0011, ctl-0015 ]
+verified-by: [ ctl-actionlint, ctl-changelog-tests, ctl-content-version-tests, ctl-merge-gate, ctl-workflow-gate-tests,
+  ctl-zizmor ]
 applies-to:
   - all
 review-by: "2027-09-02"
@@ -173,20 +174,20 @@ Read-only permission keeps CI out of the files a person edits. `generate --check
 names the command to run locally, so no job needs to write one back.
 
 A `content-version` that has not moved publishes nothing, so no reader sees the edited record and the published copy
-drifts from `main`. [ctl-0011] reports that on the pull request, and a reviewer judges whether the move is the right
-size. Merging a move of `<Version>` publishes to nuget.org, and a published version cannot be replaced. So the branch
-owner decides whether to release before the pull request opens, and an entry waits under `## Unreleased` until they
-do. What each of these numbers means, and what a producer's move obliges of the corpora consuming it, are
+drifts from `main`. [ctl-content-version-tests] reports that on the pull request, and a reviewer judges whether the move
+is the right size. Merging a move of `<Version>` publishes to nuget.org, and a published version cannot be replaced. So
+the branch owner decides whether to release before the pull request opens, and an entry waits under `## Unreleased`
+until they do. What each of these numbers means, and what a producer's move obliges of the corpora consuming it, are
 [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a workflow publishes it.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
 outside the gate is invisible. The `lint` job runs `actionlint` over every workflow, and then zizmor over every workflow
-and each `dependabot.yml`. [ctl-0015] says which rules zizmor checks. Nothing checks a permission nobody uses, or a
+and each `dependabot.yml`. [ctl-zizmor] says which rules zizmor checks. Nothing checks a permission nobody uses, or a
 secret written into a script body. A reviewer catches both.
 
 A checkout keeping its credential lets every later step push with the job's token, a test run or a package restore
-included. The one `git push` here, to the `marketplace` branch, takes the token in its own step, so the restores and builds
-before it run without write access.
+included. The one `git push` here, to the `marketplace` branch, takes the token in its own step, so the restores and
+builds before it run without write access.
 
 The timeout rule covers the publishing jobs, where a hang keeps a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, so the tag step always has a release body to publish.
@@ -231,7 +232,7 @@ say why in the change.
 [Security hardening for GitHub Actions]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
 [Trusted publishing on nuget.org]: https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
 [actionlint]: https://github.com/rhysd/actionlint
-[ctl-0011]: ../controls/0011-content-version-tests.md
-[ctl-0015]: ../controls/0015-zizmor.md
+[ctl-content-version-tests]: ../controls/content-version-tests.md
+[ctl-zizmor]: ../controls/zizmor.md
 [std-VERS]: versioning.md
 [zizmor]: https://docs.zizmor.sh/audits/#artipacked

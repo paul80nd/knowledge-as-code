@@ -76,7 +76,8 @@ kac validate --since origin/main
 
 `--since` also compares each record with its state at the revision you name. `validate` reads that revision and your
 working tree, and no history between them. It pairs the two copies of a record by `id`, so a file you moved is still
-compared.
+compared. A record whose `id` changed is a rename. It pairs with the record of its type now at its path, or at the path
+git reports it moved to, where that record's `id` is new. Git reports a move once the file is staged or committed.
 
 | Check                       | Level   | What it reports                                                        |
 |-----------------------------|---------|------------------------------------------------------------------------|
@@ -97,11 +98,15 @@ A change in substance is anything except these:
 * **A typo.** Each changed word is within two edits of the word it replaced, and the section keeps its word count.
 * **`status`, `superseded-by`, `review-by` and `accepts`.** Any other frontmatter field that moves is a change in
   substance.
+* **A renamed `id`.** A frontmatter value, or the whole text of a link, may swap a renamed record's old `id` for its
+  new one. The same swap anywhere else in the prose, or a swap for any other `id`, is a change in substance. So is a
+  change to the record's own `id`, so a decided ADR or a published postmortem keeps its `id`.
 
 `validate` compares the body one `##` section at a time. A section added, removed or renamed is a change in substance.
 
-A record deleted as a draft, or after it was retired or superseded, reports nothing. Something outside the corpus may
-still cite an in-force record's id, so retire it through its `status`.
+A record deleted as a draft, or after it was retired or superseded, reports nothing. A renamed record was not deleted,
+and reports nothing either. Something outside the corpus may still cite an in-force record's id, so retire it through
+its `status`.
 
 Without `--since`, `validate` prints one line naming the checks it skipped. A ref git cannot resolve exits `1` and names
 the ref. That includes a shallow clone lacking it, and a tree outside git.

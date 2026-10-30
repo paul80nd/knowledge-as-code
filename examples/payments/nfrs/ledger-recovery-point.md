@@ -1,0 +1,67 @@
+---
+id: nfr-ledger-recovery-point
+type: nfr
+tier: normative
+status: agreed
+characteristic: recovery
+applies-to:
+  - svc-payment-ledger
+target: RPO 5 minutes, RTO 1 hour
+measured-by: A quarterly restore of the ledger database into an isolated environment
+agreed-on: "2026-08-28"
+review-by: "2027-08-28"
+owner: human:paul.law
+tags: [ ledger, recovery, resilience ]
+---
+
+# A recovered ledger loses at most five minutes of payments
+
+`NFR: nfr-ledger-recovery-point` `AGREED`
+
+The ledger is recoverable to a point five minutes before a failure. It is back in service within an hour.
+
+## Target
+
+RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger]. Both figures are read against
+each failure.
+
+## Why this number
+
+Five minutes is a chosen figure. The PSP's settlement file lists every authorisation it took, so the reconciliation can
+rebuild any gap shorter than a day. Five minutes is how much repair finance accepts after a failure, and no failover
+has tested it.
+
+The hour is a figure the quarterly restore has already met. `Current actual` records the last one at 38 minutes, so
+the target commits to what the procedure does today and not to an improvement nobody has planned.
+
+## How it is measured
+
+A quarterly restore into an isolated environment measures both figures. The recovery time runs from the decision to
+restore to the ledger serving queries. The recovery point compares the last entry in the restored data with the last
+entry the source held.
+
+A failover to the geo-replica loses whatever the replica had not yet received, and nothing measures that lag. [pmt-0001]
+lost 11 minutes that way. Until its action to alert on replica lag lands, a failover can breach this target and nothing
+reports it.
+
+## Current actual
+
+The restore on 2026-08-14 took 38 minutes and recovered to within 2 minutes. The database configuration shows
+point-in-time backup on, with a 35-day retention.
+
+## What a breach costs
+
+Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger
+has no entry for it. Until the repair runs, the ledger understates what was taken.
+
+## What we do about a breach
+
+No alert fires, because the figure is read at a restore and not continuously. The repair is the reconciliation, which
+rebuilds the missing entries from the PSP's settlement file.
+
+## Related
+
+* [pmt-0001] records the incident this target was written after.
+
+[pmt-0001]: ../postmortems/0001-refused-authorised-payments.md
+[svc-payment-ledger]: ../services/payment-ledger.md

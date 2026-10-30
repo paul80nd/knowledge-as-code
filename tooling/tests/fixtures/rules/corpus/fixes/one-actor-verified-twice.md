@@ -1,5 +1,5 @@
 ---
-id: fix-0004
+id: fix-one-actor-verified-twice
 type: fix
 tier: normative
 status: active
@@ -13,7 +13,7 @@ owner: human:alex.doe
 
 # One actor verified twice
 
-`Fix: fix-0004` `ACTIVE`
+`Fix: fix-one-actor-verified-twice` `ACTIVE`
 
 ## Symptom
 

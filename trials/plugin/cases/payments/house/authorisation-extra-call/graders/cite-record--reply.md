@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'nfr-0001'
+pattern: 'nfr-authorisation-latency'
 ---

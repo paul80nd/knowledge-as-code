@@ -51,8 +51,8 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 The five sections before `Scope` are always present, because the type requires them. `owner` travels with this type
 alone, so it is the one place an export says who accepted a risk.
 
-**Search a bracketed id inside a section**, as `[ctl-0007]`. The export drops the link definitions, so the id alone is
-the cross-reference.
+**Search a bracketed id inside a section**, as `[ctl-secret-scanner]`. The export drops the link definitions, so the
+id alone is the cross-reference.
 
 ## Say whether it is current
 

@@ -7,13 +7,13 @@ public class RuleExprTests
     [Fact]
     public void Entries_match_reads_every_object_in_a_list()
         => Assert.False(Eval("entries_match('verified', 'by', '^human:')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
             + "  - { at: 2026-06-13T09:00:00Z, by: role:head-of-engineering }\n"));
 
     [Fact]
     public void Entries_match_is_true_where_every_object_matches()
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
 
     [Fact]
     public void Entries_match_reads_the_one_object_a_mapping_holds()
@@ -22,33 +22,33 @@ public class RuleExprTests
 
     [Fact]
     public void Entries_match_is_true_where_the_field_is_absent()
-        => Assert.True(Eval("entries_match('verified', 'by', '^human:')", "id: fix-0001"));
+        => Assert.True(Eval("entries_match('verified', 'by', '^human:')", "id: fix-goldens-disagree"));
 
     [Fact]
     public void Entries_match_is_true_where_an_object_does_not_carry_the_key()
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"));
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"));
 
     [Fact]
     public void Entries_unique_is_false_where_one_actor_is_written_twice()
         => Assert.False(Eval("entries_unique('verified', 'by')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
             + "  - { at: 2026-09-04T11:30:00Z, by: human:alex.doe }\n"));
 
     [Fact]
     public void Entries_unique_is_true_where_each_actor_is_written_once()
         => Assert.True(Eval("entries_unique('verified', 'by')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
             + "  - { at: 2026-09-04T11:30:00Z, by: symptom-sweep/1.4.0 }\n"));
 
     [Fact]
     public void Entries_unique_is_true_where_the_field_is_absent()
-        => Assert.True(Eval("entries_unique('verified', 'by')", "id: fix-0001"));
+        => Assert.True(Eval("entries_unique('verified', 'by')", "id: fix-goldens-disagree"));
 
     [Fact]
     public void Entries_unique_is_true_where_no_object_carries_the_key()
         => Assert.True(Eval("entries_unique('verified', 'by')",
-            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"
+            "id: fix-goldens-disagree\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"
             + "  - { at: 2026-09-04T11:30:00Z }\n"));
 
     private static Facts FactsFor(string frontmatter, string body, DateOnly? today = null)
@@ -178,7 +178,7 @@ public class RuleExprTests
     [Fact]
     public void Field_matches_reads_the_frontmatter_that_matches_cannot()
     {
-        const string front = "id: nfr-0001\nmeasured-by: Monitored where practical.";
+        const string front = "id: nfr-authorisation-latency\nmeasured-by: Monitored where practical.";
         Assert.True(Eval("field_matches('measured-by', '(?i)where practical')", front, "Body text."));
         Assert.False(Eval("field_matches('measured-by', 'p95')", front, "p95 appears in the body only."));
         Assert.False(Eval("field_matches('nope', '.')", front, "Body text."));

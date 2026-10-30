@@ -23,17 +23,22 @@ public static class Substance
 
     private const string Opening = "the title and opening";
 
+    private static readonly IReadOnlyDictionary<string, string> NoneRenamed = new Dictionary<string, string>();
+
     /// <summary>
     /// Empty where <paramref name="after"/> says what <paramref name="before"/> said. The frontmatter comes first, then
-    /// the body.
+    /// the body. A frontmatter value other than <c>id</c>, or a link's text, that swaps an id in
+    /// <paramref name="renamed"/> for the id it maps to says what it said.
     /// </summary>
-    public static IReadOnlyList<Change> Changes(Doc before, Doc after)
+    public static IReadOnlyList<Change> Changes(Doc before, Doc after,
+        IReadOnlyDictionary<string, string>? renamed = null)
     {
+        renamed ??= NoneRenamed;
         var changes = new List<Change>();
-        Frontmatter(before, after, changes);
+        Frontmatter(before, after, renamed, changes);
 
-        if (!Close(Words(before, before.BodyStart, FirstSection(before)), Words(after, after.BodyStart,
-                FirstSection(after))))
+        if (!Close(Words(before, before.BodyStart, FirstSection(before), renamed), Words(after, after.BodyStart,
+                FirstSection(after), NoneRenamed)))
             changes.Add(new Change(Opening, Math.Max(after.H1Line, 1)));
 
         var was = Keyed(before);
@@ -50,7 +55,8 @@ public static class Substance
                 continue;
             }
 
-            if (!Close(Words(before, then.BodyStart, then.BodyEnd), Words(after, section.BodyStart, section.BodyEnd)))
+            if (!Close(Words(before, then.BodyStart, then.BodyEnd, renamed),
+                    Words(after, section.BodyStart, section.BodyEnd, NoneRenamed)))
                 changes.Add(new Change($"`## {section.Title}`", section.Line));
         }
 
@@ -58,7 +64,8 @@ public static class Substance
     }
 
     /// <summary>One change per field, named in the order the later frontmatter writes it.</summary>
-    private static void Frontmatter(Doc before, Doc after, List<Change> changes)
+    private static void Frontmatter(Doc before, Doc after, IReadOnlyDictionary<string, string> renamed,
+        List<Change> changes)
     {
         var line = Math.Max(after.FrontStartLine, 1);
         var was = Fields(before);
@@ -67,7 +74,9 @@ public static class Substance
         foreach (var key in now.Keys.Concat(was.Keys.Where(k => !now.ContainsKey(k))))
         {
             if (Movable.Contains(key)) continue;
-            if (was.TryGetValue(key, out var a) && now.TryGetValue(key, out var b) && Same(a, b)) continue;
+            // A decided record's own id stays fixed, so only its citations of a renamed record may swap.
+            if (was.TryGetValue(key, out var a) && now.TryGetValue(key, out var b)
+                && Same(a, b, key == "id" ? NoneRenamed : renamed)) continue;
 
             changes.Add(new Change($"`{key}`", line));
         }
@@ -83,15 +92,20 @@ public static class Substance
         return fields;
     }
 
-    /// <summary>Compared by value, so a date quoted in one revision and bare in the other is the same date.</summary>
-    private static bool Same(YamlNode a, YamlNode b) => (a, b) switch
+    /// <summary>
+    /// Compared by value, so a date quoted in one revision and bare in the other is the same date, and an id swapped
+    /// for the id it was renamed to is the same id.
+    /// </summary>
+    private static bool Same(YamlNode a, YamlNode b, IReadOnlyDictionary<string, string> renamed) => (a, b) switch
     {
-        (YamlScalarNode x, YamlScalarNode y) => x.Value == y.Value,
+        (YamlScalarNode x, YamlScalarNode y) =>
+            x.Value == y.Value || x.Value is { } was && renamed.GetValueOrDefault(was) is { } now && now == y.Value,
         (YamlSequenceNode x, YamlSequenceNode y) =>
-            x.Children.Count == y.Children.Count && x.Children.Zip(y.Children).All(p => Same(p.First, p.Second)),
+            x.Children.Count == y.Children.Count
+            && x.Children.Zip(y.Children).All(p => Same(p.First, p.Second, renamed)),
         (YamlMappingNode x, YamlMappingNode y) =>
             x.Children.Count == y.Children.Count
-            && x.Children.All(kv => y.Children.TryGetValue(kv.Key, out var other) && Same(kv.Value, other)),
+            && x.Children.All(kv => y.Children.TryGetValue(kv.Key, out var other) && Same(kv.Value, other, renamed)),
         _ => false
     };
 
@@ -118,17 +132,21 @@ public static class Substance
 
     /// <summary>
     /// The words between two offsets, whitespace folded, each link reduced to its text and each autolink to nothing.
-    /// The identity line is left out, and <c>identity-status</c> checks it against <c>status</c>.
+    /// A link whose whole text is an id in <paramref name="renamed"/> reads as the id it maps to. The identity line is
+    /// left out, and <c>identity-status</c> checks it against <c>status</c>.
     /// </summary>
-    private static List<string> Words(Doc d, int start, int end)
+    private static List<string> Words(Doc d, int start, int end, IReadOnlyDictionary<string, string> renamed)
     {
-        var cuts = Cuts(d).Where(c => c.End > start && c.Start < end).OrderBy(c => c.Start);
+        var edits = Cuts(d).Select(c => (c.Start, c.End, Text: ""))
+            .Concat(Swaps(d, renamed))
+            .Where(c => c.End > start && c.Start < end).OrderBy(c => c.Start);
         var kept = new StringBuilder();
         var at = start;
 
-        foreach (var (from, to) in cuts)
+        foreach (var (from, to, text) in edits)
         {
             if (from > at) kept.Append(d.Text, at, from - at);
+            kept.Append(text);
             at = Math.Max(at, to);
         }
 
@@ -167,6 +185,18 @@ public static class Substance
         if (h1 >= 0 && h1 + 1 < blocks.Count
                     && blocks[h1 + 1] is ParagraphBlock { Inline.FirstChild: CodeInline } identity)
             yield return (identity.Span.Start, identity.Span.End + 1);
+    }
+
+    /// <summary>The text of each link that is exactly a renamed id, with the id it was renamed to.</summary>
+    private static IEnumerable<(int Start, int End, string Text)> Swaps(Doc d,
+        IReadOnlyDictionary<string, string> renamed)
+    {
+        if (renamed.Count == 0) yield break;
+
+        foreach (var link in d.Ast.Descendants<LinkInline>())
+            if (!link.IsAutoLink && link.FirstChild is LiteralInline { NextSibling: null } text
+                                 && renamed.GetValueOrDefault(text.Content.ToString()) is { } now)
+                yield return (text.Span.Start, text.Span.End + 1, now);
     }
 
     /// <summary>Levenshtein distance, with a substitution, an insertion and a deletion each costing one.</summary>

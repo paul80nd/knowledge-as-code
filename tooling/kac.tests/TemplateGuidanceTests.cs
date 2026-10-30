@@ -32,6 +32,22 @@ public class TemplateGuidanceTests
 
     [Theory]
     [MemberData(nameof(Types))]
+    public void A_template_writes_its_id_in_its_type_s_style(string folder)
+    {
+        var t = Declared.ByFolder[folder];
+        var placeholder = t.IdStyle switch
+        {
+            "numbered" => "{{nnnn}}",
+            "mnemonic" => "{{MNEM}}",
+            _ => "{{slug}}"
+        };
+        var text = Files.ReadLf(Path.Combine(Repo.Root, "template", folder, "_template.md"));
+
+        Assert.Contains($"\nid: {t.IdPrefix}-{placeholder}\n", text, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [MemberData(nameof(Types))]
     public void A_template_whose_type_has_a_list_field_states_the_alphabetical_order(string folder)
     {
         Assert.SkipUnless(Declared.ByFolder[folder].DeclaredFields.Any(f => f.Type == "list"),

@@ -19,10 +19,10 @@ Feature: Assure. The corpus owner finds what is uncovered, unchecked and due
   @intent:inform @type:controls @trial:plugin/engineering/house/is-deploy-enforced
   Scenario: A question about enforcement gets the control, and its mechanism
     Baseline: the plugin arm met the threshold in 3 of 3 runs, so the scenario holds.
-    Given ctl-0002 verifies std-DEPLOY, and its mechanism is not-enforced
+    Given ctl-health-reports-commit verifies std-DEPLOY, and its mechanism is not-enforced
     And a task asking whether anything checks that an artefact records its commit
     When the session answers
-    Then in at least 2 of 3 runs the reply cites ctl-0002 and says nothing enforces the rule
+    Then in at least 2 of 3 runs the reply cites ctl-health-reports-commit and says nothing enforces the rule
 
   @intent:respect @type:deviations @trial:plugin/dog-fooding/house/deviations-due
   Scenario: A question about open departures gets each one with its review date

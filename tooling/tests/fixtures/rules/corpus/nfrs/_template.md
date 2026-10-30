@@ -1,5 +1,5 @@
 ---
-id: nfr-{{nnnn}}
+id: nfr-{{slug}}
 type: nfr
 tier: normative
 status: draft
@@ -15,7 +15,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`NFR: nfr-{{nnnn}}` `DRAFT`
+`NFR: nfr-{{slug}}` `DRAFT`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds

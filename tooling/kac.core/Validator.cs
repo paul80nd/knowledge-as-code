@@ -825,8 +825,10 @@ public static class Validator
 
     /// <summary>
     /// Pairs each record at <paramref name="since"/> with the record holding its id now, wherever its file went. A
-    /// record whose id has gone is reported where its status then was its type's <c>in-force:</c> value. A record
-    /// still here is handed to each history rule its type declares, where its text changed.
+    /// record whose id has gone pairs with the record of its type now at its path, or at the path git moved it to,
+    /// where that record's id is new. Such a pair is a rename, and every history rule is told of it. A record left
+    /// unpaired is reported where its status then was its type's <c>in-force:</c> value. A paired record is handed to
+    /// each history rule its type declares, where its text changed.
     /// </summary>
     public static void CheckHistory(Schema schema, IReadOnlyList<Doc> docs, Baseline since, List<Finding> f)
     {
@@ -835,33 +837,59 @@ public static class Validator
             if (d.FrontScalar("id") is { Length: > 0 } id)
                 now.TryAdd(id, d);
 
+        var byPath = docs.ToDictionary(d => d.Rel, StringComparer.Ordinal);
+        var heldThen = since.Docs.Select(d => d.FrontScalar("id")).OfType<string>()
+            .ToHashSet(StringComparer.Ordinal);
+
+        // A file unchanged since the revision is not in `since.Docs`, so its id is new only where no other record now
+        // holds it.
+        var holders = docs.Select(d => d.FrontScalar("id")).OfType<string>().CountBy(id => id, StringComparer.Ordinal)
+            .ToDictionary(p => p.Key, p => p.Value, StringComparer.Ordinal);
+
         // A record still at its path whose id cannot be read is one `frontmatter-parses` or `required-field` reports.
         var unread = docs.Where(d => d.FrontScalar("id") is not { Length: > 0 }).Select(d => d.Rel)
             .ToHashSet(StringComparer.Ordinal);
 
+        var pairs = new List<(Doc Before, Doc After, TypeSchema Type)>();
+        var renamed = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var before in since.Docs)
         {
             if (before.Type is not { } t || before.FrontScalar("id") is not { Length: > 0 } id) continue;
 
-            if (!now.TryGetValue(id, out var after))
+            if (now.TryGetValue(id, out var after))
             {
-                if (unread.Contains(before.Rel)) continue;
-
-                var status = before.FrontScalar("status");
-                if (status is not null && status == schema.EffectiveField(t, "status")?.InForce)
-                    f.Add(new Finding(before.Rel, null, Sev.Warning, HistoryRules.RetireNotDelete,
-                        $"{id} was `{status}` at {since.Ref}, and no record here has that id now. Something "
-                        + $"outside the corpus may still cite {id}, so restore the record and retire it through "
-                        + "its `status`."));
+                pairs.Add((before, after, t));
                 continue;
             }
 
+            if (byPath.GetValueOrDefault(since.Moved.GetValueOrDefault(before.Rel, before.Rel)) is { } successor
+                && successor.Type?.Folder == t.Folder
+                && successor.FrontScalar("id") is { Length: > 0 } newId
+                && !heldThen.Contains(newId) && holders[newId] == 1)
+            {
+                renamed[id] = newId;
+                pairs.Add((before, successor, t));
+                continue;
+            }
+
+            if (unread.Contains(before.Rel)) continue;
+
+            var status = before.FrontScalar("status");
+            if (status is not null && status == schema.EffectiveField(t, "status")?.InForce)
+                f.Add(new Finding(before.Rel, null, Sev.Warning, HistoryRules.RetireNotDelete,
+                    $"{id} was `{status}` at {since.Ref}, and no record here has that id now. Something "
+                    + $"outside the corpus may still cite {id}, so restore the record and retire it through "
+                    + "its `status`."));
+        }
+
+        foreach (var (before, after, t) in pairs)
+        {
             if (after.Text == before.Text) continue;
 
             var inForce = schema.EffectiveField(t, "status")?.InForce;
             foreach (var rule in t.Rules)
                 if (HistoryRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                    implementation.Check(new HistoryRuleContext(before, after, t, rule, since.Ref, inForce,
+                    implementation.Check(new HistoryRuleContext(before, after, t, rule, since.Ref, inForce, renamed,
                         new Report(after.Rel, f)));
         }
     }
