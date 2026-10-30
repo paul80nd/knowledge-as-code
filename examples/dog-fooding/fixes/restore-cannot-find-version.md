@@ -53,7 +53,7 @@ with no `.imports/`.
    dotnet run --project ../../tooling/kac -- pack
    ```
 
-   `pack` prints `pack: sealed <n> file(s) as example-engineering <version>, cited as 'eng:'.` Every consumer has to
+   `pack` prints `pack: sealed <n> files as example-engineering <version>, cited as 'eng:'.` Every consumer has to
    ask for that version. `pack` empties `.dist/package` before it writes, so the earlier package is gone.
 
 2. Where `examples/engineering`'s records changed on this branch and its `content-version` did not move, move it as
@@ -80,7 +80,7 @@ with no `.imports/`.
    ```
 
 It worked when `restore` prints `restore: example-engineering <version> as 'eng:'.` and `validate` reports
-`0 error(s)` in both consumers. To undo what steps 3 to 8 wrote, run
+`0 errors` in both consumers. To undo what steps 3 to 8 wrote, run
 `git checkout -- examples/payments/.corpus.yaml examples/dog-fooding/.corpus.yaml` from the root of the repository. It
 also discards any other uncommitted edit to either file, and leaves the package step 1 wrote. Before the pull request
 opens, check that both consumers moved their own `content-version` with the lock.

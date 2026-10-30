@@ -107,8 +107,8 @@ public static class Commands
         if (plan.Unread.Count > 0)
         {
             Note(
-                $"export: {plan.Unread.Count} cross-reference(s) name a record and no part inside it, so "
-                + "nothing was carried for them:");
+                $"export: carried nothing for {Counted.Of(plan.Unread.Count, "cross-reference")} naming a record "
+                + "and no part inside it:");
             foreach (var u in plan.Unread) Out.Line($"  {u}");
             Note("export: point each link at the part it means, as '<file>.md#<anchor>'.");
         }
@@ -119,8 +119,9 @@ public static class Commands
                  + "this corpus consumes. Their records travel merged with its own.");
 
         Account(plan.Types.Count == 0
-            ? $"export: wrote {written.Count} file(s); no type contributed a record."
-            : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
+            ? $"export: wrote {Counted.Of(written.Count, "file")}; no type contributed a record."
+            : $"export: wrote {Counted.Of(written.Count, "file")} for "
+              + $"{string.Join(", ", plan.Types.Select(t => t.Type))}.");
         return 0;
     }
 
@@ -181,12 +182,13 @@ public static class Commands
         foreach (var path in written) Out.Markup(Wrote(path));
 
         if (plan.DeclinedTypes.Count > 0)
-            Account($"new: {plan.DeclinedTypes.Count} file(s) withheld for the types this corpus declined.");
+            Account($"new: {Counted.Of(plan.DeclinedTypes.Count, "file")} withheld for the types this corpus "
+                    + "declined.");
         if (plan.DeclinedCi.Count > 0)
             Account($"new: did not write {string.Join(", ", plan.DeclinedCi)}: this corpus is built by "
                     + $"{answers.Ci}.");
 
-        Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
+        Account($"new: wrote {Counted.Of(plan.Copied.Count + plan.Composed.Count, "file")} for {answers.Name}, taken "
                 + $"from {request.From}{At(take.Commit)}.");
         Owned("new", answers.Owner, received.Owned);
         Unlinked("new", received.Unlinked);
@@ -362,8 +364,8 @@ public static class Commands
         foreach (var warning in plan.Warnings) Note($"bundle: {warning}");
 
         Account(
-            $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
-            + $"{plan.Version ?? "(no version)"}. {plan.Included.Count} component(s) included, "
+            $"bundle: wrote {Counted.Of(written.Count, "file")} to {Dist.Plugin}/ as {plan.PluginName} "
+            + $"{plan.Version ?? "(no version)"}. {Counted.Of(plan.Included.Count, "component")} included, "
             + $"{plan.Trimmed.Count} trimmed.");
 
         Out.Markup(
@@ -392,7 +394,7 @@ public static class Commands
         var written = Packer.Write(corpusRoot, plan);
         Out.Markup(Wrote(written));
 
-        Account($"pack: sealed {plan.Entries.Count} file(s) as {plan.Id} {plan.Version}, cited as "
+        Account($"pack: sealed {Counted.Of(plan.Entries.Count, "file")} as {plan.Id} {plan.Version}, cited as "
                 + $"'{plan.Shortcode}:'.");
 
         // `docs/use/cli/pack.md` says what to do when a registry rejects the push.
@@ -441,7 +443,7 @@ public static class Commands
                     + (step.Current ? " Already current." : ""));
 
         Account($"restore: {written.Count} fetched, {plan.Steps.Count - written.Count} already current. "
-                + $"{locked.Count} resolved version(s) written to .corpus.yaml, and "
+                + $"{Counted.Of(locked.Count, "resolved version")} written to .corpus.yaml, and "
                 + $"{kac.core.Restore.ImportsDir}/ is not committed.");
         return 0;
     }
@@ -458,7 +460,7 @@ public static class Commands
             var stale = plan.Where(f => f.Stale).Select(f => f.Path).ToList();
             if (stale.Count == 0)
             {
-                Out.Line($"generated files are up to date ({plan.Count} file(s)).");
+                Out.Line($"generated files are up to date ({Counted.Of(plan.Count, "file")}).");
                 return 0;
             }
 
@@ -483,7 +485,7 @@ public static class Commands
 
         Out.Markup(written.Count == 0
             ? "generated files already up to date; nothing written."
-            : $"updated [bold]{written.Count}[/] of {plan.Count} generated file(s).");
+            : $"updated [bold]{written.Count}[/] of {Counted.Of(plan.Count, "generated file")}.");
     }
 
     private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json,
@@ -536,8 +538,8 @@ public static class Commands
                     Out.Raw(annotation);
 
         Out.Markup(
-            $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
-            + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}"
+            $"validated {Counted.Of(validated, "document")} and {Counted.Of(templates, "template")}, skipped "
+            + $"{skipped} without frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}"
             + (infos > 0 ? $", {Tally(infos, Sev.Info)}" : ""));
         return errors > 0 ? 1 : 0;
     }
@@ -745,7 +747,7 @@ public static class Commands
     {
         var (word, colour) = Severity(severity);
 
-        var counted = severity == Sev.Info ? $"{count} {word}" : $"{count} {word}(s)";
+        var counted = severity == Sev.Info ? $"{count} {word}" : Counted.Of(count, word);
         return count == 0 ? counted : $"[{colour}]{counted}[/]";
     }
 
@@ -811,7 +813,7 @@ public static class Commands
 
         if (!plan.Changes)
         {
-            Out.Line($"update: in step, {plan.InStep} file(s) compared.");
+            Out.Line($"update: in step, {Counted.Of(plan.InStep, "file")} compared.");
             return 0;
         }
 
@@ -854,8 +856,8 @@ public static class Commands
 
         if (plan.Unshared.Count > 0)
         {
-            Note($"update: {plan.Unshared.Count} file(s) sit where the framework's rules apply, and the "
-                 + "template sends nothing to them:");
+            Note($"update: the template sends nothing to {Counted.Of(plan.Unshared.Count, "file")} sitting "
+                 + "where the framework's rules apply:");
             foreach (var rel in plan.Unshared) Out.Line($"  {rel}");
         }
 
@@ -883,17 +885,17 @@ public static class Commands
     {
         if (plan.Skipped.Count > 0)
         {
-            Account($"update: stepped over {plan.Skipped.Count} file(s) that .corpus.yaml claims:");
+            Account($"update: stepped over {Counted.Of(plan.Skipped.Count, "file")} that .corpus.yaml claims:");
             foreach (var p in plan.Skipped) Out.Line($"  {p}");
         }
 
         if (plan.Declined > 0)
-            Account($"update: withheld {plan.Declined} file(s) for types this corpus has not adopted.");
+            Account($"update: withheld {Counted.Of(plan.Declined, "file")} for types this corpus has not adopted.");
 
         if (kac.core.Update.CiWithheld(plan) is { } ci) Account(ci);
 
         if (plan.DeclinedPlugin > 0)
-            Account($"update: withheld {plan.DeclinedPlugin} plugin file(s) this corpus reads from "
+            Account($"update: withheld {Counted.Of(plan.DeclinedPlugin, "plugin file")} this corpus reads from "
                     + "elsewhere. .corpus.yaml says where under plugin.from.");
 
         var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();

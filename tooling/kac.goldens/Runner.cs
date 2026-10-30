@@ -508,7 +508,7 @@ internal static class Runner
         string.Join('\n', output.Replace(root, "<template>").Split('\n')
             .Select(l => l.TrimEnd())
             .Where(l => l.Length > 0)
-            .Where(l => !l.Contains("file(s) compared", StringComparison.Ordinal))
+            .Where(l => !l.StartsWith("update: in step,", StringComparison.Ordinal))
             .Where(l => !l.Contains("withheld", StringComparison.Ordinal))) + "\n";
 
     private static void RunExportScenario(Outcome outcome, string name, string scenario, string corpusDir)

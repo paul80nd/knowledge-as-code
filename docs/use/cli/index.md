@@ -93,6 +93,8 @@ everywhere.
 `kac --help` lists the commands, and `kac <command> --help` prints that command's options. `--version` prints the
 release and the commit it was built from:
 
+<!-- transcript: illustration, kac --version -->
+
 ```text
 0.41.0+c1c9621bc64317da9642f942d804d7dd22e41644
 ```

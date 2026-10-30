@@ -7,4 +7,4 @@ wrote .dist/plugin/skills/standards-lookup/SKILL.md
 wrote .dist/plugin/hooks/build-index.json
 
 # Every component survives: the export has standards at shape 2 and controls at shape 1.
-4 component(s) included, 0 trimmed.
+4 components included, 0 trimmed.

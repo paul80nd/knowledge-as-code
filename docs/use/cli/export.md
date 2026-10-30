@@ -37,15 +37,16 @@ merged into the flat file for each type, so a consumer greps once for everything
 kac export
 ```
 
-`export` prints each file as it writes it, and closes with a count per type:
+`export` prints each file as it writes it, and closes with a count of the files and the types they came from. The tail
+of a run:
+
+<!-- transcript: examples/library, kac export -->
 
 ```text
-wrote .dist/export/glossary/gls-example-libraries.json
-wrote .dist/export/glossary/gls-knowledge-as-code.json
-wrote .dist/export/glossary/gls-search.json
-wrote .dist/export/glossary/terms.jsonl
-wrote .dist/export/manifest.json
-export: wrote 5 file(s) for glossary.
+wrote .dist/export/services/svc-search.json
+wrote .dist/export/services/svc-shelf-audit.json
+wrote .dist/export/services/svc-thumbnailer.json
+export: wrote 30 files for adrs, data, explanations, glossary, integrations, offerings, services.
 ```
 
 ### One type
@@ -55,14 +56,27 @@ kac export --type glossary
 ```
 
 `kac` still loads the corpus whole, so every id resolves. It refuses a type your corpus has not adopted, and says which
-one.
+one. A run for one type writes that type's files and the manifest:
+
+<!-- transcript: examples/library, kac export --type glossary -->
+
+```text
+wrote .dist/export/glossary/gls-example-libraries.json
+wrote .dist/export/glossary/gls-knowledge-as-code.json
+wrote .dist/export/glossary/gls-search.json
+wrote .dist/export/glossary/terms.jsonl
+wrote .dist/export/manifest.json
+export: wrote 5 files for glossary.
+```
 
 ### A corpus that consumes another
 
 Where `.corpus.yaml` lists another corpus in `consumes:`, the run says which one arrived and at what version:
 
+<!-- transcript: examples/dog-fooding, kac export -->
+
 ```text
-export: carried example-engineering 0.16.0, which this corpus consumes. Their records travel merged with its own.
+export: carried example-engineering 0.48.0, which this corpus consumes. Their records travel merged with its own.
 ```
 
 Their records are filed under the shortcode of the corpus that wrote them, and their lines name that shortcode too. A
@@ -74,6 +88,8 @@ corpus of their own keeps the name of whoever wrote it, so each record is filed 
 An export records the commit it was built from. Where the tree has uncommitted changes, the run says so and the manifest
 records it:
 
+<!-- transcript: illustration, kac export -->
+
 ```text
 export: built from a dirty working tree, and the manifest says so. The commit it names does not reproduce it.
 ```
@@ -84,6 +100,8 @@ Commit first where you are about to publish the result.
 
 Each of these ends the run with nothing written, and prints one line saying why. Where more than one applies, the run
 lists every one. Each would otherwise publish a file that reads as whole and answers two ways:
+
+<!-- transcript: illustration, kac export -->
 
 ```text
 export: nothing is restored for eng, which this corpus consumes and an export carries. Run kac restore.

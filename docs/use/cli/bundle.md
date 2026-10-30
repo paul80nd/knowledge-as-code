@@ -76,6 +76,8 @@ and the build index's path in its place, and warns.
 states. Where that tracker has no backlog to file on, `bundle` warns and still builds. The warning names each of the two
 skills the plugin ships:
 
+<!-- transcript: illustration, kac bundle -->
+
 ```text
 bundle: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml and export again to set one.
 ```
@@ -95,12 +97,18 @@ kac bundle
 `bundle` prints each file as it writes it. The run closes with what shipped, what was trimmed and why, and how to
 install it:
 
+<!-- transcript: examples/library, kac bundle -->
+
 ```text
 wrote .dist/plugin/hooks/breadcrumb
 wrote .dist/plugin/hooks/breadcrumb.cmd
 wrote .dist/plugin/hooks/breadcrumb.txt
 wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
+wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
+wrote .dist/plugin/skills/ask-the-corpus/deviations.md
+wrote .dist/plugin/skills/ask-the-corpus/reports.md
+wrote .dist/plugin/skills/ask-the-corpus/runbooks.md
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
@@ -115,7 +123,7 @@ bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 50 file(s) to .dist/plugin/ as example-libraries 0.31.0. 6 component(s) included, 6 trimmed.
+bundle: wrote 50 files to .dist/plugin/ as example-libraries 0.32.1. 6 components included, 6 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -142,8 +150,10 @@ the four skills that name no type of their own. Its export has standards, so it 
 `standards-review`, which reads the review view. It has no fixes and no processes, so `fix-lookup` and
 `process-lookup` are trimmed. The closing line counts what survived:
 
+<!-- transcript: examples/engineering, kac bundle -->
+
 ```text
-bundle: wrote 82 file(s) to .dist/plugin/ as example-engineering 0.45.0. 12 component(s) included, 2 trimmed.
+bundle: wrote 82 files to .dist/plugin/ as example-engineering 0.48.0. 12 components included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -151,6 +161,8 @@ bundle: wrote 82 file(s) to .dist/plugin/ as example-engineering 0.45.0. 12 comp
 ```bash
 jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bundle.json
 ```
+
+<!-- transcript: examples/engineering, jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bundle.json -->
 
 ```text
 {"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
@@ -161,6 +173,8 @@ To see which assembled skill reads the file one type exports, search for it:
 ```bash
 grep -l clauses.jsonl .dist/plugin/skills/*/SKILL.md
 ```
+
+<!-- transcript: examples/engineering, grep -l clauses.jsonl .dist/plugin/skills/*/SKILL.md -->
 
 ```text
 .dist/plugin/skills/policy-lookup/SKILL.md

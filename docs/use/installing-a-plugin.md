@@ -5,7 +5,7 @@ installs it from the marketplace your corpus publishes, and takes each new versi
 that marketplace, and a version you publish loads in the reader's next session. Claude Code leaves auto-update off for
 every marketplace but Anthropic's official ones.
 
-```text
+```
 /plugin marketplace add paul80nd/knowledge-as-code@marketplace   # register the marketplace
 /plugin install example-dogfooding@knowledge-as-code             # install one plugin from it
 ```
@@ -76,7 +76,7 @@ session keeps the version it loaded, and shows `Plugin updated: <name> · Run /r
 
 Without auto-update, a reader takes a new version only by asking for it:
 
-```text
+```
 /plugin marketplace update knowledge-as-code              # in a session
 claude plugin update example-dogfooding@knowledge-as-code # in a shell
 ```

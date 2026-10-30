@@ -109,19 +109,23 @@ kac restore
 
 `restore` reports each corpus with the version it came in at and the folder it was unpacked into:
 
+<!-- transcript: illustration, kac restore -->
+
 ```text
 wrote .imports/eng
 restore: example-engineering 0.16.0 as 'eng:'.
-restore: 1 fetched, 0 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
+restore: 1 fetched, 0 already current. 1 resolved version written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 ### A repeat run
 
 Nothing is fetched twice. If `.imports/<shortcode>/` already contains the resolved version, `restore` skips it:
 
+<!-- transcript: illustration, kac restore -->
+
 ```text
 restore: example-engineering 0.16.0 as 'eng:'. Already current.
-restore: 0 fetched, 1 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
+restore: 0 fetched, 1 already current. 1 resolved version written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 Where the lock still satisfies the range, `kac` never asks the registry, so two restores of an unchanged `.corpus.yaml`
@@ -143,11 +147,15 @@ A refusal reports the entry and exits `1`. Nothing is written.
 
 A package whose stamped shortcode disagrees with your declaration is one:
 
+<!-- transcript: illustration, kac restore -->
+
 ```text
 restore: the package for 'example-engineering' is cited as 'eng:' by its own manifest, and this corpus declares it as 'gov:'. The producer owns the spelling, so change the declaration to match it.
 ```
 
 A range no published version satisfies is another, and it lists the versions the registry does have:
+
+<!-- transcript: illustration, kac restore -->
 
 ```text
 restore: 'example-engineering' has no version matching '^2.0.0' at https://nuget.pkg.github.com/OWNER/index.json. It holds 0.16.0.

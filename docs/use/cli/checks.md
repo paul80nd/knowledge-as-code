@@ -34,13 +34,15 @@ kac checks
 
 One check to a line, with the severity it reports at and what it proves, and a tally at the foot:
 
+<!-- transcript: template, kac checks -->
+
 ```text
   error    schema-unknown-key             Every key in a schema file is one the loader reads.
   error    frontmatter-parses             The frontmatter block is present and parses as a YAML mapping.
   error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
   warning  deprecated-has-successor       A deprecated tool states what replaces it.
 
-164 checks: 101 error(s), 61 warning(s), 2 info.
+164 checks: 101 errors, 61 warnings, 2 info.
 ```
 
 Only an error fails the build. A warning is something to act on. An info reports something true that is nobody's fault,
@@ -62,6 +64,8 @@ kac checks | grep -i expiry
 ```
 
 The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`:
+
+<!-- transcript: template, kac checks | grep -i expiry -->
 
 ```text
   warning  expiry                         An active deviation is still inside its review date.

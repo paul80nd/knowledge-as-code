@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **Every `kac` verb prints a count with its noun in the singular or the plural.** A count of one takes the
+  singular and any other count the plural, so `kac export` prints `wrote 1 file` and `wrote 31 files` where it printed
+  `file(s)`. The `kac validate` summary and the `kac checks` tally read `0 errors, 1 warning`. Two notes are reworded
+  around their count: `kac export` names the cross-references it carried nothing for, and `kac update` names the files
+  the template sends nothing to. A script matching `(s)` in the output needs its pattern changed.
+
 ## 0.44.0 - 2026-10-30
 
 ### Added

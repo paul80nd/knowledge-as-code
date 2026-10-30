@@ -10,6 +10,8 @@ dotnet --list-sdks
 
 You want a line opening `10.`, whatever follows it:
 
+<!-- transcript: illustration, dotnet --list-sdks -->
+
 ```text
 10.0.113 [/usr/lib/dotnet/sdk]
 ```
@@ -37,6 +39,8 @@ kac --version
 ```
 
 `--version` prints the release and the commit it was built from:
+
+<!-- transcript: illustration, kac --version -->
 
 ```text
 0.41.0+c1c9621bc64317da9642f942d804d7dd22e41644
@@ -66,13 +70,15 @@ nothing, which is what a pipeline runs.
 The folder does not have to be a repository yet. `new` offers to run `git init` where there is none. It finishes by
 running `generate`, then `validate`, then `git add -A`:
 
+<!-- transcript: tooling/tests/fixtures/new, kac new -->
+
 ```text
 new: did not write .github/dependabot.yml, .github/workflows/kac.yml, azure-pipelines.yml: this corpus is built by none.
-new: wrote 126 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
+new: wrote 126 files for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at c1c9621.
 new: wrote human:alex.doe as the owner of adrs/0001-knowledge-as-code.md, policies/devi-deviations.md.
 wrote README.md
-updated 1 of 40 generated file(s).
-validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+updated 1 of 40 generated files.
+validated 3 documents and 18 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
 validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 new: this corpus has no tracker to file on, so raise-finding and request-deviation will print each issue for you to file. Add a `tracker:` block to .corpus.yaml to set one.
@@ -121,12 +127,16 @@ kac generate            # rewrite the indexes and the tables inside the markers
 A clean `validate` prints the counts and exits `0`. Its second line names the checks that compare each record with an
 earlier revision, which run only when you name one with `--since`:
 
+<!-- transcript: template, kac validate -->
+
 ```text
-validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
-validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
+validated 3 documents and 18 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
+validate: skipped immutable-after-accepted, clause-id-kept, immutable-after-published, rule-id-kept and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
 A `generate` with nothing to do says so:
+
+<!-- transcript: template, kac generate -->
 
 ```text
 generated files already up to date; nothing written.

@@ -73,6 +73,8 @@ needs.
 writes nothing. Give the job `contents: read`, so it cannot commit either. Run `kac generate` on your own machine and
 commit what it writes.
 
+<!-- transcript: illustration, kac generate --check -->
+
 ```text
 generated files are stale. These differ from the schema/frontmatter:
   glossary/_index.md

@@ -3,7 +3,7 @@
 wrote .dist/export/manifest.json
 wrote .dist/export/policies/clauses.jsonl
 wrote .dist/export/policies/frameworks.jsonl
-export: wrote 4 file(s) for policies.
+export: wrote 4 files for policies.
 
 # The temp root is not a git repository, so no ref resolves and no link can be built.
 export: no published links

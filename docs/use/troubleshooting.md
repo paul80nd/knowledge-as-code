@@ -27,6 +27,8 @@ dotnet tool run kac validate
 
 ## `could not locate a corpus (no .corpus.yaml above the cwd)`
 
+<!-- transcript: illustration, kac validate -->
+
 ```text
 kac: could not locate a corpus (no .corpus.yaml above the cwd).
 ```
@@ -38,6 +40,8 @@ are outside one. The exit code is `2`, which means no corpus rather than a fault
 
 ## `is already a corpus, so there is nothing here to create`
 
+<!-- transcript: illustration, kac new -->
+
 ```text
 new: /path/to/corpus is already a corpus, so there is nothing here to create.
 Taking a newer framework into one is `kac update`.
@@ -47,6 +51,8 @@ Taking a newer framework into one is `kac update`.
 [`update`](cli/update.md).
 
 ## `generated files are stale`
+
+<!-- transcript: illustration, kac generate --check -->
 
 ```text
 generated files are stale. These differ from the schema/frontmatter:
@@ -61,6 +67,8 @@ Where an index still looks wrong, the frontmatter it was built from is wrong.
 
 ## `this repository holds uncommitted changes`
 
+<!-- transcript: illustration, kac update -->
+
 ```text
 update: this repository holds uncommitted changes. Commit or stash them first,
 so that what `update` writes reads as a diff of its own.
@@ -73,6 +81,8 @@ Commit or stash, then run it again. To see what it *would* do without any of thi
 and runs over a tree in any state.
 
 ## `no export at .dist/export/`
+
+<!-- transcript: illustration, kac bundle -->
 
 ```text
 bundle: no export at .dist/export/. Run it first: kac export
@@ -88,6 +98,8 @@ kac pack       # the package another corpus imports
 
 ## `Unknown option` or `No such command`
 
+<!-- transcript: illustration, kac validate --wrong -->
+
 ```text
        validate --wrong
                 ^^^^^^^ Unknown option
@@ -99,6 +111,8 @@ what that one accepts.
 ## A finding you do not understand
 
 Every finding names the check that fired, in brackets:
+
+<!-- transcript: illustration, kac validate -->
 
 ```text
 adrs/0001-knowledge-as-code.md
@@ -127,8 +141,10 @@ The five you are most likely to meet:
 
 The summary counts it:
 
+<!-- transcript: illustration, kac validate -->
+
 ```text
-validated 13 document(s) and 8 template(s), skipped 1 without frontmatter. 0 error(s), 0 warning(s)
+validated 28 documents and 9 templates, skipped 1 without frontmatter. 0 errors, 0 warnings
 ```
 
 A document is validated only if it has a YAML frontmatter block. Frontmatter is how a document opts into its type's
@@ -139,6 +155,8 @@ A file that is not counted at all was never discovered.
 `_` anywhere in its path is the usual answer.
 
 ## A new corpus does not validate
+
+<!-- transcript: illustration, kac validate -->
 
 ```text
 glossary.md

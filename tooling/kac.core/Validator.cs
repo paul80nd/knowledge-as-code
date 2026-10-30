@@ -929,7 +929,7 @@ public static class Validator
                 foreach (var (doc, values) in carried)
                 foreach (var value in values.Where(v => count[v] < floor).Order(StringComparer.Ordinal))
                 {
-                    var carriers = Count(count[value], $"{type.TypeName} record", $"{type.TypeName} records");
+                    var carriers = Counted.Of(count[value], $"{type.TypeName} record");
                     f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, new CheckId("min-records"),
                         $"'{name}: {value}' is carried by {carriers}: the schema asks for at least {floor}, "
                         + "because a value here is meant to group records. One that does not belongs in a field "
@@ -1229,8 +1229,6 @@ public static class Validator
 
         return folders;
     }
-
-    private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 
     /// <summary>
     /// A label used for singular and plural alike is a mass noun and takes no article. A label in capitals takes the

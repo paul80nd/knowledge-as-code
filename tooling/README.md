@@ -66,7 +66,12 @@ examples keeps each at `###`. `CliReferenceTests` holds every page to that set, 
 **What it does** or **Examples**.
 
 **Examples carry the output the command prints**, taken from a real run rather than written by hand. A reader deciding
-whether they have a clean run needs to see one.
+whether they have a clean run needs to see one. Each `text` fence on the site and in the root `README.md` is that
+output, and the line above it names the folder the command ran in and the command:
+`<!-- transcript: examples/library, kac validate -->`. Output set up by hand, such as a fault made on purpose, names
+`illustration` for the folder. A tree or a command to type is not output, so its fence takes no language.
+`DocumentationTests` fails a `text` fence with no marker, and a `kac new` count that the `new` fixture's tree
+disagrees with.
 
 A command page argues nothing, which keeps it the length somebody reads while running the command.
 [The documentation charter](../docs/maintaining/charter.md#where-an-argument-goes) says where the argument behind a

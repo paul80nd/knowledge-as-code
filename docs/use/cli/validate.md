@@ -167,8 +167,10 @@ kac validate
 
 `validate` prints the counts, names the checks it skipped without `--since`, and exits `0`:
 
+<!-- transcript: examples/library, kac validate -->
+
 ```text
-validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+validated 28 documents and 9 templates, skipped 0 without frontmatter. 0 errors, 0 warnings
 validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
@@ -176,14 +178,16 @@ validate: skipped immutable-after-accepted and retire-not-delete, which compare 
 
 `validate` groups the faults under the file that caused them, names the check that fired and the line, and exits `1`:
 
+<!-- transcript: illustration, kac validate -->
+
 ```text
 adrs/0001-knowledge-as-code.md
   error  [required-field]  missing required field 'owner'.  (adrs/0001-knowledge-as-code.md:1)
   error  [id-format]       id 'adr-1' must be 'adr-' followed by 4 digits.  (adrs/0001-knowledge-as-code.md:2)
-  error  [link-resolves]   link target '0099-nothing.md' does not resolve.  (adrs/0001-knowledge-as-code.md:8)
-  error  [identity-id]     identity line id 'adr-0001' does not match the document's id 'adr-1'.  (adrs/0001-knowledge-as-code.md:12)
+  error  [identity-id]     identity line id 'adr-0001' does not match the document's id 'adr-1'.  (adrs/0001-knowledge-as-code.md:13)
+  error  [link-resolves]   link target '0099-nothing.md' does not resolve.  (adrs/0001-knowledge-as-code.md:20)
 
-validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 4 error(s), 0 warning(s)
+validated 28 documents and 9 templates, skipped 0 without frontmatter. 4 errors, 0 warnings
 validate: skipped immutable-after-accepted and retire-not-delete, which compare each record with an earlier revision. Name one with `--since <ref>` to run them.
 ```
 
@@ -195,11 +199,15 @@ The name in brackets is a check id, and [`checks`](checks.md) prints what every 
 `validate` prints the same report, then one line per error or warning before the counts. GitHub reads each of these
 lines as an annotation:
 
+<!-- transcript: illustration, kac validate -->
+
 ```text
 ::error file=adrs/0001-knowledge-as-code.md,line=1,title=required-field::missing required field 'owner'.
 ```
 
 Under Azure Pipelines the same finding is written as:
+
+<!-- transcript: illustration, kac validate -->
 
 ```text
 ##vso[task.logissue type=error;sourcepath=adrs/0001-knowledge-as-code.md;linenumber=1;code=required-field]missing required field 'owner'.

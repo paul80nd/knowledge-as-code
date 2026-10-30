@@ -35,6 +35,8 @@ kac generate
 
 A run that changes nothing says so:
 
+<!-- transcript: examples/library, kac generate -->
+
 ```text
 generated files already up to date; nothing written.
 ```
@@ -46,6 +48,8 @@ kac generate --check
 ```
 
 `--check` recomputes every generated file, lists the ones that differ, and exits `1`. It writes nothing:
+
+<!-- transcript: illustration, kac generate --check -->
 
 ```text
 generated files are stale. These differ from the schema/frontmatter:
