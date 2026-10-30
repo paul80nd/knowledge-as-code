@@ -45,7 +45,7 @@ lose to one type.
 
 * [std-VERS] gives each shape a stamp, so a reader meeting an unknown stamp keeps working on the rest of the export.
 * `kac bundle` refuses an export whose `formatVersion` is not the one that build reads.
-* The changelog records every change a user can observe, and [ctl-0006] fails a version with no section.
+* The changelog records every change a user can observe, and [ctl-changelog-tests] fails a version with no section.
 * Every consumer is in this repository, so a shape change is a change to files a pull request already touches.
 
 ## How it closes
@@ -61,5 +61,5 @@ The export `kac export` writes, the package `kac pack` zips, and the plugin `kac
 
 * [std-VERS] defines the version stamps a consumer reads in place of a notice period.
 
-[ctl-0006]: ../controls/0006-changelog-tests.md
+[ctl-changelog-tests]: ../controls/changelog-tests.md
 [std-VERS]: ../standards/versioning.md

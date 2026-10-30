@@ -1,5 +1,5 @@
 ---
-id: fix-0001
+id: fix-duplicate-authorisation
 type: fix
 tier: normative
 status: active
@@ -16,7 +16,7 @@ tags: [ authorisation, idempotency, retries ]
 
 # One order shows two authorisations on the cardholder's statement
 
-`Fix: fix-0001` `ACTIVE`
+`Fix: fix-duplicate-authorisation` `ACTIVE`
 
 ## Symptom
 

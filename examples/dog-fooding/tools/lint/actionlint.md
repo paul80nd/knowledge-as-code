@@ -45,8 +45,8 @@ MIT. Nothing follows for anything this repository publishes.
 
 * [tol-yamllint] reads the same files as plain YAML.
 * [tol-zizmor] reads the same workflows for insecure patterns.
-* [ctl-0003] is the check that runs it.
+* [ctl-actionlint] is the check that runs it.
 
-[ctl-0003]: ../../controls/0003-actionlint.md
+[ctl-actionlint]: ../../controls/actionlint.md
 [tol-yamllint]: yamllint.md
 [tol-zizmor]: zizmor.md

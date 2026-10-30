@@ -61,8 +61,8 @@ a repository, so a bad release costs that user time and a revert.
 ## What compensates
 
 * A correction ships as a new version, which [std-VERS] governs, and a published version is never replaced.
-* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus
-  it created, so a `kac` that cannot run is caught before it ships.
+* [ctl-corpus-validation] packs the tool and installs it on every pull request. That copy runs `kac new` and validates
+  the corpus it created, so a `kac` that cannot run is caught before it ships.
 * `.github/SECURITY.md` gives a private route for a vulnerability, and GitHub security advisories keep the thread.
 
 ## How it closes
@@ -82,5 +82,5 @@ when both exist.
 
 * [std-VERS] governs the version a correction ships as.
 
-[ctl-0007]: ../controls/0007-corpus-validation.md
+[ctl-corpus-validation]: ../controls/corpus-validation.md
 [std-VERS]: ../standards/versioning.md

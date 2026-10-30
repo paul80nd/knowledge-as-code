@@ -88,8 +88,8 @@ and a debit on their statement.
 A timeout is the absence of an answer. Treating it as a decline invents an outcome, and the customer's bank has the
 real one.
 
-The 5-second default is well above [nfr-0001], which asks for an answer inside 800ms at the 95th percentile. The target
-governs the ordinary call, and the timeout bounds the slowest one.
+The 5-second default is well above [nfr-authorisation-latency], which asks for an answer inside 800ms at the 95th
+percentile. The target governs the ordinary call, and the timeout bounds the slowest one.
 
 ## Sources and further reading
 
@@ -106,5 +106,5 @@ To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart 
 say why in the change.
 
 [Exponential backoff and jitter]: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
-[nfr-0001]: ../../nfrs/0001-authorisation-latency.md
+[nfr-authorisation-latency]: ../../nfrs/authorisation-latency.md
 [std-IDEM.KEY]: idempotency.md#key-the-caller-chooses-the-key

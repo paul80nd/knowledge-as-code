@@ -37,9 +37,16 @@ internal static partial class Verification
     /// <summary>
     /// The prose, with every run of whitespace read as one space. Rider rewraps markdown in this repository from
     /// <c>.editorconfig</c>, in files a session never opened, and a reflow moves no word. A byte-exact comparison would
-    /// ask somebody to read text again that says what it said before.
+    /// ask somebody to read text again that says what it said before. The identity line is left out, as
+    /// <c>Substance</c> leaves it out.
     /// </summary>
-    private static string Body(Doc doc) => Whitespace().Replace(doc.Text[doc.BodyStart..], " ").Trim();
+    private static string Body(Doc doc)
+    {
+        var lines = doc.Text.Split('\n');
+        if (doc.IdentityLine > 0) lines[doc.IdentityLine - 1] = "";
+
+        return Whitespace().Replace(string.Join('\n', lines)[doc.BodyStart..], " ").Trim();
+    }
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();

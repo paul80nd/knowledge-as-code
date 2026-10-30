@@ -5,7 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.ASSETS, eng:pol-EVER.ORPHAN, eng:pol-EVER.PARITY,
   eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-SUPL.REVIEW, eng:pol-TRUS.INVENT, eng:pol-TRUS.SOURCE ]
-verified-by: [ ctl-0004, ctl-0005, ctl-0015 ]
+verified-by: [ ctl-update-check, ctl-yamllint, ctl-zizmor ]
 applies-to:
   - all
 review-by: "2027-09-02"
@@ -144,7 +144,7 @@ rule above is the one the rest depend on.
 
 The `lint` job in `.github/workflows/kac.yml` runs `yamllint --strict .`, so the shape rules fail a build without
 waiting on a reviewer. The same job runs zizmor, which fails an ecosystem with a cooldown under seven days, as
-[ctl-0015] describes. A cooldown gives a compromised release a week to be found and withdrawn before it reaches a pull
+[ctl-zizmor] describes. A cooldown gives a compromised release a week to be found and withdrawn before it reaches a pull
 request. Dependabot never applies a cooldown to a security update. `kac update --check` checks the overlay copies. A
 seed, such as a type page or a `_template.md`, is copied by hand, and nothing compares it. No command checks a comment:
 whether it gives a reason, and whether that reason is true. That is what a reviewer is reading for.
@@ -180,7 +180,7 @@ say why in the change.
 [EditorConfig]: https://editorconfig.org
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md
 [YAML 1.2.2]: https://yaml.org/spec/1.2.2/
-[ctl-0015]: ../controls/0015-zizmor.md
+[ctl-zizmor]: ../controls/zizmor.md
 [std-CI]: workflows.md
 [yamllint]: https://yamllint.readthedocs.io/en/stable/rules.html
 [zizmor]: https://docs.zizmor.sh/audits/#dependabot-cooldown

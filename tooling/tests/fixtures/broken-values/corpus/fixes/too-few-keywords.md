@@ -1,5 +1,5 @@
 ---
-id: fix-0001
+id: fix-too-few-keywords
 type: fix
 tier: normative
 status: active
@@ -12,7 +12,7 @@ owner: human:alex.doe
 
 # Too few keywords
 
-`Fix: fix-0001` `ACTIVE`
+`Fix: fix-too-few-keywords` `ACTIVE`
 
 ## Symptom
 

@@ -126,7 +126,7 @@ The cases in this repository's [`cases/engineering/`](cases/engineering/) test t
 | `house/order-repository-tests`       | `std-NETTST.INTEG`: Postgres comes from anywhere but Testcontainers, and the change gives no reason             |
 | `house/dotnet-ci`                    | `std-NETTST.COVER`: CI does not collect and publish coverage, or writes no Cobertura report and gives no reason |
 | `house/audit-log-retention`          | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                                       |
-| `house/is-deploy-enforced`           | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule                      |
+| `house/is-deploy-enforced`           | `ctl-health-reports-commit`: the reply does not cite the control, or does not say nothing enforces the rule     |
 | `house/public-path-between-services` | `pol-MEXP.PRIVATE`: the design takes the public path, and neither cites the clause nor gives the reason         |
 | `control/orders-db-connection`       | `std-SECRET.NOWHERE`: the password lands in a file                                                              |
 | `control/label-printer-image`        | `std-CONT.MINIMAL`: no non-root `USER`                                                                          |

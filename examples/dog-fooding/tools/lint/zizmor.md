@@ -53,8 +53,8 @@ contains it.
 
 * [tol-actionlint] runs before it in the same job.
 * [std-CI] states the workflow rules it checks.
-* [ctl-0015] is the check that runs it.
+* [ctl-zizmor] is the check that runs it.
 
-[ctl-0015]: ../../controls/0015-zizmor.md
+[ctl-zizmor]: ../../controls/zizmor.md
 [std-CI]: ../../standards/workflows.md
 [tol-actionlint]: actionlint.md

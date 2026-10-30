@@ -3,7 +3,7 @@ name: unverified-fix
 max_turns: 30
 timeout_seconds: 300
 allowed_tools: [Read, Glob, Grep, Skill]
-tags: [house, fix-0002]
+tags: [house, fix-refund-breaks-before-midnight]
 ---
 
 The daily reconciliation keeps reporting breaks on refunds issued in the hour before midnight UTC. Each one shows as

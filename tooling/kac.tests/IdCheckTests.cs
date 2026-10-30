@@ -117,7 +117,7 @@ public class IdCheckTests
 
     [Fact]
     public void A_link_to_a_record_whose_filename_carries_no_id_cites_nothing()
-        => Assert.Null(Cite("/standards/card-data.md", "controls/0001-a.md", Span()));
+        => Assert.Null(Cite("/standards/card-data.md", "controls/a.md", Span()));
 
     private const string TooLong = "slug-that-is-definitely-way-too-long";
 

@@ -23,9 +23,9 @@ tags: [ derived-data, generate, verification ]
 
 ## What we are doing instead
 
-`kac generate --check` regenerates every block and index and compares the result against what is committed. [ctl-0007]
-runs it on each pull request, and the workflow log records the run and its result. That log lives in GitHub Actions
-and expires there, and nothing keeps the result for longer.
+`kac generate --check` regenerates every block and index and compares the result against what is committed.
+[ctl-corpus-validation] runs it on each pull request, and the workflow log records the run and its result. That log
+lives in GitHub Actions and expires there, and nothing keeps the result for longer.
 
 ## Why we need it
 
@@ -56,6 +56,6 @@ Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, an
 
 ## Related
 
-* [ctl-0007] runs the check that fails a stale file.
+* [ctl-corpus-validation] runs the check that fails a stale file.
 
-[ctl-0007]: ../controls/0007-corpus-validation.md
+[ctl-corpus-validation]: ../controls/corpus-validation.md

@@ -15,7 +15,7 @@ and no record.
 
 | Case                  | The change                                                                                   | What a review should say                                                                                    |
 |-----------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `health-endpoint/1-3` | a health endpoint that reports no commit, from the plugin trial's full pass, plugin runs 1-3 | `std-DEPLOY`'s artefact does not record its commit, and `ctl-0002` checks nothing                           |
+| `health-endpoint/1-3` | a health endpoint that reports no commit, from the plugin trial's full pass, plugin runs 1-3 | `std-DEPLOY`'s artefact does not record its commit, and `ctl-health-reports-commit` checks nothing          |
 | `should-departure`    | request logging in London time, with the reason in a comment                                 | `std-OBS`'s SHOULD on UTC is departed from with a reason, so the departure is a judgement call, not a fault |
 | `must-in-added-lines` | a fetch from another service, with its API key written into source                           | `std-SECRET`'s MUST NOT on a secret in source is broken, and the key comes out before merging               |
 

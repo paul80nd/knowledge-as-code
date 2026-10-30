@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.DOCS, eng:pol-KNOW.SYNC, eng:pol-PIPE.REVERT, eng:pol-TRUS.MUTATE ]
-verified-by: [ ctl-0007, ctl-0011 ]
+verified-by: [ ctl-content-version-tests, ctl-corpus-validation ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -203,13 +203,13 @@ what the move means. The `glossary@1` a component names in `plugin.json` is [std
 `kac` itself takes is [std-CONFIG]'s. The version on an assembled plugin is the export's `contentVersion` read back, so
 it states nothing the rules above have not already bound.
 
-**A reviewer reads most of the rules above.** [ctl-0007] runs `kac validate`, which fails a declared import that was
-never restored and warns where a newer version sits inside the declared range. It reports the caret trap as
-information, not as a warning, because a corpus that capped itself on purpose is reporting a decision. [ctl-0011]
-fails a corpus whose `content-version` did not rise where its export changed, its `resolved:` lock moved, or its
-bundle includes a skill, a hook or a manifest that changed. A reviewer judges whether that last change was to wording or
-to what the component tells a reader to do. Nothing compares a `shapeVersion` against the files it stamps, and
-nothing reads `<Version>` against what a user of `kac` can observe.
+**A reviewer reads most of the rules above.** [ctl-corpus-validation] runs `kac validate`, which fails a declared import
+that was never restored and warns where a newer version sits inside the declared range. It reports the caret trap as
+information, not as a warning, because a corpus that capped itself on purpose is reporting a decision.
+[ctl-content-version-tests] fails a corpus whose `content-version` did not rise where its export changed, its
+`resolved:` lock moved, or its bundle includes a skill, a hook or a manifest that changed. A reviewer judges whether
+that last change was to wording or to what the component tells a reader to do. Nothing compares a `shapeVersion` against
+the files it stamps, and nothing reads `<Version>` against what a user of `kac` can observe.
 
 ## Sources and further reading
 
@@ -235,8 +235,8 @@ To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart 
 say why in the change.
 
 [Semantic Versioning 2.0.0]: https://semver.org
-[ctl-0007]: ../controls/0007-corpus-validation.md
-[ctl-0011]: ../controls/0011-content-version-tests.md
+[ctl-content-version-tests]: ../controls/content-version-tests.md
+[ctl-corpus-validation]: ../controls/corpus-validation.md
 [npm semver ranges]: https://github.com/npm/node-semver#ranges
 [std-CI]: workflows.md
 [std-CONFIG]: configuration.md

@@ -1,5 +1,5 @@
 ---
-id: fix-0003
+id: fix-goldens-disagree
 type: fix
 tier: normative
 status: draft
@@ -15,7 +15,7 @@ tags: [ goldens, testing ]
 
 # The golden suite reports a diff nobody meant
 
-`Fix: fix-0003` `DRAFT`
+`Fix: fix-goldens-disagree` `DRAFT`
 
 ## Symptom
 
@@ -121,7 +121,7 @@ scenarios. The suite is a gate on purpose, and it only works where somebody read
 ## Related
 
 * [svc-kac] is the service affected.
-* [ctl-0009] is the check that runs the three layers.
+* [ctl-tool-test-layers] is the check that runs the three layers.
 
-[ctl-0009]: ../controls/0009-tool-test-layers.md
+[ctl-tool-test-layers]: ../controls/tool-test-layers.md
 [svc-kac]: ../services/kac.md

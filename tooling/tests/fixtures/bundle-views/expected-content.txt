@@ -28,7 +28,7 @@
 .dist/plugin/views/review.md :: - A service **SHOULD** report that commit on its health endpoint.
 
 # A control is stated under each rule it names in `verifies`, with its mechanism. A rule no control checks says so.
-.dist/plugin/views/review.md :: Controls: `ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
+.dist/plugin/views/review.md :: Controls: `ctl-health-reports-commit` Nothing checks that a running service reports its commit (`not-enforced`, active).
 .dist/plugin/views/review.md :: Controls: none.
 
 # The plugin manifest keeps each view's declaration, as it keeps every component that survived.

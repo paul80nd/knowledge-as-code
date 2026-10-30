@@ -5,7 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-OBSV.ALERTS, pol-OBSV.BLIND, pol-OBSV.CENTRAL, pol-OBSV.CLOCKS, pol-OBSV.CORREL, pol-OBSV.HEALTH,
   pol-OBSV.RETAIN, pol-OBSV.SECRETS, pol-OBSV.SLO ]
-verified-by: [ ctl-0003 ]
+verified-by: [ ctl-alert-owner-and-action ]
 applies-to:
   - all
 review-by: "2027-08-31"

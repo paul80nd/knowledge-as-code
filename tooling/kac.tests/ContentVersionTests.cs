@@ -1,7 +1,7 @@
 using System.Text;
 using kac.core;
 
-// `validate` sees one revision, so this compares two, as `VerificationTests` compares two records. `ctl-0011` names
+// `validate` sees one revision, so this compares two, as `VerificationTests` compares two records. `ctl-content-version-tests` names
 // where its reach differs from `std-VERS`.
 
 namespace kac.tests;

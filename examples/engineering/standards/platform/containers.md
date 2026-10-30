@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: draft
 implements: [ pol-ACCS.LEAST, pol-ENVS.BASELIN, pol-MEXP.PUBLIC, pol-TRUS.MUTATE, pol-TRUS.SOURCE ]
-verified-by: [ ctl-0001 ]
+verified-by: [ ctl-image-pinned-by-digest ]
 applies-to:
   - all
 review-by: "2027-08-31"

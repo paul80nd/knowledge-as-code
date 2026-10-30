@@ -14,7 +14,7 @@ affected:
   - svc-payment-api
   - svc-payment-ledger
 prompted:
-  - nfr-0002
+  - nfr-ledger-recovery-point
 owner: human:paul.law
 tags: [ failover, ledger, reconciliation ]
 ---
@@ -63,7 +63,7 @@ PSP.
 outage lasted 12 minutes; the 214 orders were a defect behind a service that was already serving.
 
 No recovery-point target covered the ledger on the day, so nobody could say on the night whether losing 11 minutes was
-acceptable. That absence is the finding that produced [nfr-0002].
+acceptable. That absence is the finding that produced [nfr-ledger-recovery-point].
 
 ## Resolution
 
@@ -112,8 +112,8 @@ The whole lost window fell inside one settlement file. The PSP sends one file a 
 00:05 would have split the window across two days' files, and the repair would have waited a further day for the
 second.
 
-Nothing in the design made eleven minutes repairable in one pass. [nfr-0002] now sets a recovery point of five
-minutes.
+Nothing in the design made eleven minutes repairable in one pass. [nfr-ledger-recovery-point] now sets a recovery point
+of five minutes.
 
 ## Actions
 
@@ -125,7 +125,7 @@ minutes.
 
 ## Related
 
-* [nfr-0002] states the recovery point this incident caused to be written.
+* [nfr-ledger-recovery-point] states the recovery point this incident caused to be written.
 * [std-RECON] is the daily run that found the lost entries.
 * [std-LEDGER] is why the repair appended entries.
 
@@ -134,7 +134,7 @@ minutes.
 [gh#3312]: https://git.example.com/example-payments/payment-ledger/issues/3312
 [gh#3313]: https://git.example.com/example-payments/payment-api/issues/3313
 [gh#3314]: https://git.example.com/example-payments/payment-ledger/issues/3314
-[nfr-0002]: ../nfrs/0002-ledger-recovery-point.md
+[nfr-ledger-recovery-point]: ../nfrs/ledger-recovery-point.md
 [std-LEDGER]: ../standards/ledger/entries.md
 [std-RECON]: ../standards/ledger/reconciliation.md
 [svc-payment-api]: ../services/payment-api.md

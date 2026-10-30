@@ -1,5 +1,5 @@
 ---
-id: fix-0005
+id: fix-review-overdue
 type: fix
 tier: normative
 status: draft
@@ -10,7 +10,7 @@ owner: human:alex.doe
 
 # A fix nobody has re-read since 2020
 
-`Fix: fix-0005` `DRAFT`
+`Fix: fix-review-overdue` `DRAFT`
 
 ## Symptom
 

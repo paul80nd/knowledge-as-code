@@ -3,7 +3,7 @@ using kac.core;
 using YamlDotNet.RepresentationModel;
 
 // std-A11Y asks for a new assessment wherever a pin moves its major or minor, and below 0.1.0 wherever it moves at
-// all. `ctl-0014` says what this proves and what it leaves to a reviewer.
+// all. `ctl-assessed-pin-tests` says what this proves and what it leaves to a reviewer.
 
 namespace kac.tests;
 

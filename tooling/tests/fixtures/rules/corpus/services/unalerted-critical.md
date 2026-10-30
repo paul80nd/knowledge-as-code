@@ -8,7 +8,7 @@ repos: [ unalerted-critical ]
 platform: azure-function
 criticality: critical
 monitoring-output: none
-nfrs: [nfr-0002, nfr-0003, nfr-0004]
+nfrs: [nfr-a-delay-with-no-alert, nfr-review-overdue, nfr-target-left-as-a-dash]
 owner: human:alex.doe
 ---
 

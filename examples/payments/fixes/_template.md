@@ -1,5 +1,5 @@
 ---
-id: fix-{{nnnn}}
+id: fix-{{slug}}
 type: fix
 tier: normative
 status: active
@@ -12,7 +12,7 @@ tags: [ a, b ]
 
 # {{The symptom, as you would encounter it}}
 
-`Fix: fix-{{nnnn}}` `ACTIVE`
+`Fix: fix-{{slug}}` `ACTIVE`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -27,7 +27,7 @@ head. Write each list field's entries in alphabetical order.
 Name the title and the filename for the **symptom**, not the cause, in the words the error message or the user would
 use. That is what people search for.
 
-* **`id`**: `fix-` plus a four-digit number, as `fix-0001`. Save the file as `<slug>.md`.
+* **`id`**: `fix-` plus a slug naming the symptom, as `fix-goldens-disagree`. Save the file as `<slug>.md`.
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it with the search terms that
   failed you the day you hit the problem.

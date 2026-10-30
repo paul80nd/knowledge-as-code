@@ -5,7 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-AGNT.ACCEPT, pol-AGNT.DUTIES, pol-AGNT.EQUAL, pol-AGNT.PROV, pol-AGNT.SELFVER, pol-EVER.BRANCH,
   pol-EVER.INTENT, pol-SECD.CODEREV ]
-verified-by: [ ctl-0007 ]
+verified-by: [ ctl-pr-names-agent ]
 applies-to:
   - all
 review-by: "2027-08-26"

@@ -6,7 +6,7 @@ status: active
 implements: [ eng:pol-AGNT.ACCEPT, eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.EQUAL,
   eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER, eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY,
   eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM, eng:pol-DEVI.RECORD, eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
-verified-by: [ ctl-0008, ctl-0009 ]
+verified-by: [ ctl-publish-round-trip, ctl-tool-test-layers ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -329,8 +329,8 @@ names a tool the session may not have, so a reader without it must choose betwee
 The avoided table states no type at all, so a reader cannot tell whether to loop over the field or read it whole. It
 says a field with no value is absent, so a reader testing for the key finds it every time and reads nothing.
 
-A finding is the whole of an issue body. `fix-0002` settled what a session first noticed about Rider, and this is the
-finding that observation would have arrived as.
+A finding is the whole of an issue body. `fix-editorconfig-has-no-effect` settled what a session first noticed about
+Rider, and this is the finding that observation would have arrived as.
 
 `````
 ✅ Good

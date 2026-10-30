@@ -1,5 +1,5 @@
 ---
-id: fix-0004
+id: fix-restore-cannot-find-version
 type: fix
 tier: normative
 status: draft
@@ -14,7 +14,7 @@ tags: [ imports, restore, versioning ]
 
 # kac restore cannot find the version the lock names
 
-`Fix: fix-0004` `DRAFT`
+`Fix: fix-restore-cannot-find-version` `DRAFT`
 
 ## Symptom
 
@@ -99,9 +99,9 @@ states. `.imports/` is untracked, so a restore over a folder you kept proves not
 
 ## Related
 
-* [ctl-0007] is the check that runs `validate` in every corpus.
+* [ctl-corpus-validation] is the check that runs `validate` in every corpus.
 * [std-VERS.CONSUME] is the rule a stale lock breaches.
 
-[ctl-0007]: ../controls/0007-corpus-validation.md
+[ctl-corpus-validation]: ../controls/corpus-validation.md
 [std-VERS]: ../standards/versioning.md
 [std-VERS.CONSUME]: ../standards/versioning.md#consume-a-producers-move-obliges-every-consumer-in-the-same-pull-request

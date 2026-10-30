@@ -1,0 +1,46 @@
+---
+id: ctl-update-check
+type: control
+tier: normative
+status: active
+verifies: [ std-CONFIG.COPIES ]
+mechanism: ci
+frequency: per-pr
+evidence: The `corpora` job's log on the pull request, under the step "Check the corpus is in step with the template".
+applies-to:
+  - all
+review-by: "2027-09-22"
+owner: human:paul.law
+tags: [ overlay, template ]
+---
+
+# Every corpus holds the file the template sends it
+
+`Control: ctl-update-check` `ACTIVE`
+
+The same file lives in the template and in every corpus. A copy that drifted fails the build.
+
+## What it checks
+
+* [std-CONFIG.COPIES] says every overlay copy "**MUST** match its
+  source, as `kac update --check --from ../../` reports in that corpus".
+
+## How it works
+
+The `corpora` job runs `dotnet run --project ../../tooling/kac -- update --check --from ../../` in each of the four
+corpora under `examples/`. `manifest.yaml` at the root lists the files the check covers, and each of its rules states
+which layer those files belong to.
+
+The check reports two faults: a copy whose content differs from the template's, and a file in a corpus that the
+template sends nothing to. Either one exits non-zero.
+
+## Coverage and gaps
+
+The matrix covers `examples/`. These files are authored in `template/`, and nothing compares `template/` against a
+copy of itself. The check compares no seed, such as a type page or a `_template.md`.
+
+`manifest.yaml` covers `.schema/` and `template/.plugin/`, and neither reaches a corpus here as a copy. `.schema/`
+lands on the path it was read from. Every corpus names `plugin.from`, so it reads the plugin tree from `template/`. A
+corpus created elsewhere gets its own `.editorconfig`, and each corpus here declares that file under `skip:`.
+
+[std-CONFIG.COPIES]: ../standards/configuration.md#copies-a-value-living-in-more-than-one-tree-is-copied-and-proved

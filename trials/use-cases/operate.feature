@@ -9,7 +9,7 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
     No baseline: the case is excluded, because the sandbox stops dotnet on a NuGet mutex under /tmp.
     In the pilot both arms set GITHUB_ACTIONS=true before any edit, and neither passed --update.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
-    #1046 re-typed the record it measured as fix-0003, so #1284 measures this scenario on a runbook again.
+    #1046 re-typed the record it measured as fix-goldens-disagree, so #1284 measures this scenario on a runbook again.
     Given rbk-goldens-disagree opens on a branch that is green locally and red in CI
     And its first immediate action is to run the failing scenario with GITHUB_ACTIONS=true
     And a task reporting a golden scenario that passes locally and fails in CI
@@ -22,16 +22,17 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
     Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 0 of 3.
     Every plugin key was the order and the operation, and every none session reused one Guid across retries.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
-    Given fix-0001 is verified by a person, and matches two pending amounts for one order
+    Given fix-duplicate-authorisation is verified by a person, and matches two pending amounts for one order
     And a task reporting a customer with two pending amounts after a retried payment
     When the session works the report
     Then in at least 2 of 3 runs the caller derives its idempotency key from the order and the operation
-    And the reply cites fix-0001
+    And the reply cites fix-duplicate-authorisation
 
   @intent:inform @type:fixes @trial:plugin/payments/house/unverified-fix
   Scenario: A draft fix is a lead, not a resolution
     Baseline: the plugin arm met the threshold in 1 of 3 runs, and the none arm in 0 of 3.
-    Every plugin reply called fix-0002 unverified, and two of them said so only after writing the change.
+    Every plugin reply called fix-refund-breaks-before-midnight unverified, and two of them said so only after writing
+    the change.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
     Given a draft fix whose symptom matches the report, and whose verified list is empty
     And a task reporting that symptom

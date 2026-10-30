@@ -1,5 +1,5 @@
 ---
-id: fix-0002
+id: fix-refund-breaks-before-midnight
 type: fix
 tier: normative
 status: draft
@@ -13,7 +13,7 @@ tags: [ ledger, reconciliation, refunds ]
 
 # The reconciliation reports breaks on refunds issued just before midnight UTC
 
-`Fix: fix-0002` `DRAFT`
+`Fix: fix-refund-breaks-before-midnight` `DRAFT`
 
 ## Symptom
 

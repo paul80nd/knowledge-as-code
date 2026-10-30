@@ -1,5 +1,5 @@
 ---
-id: fix-0002
+id: fix-verification-not-stated
 type: fix
 tier: normative
 status: active
@@ -10,7 +10,7 @@ owner: human:alex.doe
 
 # Verification not stated
 
-`Fix: fix-0002` `ACTIVE`
+`Fix: fix-verification-not-stated` `ACTIVE`
 
 ## Symptom
 

@@ -142,14 +142,14 @@ public class ClauseQuotedFaithfullyTests
 
         // A shortcut reference renders as plain text until something defines the label, so the two
         // labels the tests reach for are defined here whether a given test writes one or not.
-        var body = "---\nid: ctl-0001\ntype: control\ntier: normative\nstatus: active\n"
+        var body = "---\nid: ctl-merge-gate\ntype: control\ntier: normative\nstatus: active\n"
                    + "owner: human:alex.doe\n---\n\n# A merge waits for the validate job\n\n"
-                   + $"`Control: ctl-0001` `ACTIVE`\n\n## What it checks\n\n{control}\n\n"
+                   + $"`Control: ctl-merge-gate` `ACTIVE`\n\n## What it checks\n\n{control}\n\n"
                    + "[std-ERRORS.WHAT]: "
                    + "../standards/error-responses.md#what-a-failure-says-what-happened\n"
                    + "[pol-SCRT.STORE]: ../policies/secrets.md#store\n";
 
-        var doc = Doc.Parse("controls/0001-merge-gate.md", body, Types);
+        var doc = Doc.Parse("controls/merge-gate.md", body, Types);
         Assert.NotNull(doc);
 
         var found = new List<Finding>();

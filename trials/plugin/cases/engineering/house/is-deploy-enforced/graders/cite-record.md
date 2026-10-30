@@ -1,4 +1,4 @@
 ---
 type: regex
-pattern: 'ctl-0002'
+pattern: 'ctl-health-reports-commit'
 ---

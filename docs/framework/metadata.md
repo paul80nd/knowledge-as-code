@@ -115,8 +115,8 @@ meaning has moved past its mnemonic is replaced, and the old one retired.
 
 The schema sets one per type, and `id.width` says how long the discriminator runs.
 
-*Numbered* (`adr-0017`) suits anything chronological. The id records the order things happened, which is information
-none of the others can give.
+*Numbered* (`adr-0017`) suits a record of something that happened, such as a decision taken or an incident reviewed. The
+id records the order they happened in, which is information none of the others can give.
 
 *Slug* (`svc-billing-api`) suits anything with a natural stable name, where a number would be an arbitrary handle for
 something already well identified.

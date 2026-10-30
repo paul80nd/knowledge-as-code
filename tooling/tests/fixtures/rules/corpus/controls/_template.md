@@ -1,5 +1,5 @@
 ---
-id: ctl-{{nnnn}}
+id: ctl-{{slug}}
 type: control
 tier: normative
 status: planned
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Control: ctl-{{nnnn}}` `PLANNED`
+`Control: ctl-{{slug}}` `PLANNED`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds

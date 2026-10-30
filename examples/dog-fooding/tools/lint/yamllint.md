@@ -48,8 +48,8 @@ copyleft terms apply to no artefact this repository ships.
 
 * [tol-actionlint] runs beside it in the same job.
 * [std-CONFIG] states what `.yamllint` has to contain.
-* [ctl-0004] is the check that runs it.
+* [ctl-yamllint] is the check that runs it.
 
-[ctl-0004]: ../../controls/0004-yamllint.md
+[ctl-yamllint]: ../../controls/yamllint.md
 [std-CONFIG]: ../../standards/configuration.md
 [tol-actionlint]: actionlint.md

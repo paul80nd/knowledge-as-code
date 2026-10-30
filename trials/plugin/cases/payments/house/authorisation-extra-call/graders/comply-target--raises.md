@@ -1,5 +1,5 @@
 ---
 type: regex
 target: { source: file, path: docs/design.md }
-pattern: 'nfr-0001'
+pattern: 'nfr-authorisation-latency'
 ---

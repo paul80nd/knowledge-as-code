@@ -1,5 +1,5 @@
 ---
-id: nfr-{{nnnn}}
+id: nfr-{{slug}}
 type: nfr
 tier: normative
 status: draft
@@ -15,7 +15,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`NFR: nfr-{{nnnn}}` `DRAFT`
+`NFR: nfr-{{slug}}` `DRAFT`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -27,7 +27,7 @@ optional field from [the type page](../nfrs.md#metadata) where you have a value 
 Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
 head. Write each list field's entries in alphabetical order.
 
-* **`id`**: `nfr-` plus a four-digit number, as `nfr-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
+* **`id`**: `nfr-` plus a slug naming what the target measures, as `nfr-checkout-latency`. Save the file as `<slug>.md`.
 * **`status`**: `draft` while the figure is still being settled. `aspirational` where it is settled and nobody is held
   to it yet. `agreed` where the estate is held to it. `retired` where it no longer applies.
 * **`characteristic`**: the quality this target commits to, from the values [the type page](../nfrs.md#metadata) lists.

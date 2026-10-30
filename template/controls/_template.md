@@ -1,5 +1,5 @@
 ---
-id: ctl-{{nnnn}}
+id: ctl-{{slug}}
 type: control
 tier: normative
 status: planned
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Control: ctl-{{nnnn}}` `PLANNED`
+`Control: ctl-{{slug}}` `PLANNED`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -25,7 +25,7 @@ optional field from [the type page](../controls.md#metadata) where you have a va
 Keep the slug to 30 characters at most: the filename without `.md` and without any number or mnemonic at its
 head. Write each list field's entries in alphabetical order.
 
-* **`id`**: `ctl-` plus a four-digit number, as `ctl-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
+* **`id`**: `ctl-` plus a slug naming what the control checks, as `ctl-secret-scanner`. Save the file as `<slug>.md`.
 * **`verifies`**: the rules this control checks, as `verifies: [ std-SECRET.ROTATE ]`. A bare standard id is refused, so
   a control checking every rule of a standard lists every rule. The standard names the control once in `verified-by`.
   When the way a rule is checked changes, update this control and leave the standard as it is.

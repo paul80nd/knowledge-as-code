@@ -1,0 +1,49 @@
+---
+id: ctl-merge-gate
+type: control
+tier: normative
+status: active
+verifies: [ eng:std-GATES.BLOCK, std-CI.GATE ]
+mechanism: ci
+frequency: per-pr
+evidence: The `validate` check on the pull request, and the branch rule on `main` in the repository settings.
+applies-to:
+  - all
+review-by: "2027-09-22"
+owner: human:paul.law
+tags: [ branch-protection, continuous-integration ]
+---
+
+# A merge waits for the validate job
+
+`Control: ctl-merge-gate` `ACTIVE`
+
+A failing job in `kac.yml` stops the merge.
+
+## What it checks
+
+* [std-CI.GATE] says the branch rule on `main` "**MUST** name `validate` as
+  the check a merge waits for".
+* `eng:std-GATES.BLOCK` says branch policy "**MUST** block a merge while any required check
+  is failing".
+
+## How it works
+
+`kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and
+`import-round-trip`. The branch rule requires that one check name. The job runs after the others whatever they report,
+because its `if:` is `always()`. Its one step reads each job's result and fails unless every one is `success`.
+
+Without `always()`, a failed job would skip `validate`. GitHub counts a skipped required check as passing, so the
+merge would not wait.
+
+Three of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)`
+and three more. A branch rule naming the matrix would wait for a check that never arrives.
+
+## Coverage and gaps
+
+The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI
+reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-workflow-gate-tests] checks
+the other half: whether `validate` still needs every job.
+
+[ctl-workflow-gate-tests]: workflow-gate-tests.md
+[std-CI.GATE]: ../standards/workflows.md#gate-the-gate-runs-on-every-pull-request-into-main

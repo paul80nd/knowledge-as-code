@@ -80,9 +80,9 @@ Every other control leaves the rule with you. `review-checklist` and `manual` me
 reviewing, and that person is you. `local-hook` runs on a developer's machine, and the developer can bypass it.
 `not-enforced` means nothing checks it. A control at any other status checks nothing today.
 
-**A prefix on a control's id names the corpus that wrote it.** `eng:ctl-0004` is at
-`${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-0004.json`, and a bare `ctl-0004` is at
-`${CLAUDE_PLUGIN_ROOT}/corpus/controls/ctl-0004.json`.
+**A prefix on a control's id names the corpus that wrote it.** `eng:ctl-secret-scanner` is at
+`${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-secret-scanner.json`, and a bare `ctl-secret-scanner` is at
+`${CLAUDE_PLUGIN_ROOT}/corpus/controls/ctl-secret-scanner.json`.
 
 **Say which automated check covers each rule you left out, and say so for each finding where none does.** A reader
 deciding whether to merge needs to know what CI will catch and what only this review will.

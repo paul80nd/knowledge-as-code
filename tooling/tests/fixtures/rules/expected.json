@@ -16,46 +16,46 @@
       "message": "'Decision' rests on 'services/notifications.md', a service record. A service changes as the estate does, and an ADR is not rewritten once accepted. State the constraint itself here, and cite the service from Context or References."
     },
     {
-      "file": "controls/0001-frequency-not-stated.md",
-      "line": 1,
-      "severity": "error",
-      "check": "required-field",
-      "message": "missing required field 'frequency' (required when mechanism != not-enforced)."
-    },
-    {
-      "file": "controls/0002-evidence-not-named.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "mechanism-has-evidence",
-      "message": "this control claims to run and does not say where the proof lives. Set `evidence` to the build log, the audit note or the dashboard."
-    },
-    {
-      "file": "controls/0002-evidence-not-named.md",
-      "line": 25,
-      "severity": "error",
-      "check": "clause-quoted-faithfully",
-      "message": "'std-ERRORS.WHAT' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
-    },
-    {
-      "file": "controls/0003-review-overdue.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "control-in-date",
-      "message": "this control's `review-by` has passed. Check the control still runs the way this record says, then set `review-by` to the next day somebody looks at it."
-    },
-    {
-      "file": "controls/0004-checked-by-a-process.md",
+      "file": "controls/checked-by-a-process.md",
       "line": 1,
       "severity": "error",
       "check": "verified-by-a-person-or-agent",
       "message": "the `by` in `last-verified` states no person or agent. Write `human:alex.doe` for a person, or `review-agent/2.1.0` for an agent. A check a process runs is a `ci` control, scheduled or not, and states no `last-verified`."
     },
     {
-      "file": "controls/0004-checked-by-a-process.md",
+      "file": "controls/checked-by-a-process.md",
       "line": 1,
       "severity": "error",
       "check": "check-states-no-method",
       "message": "`last-verified` states a `method`, which says how a runbook was walked. A check runs one way, so drop `method`."
+    },
+    {
+      "file": "controls/evidence-not-named.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mechanism-has-evidence",
+      "message": "this control claims to run and does not say where the proof lives. Set `evidence` to the build log, the audit note or the dashboard."
+    },
+    {
+      "file": "controls/evidence-not-named.md",
+      "line": 25,
+      "severity": "error",
+      "check": "clause-quoted-faithfully",
+      "message": "'std-ERRORS.WHAT' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
+    },
+    {
+      "file": "controls/frequency-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'frequency' (required when mechanism != not-enforced)."
+    },
+    {
+      "file": "controls/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "control-in-date",
+      "message": "this control's `review-by` has passed. Check the control still runs the way this record says, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "data/borrower-records.md",
@@ -247,35 +247,35 @@
       "message": "this integration is critical or important and nothing says how the estate would leave it. Add an `## Exit` section stating what would have to move, and what would make the move hard."
     },
     {
-      "file": "nfrs/0001-hedged-measurement.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "target-is-measurable",
-      "message": "`measured-by` is hedged. Write the dashboard, query or report that gives the number."
-    },
-    {
-      "file": "nfrs/0002-a-delay-with-no-alert.md",
+      "file": "nfrs/a-delay-with-no-alert.md",
       "line": 1,
       "severity": "warning",
       "check": "alert-after-needs-an-alert",
       "message": "'alert-after' states a delay and nothing this binds raises an alert or a ticket: 'monitoring-output' is 'none'. Bind a service that raises one, or drop 'alert-after'."
     },
     {
-      "file": "nfrs/0003-review-overdue.md",
+      "file": "nfrs/hedged-measurement.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "target-is-measurable",
+      "message": "`measured-by` is hedged. Write the dashboard, query or report that gives the number."
+    },
+    {
+      "file": "nfrs/review-overdue.md",
       "line": 1,
       "severity": "warning",
       "check": "nfr-in-date",
       "message": "this target's `review-by` has passed. Check the number is still the one that was agreed, then set `review-by` to the next day somebody looks at it."
     },
     {
-      "file": "nfrs/0004-target-left-as-a-dash.md",
+      "file": "nfrs/target-left-as-a-dash.md",
       "line": 1,
       "severity": "error",
       "check": "required-field",
       "message": "missing required field 'target'."
     },
     {
-      "file": "nfrs/0004-target-left-as-a-dash.md",
+      "file": "nfrs/target-left-as-a-dash.md",
       "line": 8,
       "severity": "error",
       "check": "bare-key",

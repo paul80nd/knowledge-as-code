@@ -30,6 +30,6 @@ Feature: Review. A reviewer checks a change against the rules, and cites each on
   @intent:inform @type:controls @trial:review/engineering/health-endpoint
   Scenario: A review says which rule no control checks
     Baseline: 1 of 3 replies checked std-DEPLOY and said nothing automated checks it, and 1 of 3 reports.
-    Given ctl-0002 verifies std-DEPLOY, and its mechanism is not-enforced
+    Given ctl-health-reports-commit verifies std-DEPLOY, and its mechanism is not-enforced
     When a reviewer reviews a health-endpoint workspace
     Then in at least 2 of 3 reviews the review checks std-DEPLOY itself, and says no automated check covers it

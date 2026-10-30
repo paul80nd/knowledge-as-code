@@ -19,15 +19,16 @@ Some records need another record to trip their rule, and those are the findings 
 
 A finding beside the one a record is for is there because the rule cannot be reached without it. Each runbook states
 `never` or a walk far enough past to trip `staleness-loud`, and the pair on `walk-method-stated` pins both sides of it.
-`ctl-0004` names a process as `by` and states a `method`, so it trips `verified-by-a-person-or-agent` and
-`check-states-no-method` together. An NFR writing `target` as an em dash reports `bare-key` and `required-field`
+`ctl-checked-by-a-process` names a process as `by` and states a `method`, so it trips `verified-by-a-person-or-agent`
+and `check-states-no-method` together. An NFR writing `target` as an em dash reports `bare-key` and `required-field`
 together.
 
 Two records trip nothing, and each pins a form a rule must pass over:
 
 * `reports/own-corpus-first.md` lists `fixture-corpus` in `sources` ahead of an import that sorts before it, as
   `kac report` writes them. `list-order` passes over a field declaring `order: as-written`.
-* `ctl-0005` states `local-hook` as its `mechanism` and `per-commit` as its `frequency`, which `enum` accepts.
+* `ctl-runs-as-a-local-hook` states `local-hook` as its `mechanism` and `per-commit` as its `frequency`, which `enum`
+  accepts.
 
 `.corpus.yaml` states a name and a content version for `report-stale` to compare against, a `repos-base` for
 `mirrors-repo-links` to resolve against, and the `platform` and `component-type` ranges the services use. A rule
