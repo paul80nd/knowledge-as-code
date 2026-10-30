@@ -85,15 +85,26 @@ Scenario: An index heads a table for each folder below the type
   When I generate
   Then it succeeds
   And "standards/_index.md" lists, in order:
-    | text        |
-    | ## Common   |
-    | std-TEST    |
-    | ## Platform |
-    | std-NODE    |
+    | text              |
+    | \n## Not in force |
+    | \n### Common      |
+    | std-TEST          |
+    | \n### Platform    |
+    | std-NODE          |
   And the tables in "standards/_index.md" are headed:
     | columns                                              |
     | ID, Title, Status, Derived from, Review by           |
     | ID, Title, Category, Status, Derived from, Review by |
+
+Scenario: An index lists the records not in force under a heading of their own
+  Given the generate fixture corpus
+  When I generate
+  Then it succeeds
+  And "adrs/_index.md" lists, in order:
+    | text              |
+    | adr-0001          |
+    | \n## Not in force |
+    | adr-0002          |
 
 Scenario: A type with no records gets an index saying so
   Given the clean fixture corpus

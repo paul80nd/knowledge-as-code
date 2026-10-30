@@ -2,6 +2,8 @@
 
 # ADR Index
 
+## Not in force
+
 | ID       | Title                                                                                                                            | Status   | Decided on |
 |----------|----------------------------------------------------------------------------------------------------------------------------------|----------|------------|
 | adr-0001 | [Create a structured, validated wiki that AI sessions can read and contribute to (Knowledge as code)](0001-knowledge-as-code.md) | proposed |            |

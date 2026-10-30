@@ -2,10 +2,15 @@
 
 # Integration Index (ITG)
 
-| ID                     | Title                                       | Vendor                     | Criticality | Their SLA                                                                            | Status  |
-|------------------------|---------------------------------------------|----------------------------|-------------|--------------------------------------------------------------------------------------|---------|
-| itg-bibliographic-data | [Bibliographic Data](bibliographic-data.md) | Pennine Bibliographic Data | supporting  | 99.5% monthly availability on the API                                                | active  |
-| itg-card-payments      | [Card Payments](card-payments.md)           | Kestrel Payments           | important   | 99.9% monthly availability on the hosted payment page                                | trial   |
-| itg-identity           | [Identity](identity.md)                     | Loxley Identity            | critical    | 99.95% monthly availability on the sign-in endpoint                                  | active  |
-| itg-mail-delivery      | [Mail Delivery](mail-delivery.md)           | Hartwell Mail              | important   | 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds | active  |
-| itg-sms-notices        | [SMS Notices](sms-notices.md)               | Marbury Messaging          | supporting  |                                                                                      | retired |
+| ID                     | Title                                       | Vendor                     | Criticality | Their SLA                                                                            | Status |
+|------------------------|---------------------------------------------|----------------------------|-------------|--------------------------------------------------------------------------------------|--------|
+| itg-bibliographic-data | [Bibliographic Data](bibliographic-data.md) | Pennine Bibliographic Data | supporting  | 99.5% monthly availability on the API                                                | active |
+| itg-identity           | [Identity](identity.md)                     | Loxley Identity            | critical    | 99.95% monthly availability on the sign-in endpoint                                  | active |
+| itg-mail-delivery      | [Mail Delivery](mail-delivery.md)           | Hartwell Mail              | important   | 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds | active |
+
+## Not in force
+
+| ID                | Title                             | Vendor            | Criticality | Their SLA                                             | Status  |
+|-------------------|-----------------------------------|-------------------|-------------|-------------------------------------------------------|---------|
+| itg-card-payments | [Card Payments](card-payments.md) | Kestrel Payments  | important   | 99.9% monthly availability on the hosted payment page | trial   |
+| itg-sms-notices   | [SMS Notices](sms-notices.md)     | Marbury Messaging | supporting  |                                                       | retired |

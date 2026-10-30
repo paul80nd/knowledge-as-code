@@ -2,7 +2,9 @@
 
 # Policy Index (POL)
 
-## Security
+## Not in force
+
+### Security
 
 | ID       | Title                                                            | Status | Aligns with | Review by  |
 |----------|------------------------------------------------------------------|--------|-------------|------------|

@@ -26,20 +26,37 @@ public static class Generator
             return $"{Banner}\n\n# {title}\n\n"
                    + $"_Nothing here yet. Copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._\n";
 
-        // Rows are sorted before they are grouped, so the type's `sort:` orders each table.
+        // Rows are sorted before they are split and grouped, so the type's `sort:` orders each table.
         var located = t.Fields.Values.FirstOrDefault(f => f.From == Doc.SubPath)?.Name;
-        var groups = Sorted(t, docs)
+        var sorted = Sorted(t, docs).ToList();
+        // A type declaring no `in-force:` value has every record in force.
+        var inForce = t.Fields.GetValueOrDefault(Status)?.InForce;
+        var split = sorted.ToLookup(d =>
+            inForce is null || string.Equals(d.FrontScalar(Status), inForce, StringComparison.Ordinal));
+
+        var sections = new List<string>();
+        if (split[true].Any()) sections.Add(Grouped(t, located, [.. split[true]], "##"));
+        if (split[false].Any()) sections.Add($"## {NotInForce}\n\n{Grouped(t, located, [.. split[false]], "###")}");
+
+        return $"{Banner}\n\n# {title}\n\n{string.Join("\n\n", sections)}\n";
+    }
+
+    private const string Status = "status";
+
+    /// <summary>The heading over every record whose status is not its type's <c>in-force:</c> value.</summary>
+    private const string NotInForce = "Not in force";
+
+    /// <summary>
+    /// A table per folder, each under a heading at <paramref name="level"/>. The records no folder holds lead, under
+    /// no heading.
+    /// </summary>
+    private static string Grouped(TypeSchema t, string? located, List<Doc> rows, string level) =>
+        string.Join("\n\n", rows
             .GroupBy(d => Group(d, located))
             .OrderBy(g => g.Key, StringComparer.Ordinal)
-            .Select(g => (g.Key, Rows: g.ToList()))
-            .ToList();
-
-        var body = string.Join("\n\n", groups.Select(g => g.Key.Length == 0
-            ? Table(t, located, g.Key, g.Rows)
-            : $"## {GroupHeading(g.Key)}\n\n{Table(t, located, g.Key, g.Rows)}"));
-
-        return $"{Banner}\n\n# {title}\n\n{body}\n";
-    }
+            .Select(g => g.Key.Length == 0
+                ? Table(t, located, g.Key, [.. g])
+                : $"{level} {GroupHeading(g.Key)}\n\n{Table(t, located, g.Key, [.. g])}"));
 
     /// <summary>
     /// Which table a row lands in: the first folder under the type, and nothing below it. A type deriving nothing from

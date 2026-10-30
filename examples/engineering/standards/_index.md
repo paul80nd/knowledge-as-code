@@ -2,7 +2,9 @@
 
 # Standard Index (STD)
 
-## Common
+## Not in force
+
+### Common
 
 | ID         | Title                                                                                        | Status | Derived from | Review by  |
 |------------|----------------------------------------------------------------------------------------------|--------|--------------|------------|
@@ -17,7 +19,7 @@
 | std-TEST   | [A test runs at the lowest level that can catch the fault](common/testing.md)                | draft  |              | 2027-08-31 |
 | std-VCS    | [Everything a service needs is committed to its repository](common/version-control.md)       | draft  |              | 2027-08-26 |
 
-## Platform
+### Platform
 
 | ID         | Title                                                                                                                     | Category        | Status | Derived from | Review by  |
 |------------|---------------------------------------------------------------------------------------------------------------------------|-----------------|--------|--------------|------------|

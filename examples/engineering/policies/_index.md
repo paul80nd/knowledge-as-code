@@ -2,7 +2,9 @@
 
 # Policy Index (POL)
 
-## Delivery
+## Not in force
+
+### Delivery
 
 | ID       | Title                                                                                                 | Status | Aligns with    | Review by  |
 |----------|-------------------------------------------------------------------------------------------------------|--------|----------------|------------|
@@ -15,7 +17,7 @@
 | pol-PERF | [Performance targets are stated and verified](delivery/perf-performance-targets.md)                   | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-PIPE | [Changes reach production through the pipeline](delivery/pipe-pipeline-to-production.md)              | draft  | ISO 27001:2022 | 2027-08-04 |
 
-## Governance
+### Governance
 
 | ID       | Title                                                                                             | Status | Aligns with                    | Review by  |
 |----------|---------------------------------------------------------------------------------------------------|--------|--------------------------------|------------|
@@ -24,7 +26,7 @@
 | pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations.md)                    | draft  | ISO 27001:2022                 | 2027-08-04 |
 | pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-written-knowledge.md) | draft  | ISO 27001:2022                 | 2027-08-04 |
 
-## Operations
+### Operations
 
 | ID       | Title                                                                             | Status | Aligns with             | Review by  |
 |----------|-----------------------------------------------------------------------------------|--------|-------------------------|------------|
@@ -32,7 +34,7 @@
 | pol-OBSV | [Systems are observable and actively monitored](operations/obsv-observability.md) | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-RECV | [Services and data are recoverable](operations/recv-recoverability.md)            | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 
-## Security
+### Security
 
 | ID       | Title                                                                                                          | Status | Aligns with             | Review by  |
 |----------|----------------------------------------------------------------------------------------------------------------|--------|-------------------------|------------|

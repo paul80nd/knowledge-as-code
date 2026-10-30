@@ -2,6 +2,8 @@
 
 # Policy Index (POL)
 
+## Not in force
+
 | ID       | Title                                                               | Status | Aligns with | Review by  |
 |----------|---------------------------------------------------------------------|--------|-------------|------------|
 | pol-DEVI | [Deviations are recorded, owned and time-bound](devi-deviations.md) | draft  |             | 2027-08-23 |

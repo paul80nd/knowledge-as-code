@@ -4,8 +4,8 @@ The corpus stands up `adrs` alone and holds two ADRs, one accepted and one propo
 `generate --check` finds every generated file fresh. A change to a generator fails here until an update rewrites the
 files under `corpus/`, and the diff is the change a corpus would see.
 
-* `adrs/_index.md` pins the index table, with a `decided-on` cell filled for the accepted ADR and empty for the
-  proposed one.
+* `adrs/_index.md` pins the index tables. The accepted ADR leads, with its `decided-on` cell filled. The proposed one
+  follows under `## Not in force`, with that cell empty.
 * `adrs.md` pins the `schema-adrs` and `checks-adrs` blocks spliced into the type page.
 * `README.md` pins `types-index`, which lists the one type the corpus holds and none of the others the schema declares.
 * The pages under `knowledge-as-code/` pin the framework's blocks: `checks-universal` and `types-metadata` in

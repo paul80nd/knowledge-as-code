@@ -146,9 +146,9 @@ public class GeneratorTests
 
     /// <summary>
     /// A type deriving a field from where its records sit. The schema is built rather than loaded so each test below
-    /// can file records wherever it wants to.
+    /// can file records wherever it wants to. A null <paramref name="inForce"/> leaves every record in force.
     /// </summary>
-    private static Schema Located() => new()
+    private static Schema Located(string? inForce = null) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
@@ -161,7 +161,8 @@ public class GeneratorTests
                 IndexColumns = ["id", "title", "category"],
                 Fields = new Dictionary<string, FieldSpec>
                 {
-                    ["category"] = new() { Name = "category", From = "sub-path" }
+                    ["category"] = new() { Name = "category", From = "sub-path" },
+                    ["status"] = new() { Name = "status", Type = "enum", InForce = inForce }
                 }
             }
         }
@@ -254,6 +255,89 @@ public class GeneratorTests
 
         Assert.True(page.IndexOf("pol-0001", StringComparison.Ordinal)
                     < page.IndexOf("## Security", StringComparison.Ordinal));
+    }
+
+    /// <summary>A runbook type in force at <c>active</c>, with one record per status given.</summary>
+    private static (TypeSchema Type, List<Doc> Docs) Statused(params string[] statuses) =>
+        (new TypeSchema
+        {
+            Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "status"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["status"] = new() { Name = "status", Type = "enum", InForce = "active" }
+            }
+        },
+        [
+            .. statuses.Select((s, i) => Required.Parsed($"runbooks/r{i}.md",
+                $"---\nid: rbk-{i}\nstatus: {s}\n---\n\n# Record {i}\n", new Schema()))
+        ]);
+
+    [Fact]
+    public void IndexPage_lists_a_record_not_in_force_under_its_own_heading_after_the_rest()
+    {
+        var (t, docs) = Statused("retired", "active");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.Contains("\n## Not in force\n", page);
+        Assert.True(page.IndexOf("rbk-1", StringComparison.Ordinal)
+                    < page.IndexOf("## Not in force", StringComparison.Ordinal));
+        Assert.True(page.IndexOf("## Not in force", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-0", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void IndexPage_opens_on_the_not_in_force_heading_where_no_record_is_in_force()
+    {
+        var (t, docs) = Statused("retired");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.Contains("(RBK)\n\n## Not in force\n\n| ID ", page);
+    }
+
+    [Fact]
+    public void IndexPage_heads_nothing_where_every_record_is_in_force()
+    {
+        var (t, docs) = Statused("active", "active");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.DoesNotContain("## ", page);
+    }
+
+    [Fact]
+    public void IndexPage_heads_nothing_where_the_type_declares_no_in_force_value()
+    {
+        var (_, docs) = Statused("retired", "draft");
+        var t = new TypeSchema { Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "status"] };
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.DoesNotContain("## ", page);
+    }
+
+    [Fact]
+    public void IndexPage_groups_the_records_not_in_force_by_folder_a_level_below_their_heading()
+    {
+        var schema = Located("active");
+        var t = schema.ByFolder["policies"];
+        List<Doc> docs =
+        [
+            .. new[] { ("security/one.md", "active"), ("security/two.md", "retired"), ("delivery/three.md", "retired") }
+                .Select((r, i) => Required.Parsed($"policies/{r.Item1}",
+                    $"---\nid: pol-{i:0000}\nstatus: {r.Item2}\n---\n\n# Record {i}\n", schema))
+        ];
+
+        var page = Generator.IndexPage(t, docs);
+
+        var cut = page.IndexOf("\n## Not in force\n", StringComparison.Ordinal);
+        Assert.True(cut > 0);
+        var (inForce, rest) = (page[..cut], page[cut..]);
+        Assert.Contains("\n## Security\n", inForce);
+        Assert.DoesNotContain("Delivery", inForce);
+        Assert.Contains("\n### Delivery\n", rest);
+        Assert.Contains("\n### Security\n", rest);
     }
 
     [Fact]
