@@ -36,9 +36,11 @@ public partial class FixtureReadmeTests
     public void The_scenario_table_has_one_row_per_fixture()
     {
         var fixtures = Directory.EnumerateDirectories(FixturesDir)
-            .Select(dir => Path.GetFileName(dir))
+            .Select(Path.GetFileName)
+            .OfType<string>()
             .ToHashSet(StringComparer.Ordinal);
-        var rows = ScenarioRows(File.ReadAllLines(SuiteReadme)).ToHashSet(StringComparer.Ordinal);
+        var listed = ScenarioRows(File.ReadAllLines(SuiteReadme)).ToList();
+        var rows = listed.ToHashSet(StringComparer.Ordinal);
 
         // A table the parser cannot find checks nothing.
         Assert.NotEmpty(rows);
@@ -46,6 +48,9 @@ public partial class FixtureReadmeTests
         var faults = fixtures.Except(rows)
             .Select(name => $"fixture '{name}' has no row in the scenario table.")
             .Concat(rows.Except(fixtures).Select(name => $"row '{name}' names no fixture directory."))
+            .Concat(listed.GroupBy(name => name, StringComparer.Ordinal)
+                .Where(group => group.Count() > 1)
+                .Select(group => $"row '{group.Key}' appears {group.Count()} times."))
             .Order(StringComparer.Ordinal)
             .ToList();
 
