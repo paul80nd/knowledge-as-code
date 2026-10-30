@@ -196,6 +196,11 @@ check described without what it misses reads as stronger than the one you built.
 **`mechanism: not-enforced` records a rule nothing checks.** It is a value like any other, so the gap is written down
 and counted. `mechanism` and `frequency` are the keys an agent filters on.
 
+**`mechanism: local-hook` records a pre-commit check or a Claude Code hook.** The coverage report counts it as a check,
+like any value except `not-enforced`. A review does not leave its rules out, because a developer can bypass a hook on
+their own machine. Only `ci` and `runtime-alert` run where nobody can bypass them, so only those two take a rule out of
+a review.
+
 Three more fields date and place the check:
 
 * `evidence` says where the proof lives.

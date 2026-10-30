@@ -72,16 +72,17 @@ fields:
   mechanism:
     required: true
     type: enum
-    values: [ci, review-checklist, manual, runtime-alert, not-enforced]
+    values: [ci, local-hook, review-checklist, manual, runtime-alert, not-enforced]
     description: How the check runs, or `not-enforced` where nothing checks the rule.
     notes: >
-      The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it.
+      The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it. `local-hook` is a
+      pre-commit check or a Claude Code hook on a developer's machine.
 
   frequency:
     required: false
     required-when: 'mechanism != not-enforced'
     type: enum
-    values: [continuous, per-pr, per-deploy, daily, monthly, quarterly, annual]
+    values: [continuous, per-commit, per-pr, per-deploy, daily, monthly, quarterly, annual]
     description: How often it runs, or `continuous` where the check never stops.
 
   last-verified:

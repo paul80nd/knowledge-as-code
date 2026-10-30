@@ -23,8 +23,11 @@ A finding beside the one a record is for is there because the rule cannot be rea
 `check-states-no-method` together. An NFR writing `target` as an em dash reports `bare-key` and `required-field`
 together.
 
-`reports/own-corpus-first.md` trips nothing. Its `sources` lists `fixture-corpus` ahead of an import that sorts
-before it, as `kac report` writes them, and pins that `list-order` passes over a field declaring `order: as-written`.
+Two records trip nothing, and each pins a form a rule must pass over:
+
+* `reports/own-corpus-first.md` lists `fixture-corpus` in `sources` ahead of an import that sorts before it, as
+  `kac report` writes them. `list-order` passes over a field declaring `order: as-written`.
+* `ctl-0005` states `local-hook` as its `mechanism` and `per-commit` as its `frequency`, which `enum` accepts.
 
 `.corpus.yaml` states a name and a content version for `report-stale` to compare against, a `repos-base` for
 `mirrors-repo-links` to resolve against, and the `platform` and `component-type` ranges the services use. A rule
