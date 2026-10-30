@@ -29,9 +29,10 @@ head. Write each list field's entries in alphabetical order.
 * **`verifies`**: the rules this control checks, as `verifies: [ std-SECRET.ROTATE ]`. A bare standard id is refused, so
   a control checking every rule of a standard lists every rule. The standard names the control once in `verified-by`.
   When the way a rule is checked changes, update this control and leave the standard as it is.
-* **`mechanism`**: pick the one that runs today. `not-enforced` is a first-class value and the whole point of the
-  coverage report, so do not invent a mechanism to avoid using it. Write the control for an unenforced rule all the
-  same, because an unenforced rule you know about is worth more than one you do not.
+* **`mechanism`**: pick the one that runs today. Write `local-hook` for a pre-commit check or a Claude Code hook,
+  which runs on a developer's machine. `not-enforced` is a first-class value and the whole point of the coverage
+  report, so do not invent a mechanism to avoid using it. Write the control for an unenforced rule all the same,
+  because an unenforced rule you know about is worth more than one you do not.
 * **`last-verified`**: the last time somebody ran the check, as `{ at: "2026-10-20", by: human:alex.doe }`, or
   `never`. Add it where `mechanism` is `manual`. `by` is a person or an agent with its version, because a check a
   process runs is a `ci` control.

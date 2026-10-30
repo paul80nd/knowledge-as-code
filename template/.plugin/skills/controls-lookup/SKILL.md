@@ -50,7 +50,7 @@ three section keys are always present, because this type requires all three.
 | `fields.title`               | string                   | what the control checks, in one line                                                               |
 | `fields.status`              | string                   | `active`, `planned` or `retired`                                                                   |
 | `fields.verifies`            | list of strings          | the rules it checks, as `std-CI.PERMS`. Never empty                                                |
-| `fields.mechanism`           | string                   | how the check happens, in the five values below                                                    |
+| `fields.mechanism`           | string                   | how the check happens, in the six values below                                                     |
 | `fields.frequency`           | string, or null          | how often it runs, in the seven values below                                                       |
 | `fields.last-verified`       | object, string, or null  | the last manual run: `at` and `by` are strings, and `method` is always null. Or the string `never` |
 | `fields.evidence`            | string, or null          | where the proof of a run lives                                                                     |
@@ -62,9 +62,11 @@ three section keys are always present, because this type requires all three.
 | `path`                       | string                   | where the record sits in its own repository                                                        |
 | `links`                      | object                   | the built link to that record, under `human`                                                       |
 
-`mechanism` takes one of five values:
+`mechanism` takes one of six values:
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
+* **`local-hook`.** A pre-commit check or a Claude Code hook runs it on a developer's machine. The developer can
+  bypass it, so say the rule still needs a person to check it.
 * **`review-checklist`.** A person checks it while reviewing a change.
 * **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says who last did and when.
 * **`runtime-alert`.** A running system reports it.
