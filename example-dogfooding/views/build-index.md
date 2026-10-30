@@ -1,6 +1,6 @@
 # Rules the standards of example-dogfooding state
 
-example-dogfooding 0.98.0 states 85 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-dogfooding 0.99.0 states 86 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
@@ -17,6 +17,7 @@ Each heading gives a standard's id, title and status. Each line under it gives a
 
 - A checkout leaves no credential behind
 - A job declares the permission it needs
+- A publishing workflow scans what it publishes
 - A version moves by hand and publishes once
 - A workflow holds no credential of its own
 - Every action is pinned to a commit

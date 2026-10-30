@@ -19,10 +19,10 @@
     ]
   },
   "sections": {
-    "When to use this": "A lane has taken issues for a while and nobody has read it end to end. Work here raises issues as it goes, so a lane drifts in two directions: the code answers a question and the issue stays open, and a body states a number the repository has since changed.\n\nRead the lane before you plan work in it. An issue nobody has re-read is a plan built on what was true months ago.\n\nThis process writes to the tracker and changes no file in the repository, so it ends without [prc-pull-request](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/dog-fooding/processes/pull-request.md).",
+    "When to use this": "A lane has taken issues for a while and nobody has read it end to end. Work here raises issues as it goes, so a lane drifts in two directions: the code answers a question and the issue stays open, and a body states a number the repository has since changed.\n\nRead the lane before you plan work in it. An issue nobody has re-read is a plan built on what was true months ago.\n\nThis process writes to the tracker and changes no file in the repository, so it ends without [prc-pull-request](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/dog-fooding/processes/pull-request.md).",
     "Prerequisites": "* The `gh` CLI, authenticated against the repository that publishes this corpus. The agent configuration under\n  `.claude/agents-config/` names it and says that issues live as GitHub issues.\n* Project 3, and its `Status`, `Phase` and `Rank` fields. `Phase` is the lane. A stage lane is one whose name starts\n  with a stage number and a letter, such as `3b`. Each stage lane has one epic. `Intake` and `4 Future functionality`\n  have none.\n* A checkout of this repository, because step 4 reads the code rather than the issue.\n* Writing prose to a style guide, which steps 6 to 8 need."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/dog-fooding/processes/review-a-board-lane.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/dog-fooding/processes/review-a-board-lane.md"
   }
 }

@@ -22,13 +22,13 @@
     ]
   },
   "sections": {
-    "What it does": "The money goes back to the card that paid, and reaches at most what [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/services/payment-api.md) captured.",
-    "Who it is for": "Customers who have returned an order. Every one of them paid through [ofr-card-payment](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/offerings/card-payment.md), so this group is part of that one.",
+    "What it does": "The money goes back to the card that paid, and reaches at most what [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/services/payment-api.md) captured.",
+    "Who it is for": "Customers who have returned an order. Every one of them paid through [ofr-card-payment](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/offerings/card-payment.md), so this group is part of that one.",
     "Why it exists": "The card schemes require a route to a refund. A customer who doubts they can get the money back does not pay.",
-    "Where the detail lives": "* **Implemented by**: [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/services/payment-api.md), [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/services/payment-ledger.md)\n* **Specified in**: [gh#2188](https://git.example.com/example-payments/payment-api/issues/2188)\n* **Constrained by**: [nfr-refund-settlement](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/nfrs/refund-settlement.md)",
+    "Where the detail lives": "* **Implemented by**: [svc-payment-api](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/services/payment-api.md), [svc-payment-ledger](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/services/payment-ledger.md)\n* **Specified in**: [gh#2188](https://git.example.com/example-payments/payment-api/issues/2188)\n* **Constrained by**: [nfr-refund-settlement](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/nfrs/refund-settlement.md)",
     "Known limitations": "A card that has expired since the payment cannot be refunded to it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/payments/offerings/refund.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/payments/offerings/refund.md"
   }
 }

@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-CSSTY.SUPPR](https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/engineering/standards/platform/dotnet/code-style.md#suppr-a-suppression-is-local-and-says-why) says a suppression \"**MUST** sit on the member it applies to, with a\n  `Justification` giving the reason\".\n* It says a repository \"**MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file\".",
+    "What it checks": "* [std-CSSTY.SUPPR](https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/engineering/standards/platform/dotnet/code-style.md#suppr-a-suppression-is-local-and-says-why) says a suppression \"**MUST** sit on the member it applies to, with a\n  `Justification` giving the reason\".\n* It says a repository \"**MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file\".",
     "How it works": "Nothing runs. The check these rules need is a pipeline job over the lines a pull request adds. It fails on any of these:\n\n* `#pragma warning disable`\n* a `<NoWarn>` element in a project file\n* a `dotnet_diagnostic.<id>.severity = none` line in `.editorconfig`\n* a `[SuppressMessage(` with no `Justification =`, or one with an `assembly:` target\n\nThe same patterns can run over the staged diff as a pre-commit check, or over the written content as a Claude Code hook on `Write` and `Edit`.",
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices a blanket suppression today.\n\nThe check proves a `Justification` is present, and a reviewer still judges whether it gives a reason. A `.editorconfig` severity change may be a deliberate rule for the whole repository. The check fails it anyway, and a reviewer decides. An attribute split across lines passes a pattern that reads one line."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/874d89634b8ad6af2347002d8e5cb4ce21e243f8/examples/engineering/controls/suppression-justified.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b0333383184268b860732fbaaad3e8631faa0ba1/examples/engineering/controls/suppression-justified.md"
   }
 }
