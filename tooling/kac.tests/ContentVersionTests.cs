@@ -127,23 +127,30 @@ public class ContentVersionTests
             // The merged tree keeps the very file it read, so a shared file the corpus overrides drops out here.
             var changed = Edited(touched, ownDir, own)
                 .Concat(sharedDir is null ? [] : Edited(touched, sharedDir, shared))
-                .Where(file => tree.Any(kept => ReferenceEquals(kept, file)))
+                .Where(edit => tree.Any(kept => ReferenceEquals(kept, edit.File)))
                 .ToList();
             if (changed.Count == 0) continue;
 
             // A corpus this branch created has no stamp to compare, and its first stamp stands.
             if (Git.Run(Repo.Root, "show", $"{before}:{folder}/{Descriptor}") is not { } then) continue;
 
-            var plan = Bundler.Plan(new BundleSource(tree, [.. Exported(folder, today).Select(Bytes)]));
+            List<BundleFile> export = [.. Exported(folder, today).Select(Bytes)];
+            var plan = Bundler.Plan(new BundleSource(tree, export));
             if (plan.Problems.Count > 0)
                 throw new InvalidOperationException(
                     $"{folder} cannot be bundled, so its plugin was not compared:\n  "
                     + string.Join("\n  ", plan.Problems));
 
-            var bundled = plan.Files.Select(file => file.Path).ToHashSet(StringComparer.Ordinal);
+            // `bundle` rewrites plugin.json down to the components it keeps, so an edit to a trimmed one moves no byte.
+            var bundled = Written(plan);
+            var wasPlan = Bundler.Plan(new BundleSource([.. tree.SelectMany(file => Before(before, changed, file))],
+                export));
+            var was = wasPlan.Problems.Count > 0 ? [] : Written(wasPlan);
             var reached = changed
-                .Where(file => bundled.Contains($"{Dist.PluginDir}/{file.Path}"))
-                .Select(file => file.Path)
+                .Select(edit => $"{Dist.PluginDir}/{edit.File.Path}")
+                .Where(path => bundled.TryGetValue(path, out var now)
+                               && !(was.TryGetValue(path, out var then) && SameText(now, then)))
+                .Select(path => path[(Dist.PluginDir.Length + 1)..])
                 .Order(StringComparer.Ordinal)
                 .ToList();
 
@@ -173,10 +180,36 @@ public class ContentVersionTests
             .Concat(Diff.Untracked())
             .ToList();
 
-    /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched.</summary>
-    private static IEnumerable<BundleFile> Edited(
+    /// <summary>Each file of <c>tree</c>, read from <c>dir</c>, whose path the branch touched, with that path.</summary>
+    private static IEnumerable<(BundleFile File, string RepoPath)> Edited(
         IReadOnlySet<string> touched, string dir, IReadOnlyList<BundleFile> tree) =>
-        tree.Where(file => touched.Contains($"{dir}/{file.Path}"));
+        tree.Select(file => (File: file, RepoPath: $"{dir}/{file.Path}"))
+            .Where(edit => touched.Contains(edit.RepoPath));
+
+    /// <summary>What a bundle plan writes, by path under <c>Dist.Root</c>.</summary>
+    private static Dictionary<string, byte[]> Written(BundlePlan plan) =>
+        plan.Files.ToDictionary(file => file.Path, file => file.Content, StringComparer.Ordinal);
+
+    /// <summary>
+    /// <c>file</c> as it stood at <c>before</c> where the branch changed it, and nothing where it did not exist then.
+    /// </summary>
+    private static IEnumerable<BundleFile> Before(
+        string before, IReadOnlyList<(BundleFile File, string RepoPath)> changed, BundleFile file)
+    {
+        var edit = changed.FirstOrDefault(c => ReferenceEquals(c.File, file));
+        if (edit.File is null)
+        {
+            yield return file;
+            yield break;
+        }
+
+        if (Git.Run(Repo.Root, "show", $"{before}:{edit.RepoPath}") is { } then)
+            yield return file with { Content = Encoding.UTF8.GetBytes(then) };
+    }
+
+    /// <summary>Line endings normalised, because <c>git show</c> and a Windows checkout disagree on them.</summary>
+    private static bool SameText(byte[] now, byte[] then) =>
+        Encoding.UTF8.GetString(now).ReplaceLineEndings("\n") == Encoding.UTF8.GetString(then).ReplaceLineEndings("\n");
 
     /// <summary>Forward-slashed.</summary>
     private static string RepoRelative(string path) =>
