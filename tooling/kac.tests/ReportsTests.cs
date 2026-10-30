@@ -241,6 +241,10 @@ public class ReportsTests
             """{"id":"obl-RET.KEEP","record":"obl-RET","part":"KEEP","level":"SHOULD","clause":"Keep it."}""")));
 
     [Fact]
+    public void A_consumer_that_declines_the_rule_type_names_the_inherited_rule_covering_a_clause()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD.STAY` |", Declining(Grandparent("active", rules: true)));
+
+    [Fact]
     public void An_inherited_glossary_files_none_of_its_terms_as_a_clause()
         => Assert.Contains("| **Total** | **0** | **0** | **0** |", Declining(Glossary()));
 

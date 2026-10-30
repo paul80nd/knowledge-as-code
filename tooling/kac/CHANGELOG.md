@@ -45,6 +45,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   record can link to any file in the corpus. A change anywhere else does not. `kac update` still refuses any change in
   the working tree, because it writes into it.
 
+### Fixed
+
+- **`kac report coverage` names the rules a corpus inherits without adopting `standards`.** It read an imported rule's
+  `Covers` citations under the key the corpus's own schema gave the type. A consumer declining `standards` has no such
+  schema, so `Covered by` named the standard whole where an inherited rule covered the clause. `report` now reads the
+  `covers` key on each imported line, the key `standards-lookup` reads. Regenerate a coverage report you keep as a
+  record.
+
 ## 0.44.0 - 2026-10-30
 
 ### Added

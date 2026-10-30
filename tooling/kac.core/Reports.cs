@@ -113,6 +113,9 @@ public static class Reports
     private const string ClauseKey = "clause";
     private const string LevelKey = Exporter.LevelKey;
 
+    /// <summary>The key a rule line states the clauses its <c>Covers</c> line cites under.</summary>
+    private const string CoversKey = "covers";
+
     /// <summary>
     /// What a report calls a corpus whose descriptor states no <c>corpus:</c>. Only a printed report meets it.
     /// </summary>
@@ -458,7 +461,8 @@ public static class Reports
 
     /// <summary>
     /// Every rule a <c>Covers</c> line ties to a clause, keyed by the clause. The label is the one the field
-    /// <c>implements</c> mirrors, and an inherited rule carries it under the key this schema's export line names.
+    /// <c>implements</c> mirrors. An inherited rule states its clauses under <c>covers</c> on its line, which a consumer
+    /// declining the type reads too. <c>standards-lookup</c> reads the same key.
     /// </summary>
     private static Dictionary<string, List<string>> RuleCovers(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
@@ -481,26 +485,17 @@ public static class Reports
 
         foreach (var source in inherited)
         foreach (var type in source.Types)
+        foreach (var line in type.PartLines)
         {
-            if (corpus.Schema.ByFolder.GetValueOrDefault(type.Type) is not { } local) continue;
-            if (Label(local) is not { } label || local.Export is not { } export) continue;
+            if (JsonRead.Parse(line) is not { } json) continue;
+            if (JsonRead.Str(json[type.IdKey ?? "id"]) is not { } id) continue;
+            if (json[CoversKey] is not JsonArray clauses) continue;
 
-            var key = export.Line.FirstOrDefault(l => string.Equals(l.Source,
-                PartLineSource.CitationPrefix + label, StringComparison.Ordinal)).Key;
-            if (key is null) continue;
-
-            foreach (var line in type.PartLines)
-            {
-                if (JsonRead.Parse(line) is not { } json) continue;
-                if (JsonRead.Str(json[type.IdKey ?? "id"]) is not { } id) continue;
-                if (json[key] is not JsonArray clauses) continue;
-
-                // A line further up the chain names its own corpus, and its citations were written there.
-                var scope = JsonRead.Str(json[Exporter.ShortcodeKey]) ?? source.Shortcode;
-                foreach (var clause in clauses)
-                    if (JsonRead.Str(clause) is { Length: > 0 } value)
-                        Add(Exporter.Scoped(value, scope), Exporter.Scoped(id, source.Shortcode));
-            }
+            // A line further up the chain names its own corpus, and its citations were written there.
+            var scope = JsonRead.Str(json[Exporter.ShortcodeKey]) ?? source.Shortcode;
+            foreach (var clause in clauses)
+                if (JsonRead.Str(clause) is { Length: > 0 } value)
+                    Add(Exporter.Scoped(value, scope), Exporter.Scoped(id, source.Shortcode));
         }
 
         return found;

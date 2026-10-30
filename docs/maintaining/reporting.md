@@ -8,8 +8,8 @@ proving each behaviour. [`report`](../use/cli/report.md) owns the full statement
 
 * It builds `coverage`, which lists every policy clause, and `frameworks`, which lists every framework reference.
   [What it does](../use/cli/report.md#what-it-does)
-* It reads the corpus and everything under `.imports/`, so a corpus that inherits its policies reports on them, whether
-  or not it adopts the `policies` type. [What it does](../use/cli/report.md#what-it-does)
+* It reads the corpus and everything under `.imports/`, so a corpus that inherits policies and standards reports on
+  them, whether or not it adopts the `policies` and `standards` types. [What it does](../use/cli/report.md#what-it-does)
 * It marks each clause `covered` or `uncovered`, and leaves the `Verdict` and `Note` cells blank.
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
 * It fills the standards, deviations, controls and candidate pairs each coverage row reads from frontmatter.

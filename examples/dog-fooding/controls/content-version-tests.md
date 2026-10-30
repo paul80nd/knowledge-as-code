@@ -41,7 +41,7 @@ renamed or deleted, committed or not. It runs one test for each move below. Each
 |-------------------------------|-----------------------------------------------------------------------------------------------------------|
 | The export changed            | The corpus's export, built twice in memory from its records, `.corpus.yaml` and `.schema/`, differs by a byte outside `mechanismVersion`. The first build reads git at the merge base, and the second reads the working tree. |
 | The lock moved                | A `consumes:` entry in `.corpus.yaml` states a different `resolved:` at the merge base and in the working tree. |
-| A bundled component changed   | A file under `template/.plugin/`, or under the corpus's own `.plugin/`, changed, and `kac bundle` would copy it into this corpus's plugin. |
+| A bundled component changed   | A file under `template/.plugin/`, or under the corpus's own `.plugin/`, changed, and the file `kac bundle` would write from it differs from the one it would write from that file at the merge base. |
 
 The export test skips a corpus where nothing in its folder or in `.schema/` changed. Both of its builds run one
 exporter, so a change to `kac` alone changes no byte and asks for no move. `PublishedExportTests` checks the comparison
@@ -50,7 +50,8 @@ in each direction against corpora built in memory.
 The bundle test decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
 and export. That export includes what each corpus consumes, built from the producer's folder here. So an edit to
 `controls-lookup` asks for a move in every corpus whose export includes a control, its own or inherited, and in no
-other.
+other. The test runs the plan a second time, with each changed file as it stood at the merge base, and counts a file
+only where the two plans write it differently.
 
 The `tool` job runs it under `dotnet test --project tooling/kac.tests`. That job checks out with `fetch-depth: 0` and
 names the target branch in `KAC_BASE_REF`, because a shallow checkout keeps no base to compare against. A job that
@@ -79,6 +80,9 @@ The bundle test checks that a corpus moved where a changed skill, hook or manife
 whether the change was to wording, which moves the patch, or to what the component tells a reader to do, which moves
 the minor. A file the branch deleted is not in the working plugin tree, so deleting a file from a component asks for no
 move here.
+
+`kac bundle` writes `plugin.json` with only the components it keeps. An edit to the entry of a component the corpus
+trims, such as `controls-lookup` in a corpus with no controls, leaves the bundled manifest as it was and passes.
 
 Only the corpora under `examples/` are read. `template/` states no `content-version`, and a fixture corpus under
 `tooling/` states one as part of the fixture.
