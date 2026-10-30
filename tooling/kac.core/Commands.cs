@@ -32,6 +32,8 @@ public static class Commands
         var exit = Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json,
             annotator);
 
+        if (!json && Ignored(corpusRoot, corpus.Docs.Count) is { } ignored) Note(ignored);
+
         if (!json && baseline is null && HistoryRules.Skipped(corpus.Schema, corpus.Adopted) is { Count: > 0 } skipped)
             Account($"validate: skipped {Series(skipped)}, which compare each record with an earlier revision. "
                     + "Name one with `--since <ref>` to run them.");
@@ -45,6 +47,18 @@ public static class Commands
 
         return exit;
     }
+
+    /// <summary>
+    /// The line saying git ignores the corpus folder, which leaves the listing discovery reads empty. Null where the run
+    /// read a record, which a force-added corpus does, where git does not ignore the folder, or could not answer.
+    /// </summary>
+    public static string? Ignored(string corpusRoot, int records) =>
+        records == 0
+        && Git.Run(corpusRoot, "check-ignore", "--no-index", "-q", ".") is not null
+        && Git.Prefix(corpusRoot) is { } prefix
+            ? $"validate: git ignores {prefix}, so validate reads no record in it. Move the corpus, or stop git "
+              + "ignoring the folder."
+            : null;
 
     private static string Series(IReadOnlyList<string> items) =>
         items.Count == 1 ? items[0] : string.Join(", ", items.Take(items.Count - 1)) + " and " + items[^1];

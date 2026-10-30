@@ -17,6 +17,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac validate` says when git ignores the corpus folder.** `validate` reads the files git lists, so a corpus inside
+  an ignored folder, such as a scratch copy or a vendored folder, found no records. It reported `type-setup` for every
+  type folder and nothing said why. Where git ignores the folder and the run read no record, it now ends with one line
+  naming the folder, and you can move the corpus or stop git ignoring it. A corpus force-added with `git add -f` is
+  read, and prints no such line. `kac validate --json` prints no such line either, so its output stays one JSON
+  document.
+
 ### Changed
 
 - **Every `kac` verb prints a count with its noun in the singular or the plural.** A count of one takes the

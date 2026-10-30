@@ -61,6 +61,48 @@ public class CommandsTests
         Assert.Equal(dirty, Manifest(corpus).GetProperty("dirty").GetBoolean());
     }
 
+    [Theory]
+    [InlineData("scratch/\n",
+        "validate: git ignores scratch/corpus/, so validate reads no record in it. Move the corpus, or stop git ignoring "
+        + "the folder.")]
+    [InlineData("", null)]
+    public void Validate_names_the_corpus_folder_git_ignores(string ignore, string? said)
+    {
+        var repository = Path.Combine(Path.GetTempPath(), "kac-commands-" + Guid.NewGuid().ToString("n")[..12]);
+        var corpus = Path.Combine(repository, "scratch", "corpus");
+        Directory.CreateDirectory(corpus);
+        File.WriteAllText(Path.Combine(repository, ".gitignore"), ignore);
+        File.WriteAllText(Path.Combine(corpus, ".corpus.yaml"), "");
+        try
+        {
+            Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
+
+            Assert.Equal(said, Commands.Ignored(corpus, records: 0));
+        }
+        finally
+        {
+            Files.DeleteTree(repository);
+        }
+    }
+
+    [Fact]
+    public void Validate_says_nothing_of_an_ignored_folder_whose_records_git_tracks()
+    {
+        var corpus = Fixture("export", under: "scratch");
+        var repository = Path.GetDirectoryName(corpus) ?? corpus;
+        File.WriteAllText(Path.Combine(repository, ".gitignore"), "scratch/\n");
+        Assert.SkipUnless(GitCli.Repository(repository)
+                          && GitCli.Run(repository, "add", "-f", "scratch")
+                          && GitCli.Run(repository, "-c", "user.email=test@example.com", "-c", "user.name=Test",
+                              "-c", "commit.gpgsign=false", "commit", "-qm", "force-added"),
+            GitCli.Unavailable);
+
+        var records = Corpus.Load(corpus).Docs.Count;
+
+        Assert.True(records > 0);
+        Assert.Null(Commands.Ignored(corpus, records));
+    }
+
     [Fact]
     public void Export_writes_nothing_for_a_type_the_corpus_has_not_adopted()
     {
