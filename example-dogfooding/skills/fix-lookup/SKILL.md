@@ -90,8 +90,8 @@ Report `trust` with every answer, because it decides whether the reader applies 
 derives it from `verified`, so a record cannot claim a tier its own list does not support.
 
 * **`human-reviewed`**: a person checked that the problem is real and the resolution works. Give it as the answer.
-* **`machine-confirmed`**: agents alone reproduced the symptom and ran the resolution. Give it as worth trying, and say
-  which agent ran it, from `by`.
+* **`machine-confirmed`**: non-`human:` actors alone, agents or processes, reproduced the symptom and ran the
+  resolution. Give it as worth trying, and say which actor ran it, from `by`.
 * **`unverified`**: `verified` is empty, and nobody has checked anything.
 
 Quote the newest `at` beside the tier, because a resolution checked two years ago and one checked last week share a
