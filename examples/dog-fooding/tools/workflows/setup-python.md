@@ -35,7 +35,7 @@ The `docs` and `publish` jobs pass `cache: pip`. The action saves the pip cache 
 The action's `token` input defaults to the job's `github.token`. The `publish` job of `publish-docs.yml` declares
 `pages: write` and `id-token: write`, so the action runs in a job with both.
 
-Every step pins the action to the commit behind `v7.0.0`, and Dependabot moves the pin. `versions` approves the major
+Every step pins the action to the commit behind `v7.1.0`, and Dependabot moves the pin. `versions` approves the major
 the pin sits in.
 
 ## Where it is used
@@ -51,15 +51,15 @@ None recorded.
 The repository and its `package.json` declare MIT. The action runs bundled code under `dist/`, and the `.licenses/`
 folder at the pinned commit records each npm dependency in it. Most are MIT. The others are these:
 
-| Licence       | Packages                                                           |
-|---------------|--------------------------------------------------------------------|
-| Apache-2.0    | `@protobuf-ts/runtime`, `@protobuf-ts/runtime-rpc`                 |
-| BlueOak-1.0.0 | one version of `minimatch`                                         |
-| ISC           | `@iarna/toml`, the other version of `minimatch`, `semver`          |
-| 0BSD          | `tslib`                                                            |
+| Licence       | Packages                                           |
+|---------------|----------------------------------------------------|
+| Apache-2.0    | `@protobuf-ts/runtime`, `@protobuf-ts/runtime-rpc` |
+| BlueOak-1.0.0 | `minimatch`                                        |
+| ISC           | `@iarna/toml`, `semver`                            |
+| 0BSD          | `tslib`                                            |
 
-The four entries marked `other` are `@actions/http-client`, `balanced-match`, `brace-expansion` and `concat-map`. Each
-licence file is the MIT text.
+The entries marked `other` are `@actions/http-client`, `balanced-match` and `brace-expansion`. Each licence file is the
+MIT text.
 
 The runner fetches the action for each job, and nothing here redistributes it, so nothing follows for anything this
 repository publishes.
