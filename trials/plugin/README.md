@@ -50,7 +50,8 @@ comparable with later ones.
 `CLAUDE.md` over 40,000 characters, so cut the text to that size. Have a reader who has not seen the cases choose the
 cut as the corpus's team would, copying record blocks verbatim. A new Claude Code session, given the prose text and
 none of the cases, can be that reader. A session that has read the cases cannot, so it hands the choice to a new one.
-Pass the cut to `stage.sh` as its fourth argument. Keep the cut, and the list of what it left out, in the run folder.
+Pass the cut to `stage.sh` as its fourth argument. Keep the cut, and the list of what it left out, in the run folder
+of the first run that used it. A later run using the same cut names that folder in its write-up.
 [Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made with a cut.
 
 ## The full pass and the pilot
@@ -173,6 +174,9 @@ and the report contains the prompts.
 | Node.js 24 or later          | The other scripts run on it, using only its built-in modules. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash.  |
 | `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                             |
 
+**Run every command on this page in your own shell, or in an agent session with its sandbox off.** `kac` and
+`claude plugin eval` both write outside the folder a Claude Code sandbox allows.
+
 Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture,
 then over the same fixture with CRLF line endings, as Git for Windows checks files out without a `.gitattributes`. Go
 on once it prints `every case passed`. It needs `sh` and Node.js.
@@ -199,8 +203,6 @@ Run the pilot first, and read its result before the full pass.
 ## Running the trial
 
 Run each step from the root of a clone of this repository, and the commands in the corpus as its `CLAUDE.md` says.
-Run them in your own shell. A Claude Code session running them needs its sandbox off, because `kac` and
-`claude plugin eval` both write outside the folder it allows.
 Set four paths first, each absolute, because steps 4 to 6 run in another folder:
 
 | Variable  | The folder                                                                                  |
@@ -223,9 +225,10 @@ For a run of this repository's own cases, `$CASES` is a folder under `trials/plu
 Give the repository that contains the cases a `.gitattributes` file with the line `* text=auto eol=lf`. Git for
 Windows otherwise checks text files out with CRLF line endings, and a scaffold or a grader with CRLF endings breaks.
 
-1. **Build the plugin.** Where the cases sit in the corpus's repository, commit them first, because `kac export` marks
-   an untracked case there as a dirty tree. In the corpus, run `kac export`, then `kac bundle`. The plugin is
-   `$CORPUS/.dist/plugin/`.
+1. **Build the plugin.** Where the cases and the run folders sit in the corpus's repository, commit them first.
+   `kac export` marks a tree with an uncommitted file as dirty, and writes that into the export's manifest. Commit
+   each run folder before the next run's export, too. In the corpus, run `kac export`, then `kac bundle`. The plugin
+   is `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
    plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
@@ -457,42 +460,46 @@ where it would divide by 0.
 written for every kind and every arm, zero included. `<type>` is a type of record, as the export's manifest names it,
 such as `standards`. Each `house.<arm>.type.<type>` field is written for every arm and for every type a scored house
 case tests. A type name belongs to the framework, so these fields contain nothing the organisation keeps private. The
-controls have no type fields, because a control tests general practice, which no record has to reach.
+controls have no type fields, because a control tests general practice, which no record has to reach. The
+`house.prose` coverage fields are empty where there is no prose result, or where its stage has no `pages/` folder.
 
-| Field                                  | Value                                                                                 |
-|----------------------------------------|---------------------------------------------------------------------------------------|
-| `trial`                                | `plugin`                                                                              |
-| `method`                               | the version of this method. It moves when a definition on this page changes.          |
-| `model`                                | the model id the sessions ran on                                                      |
-| `claude_version`                       | the Claude Code version that ran the plugin stage                                     |
-| `cases`                                | the cases scored, of both kinds                                                       |
-| `excluded_cases`                       | the cases `excluded.tsv` lists, which no count includes                               |
-| `runs_per_case`                        | the runs of each case in each arm                                                     |
-| `sessions`                             | the graded sessions, over every kind and arm                                          |
-| `adjudicated`                          | the sessions whose compliance verdict was read by hand                                |
-| `<kind>.<arm>.sessions`                | the sessions of that kind in that arm                                                 |
-| `<kind>.<arm>.errors`                  | of those, the sessions that ended on an error                                         |
-| `<kind>.<arm>.task_done`               | of those, the sessions that did the task, by the adjudicated verdict where one exists |
-| `<kind>.<arm>.complied`                | of the sessions that did the task, those that comply, by the same verdict             |
-| `<kind>.<arm>.compliance_rate`         | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                           |
-| `<kind>.<arm>.graders_task_done`       | of the sessions with no error, those where every `task-` grader passed                |
-| `<kind>.<arm>.graders_complied`        | of those, the sessions where every `comply-` grader or set of alternatives passed     |
-| `<kind>.<arm>.graders_compliance_rate` | `<kind>.<arm>.graders_complied` divided by `<kind>.<arm>.graders_task_done`           |
-| `<kind>.<arm>.overturned`              | the sessions whose adjudicated verdict differs from the graders' verdict              |
-| `<kind>.<arm>.cited`                   | the sessions where every `cite-` grader passed                                        |
-| `<kind>.<arm>.citation_rate`           | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
-| `<kind>.plugin.fired`                  | the plugin sessions of that kind where every `fired-` grader passed                   |
-| `<kind>.hook.fired`                    | the hook sessions of that kind where every `fired-` grader passed                     |
-| `<kind>.lead_over_prose`               | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
-| `<kind>.lead_over_none`                | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
-| `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
-| `<kind>.hook_lead_over_<arm>`          | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
-| `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
-| `house.<arm>.type.<type>.sessions`     | the house sessions in that arm whose case tests a record of that type                 |
-| `house.<arm>.type.<type>.cited`        | of those, the sessions where every `cite-` grader passed                              |
-| `house.<arm>.type.<type>.complied`     | of those, the sessions that did the task and comply, by the adjudicated verdict       |
-| `cost_usd`                             | the list-price cost every stage reports, judge calls and excluded cases included      |
-| `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
+| Field                                   | Value                                                                                 |
+|-----------------------------------------|---------------------------------------------------------------------------------------|
+| `trial`                                 | `plugin`                                                                              |
+| `method`                                | the version of this method. It moves when a definition on this page changes.          |
+| `model`                                 | the model id the sessions ran on                                                      |
+| `claude_version`                        | the Claude Code version that ran the plugin stage                                     |
+| `cases`                                 | the cases scored, of both kinds                                                       |
+| `excluded_cases`                        | the cases `excluded.tsv` lists, which no count includes                               |
+| `runs_per_case`                         | the runs of each case in each arm                                                     |
+| `sessions`                              | the graded sessions, over every kind and arm                                          |
+| `adjudicated`                           | the sessions whose compliance verdict was read by hand                                |
+| `<kind>.<arm>.sessions`                 | the sessions of that kind in that arm                                                 |
+| `<kind>.<arm>.errors`                   | of those, the sessions that ended on an error                                         |
+| `<kind>.<arm>.task_done`                | of those, the sessions that did the task, by the adjudicated verdict where one exists |
+| `<kind>.<arm>.complied`                 | of the sessions that did the task, those that comply, by the same verdict             |
+| `<kind>.<arm>.compliance_rate`          | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                           |
+| `<kind>.<arm>.graders_task_done`        | of the sessions with no error, those where every `task-` grader passed                |
+| `<kind>.<arm>.graders_complied`         | of those, the sessions where every `comply-` grader or set of alternatives passed     |
+| `<kind>.<arm>.graders_compliance_rate`  | `<kind>.<arm>.graders_complied` divided by `<kind>.<arm>.graders_task_done`           |
+| `<kind>.<arm>.overturned`               | the sessions whose adjudicated verdict differs from the graders' verdict              |
+| `<kind>.<arm>.cited`                    | the sessions where every `cite-` grader passed                                        |
+| `<kind>.<arm>.citation_rate`            | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
+| `<kind>.plugin.fired`                   | the plugin sessions of that kind where every `fired-` grader passed                   |
+| `<kind>.hook.fired`                     | the hook sessions of that kind where every `fired-` grader passed                     |
+| `<kind>.lead_over_prose`                | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
+| `<kind>.lead_over_none`                 | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
+| `<kind>.graders_lead_over_<arm>`        | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
+| `<kind>.hook_lead_over_<arm>`           | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
+| `<kind>.graders_hook_lead_over_plugin`  | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
+| `house.<arm>.type.<type>.sessions`      | the house sessions in that arm whose case tests a record of that type                 |
+| `house.<arm>.type.<type>.cited`         | of those, the sessions where every `cite-` grader passed                              |
+| `house.<arm>.type.<type>.complied`      | of those, the sessions that did the task and comply, by the adjudicated verdict       |
+| `house.prose.cases_in_text`             | the scored house cases whose record has a heading in the prose arm's text             |
+| `house.prose.text_coverage`             | `house.prose.cases_in_text` divided by the scored house cases                         |
+| `house.prose.type.<type>.cases_in_text` | of those, the cases whose record is of that type                                      |
+| `cost_usd`                              | the list-price cost every stage reports, judge calls and excluded cases included      |
+| `cost_per_session_usd`                  | `cost_usd` divided by `sessions`                                                      |
 
 ## Reading the result
 
@@ -512,6 +519,10 @@ another corpus have no scenarios there.
 **A type's fields show where to look, not a rate to compare.** At about 2 cases a type and 3 runs a case, one type has
 about 6 sessions in an arm. Where an arm's `house.<arm>.type.<type>.complied` or `.cited` is low beside the other
 types, read that type's sessions before you judge whether the plugin finds its records.
+
+**Read the prose arm's lead against `house.prose.text_coverage`.** A cut chosen without the cases can leave out a
+house case's record, and the prose arm then has the rule no more than the none arm does. Where the coverage is low,
+a lead over the prose arm measures the cut, not the delivery.
 
 Where the hook arm leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.
