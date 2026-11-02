@@ -328,8 +328,9 @@ gives every key `claude plugin eval` reads in those files.
 * **`case.yaml` has no `execution:` block, and ends with a newline.** `stage.sh` appends an `execution:` block to each
   prose arm's `case.yaml`, so a second block, or a last line with no newline, breaks the file.
 * **The prompt is a task somebody would type.** It never names the rule, the record or the corpus.
-* **The first tag in `prompt.md` is the case's kind**, `house` or `control`, followed by the id of the record the rule
-  sits in.
+* **The first tag in `prompt.md` is the case's kind**, `house` or `control`. The second is the id of the record the
+  rule sits in, as `std-SECRET`, or as `eng:std-CI` for a record a layer brought in. Give the record's id, never a
+  clause's. `score.mjs` finds the record in the export to count the case under its type.
 * **The scaffold builds the repository with heredocs.** A run cannot read the case folder, so the scaffold contains
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
@@ -402,6 +403,10 @@ own. An arm with no result file has no sessions, so its rates and every lead ove
 * **A session that ended on an error** is counted under `<kind>.<arm>.errors`, and in no rate.
 * **A session of an excluded case** is counted nowhere. `excluded_cases` says how many cases were left out.
 * **A verdict read by hand replaces the graders' verdict** in every count but the `graders_` fields.
+* **A house session is also counted under its record's type.** `score.mjs` reads the case's second tag from its
+  `prompt.md` in the stage, and finds the record in the stage's copy of the export. So score the run, and score it
+  again after adjudication, before you delete `$STAGE`. A house case whose record the export does not contain stops
+  the script.
 
 The hook arm's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported
 beside it and never added in, because the plugin's skills teach a session to cite and the prose and none arms have
@@ -438,7 +443,10 @@ run against any corpus can be published in the same shape. A rate is a fraction 
 where it would divide by 0.
 
 `<kind>` is `house` or `control`, and `<arm>` is `plugin`, `hook`, `prose` or `none`. Each `<kind>.<arm>` field is
-written for every kind and every arm, zero included.
+written for every kind and every arm, zero included. `<type>` is a type of record, as the export's manifest names it,
+such as `standards`. Each `house.<arm>.type.<type>` field is written for every arm and for every type a scored house
+case tests. A type name belongs to the framework, so these fields contain nothing the organisation keeps private. The
+controls have no type fields, because a control tests general practice, which no record has to reach.
 
 | Field                                  | Value                                                                                 |
 |----------------------------------------|---------------------------------------------------------------------------------------|
@@ -469,6 +477,9 @@ written for every kind and every arm, zero included.
 | `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
 | `<kind>.hook_lead_over_<arm>`          | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
 | `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
+| `house.<arm>.type.<type>.sessions`     | the house sessions in that arm whose case tests a record of that type                 |
+| `house.<arm>.type.<type>.cited`        | of those, the sessions where every `cite-` grader passed                              |
+| `house.<arm>.type.<type>.complied`     | of those, the sessions that did the task and comply, by the adjudicated verdict       |
 | `cost_usd`                             | the list-price cost every stage reports, judge calls and excluded cases included      |
 | `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
 
@@ -486,6 +497,10 @@ The plugin arm's lead, `house.lead_over_<arm>`, measures the lookup alone. The b
 `house.hook_lead_over_plugin` is above 0. Read it case by case. For this repository's cases, read it against the
 scenarios in [`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case. The cases of
 another corpus have no scenarios there.
+
+**A type's fields show where to look, not a rate to compare.** At about 2 cases a type and 3 runs a case, one type has
+about 6 sessions in an arm. Where an arm's `house.<arm>.type.<type>.complied` or `.cited` is low beside the other
+types, read that type's sessions before you judge whether the plugin finds its records.
 
 Where the hook arm leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.

@@ -9,9 +9,12 @@
 // A session <adjudication.tsv> lists is counted by the verdict read by hand, and the graders' verdict is kept beside
 // it. Without -k the hook arm has no sessions, and every hook field is 0 or empty. A prose result of - does the same
 // for the prose arm, and each lead over an arm with no sessions is empty.
-import { mkdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
+// Each house case's record type comes from the plugin stage the plugin result names, so score a run before you delete
+// its stage.
+import { existsSync, mkdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
+import { isAbsolute, join } from "node:path";
 
-const method = 6;
+const method = 7;
 
 // Prints a message to stderr and exits. The write is synchronous, so the exit cannot cut the message off.
 function stop(status, message) {
@@ -205,15 +208,68 @@ const tally = () => ({ sessions: 0, errors: 0, graded: 0, done: 0, complied: 0, 
   overturned: 0, cited: 0, fired: 0 });
 const count = {};
 for (const k of kinds.flatMap((kind) => arms.map((arm) => `${kind}.${arm}`))) count[k] = tally();
+// Each case's folder in the stage, from the first result file that ran it.
+const caseDirs = new Map();
+for (const f of given) {
+  const root = text(results.get(f).suite?.root);
+  for (const kase of results.get(f).cases) {
+    if (!caseDirs.has(kase.name)) caseDirs.set(kase.name, isAbsolute(kase.dir) ? kase.dir : join(root, kase.dir));
+  }
+}
+
+// The type of the record a house case tests. The case's second tag is the record's id, and the type is the one whose
+// folder in the plugin stage's export has a file of that id. A layer's id, as `eng:std-CI`, sits in a subfolder.
+const exportDir = join(text(results.get(pluginJson).suite?.root), "corpus");
+let manifest;
+const typeOf = new Map();
+function resolve(kase) {
+  const prompt = join(caseDirs.get(kase), "prompt.md");
+  let promptLines;
+  try {
+    promptLines = lines(prompt);
+  } catch {
+    stop(1, `score.mjs: cannot read ${prompt}, which gives case ${kase}'s record`);
+  }
+  const end = promptLines.indexOf("---", 1);
+  const tagLine = promptLines.slice(1, end).find((line) => /^tags:\s*\[.*\]\s*$/.test(line)) ?? "tags: []";
+  const tags = tagLine.replace(/^tags:\s*\[(.*)\]\s*$/, "$1").split(",")
+    .map((t) => t.trim().replace(/^(['"])(.*)\1$/, "$2"));
+  const id = tags[1] ?? "";
+  if (manifest === undefined) {
+    try {
+      manifest = JSON.parse(readFileSync(join(exportDir, "manifest.json"), "utf8"));
+    } catch (error) {
+      stop(1, `score.mjs: cannot read the export manifest in ${exportDir}: ${error.message}`);
+    }
+  }
+  const [layer, record] = id.includes(":") ? id.split(":", 2) : ["", id];
+  const types = record === "" ? [] : manifest.types
+    .filter((t) => existsSync(join(exportDir, text(t.dir), layer, `${record}.json`))).map((t) => text(t.type));
+  if (types.length !== 1) {
+    writeFileSync(`${out}/aggregate.md`, "");
+    stop(1, `score.mjs: case ${kase} tags ${id === "" ? "no record" : id}, which is a record of `
+      + `${types.length === 0 ? "no type" : types.join(" and ")} in ${exportDir}`);
+  }
+  return types[0];
+}
+for (const [kind, , kase] of rows) {
+  if (kind === "house" && !typeOf.has(kase)) typeOf.set(kase, resolve(kase));
+}
+const types = [...new Set(typeOf.values())].sort();
+const byType = new Map();
+for (const arm of arms) for (const type of types) byType.set(`${arm}.${type}`, { sessions: 0, cited: 0, complied: 0 });
+
 const cases = new Set();
 let total = 0;
 let misplaced = "";
 for (const [kind, arm, kase, , error, task, comply, cite, fired, , , byHandVerdict] of rows) {
   const k = `${kind}.${arm}`;
   const c = (count[k] ??= tally());
+  const t = kind === "house" ? byType.get(`${arm}.${typeOf.get(kase)}`) : undefined;
   cases.add(kase);
   if (kind !== "house" && kind !== "control") misplaced = kase;
   c.sessions++;
+  if (t !== undefined) t.sessions++;
   total++;
   if (error === "1") {
     c.errors++;
@@ -234,8 +290,10 @@ for (const [kind, arm, kase, , error, task, comply, cite, fired, , , byHandVerdi
   if (done) {
     c.done++;
     if (complies) c.complied++;
+    if (complies && t !== undefined) t.complied++;
   }
   if (cite === "1") c.cited++;
+  if (cite === "1" && t !== undefined) t.cited++;
   if (fired === "1") c.fired++;
 }
 if (misplaced !== "") {
@@ -286,6 +344,14 @@ for (const kind of kinds) {
   row(`${kind}.hook_lead_over_prose`, lead(compliance.hook, compliance.prose));
   row(`${kind}.hook_lead_over_none`, lead(compliance.hook, compliance.none));
   row(`${kind}.graders_hook_lead_over_plugin`, lead(gradersCompliance.hook, gradersCompliance.plugin));
+}
+for (const arm of arms) {
+  for (const type of types) {
+    const t = byType.get(`${arm}.${type}`);
+    row(`house.${arm}.type.${type}.sessions`, t.sessions);
+    row(`house.${arm}.type.${type}.cited`, t.cited);
+    row(`house.${arm}.type.${type}.complied`, t.complied);
+  }
 }
 row("cost_usd", fixed2(cost));
 row("cost_per_session_usd", total === 0 ? "" : fixed2(cost / total));

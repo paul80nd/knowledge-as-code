@@ -3,7 +3,7 @@ name: public-path-between-services
 max_turns: 30
 timeout_seconds: 300
 allowed_tools: [Read, Glob, Grep, Skill]
-tags: [house, pol-MEXP.PRIVATE]
+tags: [house, pol-MEXP]
 ---
 
 Orders should stop trusting the unit price the client sends, and fetch it from the pricing service when an order is
