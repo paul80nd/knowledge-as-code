@@ -250,7 +250,7 @@ both 'score.mjs' score node "$scripts/score.mjs" -a '{in}/adjudication.tsv' -k '
   '{in}/results/plugin.json' '{in}/results/prose.json' '{out}' '{in}/cases/excluded.tsv'
 aggregate=$dir/score-crlf/aggregate.md
 has "$aggregate" '| `claude_version` | 2.1.292 |' 'score.mjs reads the Claude Code version'
-has "$aggregate" '| `method` | 8 |' 'score.mjs gives the version of the method'
+has "$aggregate" '| `method` | 9 |' 'score.mjs gives the version of the method'
 has "$aggregate" '| `cases` | 4 |' 'score.mjs counts the cases'
 has "$aggregate" '| `excluded_cases` | 1 |' 'score.mjs counts the cases excluded.tsv lists'
 has "$aggregate" '| `adjudicated` | 1 |' 'score.mjs reads adjudication.tsv'
@@ -301,6 +301,38 @@ if node "$scripts/score.mjs" "$unknown/results/plugin.json" - "$dir/score-unknow
   fail 'score.mjs scores a house case whose record the export does not contain'
 else
   has "$dir/score-unknown.stderr" 'case case-a tags std-Z' 'score.mjs stops on a record the export does not contain'
+fi
+
+has "$aggregate" '| `house.prose.cases_in_text` |  |' \
+  'score.mjs leaves the coverage empty where the prose stage has no pages'
+
+# score.mjs, over a prose stage whose pages give std-A and gl-term, and leave out eng:std-B.
+cover=$fx/cover
+mkdir -p "$cover/results" "$cover/stage/prose/pages" "$dir/score-cover"
+cp -R "$lf/stage/plugin" "$cover/stage/plugin"
+printf 'Page 1 of 2.\n\n# The knowledge of fixture\n\n## standards\n\n### Rule A (`std-A`)\n\nDo A.\n' \
+  >"$cover/stage/prose/pages/page-1.md"
+printf 'Page 2 of 2.\r\n\r\n## glossary\r\n\r\n### Term (`gl-term`)\r\n\r\nA word. Not std-B.\r\n' \
+  >"$cover/stage/prose/pages/page-2.md"
+sed 's|with space/lf/|with space/cover/|g' "$lf/results/plugin.json" >"$cover/results/plugin.json"
+node -e '
+const { readFileSync, writeFileSync } = require("node:fs");
+const r = JSON.parse(readFileSync(process.argv[1], "utf8"));
+r.suite.root = process.argv[2];
+writeFileSync(process.argv[3], JSON.stringify(r, null, 2) + "\n");
+' "$lf/results/prose.json" "$cover/stage/prose" "$cover/results/prose.json"
+if node "$scripts/score.mjs" "$cover/results/plugin.json" "$cover/results/prose.json" "$dir/score-cover" \
+  "$lf/cases/excluded.tsv" >/dev/null 2>"$dir/score-cover.stderr"; then
+  has "$dir/score-cover/aggregate.md" '| `house.prose.cases_in_text` | 2 |' \
+    "score.mjs counts the house cases whose record the prose text contains"
+  has "$dir/score-cover/aggregate.md" '| `house.prose.text_coverage` | 0.67 |' \
+    "score.mjs gives the share of house cases the prose text contains"
+  has "$dir/score-cover/aggregate.md" '| `house.prose.type.standards.cases_in_text` | 1 |' \
+    "score.mjs counts a layer's record as missing where the text has no heading for it"
+  has "$dir/score-cover/aggregate.md" '| `house.prose.type.glossary.cases_in_text` | 1 |' \
+    'score.mjs reads a page with CRLF line endings'
+else
+  fail 'score.mjs stopped on a prose stage with pages'; cat "$dir/score-cover.stderr"
 fi
 
 # merge.mjs, over two batches of the prose stage, whose paths are the same in both fixtures.

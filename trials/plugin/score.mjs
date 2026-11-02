@@ -11,10 +11,10 @@
 // for the prose arm, and each lead over an arm with no sessions is empty.
 // Each house case's record type comes from the plugin stage the plugin result names, so score a run before you delete
 // its stage.
-import { existsSync, mkdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 
-const method = 8;
+const method = 9;
 
 // Prints a message to stderr and exits. The write is synchronous, so the exit cannot cut the message off.
 function stop(status, message) {
@@ -222,6 +222,7 @@ for (const f of given) {
 const exportDir = join(text(results.get(pluginJson).suite?.root), "corpus");
 let manifest;
 const typeOf = new Map();
+const recordOf = new Map();
 function resolve(kase) {
   const prompt = join(caseDirs.get(kase), "prompt.md");
   let promptLines;
@@ -250,6 +251,7 @@ function resolve(kase) {
     stop(1, `score.mjs: case ${kase} tags ${id === "" ? "no record" : id}, which is a record of `
       + `${types.length === 0 ? "no type" : types.join(" and ")} in ${exportDir}`);
   }
+  recordOf.set(kase, record);
   return types[0];
 }
 for (const [kind, , kase] of rows) {
@@ -258,6 +260,20 @@ for (const [kind, , kase] of rows) {
 const types = [...new Set(typeOf.values())].sort();
 const byType = new Map();
 for (const arm of arms) for (const type of types) byType.set(`${arm}.${type}`, { sessions: 0, cited: 0, complied: 0 });
+
+// The house cases whose record has a heading in the text the prose stage's pages gave each session. A layer's record
+// is headed by its id less the layer. A stage with no pages, or no prose result, leaves every count empty.
+const pagesDir = proseJson === "" ? "" : join(text(results.get(proseJson).suite?.root), "pages");
+let inText;
+if (pagesDir !== "" && existsSync(pagesDir)) {
+  const prose = readdirSync(pagesDir).filter((f) => f.endsWith(".md"))
+    .map((f) => readFileSync(join(pagesDir, f), "utf8").replaceAll("\r\n", "\n")).join("\n");
+  const headed = new Set([...prose.matchAll(/^#{3} .* \(`([^`]+)`\)$/gm)].map((m) => m[1]));
+  inText = new Map(types.map((type) => [type, 0]));
+  for (const [kase, record] of recordOf) {
+    if (headed.has(record)) inText.set(typeOf.get(kase), inText.get(typeOf.get(kase)) + 1);
+  }
+}
 
 const cases = new Set();
 let total = 0;
@@ -345,6 +361,10 @@ for (const kind of kinds) {
   row(`${kind}.hook_lead_over_none`, lead(compliance.hook, compliance.none));
   row(`${kind}.graders_hook_lead_over_plugin`, lead(gradersCompliance.hook, gradersCompliance.plugin));
 }
+const inTextTotal = inText === undefined ? "" : [...inText.values()].reduce((a, b) => a + b, 0);
+row("house.prose.cases_in_text", inTextTotal);
+row("house.prose.text_coverage", inText === undefined ? "" : rate(inTextTotal, recordOf.size));
+for (const type of types) row(`house.prose.type.${type}.cases_in_text`, inText === undefined ? "" : inText.get(type));
 for (const arm of arms) {
   for (const type of types) {
     const t = byType.get(`${arm}.${type}`);
