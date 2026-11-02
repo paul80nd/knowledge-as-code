@@ -14,7 +14,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 
-const method = 7;
+const method = 8;
 
 // Prints a message to stderr and exits. The write is synchronous, so the exit cannot cut the message off.
 function stop(status, message) {

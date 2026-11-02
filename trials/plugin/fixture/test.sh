@@ -179,12 +179,78 @@ sh "$scripts/stage.sh" "$big" "$lf/cases" "$dir/big-stage" >/dev/null 2>"$dir/bi
   fail 'stage.sh stopped on a CLAUDE.md over 40,000 characters'
 has "$dir/big-stage.stderr" "is over 40,000 characters" 'stage.sh warns on a CLAUDE.md over 40,000 characters'
 
+# The prose arm's text reaches a session as SessionStart hooks, one a page, each page under the 10,000-character cap.
+# Checks a prose stage's pages: their number, each one's size and header, that together they give $2 whole, that one
+# hook prints each, and that no case gains an execution: block. $3 is the least number of pages.
+pages() {
+  node -e '
+const { readFileSync, readdirSync } = require("node:fs");
+const [stage, text, least] = process.argv.slice(1);
+const files = readdirSync(`${stage}/prose/pages`).sort((a, b) => parseInt(a.slice(5)) - parseInt(b.slice(5)));
+const pages = files.map((f) => readFileSync(`${stage}/prose/pages/${f}`, "utf8"));
+const hooks = JSON.parse(readFileSync(`${stage}/prose/hooks/hooks.json`, "utf8")).hooks.SessionStart
+  .flatMap((m) => m.hooks.map((h) => h.command));
+const fault = (m) => { console.log(m); process.exit(1); };
+if (pages.length < Number(least)) fault(`${pages.length} page(s), fewer than ${least}`);
+pages.forEach((p, i) => {
+  if (p.length >= 10000) fault(`${files[i]} is ${p.length} characters`);
+  if (!p.startsWith(`Page ${i + 1} of ${pages.length}.\n\n`)) fault(`${files[i]} has no page header`);
+});
+if (pages.map((p) => p.replace(/^.*\n\n/, "")).join("") !== readFileSync(text, "utf8")) {
+  fault("the pages are not the text");
+}
+if (hooks.length !== pages.length || !hooks.every((h, i) => h.endsWith(`/pages/page-${i + 1}.md`)))
+  fault(`the hooks print ${hooks.join(", ")}`);
+' "$1" "$2" "$3" && ! grep -rq '^execution:' "$1/prose/evals"
+}
+if pages "$dir/stage-crlf" "$dir/stage-crlf/CLAUDE.md" 1; then
+  pass 'stage.sh gives the prose arm its text as one hook a page, with no execution: block'
+else
+  fail 'stage.sh does not give the prose arm its text as one hook a page'
+fi
+if pages "$dir/big-stage" "$dir/big-stage/CLAUDE.md" 5; then
+  pass 'stage.sh cuts a record longer than a page across pages under the cap'
+else
+  fail 'stage.sh does not cut a long record across pages under the cap'
+fi
+
+many=$dir/many
+cp -R "$lf/plugin" "$many"
+for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+  awk -v i="$i" 'BEGIN { for (j = 0; j < 2000; j++) s = s "b"
+    printf "{ \"fields\": { \"id\": \"gl-%02d\" }, \"sections\": { \"Text\": \"%s\" } }\n", i, s }' \
+    >"$many/corpus/glossary/gl-$i.json"
+done
+sh "$scripts/stage.sh" "$many" "$lf/cases" "$dir/many-stage" >/dev/null 2>&1 ||
+  fail 'stage.sh stopped on a corpus of many records'
+if pages "$dir/many-stage" "$dir/many-stage/CLAUDE.md" 3 && ! node -e '
+const { readFileSync, readdirSync } = require("node:fs");
+const dir = `${process.argv[1]}/prose/pages`;
+for (const f of readdirSync(dir).filter((f) => f !== "page-1.md")) {
+  if (!/^#{2,3} /.test(readFileSync(`${dir}/${f}`, "utf8").replace(/^.*\n\n/, ""))) process.exit(0);
+}
+process.exit(1);
+' "$dir/many-stage"; then
+  pass 'stage.sh starts each page at a record'
+else
+  fail 'stage.sh splits a record that fits on a page'
+fi
+
+printf '# A cut\n\nOnly this.\n' >"$dir/cut.md"
+sh "$scripts/stage.sh" "$lf/plugin" "$lf/cases" "$dir/cut-stage" "$dir/cut.md" >/dev/null 2>&1 ||
+  fail 'stage.sh stopped on a cut'
+if pages "$dir/cut-stage" "$dir/cut.md" 1; then
+  pass 'stage.sh gives the prose arm the cut it is given'
+else
+  fail 'stage.sh does not give the prose arm the cut it is given'
+fi
+
 # score.mjs
 both 'score.mjs' score node "$scripts/score.mjs" -a '{in}/adjudication.tsv' -k '{in}/results/hook.json' \
   '{in}/results/plugin.json' '{in}/results/prose.json' '{out}' '{in}/cases/excluded.tsv'
 aggregate=$dir/score-crlf/aggregate.md
 has "$aggregate" '| `claude_version` | 2.1.292 |' 'score.mjs reads the Claude Code version'
-has "$aggregate" '| `method` | 7 |' 'score.mjs gives the version of the method'
+has "$aggregate" '| `method` | 8 |' 'score.mjs gives the version of the method'
 has "$aggregate" '| `cases` | 4 |' 'score.mjs counts the cases'
 has "$aggregate" '| `excluded_cases` | 1 |' 'score.mjs counts the cases excluded.tsv lists'
 has "$aggregate" '| `adjudicated` | 1 |' 'score.mjs reads adjudication.tsv'
@@ -268,6 +334,23 @@ if node "$scripts/regrade.mjs" "$fx/regrade-cases" "$fx/regrade-in.json" "$dir/r
     'regrade.mjs reads a CRLF grader and agrees with the tool'
 else
   fail 'regrade.mjs stopped'; cat "$dir/regrade.stdout"
+fi
+
+# regrade.mjs, over a kept folder Windows could not seal, whose workspace has no sealed/ above it.
+unsealed=$fx/unsealed/run-1
+mkdir -p "$unsealed/home/cwd" "$unsealed/trace" "$fx/unsealed-cases/house/case-a/graders"
+cp "$kept/trace/trace.jsonl" "$unsealed/trace/"
+printf 'owner: olive\n' >"$unsealed/home/cwd/notes.md"
+printf -- "---\ntype: regex\npattern: 'owner: olive'\ntarget: { source: file, path: notes.md }\n---\n" \
+  >"$fx/unsealed-cases/house/case-a/graders/comply-owner.md"
+sed "s|$kept/trace|$unsealed/trace|" "$fx/regrade-in.json" >"$fx/unsealed-in.json"
+if node "$scripts/regrade.mjs" "$fx/unsealed-cases" "$fx/unsealed-in.json" "$dir/unsealed-out.json" \
+  >"$dir/unsealed.stdout" 2>&1 && node -e '
+const r = JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"));
+process.exit(r.cases[0].arms.with[0].graders[0].passed ? 0 : 1)' "$dir/unsealed-out.json"; then
+  pass 'regrade.mjs reads the workspace of a kept folder Windows could not seal'
+else
+  fail 'regrade.mjs does not read the workspace of a kept folder Windows could not seal'; cat "$dir/unsealed.stdout"
 fi
 
 [ "$failed" = 0 ] && echo "every case passed"

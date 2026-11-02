@@ -140,28 +140,19 @@ Once the questions are approved:
    node trials/plugin/prose-claude-md.mjs trials/scale/work/corpus-2/.dist/export trials/scale/work/prose-2.md
    ```
 
-3. **Stage the arms** into an empty folder outside every git repository:
+3. **Stage the arms** into an empty folder outside every git repository, with the cut as the prose text:
 
    ```sh
-   trials/plugin/stage.sh trials/scale/work/corpus-8/.dist/plugin trials/scale/cases "$STAGE"
+   trials/plugin/stage.sh trials/scale/work/corpus-8/.dist/plugin trials/scale/cases "$STAGE" \
+     trials/scale/work/prose-2.md
    ```
 
-   `stage.sh` appends the whole prose text of 8 applications to each prose case, and warns that it is too large.
-   Replace it with the cut:
-
-   ```sh
-   for c in "$STAGE"/prose/evals/house/*/; do
-     name=$(basename "$c")
-     { cat "trials/scale/cases/house/$name/case.yaml"
-       printf 'execution:\n  append_system_prompt: |\n'
-       sed 's/^/    /' trials/scale/work/prose-2.md; } > "$c/case.yaml"
-   done
-   ```
+   `stage.sh` warns that the cut is over 40,000 characters. This trial means it to be.
 
 4. **Run the plugin and none arms, then the prose arm**, as steps 4 and 5 of
    [Running the trial](../plugin/README.md#running-the-trial) say, with `--runs 3`. Twelve questions make 72 sessions
-   in the plugin stage and 36 in the prose stage. Each prose session starts with about 131,000 tokens of system prompt.
-   Run the prose arm on one question first, and read its cost before you run the rest.
+   in the plugin stage and 36 in the prose stage. Each prose session starts with about 131,000 tokens of context from
+   the prose hooks. Run the prose arm on one question first, and read its cost before you run the rest.
 5. **Score the run** with `score.mjs`, as step 7 says, and pass no hook result. Read every reply by hand. Record each
    verdict that differs from the graders' in `adjudication.tsv`.
 
