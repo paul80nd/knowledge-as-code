@@ -4,9 +4,9 @@
   "shortcode": "eng",
   "contentVersion": "0.48.0",
   "mechanismVersion": 26,
-  "commit": "0b33e205d64f9060cb2a2829d52c02981efd1834",
+  "commit": "0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1",
   "dirty": false,
-  "generatedAt": "2026-10-30T14:54:51Z",
+  "generatedAt": "2026-11-02T13:44:53Z",
   "about": {
     "displayName": "Example Engineering",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0b33e205d64f9060cb2a2829d52c02981efd1834/examples/engineering/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1/examples/engineering/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/engineering",
-    "ref": "0b33e205d64f9060cb2a2829d52c02981efd1834"
+    "ref": "0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1"
   },
   "reposBase": null,
   "tracker": {
