@@ -5,7 +5,8 @@
 //
 // Writes <out.json> in the shape of the input, with each case's grader definitions and each run's verdicts replaced.
 // It reports, for every grader whose name and definition are unchanged, whether it agrees with the tool's verdict,
-// and exits 1 on any disagreement. Open each kept folder with `chmod 700 <folder> <folder>/sealed` first.
+// and exits 1 on any disagreement. On macOS and Linux, open each kept folder with `chmod 700 <folder> <folder>/sealed`
+// first.
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
@@ -149,7 +150,10 @@ for (const kase of result.cases) {
   kase.graders = after;
   for (const [arm, runs] of Object.entries(kase.arms)) {
     for (const run of runs) {
-      const workspace = join(dirname(dirname(run.tracePath)), "sealed", "home", "cwd");
+      // Windows cannot seal a kept folder, so the workspace sits there with no sealed/ above it.
+      const kept = dirname(dirname(run.tracePath));
+      const workspace = existsSync(join(kept, "sealed")) ? join(kept, "sealed", "home", "cwd")
+        : join(kept, "home", "cwd");
       if (!existsSync(workspace)) throw new Error(`cannot read ${workspace}: run chmod 700 on the kept folder`);
       const trace = readTrace(run.tracePath);
       const old = new Map(run.graders.map((v) => [v.name, v]));

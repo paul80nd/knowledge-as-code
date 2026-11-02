@@ -8,12 +8,12 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 
 ## The four arms
 
-| Arm    | The session has                                                             | How it runs                                                           |
-|--------|-----------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| hook   | the plugin `kac bundle` builds from the corpus, as it ships                 | a third run, on the plugin as built, under `--ablation none`          |
-| plugin | the same plugin, its build-index hook silent                                | the with-arm of `claude plugin eval` on the plugin                    |
-| prose  | every record the plugin's export contains, as one text on its system prompt | a second run, on a plugin with no components, under `--ablation none` |
-| none   | nothing                                                                     | the without-arm of the same run as the plugin arm                     |
+| Arm    | The session has                                                     | How it runs                                                                      |
+|--------|---------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| hook   | the plugin `kac bundle` builds from the corpus, as it ships         | a third run, on the plugin as built, under `--ablation none`                     |
+| plugin | the same plugin, its build-index hook silent                        | the with-arm of `claude plugin eval` on the plugin                               |
+| prose  | every record the plugin's export contains, as text at session start | a second run, on a plugin of `SessionStart` hooks alone, under `--ablation none` |
+| none   | nothing                                                             | the without-arm of the same run as the plugin arm                                |
 
 **The hook arm is the plugin that ships, so the trial reports the plugin's lead from it.** The plugin arm measures the
 lookup alone. The hook and plugin arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin
@@ -35,16 +35,24 @@ the title, the id, every field, every exported section and the link, then each p
 the prose arm and the plugin arm have the same records.
 
 **The one remaining difference is delivery.** `claude plugin eval` loads no `CLAUDE.md` in a run, even one a scaffold
-writes into the workspace. The prose arm therefore receives the text through each case's `append_system_prompt`. A
-`CLAUDE.md` in a real session arrives as context in the conversation, so the prose arm is close to that delivery and
-not the same.
+writes into the workspace. So the prose arm's plugin prints the text from `SessionStart` hooks, and the session reads
+it as context in the conversation, as it reads a `CLAUDE.md`.
+[`prose-pages.mjs`](prose-pages.mjs) splits the text into pages under Claude Code's 10,000-character cap on a hook's
+output, and writes one hook for each page. A page starts at a type or a record, and only a record longer than a page is
+split. Each page begins `Page <n> of <m>.`, because Claude Code may run the hooks in any order. Read whether every page
+arrived from the session's transcript, as for the hook arm.
+
+The text never goes on a command line, because Windows caps one at 32,767 characters. Up to method 7, the prose arm
+received the text through each case's `append_system_prompt`, so its results from those runs are not strictly
+comparable with later ones.
 
 **Where the prose text is too large for a `CLAUDE.md`, give the prose arm a cut of it.** Claude Code warns on a
 `CLAUDE.md` over 40,000 characters, so cut the text to that size. Have a reader who has not seen the cases choose the
 cut as the corpus's team would, copying record blocks verbatim. A new Claude Code session, given the prose text and
-none of the cases, can be that reader. After `stage.sh`, rewrite each prose `case.yaml` from the case folder with the
-cut appended in place of the whole text. Keep the cut, and the list of what it left out, beside the run.
-[Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made this way.
+none of the cases, can be that reader. A session that has read the cases cannot, so it hands the choice to a new one.
+Pass the cut to `stage.sh` as its fourth argument. Keep the cut, and the list of what it left out, in the run folder
+of the first run that used it. A later run using the same cut names that folder in its write-up.
+[Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made with a cut.
 
 ## The full pass and the pilot
 
@@ -166,6 +174,9 @@ and the report contains the prompts.
 | Node.js 24 or later          | The other scripts run on it, using only its built-in modules. On Windows, run `winget install OpenJS.NodeJS.LTS`, then open a new Git Bash.  |
 | `git`                        | Each scaffold makes its workspace a git repository. Git for Windows installs it.                                                             |
 
+**Run every command on this page in your own shell, or in an agent session with its sandbox off.** `kac` and
+`claude plugin eval` both write outside the folder a Claude Code sandbox allows.
+
 Run `sh trials/plugin/fixture/test.sh` on a machine before its first run. It runs the scripts over a small fixture,
 then over the same fixture with CRLF line endings, as Git for Windows checks files out without a `.gitattributes`. Go
 on once it prints `every case passed`. It needs `sh` and Node.js.
@@ -214,15 +225,19 @@ For a run of this repository's own cases, `$CASES` is a folder under `trials/plu
 Give the repository that contains the cases a `.gitattributes` file with the line `* text=auto eol=lf`. Git for
 Windows otherwise checks text files out with CRLF line endings, and a scaffold or a grader with CRLF endings breaks.
 
-1. **Build the plugin.** Where the cases sit in the corpus's repository, commit them first, because `kac export` marks
-   an untracked case there as a dirty tree. In the corpus, run `kac export`, then `kac bundle`. The plugin is
-   `$CORPUS/.dist/plugin/`.
+1. **Build the plugin.** Where the cases and the run folders sit in the corpus's repository, commit them first.
+   `kac export` marks a tree with an uncommitted file as dirty, and writes that into the export's manifest. Commit
+   each run folder before the next run's export, too. In the corpus, run `kac export`, then `kac bundle`. The plugin
+   is `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
    plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
    ```sh
    trials/plugin/stage.sh "$CORPUS/.dist/plugin" "$CASES" "$STAGE"
    ```
+
+   Add the path to a cut as a fourth argument where the prose text is over 40,000 characters, as
+   [The four arms](#the-four-arms) says. `stage.sh` warns where it is.
 
 3. **Count the sessions before you start any.** The plugin stage starts cases × runs × 2 sessions, and the hook and
    prose stages cases × runs each. Count only the cases `stage.sh` staged. An `llm` grader adds three judge calls per
@@ -237,7 +252,8 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
 
    The parentheses run the command in a subshell, so your shell stays at the root of this repository for step 7. On
    Windows, write `--allow-tools Write Edit` in place of `--allow-tools Bash Write Edit`, here and in steps 5 and 6,
-   as [On Windows](#on-windows) says.
+   as [On Windows](#on-windows) says. `claude plugin eval` exits 1 where any case scores below 1, so do not chain
+   steps 4 to 6 with `&&`.
 
 5. **Run the prose arm:**
 
@@ -270,9 +286,9 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
 8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
    every house case where the hook arm disagrees with the plugin or prose arm, and every pass by a grader you know
    passes weak output.
-   Each run prints a `kept temp:` folder, whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open
-   it. The workspace is `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside
-   the folder.
+   Each run prints a `kept temp:` folder, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside the folder.
+   On macOS and Linux the workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open it, and read it at
+   `<folder>/sealed/home/cwd`. Windows cannot seal it, so the tool warns, and the workspace is `<folder>/home/cwd`.
 9. **Record each verdict you read** in `adjudication.tsv` in the run folder, as [Adjudication](#adjudication) says.
    Then score the run again with it:
 
@@ -315,9 +331,9 @@ folder to each workspace and trace the batch kept, and writes a result file of t
 node trials/plugin/regrade.mjs "$CASES" "$STAGE/out-plugin-r1/aggregate-result.json" "$STAGE/plugin-r1.json"
 ```
 
-Open each kept folder with `chmod 700` first, as step 8 says. The script compares its verdict with the tool's for
-every grader whose name and definition did not change, and exits 1 on any disagreement. Trust it on the changed
-graders only where that check passes. Merge and score the regraded file in place of the one the tool wrote.
+On macOS and Linux, open each kept folder with `chmod 700` first, as step 8 says. The script compares its verdict with
+the tool's for every grader whose name and definition did not change, and exits 1 on any disagreement. Trust it on the
+changed graders only where that check passes. Merge and score the regraded file in place of the one the tool wrote.
 
 ## Writing a case
 
@@ -325,11 +341,10 @@ A case is a folder under `house/` or `control/`, with a `prompt.md`, a `case.yam
 graders under `graders/`. The [eval suite reference](https://code.claude.com/docs/en/plugin-evals#eval-suite-reference)
 gives every key `claude plugin eval` reads in those files.
 
-* **`case.yaml` has no `execution:` block, and ends with a newline.** `stage.sh` appends an `execution:` block to each
-  prose arm's `case.yaml`, so a second block, or a last line with no newline, breaks the file.
 * **The prompt is a task somebody would type.** It never names the rule, the record or the corpus.
-* **The first tag in `prompt.md` is the case's kind**, `house` or `control`, followed by the id of the record the rule
-  sits in.
+* **The first tag in `prompt.md` is the case's kind**, `house` or `control`. The second is the id of the record the
+  rule sits in, as `std-SECRET`, or as `eng:std-CI` for a record a layer brought in. Give the record's id, never a
+  clause's. `score.mjs` finds the record in the export to count the case under its type.
 * **The scaffold builds the repository with heredocs.** A run cannot read the case folder, so the scaffold contains
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
@@ -402,6 +417,10 @@ own. An arm with no result file has no sessions, so its rates and every lead ove
 * **A session that ended on an error** is counted under `<kind>.<arm>.errors`, and in no rate.
 * **A session of an excluded case** is counted nowhere. `excluded_cases` says how many cases were left out.
 * **A verdict read by hand replaces the graders' verdict** in every count but the `graders_` fields.
+* **A house session is also counted under its record's type.** `score.mjs` reads the case's second tag from its
+  `prompt.md` in the stage, and finds the record in the stage's copy of the export. So score the run, and score it
+  again after adjudication, before you delete `$STAGE`. A house case whose record the export does not contain stops
+  the script.
 
 The hook arm's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported
 beside it and never added in, because the plugin's skills teach a session to cite and the prose and none arms have
@@ -418,7 +437,7 @@ read:
 | Column        | Value                                                                                          |
 |---------------|------------------------------------------------------------------------------------------------|
 | `case`        | the case's folder name                                                                         |
-| `arm`         | `plugin`, `hook`, `prose` or `none`                                                            |
+| `arm`         | `plugin`, `hook`, `prose` or `none`. The none arm's sessions are in the plugin result file.    |
 | `run`         | the session's place in its arm, from 1. Where batches were merged, batch 2's session is run 2. |
 | `graders`     | the graders' compliance verdict: `pass`, `fail`, or `no task` where a `task-` grader failed    |
 | `adjudicated` | your verdict, in the same three values                                                         |
@@ -438,39 +457,49 @@ run against any corpus can be published in the same shape. A rate is a fraction 
 where it would divide by 0.
 
 `<kind>` is `house` or `control`, and `<arm>` is `plugin`, `hook`, `prose` or `none`. Each `<kind>.<arm>` field is
-written for every kind and every arm, zero included.
+written for every kind and every arm, zero included. `<type>` is a type of record, as the export's manifest names it,
+such as `standards`. Each `house.<arm>.type.<type>` field is written for every arm and for every type a scored house
+case tests. A type name belongs to the framework, so these fields contain nothing the organisation keeps private. The
+controls have no type fields, because a control tests general practice, which no record has to reach. The
+`house.prose` coverage fields are empty where there is no prose result, or where its stage has no `pages/` folder.
 
-| Field                                  | Value                                                                                 |
-|----------------------------------------|---------------------------------------------------------------------------------------|
-| `trial`                                | `plugin`                                                                              |
-| `method`                               | the version of this method. It moves when a definition on this page changes.          |
-| `model`                                | the model id the sessions ran on                                                      |
-| `claude_version`                       | the Claude Code version that ran the plugin stage                                     |
-| `cases`                                | the cases scored, of both kinds                                                       |
-| `excluded_cases`                       | the cases `excluded.tsv` lists, which no count includes                               |
-| `runs_per_case`                        | the runs of each case in each arm                                                     |
-| `sessions`                             | the graded sessions, over every kind and arm                                          |
-| `adjudicated`                          | the sessions whose compliance verdict was read by hand                                |
-| `<kind>.<arm>.sessions`                | the sessions of that kind in that arm                                                 |
-| `<kind>.<arm>.errors`                  | of those, the sessions that ended on an error                                         |
-| `<kind>.<arm>.task_done`               | of those, the sessions that did the task, by the adjudicated verdict where one exists |
-| `<kind>.<arm>.complied`                | of the sessions that did the task, those that comply, by the same verdict             |
-| `<kind>.<arm>.compliance_rate`         | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                           |
-| `<kind>.<arm>.graders_task_done`       | of the sessions with no error, those where every `task-` grader passed                |
-| `<kind>.<arm>.graders_complied`        | of those, the sessions where every `comply-` grader or set of alternatives passed     |
-| `<kind>.<arm>.graders_compliance_rate` | `<kind>.<arm>.graders_complied` divided by `<kind>.<arm>.graders_task_done`           |
-| `<kind>.<arm>.overturned`              | the sessions whose adjudicated verdict differs from the graders' verdict              |
-| `<kind>.<arm>.cited`                   | the sessions where every `cite-` grader passed                                        |
-| `<kind>.<arm>.citation_rate`           | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
-| `<kind>.plugin.fired`                  | the plugin sessions of that kind where every `fired-` grader passed                   |
-| `<kind>.hook.fired`                    | the hook sessions of that kind where every `fired-` grader passed                     |
-| `<kind>.lead_over_prose`               | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
-| `<kind>.lead_over_none`                | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
-| `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
-| `<kind>.hook_lead_over_<arm>`          | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
-| `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
-| `cost_usd`                             | the list-price cost every stage reports, judge calls and excluded cases included      |
-| `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
+| Field                                   | Value                                                                                 |
+|-----------------------------------------|---------------------------------------------------------------------------------------|
+| `trial`                                 | `plugin`                                                                              |
+| `method`                                | the version of this method. It moves when a definition on this page changes.          |
+| `model`                                 | the model id the sessions ran on                                                      |
+| `claude_version`                        | the Claude Code version that ran the plugin stage                                     |
+| `cases`                                 | the cases scored, of both kinds                                                       |
+| `excluded_cases`                        | the cases `excluded.tsv` lists, which no count includes                               |
+| `runs_per_case`                         | the runs of each case in each arm                                                     |
+| `sessions`                              | the graded sessions, over every kind and arm                                          |
+| `adjudicated`                           | the sessions whose compliance verdict was read by hand                                |
+| `<kind>.<arm>.sessions`                 | the sessions of that kind in that arm                                                 |
+| `<kind>.<arm>.errors`                   | of those, the sessions that ended on an error                                         |
+| `<kind>.<arm>.task_done`                | of those, the sessions that did the task, by the adjudicated verdict where one exists |
+| `<kind>.<arm>.complied`                 | of the sessions that did the task, those that comply, by the same verdict             |
+| `<kind>.<arm>.compliance_rate`          | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                           |
+| `<kind>.<arm>.graders_task_done`        | of the sessions with no error, those where every `task-` grader passed                |
+| `<kind>.<arm>.graders_complied`         | of those, the sessions where every `comply-` grader or set of alternatives passed     |
+| `<kind>.<arm>.graders_compliance_rate`  | `<kind>.<arm>.graders_complied` divided by `<kind>.<arm>.graders_task_done`           |
+| `<kind>.<arm>.overturned`               | the sessions whose adjudicated verdict differs from the graders' verdict              |
+| `<kind>.<arm>.cited`                    | the sessions where every `cite-` grader passed                                        |
+| `<kind>.<arm>.citation_rate`            | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
+| `<kind>.plugin.fired`                   | the plugin sessions of that kind where every `fired-` grader passed                   |
+| `<kind>.hook.fired`                     | the hook sessions of that kind where every `fired-` grader passed                     |
+| `<kind>.lead_over_prose`                | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
+| `<kind>.lead_over_none`                 | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
+| `<kind>.graders_lead_over_<arm>`        | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
+| `<kind>.hook_lead_over_<arm>`           | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
+| `<kind>.graders_hook_lead_over_plugin`  | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
+| `house.<arm>.type.<type>.sessions`      | the house sessions in that arm whose case tests a record of that type                 |
+| `house.<arm>.type.<type>.cited`         | of those, the sessions where every `cite-` grader passed                              |
+| `house.<arm>.type.<type>.complied`      | of those, the sessions that did the task and comply, by the adjudicated verdict       |
+| `house.prose.cases_in_text`             | the scored house cases whose record has a heading in the prose arm's text             |
+| `house.prose.text_coverage`             | `house.prose.cases_in_text` divided by the scored house cases                         |
+| `house.prose.type.<type>.cases_in_text` | of those, the cases whose record is of that type                                      |
+| `cost_usd`                              | the list-price cost every stage reports, judge calls and excluded cases included      |
+| `cost_per_session_usd`                  | `cost_usd` divided by `sessions`                                                      |
 
 ## Reading the result
 
@@ -486,6 +515,14 @@ The plugin arm's lead, `house.lead_over_<arm>`, measures the lookup alone. The b
 `house.hook_lead_over_plugin` is above 0. Read it case by case. For this repository's cases, read it against the
 scenarios in [`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case. The cases of
 another corpus have no scenarios there.
+
+**A type's fields show where to look, not a rate to compare.** At about 2 cases a type and 3 runs a case, one type has
+about 6 sessions in an arm. Where an arm's `house.<arm>.type.<type>.complied` or `.cited` is low beside the other
+types, read that type's sessions before you judge whether the plugin finds its records.
+
+**Read the prose arm's lead against `house.prose.text_coverage`.** A cut chosen without the cases can leave out a
+house case's record, and the prose arm then has the rule no more than the none arm does. Where the coverage is low,
+a lead over the prose arm measures the cut, not the delivery.
 
 Where the hook arm leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.
@@ -509,3 +546,4 @@ Where the hook arm leads the prose arm, the next measurement is another arm: the
 | [#988 operate cases](runs/2026-10-21-988-operate.md)                             |      5 | `payments`, `library`, `dog-fooding`  |       22 | The five operate cases, plugin and none arms, two excluded        |
 | [#989 contribute cases](runs/2026-10-21-989-contribute.md)                       |      5 | `engineering`, `library`              |       12 | The two contribute cases, plugin and none arms, 3 runs a case     |
 | [The runbook route](runs/2026-10-21-1029-runbook-route.md)                       |      5 | `examples/dog-fooding`                |       21 | Two runbook cases before and after the route, then the pointer    |
+| [The prose arm through hooks](runs/2026-11-02-1315-prose-hook.md)                |      8 | `examples/engineering`                |       12 | 3 cases in the prose arm, the cut appended and the cut in hooks   |
