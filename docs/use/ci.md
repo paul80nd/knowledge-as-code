@@ -121,9 +121,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
-          dotnet-version: 10.0.402
+          dotnet-version: 10.0.403
 
       - name: Install the pinned kac
         run: dotnet tool restore
@@ -188,7 +188,7 @@ steps:
     displayName: Install the .NET 10 SDK
     inputs:
       packageType: sdk
-      version: 10.0.402
+      version: 10.0.403
 
   - script: dotnet tool restore
     displayName: Install the pinned kac
