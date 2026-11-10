@@ -198,6 +198,11 @@ files and the graders still read them. It measures less on a case whose task or 
 that reads a `Bash` call's input finds none, and a session cannot run a build or a test. Leave each such case out, as
 [Writing a case](#writing-a-case) says.
 
+**On Windows, only the permission mode keeps a session in its workspace.** Windows cannot seal the workspace, so a
+session can try to write anywhere in your user profile. In the adopting corpus's run, sessions tried to write a secret
+to the per-user secret store. The `don't ask` permission mode that `claude plugin eval` runs each session in denied
+each write, and nothing else would have.
+
 Run the pilot first, and read its result before the full pass.
 
 ## Running the trial
@@ -286,7 +291,9 @@ Windows otherwise checks text files out with CRLF line endings, and a scaffold o
 8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
    every house case where the hook arm disagrees with the plugin or prose arm, and every pass by a grader you know
    passes weak output.
-   Each run prints a `kept temp:` folder, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside the folder.
+   Find each run's folder from its `tracePath` in `aggregate-result.json`, which is `<folder>/out/trace.jsonl`. Do
+   not take it from the log. A run prints its `kept temp:` line after another case's `scaffold:` line, so the folder
+   belongs to the run line after it. Run no `git` inside the folder.
    On macOS and Linux the workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open it, and read it at
    `<folder>/sealed/home/cwd`. Windows cannot seal it, so the tool warns, and the workspace is `<folder>/home/cwd`.
 9. **Record each verdict you read** in `adjudication.tsv` in the run folder, as [Adjudication](#adjudication) says.
@@ -317,6 +324,10 @@ node trials/plugin/merge.mjs "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggrega
 node trials/plugin/merge.mjs "$STAGE/hook.json" "$STAGE"/out-hook-r*/aggregate-result.json
 node trials/plugin/merge.mjs "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
 ```
+
+To split a batch across smaller units, stage the cases in groups and add the group to each name, as
+`"$STAGE/out-plugin-r1-g1"`. The same `out-plugin-r*` pattern then passes every unit of the arm. Give every group the
+same cases in every arm.
 
 [`merge.mjs`](merge.mjs) gives each case the runs of every batch, in the order you pass the batches. It sums the cost,
 and marks the result partial if any batch was. It refuses batches that differ in stage, model, Claude Code version or
@@ -359,6 +370,10 @@ gives every key `claude plugin eval` reads in those files.
 * **A grader for a `SHOULD` rule passes a departure that gives its reason.** Add a `--reason` alternative that finds
   the clause's id in what the session wrote, beside the code that departs. A departure with no reason still fails.
   Read each pass the alternative gives, because a session can cite the clause and give no reason.
+* **A case asking for a whole solution needs a `timeout_seconds` of about 600.** A session that reads the corpus
+  first takes longer than the 300 most cases here give, and a timed-out session scores nothing.
+* **A house rule the model follows anyway needs a scaffold that invites the departure.** Without one, the none arm
+  complies too, and the case measures nothing. Put a local example of the departure in the scaffold.
 * **What the case grades travels in the export.** After step 1, open the record's file under
   `$CORPUS/.dist/plugin/corpus/`, and check that it contains the field or section the case grades. The `export:` block
   in `.schema/<type>.yaml`, at the corpus's root or in a folder above it, decides what travels. A field or section it
@@ -390,16 +405,31 @@ A `regex` grader reads the final reply by default, which is `target: last_messag
 write `target: { source: file, path: <path> }`. `regrade.mjs` reads no other target, and no `match` other than
 `contains` and `not_contains`. A `tool_used` grader's `min` is 1 by default, and its `max` is unlimited.
 
-A `fired-` grader is a `tool_used` grader on `Skill`, whose `input_match` names the skill. The skill names are the
-folder names under `$CORPUS/.dist/plugin/skills/`, which step 1 writes. This is `fired-standards-lookup.md`:
+A `fired-` grader is a `tool_used` grader on `Skill`, whose `input_match` accepts every lookup skill and
+`ask-the-corpus`. A session can reach the record through any of them, and the grader asks whether it consulted the
+corpus at all. The skill names are the folder names under `$CORPUS/.dist/plugin/skills/`, which step 1 writes. This is
+`fired-lookup.md`:
 
 ```markdown
 ---
 type: tool_used
 tool: Skill
-input_match: '"skill"\s*:\s*"(?:[\w-]+:)?standards-lookup"'
+input_match: '"skill"\s*:\s*"(?:[\w-]+:)?(?:[\w-]+-lookup|ask-the-corpus)"'
 ---
 ```
+
+**A grader tests what the rule asks for, wherever the session could reasonably have done it.** The adopting corpus's
+run overturned 36 verdicts, and each fault in this table caused some of them:
+
+| Grader    | Write it to                                                                                         |
+|-----------|-----------------------------------------------------------------------------------------------------|
+| `task-`   | find content only a finished task produces, and fail a placeholder such as `TODO`                   |
+| `task-`   | find the behaviour in any file the session could use, including a settings overlay                  |
+| `task-`   | ignore formatting the prompt never asked for, and wording another house rule forbids                |
+| `comply-` | test the behaviour the rule asks for, never the record's id, which a `cite-` grader tests           |
+| `comply-` | anchor a `not_contains` to the field that decides, so a value named only to be rejected passes      |
+| `comply-` | read files in the workspace alone, where a sanctioned store outside it receives the value by design |
+| either    | watch `Write` and `Edit` alike, because a session editing a scaffold file calls `Edit`              |
 
 `claude plugin eval` scores every grader together, and leaves a `fired-` grader out of a two-arm score. The trial
 reads each grader's verdict, and ignores the tool's score.

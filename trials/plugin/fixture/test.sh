@@ -375,7 +375,13 @@ cp "$kept/trace/trace.jsonl" "$unsealed/trace/"
 printf 'owner: olive\n' >"$unsealed/home/cwd/notes.md"
 printf -- "---\ntype: regex\npattern: 'owner: olive'\ntarget: { source: file, path: notes.md }\n---\n" \
   >"$fx/unsealed-cases/house/case-a/graders/comply-owner.md"
-sed "s|$kept/trace|$unsealed/trace|" "$fx/regrade-in.json" >"$fx/unsealed-in.json"
+# Node writes the trace path, because Git Bash hands node a C:/ path that a sed over the /tmp path would miss.
+node -e '
+const fs = require("node:fs");
+const result = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+result.cases[0].arms.with[0].tracePath = process.argv[2];
+fs.writeFileSync(process.argv[3], JSON.stringify(result, null, 2) + "\n");
+' "$fx/regrade-in.json" "$unsealed/trace/trace.jsonl" "$fx/unsealed-in.json"
 if node "$scripts/regrade.mjs" "$fx/unsealed-cases" "$fx/unsealed-in.json" "$dir/unsealed-out.json" \
   >"$dir/unsealed.stdout" 2>&1 && node -e '
 const r = JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"));
