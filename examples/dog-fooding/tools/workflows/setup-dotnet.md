@@ -29,7 +29,7 @@ Every step passes `global-json-file: global.json`, so it installs the SDK that f
 The action takes no token. It runs in the `publish` jobs of `publish-corpus.yml`, `publish-plugin.yml` and
 `publish-tool.yml`, so its code runs in a job with a write permission.
 
-Every step pins the action to the commit behind `v6.0.0`, and Dependabot moves the pin. `versions` approves the major
+Every step pins the action to the commit behind `v6.1.0`, and Dependabot moves the pin. `versions` approves the major
 the pin sits in.
 
 ## Where it is used
@@ -47,15 +47,15 @@ None recorded.
 The repository and its `package.json` declare MIT. The action runs bundled code under `dist/`, and the `.licenses/`
 folder at the pinned commit records each npm dependency in it. Most are MIT. The others are these:
 
-| Licence       | Packages                                                                         |
-|---------------|----------------------------------------------------------------------------------|
-| Apache-2.0    | `@protobuf-ts/runtime`, `@protobuf-ts/runtime-rpc`, `before-after-hook`          |
-| BlueOak-1.0.0 | one version of `minimatch`                                                       |
-| ISC           | the other version of `minimatch`, `semver`, `universal-user-agent`               |
-| 0BSD          | `tslib`                                                                          |
+| Licence       | Packages                                                                |
+|---------------|-------------------------------------------------------------------------|
+| Apache-2.0    | `@protobuf-ts/runtime`, `@protobuf-ts/runtime-rpc`, `before-after-hook` |
+| BlueOak-1.0.0 | `minimatch`                                                             |
+| ISC           | `semver`, `universal-user-agent`                                        |
+| 0BSD          | `tslib`                                                                 |
 
-The five entries marked `other` are two versions of `@actions/http-client`, `balanced-match`, `brace-expansion` and
-`concat-map`. Each licence file is the MIT text.
+The four entries marked `other` are two versions of `@actions/http-client`, `balanced-match` and `brace-expansion`.
+Each licence file is the MIT text.
 
 The runner fetches the action for each job, and nothing here redistributes it, so nothing follows for anything this
 repository publishes.
