@@ -44,6 +44,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   and `.schema/`, wherever `.schema/` sits. A changed tracked file or an untracked file there still counts, because a
   record can link to any file in the corpus. A change anywhere else does not. `kac update` still refuses any change in
   the working tree, because it writes into it.
+- **Both starter pipelines install .NET SDK 10.0.403.** `kac new` wrote 10.0.402 into
+  `.github/workflows/kac.yml` and `azure-pipelines.yml`. The GitHub workflow also pins `actions/setup-dotnet` at
+  v6.1.0. Dependabot does not move the SDK in a corpus's pipeline, so a corpus already created keeps 10.0.402 until you
+  edit the version by hand.
 
 ### Fixed
 

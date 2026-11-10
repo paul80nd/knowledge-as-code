@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.402 }
+  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.403 }
 homepage: https://dotnet.microsoft.com/
 licence: >-
   MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib AND
@@ -27,7 +27,7 @@ The SDK that builds, tests and packs `kac`, and the runtime the register's NuGet
 Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI
 as a dotnet tool.
 
-`global.json` at the repository root pins the SDK at 10.0.402. Its `rollForward` is `disable`, so `dotnet` refuses
+`global.json` at the repository root pins the SDK at 10.0.403. Its `rollForward` is `disable`, so `dotnet` refuses
 to build with any other SDK, even a later patch installed beside it. [tol-setup-dotnet] reads the file and installs
 that version in every job that builds, tests, packs or publishes with `dotnet`. A contributor installs the same
 version to build locally.
@@ -57,7 +57,7 @@ Microsoft's [Windows licence information] names the files that are not:
 * The [Windows SDK License] covers `D3DCompiler_47_cor3.dll`, which the WPF runtime uses.
 
 The `tool`, `round-trip` and `import-round-trip` jobs in `kac.yml` install the SDK on `windows-latest`, so `licence`
-includes both. Neither has an SPDX identifier, so each is a `LicenseRef-`. The Windows zip of SDK 10.0.402 contains
+includes both. Neither has an SPDX identifier, so each is a `LicenseRef-`. The Windows zip of SDK 10.0.403 contains
 every file the page names, and its root `LICENSE.txt` is the .NET Library License.
 
 The SDK also puts a `ThirdPartyNotices.txt` of 56 notices beside its `LICENSE.txt`, and the file is the same on Windows
