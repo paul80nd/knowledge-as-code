@@ -30,6 +30,6 @@
     "Coverage and gaps": "No layer reports line coverage, which `eng:std-TEST.REACH` asks for. The golden suite measures the share of check ids a fixture exercises, and the two figures answer different questions.\n\nThe suite runs on a pull request into `main`. A push to a branch with no pull request open triggers nothing, so the answer arrives when the work is offered for merge."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1/examples/dog-fooding/controls/tool-test-layers.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/83dc5b91dbb69bb46def5f8fb5558471c7b51bf9/examples/dog-fooding/controls/tool-test-layers.md"
   }
 }

@@ -23,6 +23,6 @@
     "Prerequisites": "* The main checkout, so an agent can read what it needs. One agent per folder.\n* `technical-writing` and the voice skill for the surface, loaded with the Read tool.\n* `kac` run from inside a corpus, and nobody else running it at the same time.\n* Writing a prompt an agent works from, which step 2 needs.\n* Judging prose against a style guide, which step 7 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1/examples/dog-fooding/processes/sweep-prose.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/83dc5b91dbb69bb46def5f8fb5558471c7b51bf9/examples/dog-fooding/processes/sweep-prose.md"
   }
 }

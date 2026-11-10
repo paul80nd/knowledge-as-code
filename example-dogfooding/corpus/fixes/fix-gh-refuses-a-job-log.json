@@ -39,6 +39,6 @@
     "Why it happens": "`gh` guards a terminal against escape sequences an API response could carry, and treats a job log as one of those responses. `gh run view` has no `--allow-escape-sequences` flag, so only `gh api` can pass the guard."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d62dc9e4919ed582d2dcc6cf2cdea8e179e08f1/examples/dog-fooding/fixes/gh-refuses-a-job-log.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/83dc5b91dbb69bb46def5f8fb5558471c7b51bf9/examples/dog-fooding/fixes/gh-refuses-a-job-log.md"
   }
 }
