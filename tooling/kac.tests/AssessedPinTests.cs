@@ -8,7 +8,7 @@ using YamlDotNet.RepresentationModel;
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
-public partial class AssessedPinTests
+public class AssessedPinTests
 {
     private const string Corpus = "examples/dog-fooding";
 
@@ -16,18 +16,10 @@ public partial class AssessedPinTests
 
     private static readonly Schema Schema = Schema.Load(Repo.Root);
 
-    internal sealed record Pin(string Version, string File);
-
-    [GeneratedRegex("""<PackageReference\s+Include="([^"]+)"\s+Version="([^"]+)"\s*/>""")]
-    private static partial Regex NugetPin();
-
-    [GeneratedRegex(@"^([A-Za-z0-9._-]+)==(\S+)", RegexOptions.Multiline)]
-    private static partial Regex PypiPin();
-
     [Fact]
     public void Every_assessed_component_is_pinned_inside_its_range_and_its_assessment_names_the_pin()
     {
-        var pins = Pins();
+        var pins = RepositoryPins.Read();
         var tools = Path.Combine(Repo.Root, Corpus, "tools");
         var assessed = 0;
         var faults = new List<string>();
@@ -109,32 +101,6 @@ public partial class AssessedPinTests
     }
 
     private static string MajorMinor(string version) => string.Join('.', version.Split('.').Take(2));
-
-    /// <summary>Every NuGet pin under <c>tooling/</c> and pip pin for the site, keyed by package URL.</summary>
-    private static Dictionary<string, IReadOnlyList<Pin>> Pins()
-    {
-        var pins = new Dictionary<string, List<Pin>>(StringComparer.Ordinal);
-
-        foreach (var project in Directory.EnumerateFiles(Path.Combine(Repo.Root, "tooling"), "*.csproj",
-                     SearchOption.AllDirectories))
-        {
-            var rel = Path.GetRelativePath(Repo.Root, project).Replace('\\', '/');
-            foreach (Match m in NugetPin().Matches(Files.ReadLf(project)))
-                Add($"pkg:nuget/{m.Groups[1].Value}", m.Groups[2].Value, rel);
-        }
-
-        const string requirements = "docs/requirements.txt";
-        foreach (Match m in PypiPin().Matches(Files.ReadLf(Path.Combine(Repo.Root, requirements))))
-            Add($"pkg:pypi/{m.Groups[1].Value.ToLowerInvariant()}", m.Groups[2].Value, requirements);
-
-        return pins.ToDictionary(p => p.Key, IReadOnlyList<Pin> (p) => p.Value, StringComparer.Ordinal);
-
-        void Add(string purl, string version, string file)
-        {
-            if (!pins.TryGetValue(purl, out var list)) pins[purl] = list = [];
-            list.Add(new Pin(version, file));
-        }
-    }
 
     private const string InStep = """
                                   ---
