@@ -5,11 +5,13 @@ tier: normative
 status: active
 implements: [ eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.ASSETS, eng:pol-EVER.ORPHAN, eng:pol-EVER.PARITY,
   eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-SUPL.REVIEW, eng:pol-TRUS.INVENT, eng:pol-TRUS.SOURCE ]
-verified-by: [ ctl-update-check, ctl-yamllint, ctl-zizmor ]
+verified-by: [ ctl-tool-pin-tests, ctl-update-check, ctl-yamllint, ctl-zizmor ]
 applies-to:
   - all
 review-by: "2027-09-02"
 owner: human:paul.law
+sources:
+  - { resource: https://github.com/paul80nd/knowledge-as-code/issues/1319 }
 tags: [ configuration, dependencies, yaml ]
 ---
 
@@ -47,6 +49,7 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 - A security update **MUST NOT** wait.
 - Packages that only move as a set **SHOULD** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
+- An `approved` or `trial` tool record's `versions` **MUST** contain each version this repository pins its package at.
 
 _**Covers:** `eng:pol-SUPL.REVIEW`, `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.SOURCE`_
 
@@ -131,6 +134,7 @@ the departure is still right.
 - [ ] Every file the change touches is tracked, and contains no credential.
 - [ ] Every dependency it adds names one exact version.
 - [ ] `.github/dependabot.yml` names the directory that manifest sits in.
+- [ ] Every pin the change moves sits inside its tool record's `versions`.
 - [ ] Every ecosystem in both `dependabot.yml` files sets `cooldown: {default-days: 7}`.
 - [ ] Every new value has a comment giving its reason.
 - [ ] Any new `.yamllint` override gives the reason it departs from the baseline.
@@ -165,6 +169,8 @@ Adding a fifth is a decision, not a convenience, so they sit in one file a revie
 
 ## Changelog
 
+- 2026-11-11: an `approved` or `trial` tool record's `versions` contains each version this repository pins its package
+  at.
 - 2026-10-23: each ecosystem in either `dependabot.yml` waits seven days before it proposes a release. A security
   update does not wait.
 - 2026-10-19: only an overlay copy has to match its source as `kac update --check` reports. A seed is copied by hand,

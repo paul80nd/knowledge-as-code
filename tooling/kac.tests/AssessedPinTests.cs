@@ -19,7 +19,7 @@ public class AssessedPinTests
     [Fact]
     public void Every_assessed_component_is_pinned_inside_its_range_and_its_assessment_names_the_pin()
     {
-        var pins = RepositoryPins.Read();
+        var pins = RepositoryPins.Read(Repo.Root);
         var tools = Path.Combine(Repo.Root, Corpus, "tools");
         var assessed = 0;
         var faults = new List<string>();

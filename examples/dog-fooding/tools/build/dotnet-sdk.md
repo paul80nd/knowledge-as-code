@@ -33,7 +33,8 @@ that version in every job that builds, tests, packs or publishes with `dotnet`. 
 version to build locally.
 
 Dependabot raises each new 10.0 SDK as a pull request that moves the pin, and ignores a new major. The `versions` field
-states the pinned version, so that pull request moves it to match.
+states the pinned version, so that pull request moves it to match. [ctl-tool-pin-tests] fails the pull request until it
+does.
 
 ## Where it is used
 
@@ -76,6 +77,7 @@ software to design, develop and test programs, which is what CI does with it. CI
 [.NET Library License]: https://dotnet.microsoft.com/dotnet_library_license.htm
 [Windows SDK License]: https://learn.microsoft.com/legal/windows-sdk/license
 [Windows licence information]: https://github.com/dotnet/core/blob/main/license-information-windows.md
+[ctl-tool-pin-tests]: ../../controls/tool-pin-tests.md
 [std-CONFIG]: ../../standards/configuration.md
 [svc-corpus-feed]: ../../services/corpus-feed.md
 [svc-kac]: ../../services/kac.md

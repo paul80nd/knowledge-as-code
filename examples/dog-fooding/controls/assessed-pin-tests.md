@@ -34,8 +34,7 @@ A pull request that moves the major or minor of an assessed component fails unti
 `AssessedPinTests` in `tooling/kac.tests` reads every tool record in this corpus that has an `Accessibility` section
 and `packages`. For each package it does four things:
 
-* It finds the pin. A `pkg:nuget` package is a `PackageReference` in a project under `tooling/`. A `pkg:pypi` package
-  is a line in `docs/requirements.txt`.
+* It finds the pin with `RepositoryPins`, in the files [ctl-tool-pin-tests] lists.
 * It fails where nothing pins the package.
 * It fails where the pin falls outside the `versions` range, such as `0.57.x`. Below 0.1.0 the range is the pinned
   version itself, such as `0.0.72`, and it fails where the two differ.
@@ -51,11 +50,12 @@ This check proves that the range and the version the assessment names match the 
 repeated the assessment. A reviewer who edits the version number alone passes it, so the conformance checklist in
 [std-A11Y] still asks the reviewer.
 
-It reads NuGet and pip pins only. A component rendering either surface through another ecosystem goes unchecked until
-this test learns its manifest.
+It reads the pins `RepositoryPins` finds. A component rendering either surface from a file it does not read goes
+unchecked until it learns that file.
 
 At or above 0.1.0, a patch release inside the range passes, because std-A11Y asks for a new assessment there only at
 a major or a minor.
 
+[ctl-tool-pin-tests]: tool-pin-tests.md
 [std-A11Y]: ../standards/accessibility.md
 [std-A11Y.ASSESS]: ../standards/accessibility.md#assess-a-pinned-component-carries-an-accessibility-assessment
