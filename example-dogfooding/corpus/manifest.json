@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.99.4",
+  "contentVersion": "0.100.0",
   "mechanismVersion": 26,
-  "commit": "aaee7f9f1907a21a2828056d3a34032251d156a6",
+  "commit": "a4f39dd9ca673b2fde5efdbfa52db4df17015797",
   "dirty": false,
-  "generatedAt": "2026-11-10T15:45:25Z",
+  "generatedAt": "2026-11-11T17:03:50Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "aaee7f9f1907a21a2828056d3a34032251d156a6"
+    "ref": "a4f39dd9ca673b2fde5efdbfa52db4df17015797"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -43,10 +43,10 @@
       "contentVersion": "0.48.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "aaee7f9f1907a21a2828056d3a34032251d156a6"
+        "ref": "a4f39dd9ca673b2fde5efdbfa52db4df17015797"
       },
       "reposBase": null,
       "tracker": {
@@ -61,7 +61,7 @@
     {
       "type": "controls",
       "shapeVersion": 3,
-      "records": 26,
+      "records": 27,
       "parts": 0,
       "dir": "controls",
       "partsFile": null,

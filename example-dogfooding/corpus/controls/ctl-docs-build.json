@@ -28,6 +28,6 @@
     "Coverage and gaps": "`strict: true` checks links inside the site. Nothing fetches an external URL, so a link to a page that has moved still passes.\n\nA transcript's marker says where to run it again, and nothing runs it. Only the `kac new` file count is compared with the tool.\n\nA reader judges whether a page is accurate. A published page describing behaviour the tool no longer has passes every check here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/dog-fooding/controls/docs-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/dog-fooding/controls/docs-build.md"
   }
 }

@@ -223,7 +223,7 @@ Controls: none.
 
 Cite as `std-CONFIG.PIN`.
 
-Controls: `ctl-zizmor` Every workflow and dependabot.yml passes zizmor (`ci`, active).
+Controls: `ctl-tool-pin-tests` A tool record's versions contain what this repository pins (`ci`, active); `ctl-zizmor` Every workflow and dependabot.yml passes zizmor (`ci`, active).
 
 - A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is what [OpenSSF Scorecard](https://github.com/ossf/scorecard/blob/main/docs/checks.md)'s `Dependency-Update-Tool` check asks for.
@@ -232,6 +232,7 @@ Controls: `ctl-zizmor` Every workflow and dependabot.yml passes zizmor (`ci`, ac
 - A security update **MUST NOT** wait.
 - Packages that only move as a set **SHOULD** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
+- An `approved` or `trial` tool record's `versions` **MUST** contain each version this repository pins its package at.
 
 ### A value living in more than one tree is copied and proved
 
@@ -859,7 +860,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1041,7 +1042,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1089,7 +1090,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/aaee7f9f1907a21a2828056d3a34032251d156a6/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 
