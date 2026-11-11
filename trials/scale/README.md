@@ -123,9 +123,9 @@ It uses the method and the scripts of the [plugin trial](../plugin/README.md), w
 | none   | nothing                                                                                       |
 
 **The prose arm gets the whole corpus.** It is the alternative an adopter weighs against the plugin: everything in
-context, and no plugin to install. The text of 8 applications is about 1.3 million characters, or about 530,000
-tokens. `claude-opus-5-5` has a window of 1,000,000 tokens, so the text fits. At about 2.5 characters to a token it
-stops fitting at about 15 applications. The run record states that line, and no arm measures it.
+context, and no plugin to install. The text of 8 applications is about 1.45 million characters, or about 578,000
+tokens. `claude-opus-5-5` has a window of 1,000,000 tokens, so the text fits. It stops fitting at about 15
+applications. The run record states that line, and no arm measures it.
 
 Once the questions are approved:
 
@@ -145,8 +145,8 @@ Once the questions are approved:
 
 4. **Run the plugin and none arms with `--runs 3`**, as step 4 of
    [Running the trial](../plugin/README.md#running-the-trial) says. Twelve questions make 72 sessions.
-5. **Run the prose arm with `--runs 1`**, as step 5 says. Each prose session starts with about 530,000 tokens of
-   context, and costs about ten times a plugin session. Run one question first, and read its cost before you run the
+5. **Run the prose arm with `--runs 1`**, as step 5 says. Each prose session starts with about 578,000 tokens of
+   context, and costs about 18 times a plugin session. Run one question first, and read its cost before you run the
    rest. The run record states that the prose arm ran once.
 6. **Score the run** with `score.mjs`, as step 7 says, and pass no hook result. Read every reply by hand. Record each
    verdict that differs from the graders' in `adjudication.tsv`.
@@ -177,3 +177,4 @@ Report each arm's median input tokens per session and its cost per answered ques
 | Run                              | Corpus               | What it was                                   |
 |----------------------------------|----------------------|-----------------------------------------------|
 | [2026-10-29](runs/2026-10-29.md) | 1 and 8 applications | The size half. The question half has not run. |
+| [2026-11-11](runs/2026-11-11.md) | 8 applications       | The question half, and the size half again.   |

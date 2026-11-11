@@ -1,0 +1,85 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	alder-ledger-one-engineer	1	0	1		1	1	0.4322806	14	
+house	plugin	alder-ledger-one-engineer	2	0	1		1	1	0.3241944	7	
+house	plugin	alder-ledger-one-engineer	3	0	1		1	1	0.3501464	8	
+house	none	alder-ledger-one-engineer	1	0	1		0		0.10552320000000001	3	
+house	none	alder-ledger-one-engineer	2	0	1		0		0.10395839999999999	3	
+house	none	alder-ledger-one-engineer	3	0	0		0		0.10713139999999999	3	fail
+house	plugin	alder-nuget-404	1	0	1		1	1	0.27671280000000004	13	
+house	plugin	alder-nuget-404	2	0	1		1	1	0.288367	13	
+house	plugin	alder-nuget-404	3	0	1		1	1	0.298981	14	
+house	none	alder-nuget-404	1	0	0		0		0.12352900000000003	4	
+house	none	alder-nuget-404	2	0	0		0		0.12013080000000001	4	
+house	none	alder-nuget-404	3	0	0		0		0.11577700000000002	3	
+house	plugin	alder-search-down	1	0	1		1	1	0.2294594	7	
+house	plugin	alder-search-down	2	0	1		1	1	0.21421019999999996	7	
+house	plugin	alder-search-down	3	0	1		1	1	0.21929940000000003	7	
+house	none	alder-search-down	1	0	0		0		0.11874799999999999	6	
+house	none	alder-search-down	2	0	0		0		0.1169668	5	
+house	none	alder-search-down	3	0	0		0		0.12670599999999999	7	
+house	plugin	birch-loan-retention	1	0	1		1	1	0.2205566	6	
+house	plugin	birch-loan-retention	2	0	1		1	1	0.26686299999999996	8	
+house	plugin	birch-loan-retention	3	0	1		1	1	0.21553039999999998	7	
+house	none	birch-loan-retention	1	0	0		0		0.11930999999999999	4	
+house	none	birch-loan-retention	2	0	0		0		0.1179502	4	
+house	none	birch-loan-retention	3	0	0		0		0.1129742	4	
+house	plugin	cedar-card-page-down	1	0	1		1	1	0.2297792	5	
+house	plugin	cedar-card-page-down	2	0	1		1	1	0.20755419999999997	5	
+house	plugin	cedar-card-page-down	3	0	1		1	1	0.24803960000000003	7	
+house	none	cedar-card-page-down	1	0	0		0		0.1178862	5	
+house	none	cedar-card-page-down	2	0	0		0		0.1269394	5	
+house	none	cedar-card-page-down	3	0	0		0		0.12034299999999999	6	
+house	plugin	critical-unalerted	1	0	1		1	1	0.24351019999999995	8	
+house	plugin	critical-unalerted	2	0	1		1	1	0.2703606	7	
+house	plugin	critical-unalerted	3	0	1		1	1	0.2986274	8	
+house	none	critical-unalerted	1	0	0		0		0.1195452	5	
+house	none	critical-unalerted	2	0	0		0		0.105802	3	
+house	none	critical-unalerted	3	0	0		0		0.120417	5	
+house	plugin	damson-recovery-target	1	0	1		1	1	0.2031554	5	
+house	plugin	damson-recovery-target	2	0	1		1	1	0.18977319999999998	6	
+house	plugin	damson-recovery-target	3	0	1		1	1	0.2025992	5	
+house	none	damson-recovery-target	1	0	0		0		0.11373180000000001	6	
+house	none	damson-recovery-target	2	0	0		0		0.11363600000000001	6	
+house	none	damson-recovery-target	3	0	0		0		0.11780520000000001	6	
+house	plugin	elder-two-pending-amounts	1	0	1		1	1	0.2674132	10	
+house	plugin	elder-two-pending-amounts	2	0	1		1	1	0.2728408	8	
+house	plugin	elder-two-pending-amounts	3	0	1		1	1	0.27498900000000004	8	
+house	none	elder-two-pending-amounts	1	0	0		0		0.1432172	7	
+house	none	elder-two-pending-amounts	2	0	0		0		0.13418139999999998	7	
+house	none	elder-two-pending-amounts	3	0	0		0		0.12108680000000001	5	
+house	plugin	fir-departure-owner	1	0	1		1	1	0.22864040000000002	8	
+house	plugin	fir-departure-owner	2	0	1		1	1	0.22761579999999998	8	
+house	plugin	fir-departure-owner	3	0	1		1	1	0.20616640000000003	7	
+house	none	fir-departure-owner	1	0	0		0		0.12130919999999999	5	
+house	none	fir-departure-owner	2	0	0		0		0.12151120000000001	6	
+house	none	fir-departure-owner	3	0	0		0		0.12877080000000002	7	
+house	plugin	gorse-ledger-contract	1	0	1		1	1	0.21820620000000002	6	
+house	plugin	gorse-ledger-contract	2	0	1		1	1	0.3031256	9	
+house	plugin	gorse-ledger-contract	3	0	1		1	1	0.22313739999999999	5	
+house	none	gorse-ledger-contract	1	0	0		0		0.11344040000000001	4	
+house	none	gorse-ledger-contract	2	0	0		0		0.1159898	5	
+house	none	gorse-ledger-contract	3	0	0		0		0.10505880000000001	4	
+house	plugin	hazel-authorisation-latency	1	0	1		1	1	0.21300960000000002	7	
+house	plugin	hazel-authorisation-latency	2	0	1		1	1	0.21014300000000002	6	
+house	plugin	hazel-authorisation-latency	3	0	1		1	1	0.178043	5	
+house	none	hazel-authorisation-latency	1	0	0		0		0.1055928	4	
+house	none	hazel-authorisation-latency	2	0	0		0		0.1140552	5	
+house	none	hazel-authorisation-latency	3	0	0		0		0.1156022	5	
+house	plugin	refund-idempotency	1	0	1		1	1	0.24296399999999999	5	
+house	plugin	refund-idempotency	2	0	1		1	1	0.23883379999999998	5	
+house	plugin	refund-idempotency	3	0	1		1	1	0.2370908	5	
+house	none	refund-idempotency	1	0	1		0		0.1076198	3	no task
+house	none	refund-idempotency	2	0	1		0		0.1219596	5	no task
+house	none	refund-idempotency	3	0	1		0		0.12615340000000003	6	no task
+house	prose	alder-ledger-one-engineer	1	0	1		1	0	4.5905728	1	
+house	prose	alder-nuget-404	1	0	1		1	0	4.5838608	1	
+house	prose	alder-search-down	1	0	1		1	0	4.5739008	1	
+house	prose	birch-loan-retention	1	0	1		1	0	4.5701848	1	
+house	prose	cedar-card-page-down	1	0	1		1	0	4.5731488	1	
+house	prose	critical-unalerted	1	0	1		1	0	4.577872800000001	1	
+house	prose	damson-recovery-target	1	0	1		1	0	4.5682528	1	
+house	prose	elder-two-pending-amounts	1	0	1		1	0	4.5784807999999995	1	
+house	prose	fir-departure-owner	1	0	0		1	0	4.5675288	1	
+house	prose	gorse-ledger-contract	1	0	1		1	0	4.5669488	1	
+house	prose	hazel-authorisation-latency	1	0	1		1	0	4.5717168	1	
+house	prose	refund-idempotency	1	0	1		1	0	4.5751447999999995	1	
