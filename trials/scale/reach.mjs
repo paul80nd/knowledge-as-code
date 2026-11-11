@@ -64,6 +64,8 @@ files.forEach((file, i) => {
     for (const [arm, runs] of Object.entries(c.arms)) {
       const name = i === 1 ? "prose" : arm === "with" ? "plugin" : "none";
       for (const run of runs) {
+        // A run that ended on an API error, such as a usage limit, was never graded.
+        if (run.error) continue;
         sessions.push({
           arm: name, reach, case: c.name, cost: run.costUsd ?? 0, tokens: inputTokens(run.tracePath),
           answered: passes(run.graders, "task-"), cited: passes(run.graders, "cite-"),
