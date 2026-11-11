@@ -2,8 +2,8 @@
 
 This trial measures what `kac` costs on a corpus (one repository of knowledge records) the size of an estate of eight
 applications. It times `validate`, `export` and `bundle`, and measures what `export` and `bundle` write. Its second
-half asks a session questions about that corpus through the plugin, through the corpus as one prose text, and with
-nothing. It shows whether the plugin still finds an answer once the prose no longer fits a context window.
+half asks a session questions about that corpus through the plugin, through the whole corpus as one prose text in its
+context, and with nothing. It shows what each costs per answer, and whether either loses answers at that size.
 
 Whoever decides whether `kac` and its plugin hold up at an adopting estate's size reads the result. The run also reads
 the build index against the 8,000 characters at which #1034 starts.
@@ -106,25 +106,26 @@ finds them, but its export has no source links, so the prose text comes out smal
    wc -m trials/scale/work/prose-1.md trials/scale/work/prose-8.md
    ```
 
+   Count its tokens from a prose session's trace, never from the characters. The `usage` on a trace's `result` line
+   gives them. This corpus's prose runs at about 2.5 characters to a token.
+
 6. **Write the run** to `runs/<date>.md`, with both tables, the prose sizes, the validate result and the machine.
 
 ## Running the question half
 
-The question half has not run. Have [the questions](questions.md) reviewed before the first run, because the run costs
-a large share of a subscription's usage quota. It uses the method and the scripts of the
-[plugin trial](../plugin/README.md), with these arms:
+The question half costs a large share of a subscription's usage quota, so run it at the start of a 5-hour window.
+It uses the method and the scripts of the [plugin trial](../plugin/README.md), with these arms:
 
 | Arm    | The session has                                                                               |
 |--------|-----------------------------------------------------------------------------------------------|
 | plugin | the plugin `kac bundle` builds from the corpus of 8 applications, its build-index hook silent |
-| prose  | the prose text of the corpus of 2 applications, appended to its system prompt                 |
+| prose  | the prose text of the corpus of 8 applications, delivered by the prose arm's paged hooks      |
 | none   | nothing                                                                                       |
 
-**The prose arm gets the largest whole cut that fits a 200,000-token window with room to work.** The text of 8
-applications is about 1.3 million characters, or about 330,000 tokens at four characters to a token. The text of 2
-applications, Alder and Birch with every fixed record, is about 525,000 characters, or about 131,000 tokens. The text
-of 3 is about 164,000 tokens, which leaves too little of the window for Claude Code's own prompt and the session. The
-cut is verbatim, because the corpus of 2 applications has the same records and ids as the first two of 8.
+**The prose arm gets the whole corpus.** It is the alternative an adopter weighs against the plugin: everything in
+context, and no plugin to install. The text of 8 applications is about 1.45 million characters, or about 578,000
+tokens. `claude-opus-5-5` has a window of 1,000,000 tokens, so the text fits. It stops fitting at about 15
+applications. The run record states that line, and no arm measures it.
 
 Once the questions are approved:
 
@@ -132,29 +133,29 @@ Once the questions are approved:
    [Writing a case](../plugin/README.md#writing-a-case) says. Its prompt is the question as written. Its scaffold writes
    an empty workspace. Its graders are the `task-` and `cite-` patterns in [the questions](questions.md), each a
    `regex` grader on the final reply.
-2. **Build the plugin and the cut.** Run the size half's steps 1 to 4 for the corpus of 8, then:
-
-   ```sh
-   node trials/scale/generate.mjs 2 trials/scale/work
-   ( cd trials/scale/work/corpus-2 && "$KAC" restore && "$KAC" generate && "$KAC" validate && "$KAC" export )
-   node trials/plugin/prose-claude-md.mjs trials/scale/work/corpus-2/.dist/export trials/scale/work/prose-2.md
-   ```
-
-3. **Stage the arms** into an empty folder outside every git repository, with the cut as the prose text:
+2. **Build the plugin and the prose text.** Run the size half's steps 1 to 5 for the corpus of 8.
+3. **Stage the arms** into an empty folder outside every git repository, with the whole text as the prose text:
 
    ```sh
    trials/plugin/stage.sh trials/scale/work/corpus-8/.dist/plugin trials/scale/cases "$STAGE" \
-     trials/scale/work/prose-2.md
+     trials/scale/work/prose-8.md
    ```
 
-   `stage.sh` warns that the cut is over 40,000 characters. This trial means it to be.
+   `stage.sh` warns that the text is over 40,000 characters. This trial means it to be.
 
-4. **Run the plugin and none arms, then the prose arm**, as steps 4 and 5 of
-   [Running the trial](../plugin/README.md#running-the-trial) say, with `--runs 3`. Twelve questions make 72 sessions
-   in the plugin stage and 36 in the prose stage. Each prose session starts with about 131,000 tokens of context from
-   the prose hooks. Run the prose arm on one question first, and read its cost before you run the rest.
-5. **Score the run** with `score.mjs`, as step 7 says, and pass no hook result. Read every reply by hand. Record each
+4. **Run the plugin and none arms with `--runs 3`**, as step 4 of
+   [Running the trial](../plugin/README.md#running-the-trial) says. Twelve questions make 72 sessions.
+5. **Run the prose arm with `--runs 1`**, as step 5 says. Each prose session starts with about 578,000 tokens of
+   context, and costs about 18 times a plugin session. Run one question first, and read its cost before you run the
+   rest. The run record states that the prose arm ran once.
+6. **Score the run** with `score.mjs`, as step 7 says, and pass no hook result. Read every reply by hand. Record each
    verdict that differs from the graders' in `adjudication.tsv`.
+7. **Split the result by reach and cost** with [`reach.mjs`](reach.mjs), which reads each arm's
+   `aggregate-result.json` and the trace of every session:
+
+   ```sh
+   node trials/scale/reach.mjs "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json"
+   ```
 
 ## Scoring
 
@@ -164,12 +165,16 @@ condition of about 8,000 characters.
 
 **In the question half, a session answers where every `task-` grader passed, and cites where every `cite-` grader
 did.** `score.mjs` reports these as `house.<arm>.task_done` and `house.<arm>.cited`. Report each arm's answer rate
-twice: over the questions marked `in` the cut, and over those marked `out`. The plugin keeps working at scale where
-its answer rate on the `out` questions matches its rate on the `in` questions. The prose arm's rate on the `out`
-questions is what the cut costs.
+twice: over the questions whose answer is in one record, and over those that need several. The third tag of a case's
+`prompt.md` says which, as `one-record` or `across-records`. An arm holds up at scale where its rate on
+`across-records` matches its rate on `one-record`.
+
+Report each arm's median input tokens per session and its cost per answered question beside its rates. Take both from
+`reach.mjs`, never from an estimate.
 
 ## Runs
 
 | Run                              | Corpus               | What it was                                   |
 |----------------------------------|----------------------|-----------------------------------------------|
 | [2026-10-29](runs/2026-10-29.md) | 1 and 8 applications | The size half. The question half has not run. |
+| [2026-11-11](runs/2026-11-11.md) | 8 applications       | The question half, and the size half again.   |

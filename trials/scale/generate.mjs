@@ -269,12 +269,16 @@ function strip(front, gone) {
   const lines = front.split("\n");
   const kept = [];
   for (let i = 0; i < lines.length; i++) {
-    const inline = /^([a-z-]+):\s*\[(.*)\]\s*$/.exec(lines[i]);
+    // A flow list may wrap, so it runs to the line that closes it.
+    let end = i;
+    if (/^[a-z-]+:\s*\[/.test(lines[i])) while (!lines[end].includes("]") && end + 1 < lines.length) end++;
+    const inline = /^([a-z-]+):\s*\[([\s\S]*)\]\s*$/.exec(lines.slice(i, end + 1).join("\n"));
     if (inline) {
       const items = inline[2].split(",").map((s) => s.trim()).filter((s) => s !== "");
       const rest = items.filter((s) => !gone.has(s));
-      if (rest.length === items.length) kept.push(lines[i]);
+      if (rest.length === items.length) kept.push(...lines.slice(i, end + 1));
       else if (rest.length > 0) kept.push(`${inline[1]}: [ ${rest.join(", ")} ]`);
+      i = end;
       continue;
     }
     if (/^[a-z-]+:\s*$/.test(lines[i]) && /^\s+- /.test(lines[i + 1] ?? "")) {

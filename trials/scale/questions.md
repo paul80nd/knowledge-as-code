@@ -1,32 +1,31 @@
 # The scale trial's questions
 
-These are the questions the scale trial's question arm asks. They are drafted, and no session has run them. Each one
-is answerable from the corpus (one repository of knowledge records) that [`generate.mjs`](generate.mjs) writes for 8
+These are the questions the scale trial's question arm asks. They were reviewed on 2026-11-11, and each is a case under
+[`cases/house/`](cases/house/). Each one is answerable from the corpus (one repository of knowledge records) that [`generate.mjs`](generate.mjs) writes for 8
 applications, and from no other source.
 
-**The prose arm gets a cut of the corpus: the fixed records, Alder's records and Birch's records.** The `Cut` column
-says whether the answer is in that cut. A question marked `out` measures what the prose arm loses at scale. A question
-marked `in` measures whether a long text still answers what it contains.
+**Each question reaches into one record or across several.** The `Reach` column says which. A question reaching
+across records needs a count, a reverse lookup or a cross-reference, which a long text answers least reliably.
 
 A question needs scale where its answer is in one application's copy of a record that every application has, in a
 clause of an imported policy, or across a cross-reference between records. The `Why at scale` column says which.
 
 ## The questions
 
-| #  | Question, as a session receives it                                                                                                                    | Cut |
-|----|-------------------------------------------------------------------------------------------------------------------------------------------------------|-----|
-| 1  | Where is the API contract for the Gorse application's payment ledger published?                                                                       | out |
-| 2  | Who owns the Fir application's accepted departure from the rule that operating knowledge must not live in one person's head, and when is it reviewed? | out |
-| 3  | How fast must a card authorisation in the Hazel application return, and how long does a breach last before it alerts?                                 | out |
-| 4  | Only one engineer knows how to restore the Alder ledger, and they are always reachable. Is that acceptable here?                                      | in  |
-| 5  | After the Damson checkout refused payments the card had already authorised, what recovery target was set for its ledger?                              | out |
-| 6  | A customer of the Elder checkout sees two pending amounts on their statement for one order. Has this been solved before, and what do I do?            | out |
-| 7  | How long does the Birch application keep a borrower linked to a returned loan, and does anything enforce that?                                        | in  |
-| 8  | The Cedar application's hosted card payment page is down. What happens to a borrower's hold, and what is the fallback?                                | out |
-| 9  | I am adding a refund endpoint to a payment service. What header must a refund request include, and how should the caller build its value?             | in  |
-| 10 | In the Alder application, nuget.org returns 404 for a `kac` version released minutes ago. Is there a runbook, and how severe is it?                   | in  |
-| 11 | How many services across the estate are graded critical and raise nothing when they fail? List them.                                                  | out |
-| 12 | If the Alder application's search service goes down, which other services feel it directly?                                                           | in  |
+| #  | Question, as a session receives it                                                                                                                    | Reach          |
+|----|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|
+| 1  | Where is the API contract for the Gorse application's payment ledger published?                                                                       | one-record     |
+| 2  | Who owns the Fir application's accepted departure from the rule that operating knowledge must not live in one person's head, and when is it reviewed? | one-record     |
+| 3  | How fast must a card authorisation in the Hazel application return, and how long does a breach last before it alerts?                                 | one-record     |
+| 4  | Only one engineer knows how to restore the Alder ledger, and they are always reachable. Is that acceptable here?                                      | one-record     |
+| 5  | After the Damson checkout refused payments the card had already authorised, what recovery target was set for its ledger?                              | across-records |
+| 6  | A customer of the Elder checkout sees two pending amounts on their statement for one order. Has this been solved before, and what do I do?            | one-record     |
+| 7  | How long does the Birch application keep a borrower linked to a returned loan, and does anything enforce that?                                        | one-record     |
+| 8  | The Cedar application's hosted card payment page is down. What happens to a borrower's hold, and what is the fallback?                                | one-record     |
+| 9  | I am adding a refund endpoint to a payment service. What header must a refund request include, and how should the caller build its value?             | one-record     |
+| 10 | In the Alder application, nuget.org returns 404 for a `kac` version released minutes ago. Is there a runbook, and how severe is it?                   | one-record     |
+| 11 | How many services across the estate are graded critical and raise nothing when they fail? List them.                                                  | across-records |
+| 12 | If the Alder application's search service goes down, which other services feel it directly?                                                           | across-records |
 
 ## The answers
 

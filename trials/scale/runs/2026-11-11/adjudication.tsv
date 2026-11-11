@@ -1,0 +1,5 @@
+case	arm	run	graders	adjudicated	reason
+alder-ledger-one-engineer	none	3	no task	fail	It answers no, as runs 1 and 2 do, in words task-verdict does not match.
+refund-idempotency	none	1	fail	no task	It builds the key from a random UUID, where std-IDEM.KEY derives it from the order and the operation.
+refund-idempotency	none	2	fail	no task	It builds the key from a random UUID or a payment id, where std-IDEM.KEY derives it from the order and the operation.
+refund-idempotency	none	3	fail	no task	It builds the key from a random UUID, where std-IDEM.KEY derives it from the order and the operation.
