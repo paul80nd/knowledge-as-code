@@ -73,7 +73,8 @@ public record ExportAuthor(string? Name, string? Url);
 
 /// <summary>
 /// <c>HumanTemplate</c>, <c>Base</c> and <c>Ref</c> are null together, where the corpus publishes nowhere or names a
-/// target nothing builds links for. <c>PathPrefix</c> is null where the corpus is its repository.
+/// target nothing builds links for. <c>PathPrefix</c> is null where the corpus is its repository. <c>Repository</c> is
+/// null on every target but <c>azure-devops-wiki</c>, and for a producer that exported before the key existed.
 /// <c>docs/reference/export.md</c> sets out how a client reads a record's source from these.
 /// </summary>
 public record ExportPublishing(
@@ -81,7 +82,8 @@ public record ExportPublishing(
     string? HumanTemplate,
     string? Base,
     string? PathPrefix,
-    string? Ref);
+    string? Ref,
+    string? Repository = null);
 
 /// <summary>
 /// <c>PartsFile</c>, <c>RecordKey</c>, <c>PartKey</c> and <c>IdKey</c> are null where the type keeps no parts, and

@@ -13,7 +13,7 @@ public class CommandsTests
         var root = Fixture("export");
 
         var exit = Commands.Export(root, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc),
-            "0123456789abcdef0123456789abcdef01234567", dirty: _ => true);
+            "0123456789abcdef0123456789abcdef01234567", null, dirty: _ => true);
 
         Assert.Equal(0, exit);
         var manifest = Manifest(root);
@@ -37,7 +37,7 @@ public class CommandsTests
         Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(repository, untracked)) ?? repository);
         File.WriteAllText(Path.Combine(repository, untracked), "work in progress\n");
 
-        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, null,
             paths => Git.Dirty(corpus, paths));
 
         Assert.Equal(dirty, Manifest(corpus).GetProperty("dirty").GetBoolean());
@@ -55,7 +55,7 @@ public class CommandsTests
         Assert.SkipUnless(GitCli.Repository(repository), GitCli.Unavailable);
         File.WriteAllText(Path.Combine(repository, tracked), "# changed\n");
 
-        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+        Commands.Export(corpus, null, new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, null,
             paths => Git.Dirty(corpus, paths));
 
         Assert.Equal(dirty, Manifest(corpus).GetProperty("dirty").GetBoolean());
@@ -108,7 +108,7 @@ public class CommandsTests
     {
         var root = Fixture("export");
 
-        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null,
+        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, null,
             _ => null);
 
         Assert.Equal(1, exit);

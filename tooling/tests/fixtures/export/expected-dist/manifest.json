@@ -18,7 +18,8 @@
     "humanTemplate": null,
     "base": null,
     "pathPrefix": null,
-    "ref": null
+    "ref": null,
+    "repository": null
   },
   "reposBase": null,
   "tracker": {

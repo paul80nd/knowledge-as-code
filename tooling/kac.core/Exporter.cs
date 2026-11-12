@@ -1143,7 +1143,7 @@ public static class Exporter
 
         return new ExportPublishing(
             target, publishing?.Template(), publishing is null ? null : descriptor.Base,
-            publishing?.PathPrefix, publishing?.Ref);
+            publishing?.PathPrefix, publishing?.Ref, publishing?.Repository);
     }
 
     private static ExportLinks? Links(string? link) =>

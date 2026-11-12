@@ -96,14 +96,17 @@ public sealed class ExportSteps(Workspace ws)
     }
 
     /// <summary>The time and the commit are fixed, so two runs over one corpus write the same bytes.</summary>
-    internal static int Export(string root, string? type = null, bool? dirty = false) =>
-        Commands.Export(root, type, Now, Commit, _ => dirty);
+    internal static int Export(string root, string? type = null, bool? dirty = false, string? origin = null) =>
+        Commands.Export(root, type, Now, Commit, origin, _ => dirty);
 
     [When("I export")]
     public void WhenIExport() => ws.Run(root => Export(root));
 
     [When(@"I export the ""(.*)"" type")]
     public void WhenIExportTheType(string type) => ws.Run(root => Export(root, type));
+
+    [When(@"I export from a repository whose origin is ""(.*)""")]
+    public void WhenIExportFromARepositoryWhoseOriginIs(string origin) => ws.Run(root => Export(root, origin: origin));
 
     [When("^I export from a tree git reports as (dirty|clean|unknown)$")]
     public void WhenIExportFromATreeGitReportsAs(string tree)

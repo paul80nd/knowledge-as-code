@@ -127,7 +127,8 @@ repository's own URL, with no `/blob` on the end. `export` adds that segment alo
 **`azure-devops-wiki`** means an Azure DevOps wiki publishes it. Write the wiki's own URL, as
 `https://dev.azure.com/{org}/{project}/_wiki/wikis/{wiki}`, and nothing after it. Once you open a page, the address bar
 shows a numeric page id. `export` refuses a base with one in it and builds no links. A link to a wiki page is not
-pinned to a commit, so a person following it reads whatever the wiki has now. The commit travels in the manifest.
+pinned to a commit, so a person following it reads whatever the wiki has now. The commit travels in the manifest, with
+the repository the wiki is published from, which `export` reads from the git `origin`.
 
 **`none`** means the corpus is not published. Its export has no links and says so in its manifest. It is the one value
 that needs no `publishing:` block.

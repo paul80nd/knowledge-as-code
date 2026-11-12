@@ -30,6 +30,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac new --types` takes them: `kac update --add-type policies,controls`. Each arrives with its schema, root page and
   template, and you review them as one diff. A name the template does not declare, or one already adopted, refuses the
   whole run. `update` still refuses a working tree with uncommitted changes.
+- **`kac export` names the repository an Azure DevOps wiki publishes from.** An `azure-devops-wiki` corpus's `base` is
+  the wiki, so an agent fetching a record's source had to find the repository behind it first. The manifest's
+  `publishing` block now has `repository`, the Azure Repos URL read from the git `origin`. It is `null` where there is
+  no `origin`, where the `origin` names no Azure DevOps repository, and on every other target. `formatVersion` stays
+  at 4, because an added key leaves an existing reader correct.
 
 ### Changed
 

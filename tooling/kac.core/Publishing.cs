@@ -50,6 +50,12 @@ public sealed class Publishing
     /// </summary>
     public string? PathPrefix => _prefix is { Length: > 0 } ? _prefix[1..] : null;
 
+    /// <summary>
+    /// The Azure Repos repository an <c>azure-devops-wiki</c> publishes from, where an agent reads a record's source.
+    /// Null on every other target, whose <c>Base</c> is already the repository, and where the origin names none.
+    /// </summary>
+    public string? Repository { get; private init; }
+
     private Publishing(string publishedBase, string? pathPrefix)
     {
         _base = publishedBase.TrimEnd('/');
@@ -58,9 +64,10 @@ public sealed class Publishing
 
     /// <summary>
     /// Null where the corpus has no addressable published form: no target, a target nothing builds links for, no base,
-    /// a base the target cannot join, or no <c>gitRef</c>.
+    /// a base the target cannot join, or no <c>gitRef</c>. <paramref name="origin"/> is the repository's own remote,
+    /// or null where it has none.
     /// </summary>
-    public static Publishing? For(CorpusDescriptor descriptor, string? gitRef)
+    public static Publishing? For(CorpusDescriptor descriptor, string? gitRef, string? origin = null)
     {
         if (descriptor.PublishingTarget is not { } target) return null;
         if (!Addressable.Contains(target, StringComparer.Ordinal)) return null;
@@ -68,7 +75,12 @@ public sealed class Publishing
         if (gitRef is not { Length: > 0 }) return null;
         if (!Joinable(target, published)) return null;
 
-        return new Publishing(published, descriptor.PathPrefix) { Target = target, Ref = gitRef };
+        return new Publishing(published, descriptor.PathPrefix)
+        {
+            Target = target,
+            Ref = gitRef,
+            Repository = target.Equals(AzureDevOpsWiki, StringComparison.Ordinal) ? RepositoryFrom(origin) : null
+        };
     }
 
     /// <summary>
@@ -92,9 +104,7 @@ public sealed class Publishing
     /// </summary>
     public static string? BaseFrom(string target, string? origin)
     {
-        if (origin?.Trim() is not { Length: > 0 } url) return null;
-
-        var repo = url.EndsWith(".git", StringComparison.Ordinal) ? url[..^4] : url;
+        if (Remote(origin) is not { } repo) return null;
 
         return target switch
         {
@@ -102,6 +112,20 @@ public sealed class Publishing
             AzureDevOps => AzureDevOpsBase(repo),
             _ => null
         };
+    }
+
+    /// <summary>
+    /// The Azure Repos URL an origin names, as an <c>azure-devops</c> base spells it. Null where the origin is missing
+    /// or names no Azure DevOps repository.
+    /// </summary>
+    private static string? RepositoryFrom(string? origin) =>
+        Remote(origin) is { } repo ? AzureDevOpsBase(repo) : null;
+
+    private static string? Remote(string? origin)
+    {
+        if (origin?.Trim() is not { Length: > 0 } url) return null;
+
+        return url.EndsWith(".git", StringComparison.Ordinal) ? url[..^4] : url;
     }
 
     private static string? GitHubBase(string repo)

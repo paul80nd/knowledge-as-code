@@ -899,6 +899,49 @@ public class ExporterTests
             Assert.Single(Lines(plan)).GetProperty("links").Text("human"));
     }
 
+    [Theory]
+    [InlineData("https://acme@dev.azure.com/acme/Standards/_git/kac-corpus")]
+    [InlineData("git@ssh.dev.azure.com:v3/acme/Standards/kac-corpus")]
+    public void A_wiki_manifest_names_the_repository_its_origin_points_at(string origin)
+    {
+        var publishing = WikiPublishing(Wiki(origin));
+
+        Assert.Equal("https://dev.azure.com/acme/Standards/_git/kac-corpus", publishing.Text("repository"));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("https://example.com/acme/kac-corpus.git")]
+    public void A_wiki_manifest_names_no_repository_where_its_origin_is_missing_or_unread(string? origin)
+    {
+        var publishing = WikiPublishing(Wiki(origin));
+
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("repository").ValueKind);
+    }
+
+    [Fact]
+    public void A_repository_manifest_names_no_repository_beside_its_base()
+    {
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Published, null, Run);
+
+        var publishing = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("publishing");
+
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("repository").ValueKind);
+    }
+
+    private static Publishing? Wiki(string? origin) => Publishing.For(
+        new CorpusDescriptor
+        {
+            PublishingTarget = Publishing.AzureDevOpsWiki,
+            Base = "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
+        },
+        "0123456789abcdef0123456789abcdef01234567", origin);
+
+    private static JsonElement WikiPublishing(Publishing? wiki) =>
+        JsonDocument.Parse(Single(Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), wiki, null,
+            Run), Exporter.ManifestFile).Content).RootElement.GetProperty("publishing");
+
     [Fact]
     public void A_corpus_that_publishes_nowhere_writes_null_links_on_its_part_lines()
     {

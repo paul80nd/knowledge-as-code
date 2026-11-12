@@ -18,7 +18,8 @@
     "humanTemplate": null,
     "base": null,
     "pathPrefix": null,
-    "ref": null
+    "ref": null,
+    "repository": null
   },
   "reposBase": "https://git.example.com/acme",
   "tracker": {
@@ -43,7 +44,8 @@
         "humanTemplate": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/{path}#{anchor}",
         "base": "https://github.com/example/upstream",
         "pathPrefix": null,
-        "ref": "1111111111111111111111111111111111111111"
+        "ref": "1111111111111111111111111111111111111111",
+        "repository": null
       },
       "reposBase": null,
       "tracker": {
@@ -62,7 +64,8 @@
         "humanTemplate": "https://github.com/example/grandparent/blob/2222222222222222222222222222222222222222/{path}#{anchor}",
         "base": "https://github.com/example/grandparent",
         "pathPrefix": null,
-        "ref": "2222222222222222222222222222222222222222"
+        "ref": "2222222222222222222222222222222222222222",
+        "repository": null
       },
       "reposBase": null,
       "tracker": {
