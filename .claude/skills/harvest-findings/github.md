@@ -9,19 +9,19 @@ yours. `gh` is the client that signs in to GitHub.
 
 ## What GitHub does
 
-| Fact                                                                                                         | Why it matters                                                                                      |
-|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                     | every read and write addresses `<owner>/<repo>`                                                     |
-| `gh` refuses a label the repository does not have, and refuses a whole edit where one label in it is missing | every label is made before step 8 applies the first                                                 |
-| The REST API drops every label silently for an account without push access                                   | the check after each write is what shows a label that did not land                                  |
-| Creating a label that already exists fails, unless the request asks to update a label already there          | a request that updates one can be sent for all seven labels and changes nothing                     |
-| An issue list returns 30 issues unless it asks for more                                                      | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so |
-| Search treats `kac-finding` as two words                                                                     | a body search for the block returns any issue that mentions a finding                               |
-| Adding a label adds it to the set the issue has                                                              | `kac:finding` stays on                                                                              |
-| GitHub has no areas                                                                                          | the queue is the whole repository, and nothing is bounced                                           |
-| An issue body and a comment are stored as the Markdown they were sent                                        | the block reads as it was written, and a comment needs no marking                                   |
-| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens    | it shows a finding a pull request already answers while the issue is still open                     |
-| A pull request whose body says `Closes #<issue>` closes that issue on merge                                  | merging settles the finding, and the issue keeps a link to the pull request                         |
+| Fact                                                                                                         | Why it matters                                                                                                     |
+|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                     | every read and write addresses `<owner>/<repo>`                                                                    |
+| `gh` refuses a label the repository does not have, and refuses a whole edit where one label in it is missing | every label is made before step 8 applies the first                                                                |
+| The REST API drops every label silently for an account without push access                                   | the check after each write is what shows a label that did not land                                                 |
+| Creating a label that already exists fails, unless the request asks to update a label already there          | a request that updates one can be sent for all seven labels and changes nothing                                    |
+| An issue list returns 30 issues unless it asks for more                                                      | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so                |
+| Search does not index the text inside a fenced code block                                                    | a search for `kac-finding` never reaches the block, so the second read lists the issues and reads each body itself |
+| Adding a label adds it to the set the issue has                                                              | `kac:finding` stays on                                                                                             |
+| GitHub has no areas                                                                                          | the queue is the whole repository, and nothing is bounced                                                          |
+| An issue body and a comment are stored as the Markdown they were sent                                        | the block reads as it was written, and a comment needs no marking                                                  |
+| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens    | it shows a finding a pull request already answers while the issue is still open                                    |
+| A pull request whose body says `Closes #<issue>` closes that issue on merge                                  | merging settles the finding, and the issue keeps a link to the pull request                                        |
 
 ## Signing in
 
@@ -56,13 +56,14 @@ Go back to [Making the labels](SKILL.md#making-the-labels).
 The first two reads return each issue's number, title, body and the day it was filed. The third returns its number,
 title and labels. Ask for 200 issues a read.
 
-| Read                      | State       | Search string                            | Then                                                      |
-|---------------------------|-------------|------------------------------------------|-----------------------------------------------------------|
-| the findings waiting      | open        | `label:kac:finding -label:kac:triaged`   | classify each one                                         |
-| the bodies a label missed | open        | `kac-finding in:body -label:kac:finding` | keep only a body containing ```` ```yaml kac-finding ```` |
-| the findings routed       | every state | `label:kac:triaged`                      | compare against them for duplicates                       |
+| Read                      | State       | Search string                          | Then                                                      |
+|---------------------------|-------------|----------------------------------------|-----------------------------------------------------------|
+| the findings waiting      | open        | `label:kac:finding -label:kac:triaged` | classify each one                                         |
+| the bodies a label missed | open        | `-label:kac:finding`                   | keep only a body containing ```` ```yaml kac-finding ```` |
+| the findings routed       | every state | `label:kac:triaged`                    | compare against them for duplicates                       |
 
-**Mark each issue the second read keeps with `kac:finding`.** Check that the issue's labels now include it.
+**Mark each issue the second read keeps with `kac:finding` at step 8**, once the labels exist. Check that the issue's
+labels now include it.
 
 **Given one issue, read its number, title, body, labels and state.**
 

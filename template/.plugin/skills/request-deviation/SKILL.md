@@ -125,7 +125,8 @@ so record the departure at home.
 ## Write the body
 
 The body opens with a fenced block a person can read and a later run can copy. Then the five headings a deviation
-takes, in the order the type gives them, and `## Who is asking` last.
+takes, in the order the type gives them, and `## Who is asking` last. The `Title:` line below is the issue's title,
+and the body starts at the fence.
 
 `````
 Title: Adopt the reconciliation client before it has been screened for vulnerabilities

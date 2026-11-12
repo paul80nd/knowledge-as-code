@@ -197,9 +197,10 @@ so the first read takes it in. Where the tracker states no area, say in your rep
 project.
 
 **A finding may have arrived with no mark at all.** `raise-finding` files one unmarked where the platform refuses a
-mark it does not have. The second read searches the bodies for the block instead, and returns candidates, not
-findings. Give each one whose body has the opening fence the `kac:finding` label, then triage it. A platform that
-creates any tag it is given has no unmarked case.
+mark it does not have. The second read reads the bodies for the block instead, and returns candidates, not
+findings. Triage each one whose body has the opening fence, and give it the `kac:finding` label at step 8 with its
+route, because a tracker that refused the mark has no label to give until the yes. A platform that creates any tag it
+is given has no unmarked case.
 
 **Read every one before you classify any of them.** Duplicates are only visible against the whole queue, and two
 findings that are halves of one problem read as two unrelated tickets on their own.
@@ -322,8 +323,8 @@ the `kac:route-unclear` rows at the top, because those are the ones needing an a
 Show a bounce as its own row, with the area it goes to in place of a route.
 
 **Say what you are about to write**: every label the tracker is missing, then one `kac:triaged` label, one route
-label and one comment on each issue you keep, and one move and its comment on each issue you bounce. Then wait for the
-yes.
+label and one comment on each issue you keep, a `kac:finding` label on each one the second read found, and one move
+and its comment on each issue you bounce. Then wait for the yes.
 
 ### 8. Label, and comment the reason
 

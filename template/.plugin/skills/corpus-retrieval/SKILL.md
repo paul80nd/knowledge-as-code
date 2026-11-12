@@ -74,7 +74,7 @@ about its steps from the corpus.
 ## Check what you got
 
 **Read the first line of the response before you use it.** A sign-in page, an HTML wrapper and a JSON error all
-arrive with a success exit code from something. A record opens with its own heading.
+arrive with a success exit code from something. A record opens with its frontmatter's `---`, or with its own heading.
 
 **Say which commit you read.** `generatedAt` and `commit` in `manifest.json` say when the export was taken, and the
 file you fetched is at the `ref` that export named. Say it wherever a reader is about to act on a procedure or an

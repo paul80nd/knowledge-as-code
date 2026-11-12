@@ -95,7 +95,8 @@ DevOps that is a repository inside a project, and the backlog is the project, so
 ## Write the body
 
 The body opens with a fenced block a person can read and a later run can copy without rereading the prose. Then three
-headings, in this order, with nothing between the block and the first of them.
+headings, in this order, with nothing between the block and the first of them. The `Title:` line below is the issue's
+title, and the body starts at the fence.
 
 `````
 Title: Rider does not re-read an .editorconfig changed from a shell
