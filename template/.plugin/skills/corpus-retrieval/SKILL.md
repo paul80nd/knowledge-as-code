@@ -23,13 +23,14 @@ you need.
 `publishing` block. The wrong block addresses the right path in the wrong repository at the wrong commit, and both the
 404 and somebody else's file that come back look plausible.
 
-| Key             | Type           | What it holds                                                     |
-|-----------------|----------------|-------------------------------------------------------------------|
-| `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none` |
-| `base`          | string or null | the repository the corpus publishes from                          |
-| `pathPrefix`    | string or null | the corpus's folder inside that repository                        |
-| `ref`           | string or null | the commit the export was taken at                                |
-| `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace         |
+| Key             | Type           | What it holds                                                                               |
+|-----------------|----------------|---------------------------------------------------------------------------------------------|
+| `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none`                           |
+| `base`          | string or null | the repository the corpus publishes from, or the wiki where `target` is `azure-devops-wiki` |
+| `repository`    | string or null | the repository an `azure-devops-wiki` publishes from, and `null` on every other target      |
+| `pathPrefix`    | string or null | the corpus's folder inside that repository                                                  |
+| `ref`           | string or null | the commit the export was taken at                                                          |
+| `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace                                   |
 
 A key with no value is `null`, and the key is still there.
 
@@ -56,13 +57,16 @@ for another shell fails in yours. Each platform below states what you could not 
 
 ### Azure DevOps
 
-| Fact                                                                                                         | Why it matters                             |
-|--------------------------------------------------------------------------------------------------------------|--------------------------------------------|
-| `az repos` has no command for a file's content, and `az devops invoke` and `az rest` both reach the REST API | the REST API is the only route             |
-| The [Git Items API] serves a file, and names the parameters that address a path at a commit                  | it is the resource to fetch from           |
-| The media type `text/plain` makes the response the file                                                      | without it the response describes the file |
-| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as `--resource`  | it tells `az` which token signs the call   |
-| `az rest` signs in through `az login`, and a token set up for `az devops login` does not reach it            | a sign-in failure is fixed by `az login`   |
+| Fact                                                                                                              | Why it matters                                                                  |
+|-------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| `az repos` has no command for a file's content, and `az devops invoke` and `az rest` both reach the REST API      | the REST API is the only route                                                  |
+| The [Git Items API] serves a file, and names the parameters that address a path at a commit                       | it is the resource to fetch from                                                |
+| The media type `text/plain` makes the response the file                                                           | without it the response describes the file                                      |
+| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as `--resource`       | it tells `az` which token signs the call                                        |
+| `az rest` signs in through `az login`, and a token set up for `az devops login` does not reach it                 | a sign-in failure is fixed by `az login`                                        |
+| An `azure-devops-wiki` record is read from `repository` through the Git Items API, at `ref`, under `pathPrefix`   | `base` is the wiki, and the file sits in the repository behind it               |
+| Where `repository` is `null`, the [Wikis API] lists the project's wikis and the repository each is published from | the export was taken where the corpus had no `origin` it could read             |
+| `az devops invoke` refuses a response that is not JSON unless it writes the response to a file                    | `az rest` with `text/plain` as its `Accept` header returns the file in one call |
 
 ### Where neither `gh` nor `az` fetches it
 
@@ -94,3 +98,4 @@ other character. Where that block's `target` is `azure-devops-wiki`, remove `.md
 address, so say so, and give the `path` as the record's place in its own repository.
 
 [Git Items API]: https://learn.microsoft.com/en-us/rest/api/azure/devops/git/items
+[Wikis API]: https://learn.microsoft.com/en-us/rest/api/azure/devops/wiki/wikis/list
