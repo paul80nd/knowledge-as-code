@@ -218,13 +218,20 @@ Leave the copy under `${CLAUDE_PLUGIN_ROOT}` as it is, and offer no edit to it, 
 Write the body to a file first, because passing it inline turns every backtick and quote in the block into a quoting
 problem.
 
-**Read the file for the `target` of the tracker of the corpus owning the clause, and no other.** Each holds one
-platform's command, and that tracker may be on a different platform from the one you are holding.
+**Read the file for the `target` of the tracker of the corpus owning the clause, and no other.** Each states one
+platform's facts, and that tracker may be on a different platform from the one you are holding.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/request-deviation/github.md        # target github: gh issue create, and the label
-${CLAUDE_PLUGIN_ROOT}/skills/request-deviation/azure-devops.md  # target azure-devops: az rest, and the area path
+${CLAUDE_PLUGIN_ROOT}/skills/request-deviation/github.md        # target github: the label, and the check on the issue
+${CLAUDE_PLUGIN_ROOT}/skills/request-deviation/azure-devops.md  # target azure-devops: REST, the area path, the check
 ```
+
+**Neither file gives a command.** Each states what filing achieves, the facts about its platform you could not work
+out, and a check on what the platform sends back. Write each command for the shell and the client you have, because a
+command written for another shell fails in yours.
+
+**Read the issue back once it is filed, and file nothing a second time.** Where a check fails, report the field and
+the link. The issue already exists, so a second attempt leaves two.
 
 Where the file for that target is missing, the plugin is not assembled as it should be. Say so, and print the body.
 
@@ -242,7 +249,8 @@ request read out to somebody still reaches the owner.
 ## Say what you did
 
 Name the issue you opened and its URL, or the repository the body still needs pasting on. Say where you filed it
-unlabelled or in the project's default area, and which parts of `## Who is asking` you could not reach.
+unlabelled or in the project's default area, which check failed and on which field, and which parts of
+`## Who is asking` you could not reach.
 
 **Say that nothing is accepted yet.** The work departs from the clause until an individual with the authority answers.
 Name what you are waiting for: a person, and a review date they are content with.

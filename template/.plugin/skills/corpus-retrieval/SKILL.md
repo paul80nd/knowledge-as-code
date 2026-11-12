@@ -23,13 +23,13 @@ you need.
 `publishing` block. The wrong block addresses the right path in the wrong repository at the wrong commit, and both the
 404 and somebody else's file that come back look plausible.
 
-| Key             | Type           | What it holds                                                         |
-|-----------------|----------------|-----------------------------------------------------------------------|
-| `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none`     |
-| `base`          | string or null | the repository the corpus publishes from                              |
-| `pathPrefix`    | string or null | the corpus's folder inside that repository                            |
-| `ref`           | string or null | the commit the export was taken at                                    |
-| `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace             |
+| Key             | Type           | What it holds                                                     |
+|-----------------|----------------|-------------------------------------------------------------------|
+| `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none` |
+| `base`          | string or null | the repository the corpus publishes from                          |
+| `pathPrefix`    | string or null | the corpus's folder inside that repository                        |
+| `ref`           | string or null | the commit the export was taken at                                |
+| `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace         |
 
 A key with no value is `null`, and the key is still there.
 
@@ -42,28 +42,27 @@ Only GitHub serves a public repository's source without credentials. Everywhere 
 the platform fetches it. That client is already there: it is the one that opens an issue or a work item when something
 needs writing back.
 
+This skill gives no command. Write the fetch yourself, for the shell and the client you have, because a command written
+for another shell fails in yours. Each platform below states what you could not work out.
+
 ### GitHub
 
-`gh` fetches a file at a ref. The accept header makes the response the file, and not JSON describing it:
-
-```bash
-gh api "repos/<owner>/<repo>/contents/<pathPrefix><path>?ref=<ref>" -H "Accept: application/vnd.github.raw"
-```
-
-`<owner>/<repo>` comes from the block's `base`. A public repository answers without credentials, and a private one
-answers where `gh auth status` reports you signed in to that host.
+| Fact                                                                                   | Why it matters                                           |
+|----------------------------------------------------------------------------------------|----------------------------------------------------------|
+| `base` is the repository, as `https://github.com/<owner>/<repo>`                       | the owner and the repository address the contents API    |
+| The REST contents API serves a file at a ref, through `repos/<owner>/<repo>/contents/` | `gh` reaches it with the sign-in it already has          |
+| The media type `application/vnd.github.raw` makes the response the file                | without it the response is JSON describing the file      |
+| A public repository answers without credentials                                        | a private one answers only where you are signed in to it |
 
 ### Azure DevOps
 
-`az repos` has no command for a file's content. `az devops invoke` reaches the REST API, and the Git Items resource
-serves a file:
-
-```bash
-az devops invoke --area git --resource items --accept-media-type text/plain --org <base> ...
-```
-
-The [Git Items API](https://learn.microsoft.com/en-us/rest/api/azure/devops/git/items) names the parameters that
-address a path at a ref. `--accept-media-type text/plain` makes the response the file, and not a description of it.
+| Fact                                                                                                         | Why it matters                             |
+|--------------------------------------------------------------------------------------------------------------|--------------------------------------------|
+| `az repos` has no command for a file's content, and `az devops invoke` and `az rest` both reach the REST API | the REST API is the only route             |
+| The [Git Items API] serves a file, and names the parameters that address a path at a commit                  | it is the resource to fetch from           |
+| The media type `text/plain` makes the response the file                                                      | without it the response describes the file |
+| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as `--resource`  | it tells `az` which token signs the call   |
+| `az rest` signs in through `az login`, and a token set up for `az devops login` does not reach it            | a sign-in failure is fixed by `az login`   |
 
 ### Where neither `gh` nor `az` fetches it
 
@@ -93,3 +92,5 @@ other character. Where that block's `target` is `azure-devops-wiki`, remove `.md
 
 **Quote the `path` where `links` or `humanTemplate` is `null`.** That corpus publishes nowhere the export could
 address, so say so, and give the `path` as the record's place in its own repository.
+
+[Git Items API]: https://learn.microsoft.com/en-us/rest/api/azure/devops/git/items

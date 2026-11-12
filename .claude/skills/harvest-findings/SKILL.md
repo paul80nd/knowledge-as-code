@@ -47,16 +47,23 @@ missing, print what you produced and say which invocation you could not finish.
 
 ## The platform files
 
-**Every command this skill runs is in the file for the tracker's `target`.** Read that file, and no other, before you
-run the first command. Each of its sections is headed by the step it serves, and sends you back to that step.
+**What each step needs from the platform is in the file for the tracker's `target`.** Read that file, and no other,
+before the first read. Each of its sections is headed by the step it serves, and sends you back to that step.
 
 | `target`       | Read                                                                                               |
 |----------------|----------------------------------------------------------------------------------------------------|
-| `github`       | [github.md](github.md): `gh` for the labels, the issues and the pull request                       |
-| `azure-devops` | [azure-devops.md](azure-devops.md): `az boards`, `az rest` and `az repos`                          |
+| `github`       | [github.md](github.md): the labels, the search strings and the pull request                        |
+| `azure-devops` | [azure-devops.md](azure-devops.md): the area path, the WIQL, the REST API and the tag set          |
 | `none`         | nothing. [Where the platform runs no tracker](#where-the-platform-runs-no-tracker) says what to do |
 
 Both files sit beside this one, in the base directory this skill was loaded from.
+
+**Neither file gives a command.** Each states what a step achieves, the facts about its platform you could not work
+out, and a check on what the platform sends back. Write each command for the shell and the client you have, because a
+command written for another shell fails in yours.
+
+**Read every write back, and repeat none of them.** Where a check fails, report the field and the link, and write
+nothing more to that item. The write already landed in part, so a second attempt leaves two comments or two routes.
 
 ## Triage does not decide whether a finding is true
 
@@ -118,7 +125,7 @@ backlogs. One Azure DevOps project under two areas is one backlog divided betwee
 **Where the target and base match and only the area differs, bounce the work item.** A bounce moves the finding to
 the other area and leaves the verdict to whoever triages that area. Nothing is refiled: the finding keeps its id, its
 history and `kac:finding`. Move it to the other address's area, or to the project alone where that address states no
-area, then comment why it moved and where. `azure-devops.md` has both commands under "Bounce a work item".
+area, then comment why it moved and where. `azure-devops.md` says what both need under "Bounce a work item".
 
 **A bounced finding takes no `kac:triaged` and no route label.** It leaves this corpus's queue because the queue
 selects by area, and it arrives in the other area's queue untriaged. A route label here would hide it there.
@@ -325,7 +332,7 @@ comment one issue at a time, doing the pair together. An issue labelled with no 
 with. Bounce each finding that goes to another area, as [Read the addresses](#read-the-addresses) says.
 
 **Write each comment to a file with your own file tool.** Passing it inline turns every backtick into a quoting
-problem. The platform file has the commands that label, comment and bounce.
+problem. The platform file says what labelling, commenting and bouncing need, and how to check each one.
 
 #### What the comment says
 
@@ -371,8 +378,8 @@ copy.
 [Read the addresses](#read-the-addresses) shows the bounce. It takes no label here. The work item stays inside the
 project, so there is nothing to copy and nothing to strip.
 
-**Where the targets or the bases differ, draft the upstream body and post it as a comment**, with the comment command
-step 8 uses. Then mark it and stop. Somebody copies the body into whatever tracker they can reach. Never file it
+**Where the targets or the bases differ, draft the upstream body and post it as a comment**, the way step 8 posts
+one. Then mark it and stop. Somebody copies the body into whatever tracker they can reach. Never file it
 yourself: an Azure DevOps user has no GitHub account, and a corpus published from somebody else's repository is
 somebody else's backlog.
 
@@ -420,7 +427,8 @@ the body says what that repository owes.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
 
 **Refuse a finding that already has a pull request, open or merged.** The record it asked for is written. The
-platform file reads the linked pull requests and the state alongside the labels. Name the pull request and stop.
+platform file says where the linked pull requests and the state show, alongside the labels. Name the pull request and
+stop.
 
 **Refuse a closed finding as well.** Somebody closed it by hand, so the observation is settled and no record is owed.
 
@@ -485,7 +493,7 @@ The pull request links the finding, so merging it settles the finding. Closing t
 observation nobody has accepted.
 
 **Commit the record to a new branch and push it.** Then write the body to a file and open the pull request against the
-repository step 2 found, with the command in the platform file. Its title is the record, in one line.
+repository step 2 found, as the platform file says. Its title is the record, in one line.
 
 **Name the record's id and its path in the body.** The finding closes with a link to the pull request, so the body is
 where a reader arriving from the observation learns which record answered it.
@@ -507,4 +515,4 @@ After `draft`, name the pull request and its URL, and the issue it answers. Say 
 draft until somebody accepts it.
 
 **Name what you could not do**: a missing client, a label you could not create, an issue the tracker refused to
-update, an area it refused to bounce one to.
+update, an area it refused to bounce one to, and each check that failed, with its field and its link.

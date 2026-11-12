@@ -3,17 +3,40 @@
 Read this where the tracker of the corpus owning the clause has a `target` of `github`. You have the body in a file,
 and a yes to it.
 
-`base` is the repository, as `https://github.com/<owner>/<repo>`.
+This file states what each step achieves and what GitHub does that you could not work out, and gives no command. Write
+each command yourself, for the shell and the client you have, because a command written for another shell fails in
+yours.
 
-```bash
-gh issue create --repo <owner>/<repo> --title "<the title>" --body-file <path> --label kac:deviation
-```
+## What GitHub does
 
-**Run it again with no `--label` where the repository has no `kac:deviation` label.** The error names the label. Say
-in your reply that you filed it unlabelled and why, because the work is waiting on the answer.
+| Fact                                                                                     | Why it matters                                                       |
+|------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| `base` is the repository, as `https://github.com/<owner>/<repo>`                         | the owner and the repository are what the issue is filed against     |
+| GitHub refuses a label the repository does not have, and refuses the whole issue with it | a repository nobody set up for requests has no `kac:deviation` label |
+| GitHub stores an issue body as the Markdown it was sent                                  | the block reaches the record with its fences, so it needs no marking |
 
-**A failure on sign-in or on permission ends with the body printed.** `gh auth status` says whether you are signed in
-to that host. A repository with issues turned off, or an account without the rights to open one, ends the same way.
-Say which it was.
+## File the issue
+
+**Open one issue on that repository**, with your title, the body from the file character for character, and the label
+`kac:deviation`. `gh` is the client that signs in to GitHub.
+
+**Where GitHub refuses the label, open the issue once more with no label.** The refusal names the label, and nothing
+was filed, so the second attempt is the only issue. Say in your reply that you filed it unlabelled and why, because the
+work is waiting on the answer.
+
+## Check the issue
+
+Read the issue back, and check two things:
+
+* **The body opens on the line ```` ```yaml kac-deviation ````**, so the block arrived with its fences.
+* **The labels include `kac:deviation`**, unless you filed it unlabelled.
+
+**Where a check fails, report the field and the issue's URL, and file nothing again.** The issue exists, and a second
+copy is a duplicate the owner has to close. Whoever is with you can correct the one that is there.
+
+## Where filing fails
+
+**A failure on sign-in or on permission ends with the body printed.** Check whether you are signed in to that host. A
+repository with issues turned off, or an account without the rights to open one, ends the same way. Say which it was.
 
 Then say what you did, as `SKILL.md` describes.
