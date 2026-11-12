@@ -15,12 +15,12 @@
     "sources": [
       {
         "resource": "example-engineering",
-        "version": "0.49.0"
+        "version": "0.50.0"
       }
     ],
     "verified": [
       {
-        "at": "2026-10-29T11:55:00Z",
+        "at": "2026-11-12T14:13:00Z",
         "by": "human:paul.law"
       }
     ],
@@ -31,6 +31,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a35438fe3e464455ba9ee521caa681cfb391da67/examples/engineering/reports/framework-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5fda7bc7c4a11c9966435bb0f1421a0a0dbd5ca2/examples/engineering/reports/framework-coverage.md"
   }
 }
