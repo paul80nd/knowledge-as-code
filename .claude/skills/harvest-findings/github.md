@@ -3,102 +3,93 @@
 Read this where the tracker has a `target` of `github`. Each section serves one step of `SKILL.md`, and ends by sending
 you back to it.
 
-`tracker.base` is the repository, as `https://github.com/<owner>/<repo>`. Every command takes it as
-`--repo <owner>/<repo>`.
+This file states what each step achieves and what GitHub does that you could not work out, and gives no command. Write
+each command yourself, for the shell and the client you have, because a command written for another shell fails in
+yours. `gh` is the client that signs in to GitHub.
+
+## What GitHub does
+
+| Fact                                                                                                         | Why it matters                                                                                                     |
+|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                     | every read and write addresses `<owner>/<repo>`                                                                    |
+| `gh` refuses a label the repository does not have, and refuses a whole edit where one label in it is missing | every label is made before step 8 applies the first                                                                |
+| The REST API drops every label silently for an account without push access                                   | the check after each write is what shows a label that did not land                                                 |
+| Creating a label that already exists fails, unless the request asks to update a label already there          | a request that updates one can be sent for all seven labels and changes nothing                                    |
+| An issue list returns 30 issues unless it asks for more                                                      | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so                |
+| Search does not index the text inside a fenced code block                                                    | a search for `kac-finding` never reaches the block, so the second read lists the issues and reads each body itself |
+| Adding a label adds it to the set the issue has                                                              | `kac:finding` stays on                                                                                             |
+| GitHub has no areas                                                                                          | the queue is the whole repository, and nothing is bounced                                                          |
+| An issue body and a comment are stored as the Markdown they were sent                                        | the block reads as it was written, and a comment needs no marking                                                  |
+| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens    | it shows a finding a pull request already answers while the issue is still open                                    |
+| A pull request whose body says `Closes #<issue>` closes that issue on merge                                  | merging settles the finding, and the issue keeps a link to the pull request                                        |
 
 ## Signing in
 
-```bash
-gh auth status
-```
-
-It says whether you are signed in to the host. Go back to [Find the corpus first](SKILL.md#find-the-corpus-first).
+**Know that you are signed in to the repository's host** before the first read. Go back to
+[Find the corpus first](SKILL.md#find-the-corpus-first).
 
 ## Making the labels
 
-GitHub refuses an unknown label, and `gh issue edit` rejects the whole command when one label is missing.
+**Read the names of every label the repository has**, up to 100. Count the missing ones from the table below into what
+you tell the person you are about to write.
 
-Read first:
+**Once they have agreed, create each missing label** with the colour and the description the table gives. A request
+that updates a label already there may send all seven instead.
 
-```bash
-gh label list --repo <owner>/<repo> --limit 100 --json name --jq '.[].name'
-```
+| Label                 | Colour   | Description                                            |
+|-----------------------|----------|--------------------------------------------------------|
+| `kac:finding`         | `006B75` | An observation an agent filed against a corpus         |
+| `kac:triaged`         | `BFDADC` | A finding triage has routed                            |
+| `kac:route-framework` | `1D76DB` | The finding reports the framework rather than a record |
+| `kac:route-record`    | `0E8A16` | A record here is wrong, or one is missing              |
+| `kac:route-misfiled`  | `FBCA04` | The finding belongs to a corpus this one consumes      |
+| `kac:route-none`      | `CFD3D7` | A duplicate, or already covered by a record            |
+| `kac:route-unclear`   | `D876E3` | Triaged, and a person has to decide                    |
 
-Then, once they have agreed:
-
-```bash
-gh label create kac:finding --repo <owner>/<repo> --color 006B75 --force \
-  --description "An observation an agent filed against a corpus"
-gh label create kac:triaged --repo <owner>/<repo> --color BFDADC --force \
-  --description "A finding triage has routed"
-gh label create kac:route-framework --repo <owner>/<repo> --color 1D76DB --force \
-  --description "The finding reports the framework rather than a record"
-gh label create kac:route-record --repo <owner>/<repo> --color 0E8A16 --force \
-  --description "A record here is wrong, or one is missing"
-gh label create kac:route-misfiled --repo <owner>/<repo> --color FBCA04 --force \
-  --description "The finding belongs to a corpus this one consumes"
-gh label create kac:route-none --repo <owner>/<repo> --color CFD3D7 --force \
-  --description "A duplicate, or already covered by a record"
-gh label create kac:route-unclear --repo <owner>/<repo> --color D876E3 --force \
-  --description "Triaged, and a person has to decide"
-```
-
-`--force` updates a label that is already there, so running this every time costs one call each and changes nothing.
+**Check by reading the labels again.** Every name in the table is there. Where one is missing, say which, and apply no
+label that depends on it.
 
 Go back to [Making the labels](SKILL.md#making-the-labels).
 
 ## `triage` step 1: read the queue
 
-The three reads, in order: the findings waiting, the bodies a label never reached, and the findings already routed.
+The first two reads return each issue's number, title, body and the day it was filed. The third returns its number,
+title and labels. Ask for 200 issues a read.
 
-```bash
-gh issue list --repo <owner>/<repo> --state open --limit 200 \
-  --search "label:kac:finding -label:kac:triaged" --json number,title,body,createdAt
-gh issue list --repo <owner>/<repo> --state open --limit 200 \
-  --search "kac-finding in:body -label:kac:finding" --json number,title,body,createdAt \
-  --jq '[.[] | select(.body | contains("```yaml kac-finding"))]'
-gh issue list --repo <owner>/<repo> --state all --limit 200 \
-  --search "label:kac:triaged" --json number,title,labels
-```
+| Read                      | State       | Search string                          | Then                                                      |
+|---------------------------|-------------|----------------------------------------|-----------------------------------------------------------|
+| the findings waiting      | open        | `label:kac:finding -label:kac:triaged` | classify each one                                         |
+| the bodies a label missed | open        | `-label:kac:finding`                   | keep only a body containing ```` ```yaml kac-finding ```` |
+| the findings routed       | every state | `label:kac:triaged`                    | compare against them for duplicates                       |
 
-GitHub reads `kac-finding` as two words, so the second search returns any issue that discusses a finding. The `--jq`
-filter keeps only a body with the opening fence in it. Mark each one it keeps:
+**Mark each issue the second read keeps with `kac:finding` at step 8**, once the labels exist. Check that the issue's
+labels now include it.
 
-```bash
-gh issue edit <number> --repo <owner>/<repo> --add-label kac:finding
-```
-
-GitHub has no areas, so the queue is the whole repository.
-
-Given one issue, read it with:
-
-```bash
-gh issue view <issue> --repo <owner>/<repo> --json number,title,body,labels,state
-```
+**Given one issue, read its number, title, body, labels and state.**
 
 A GitHub body is the Markdown its author wrote, so read the block as it is. Go back to
 [step 1](SKILL.md#1-read-the-queue).
 
 ## `triage` step 8: label, and comment the reason
 
-```bash
-gh issue edit <number> --repo <owner>/<repo> --add-label kac:triaged --add-label kac:route-record
-gh issue comment <number> --repo <owner>/<repo> --body-file <path>
-```
+**Add `kac:triaged` and the route label to the issue in one edit.** Then post the comment from its file. Step 9 posts
+the upstream body as a comment the same way.
 
-`--add-label` adds to the labels the issue has, so `kac:finding` stays. Step 9 posts the upstream body with the same
-`gh issue comment`. GitHub has no areas, so nothing is bounced here.
+**Check what each write returned.**
+
+* **The issue's labels include `kac:finding`, `kac:triaged` and the route.**
+* **The comment reads as the file you wrote**, fences and backticks intact.
+
+**Where a check fails, report the field and the issue's URL, and write nothing more to that issue.** The verdict is
+already partly there, and a second attempt leaves two comments or two routes.
 
 Go back to [step 8](SKILL.md#8-label-and-comment-the-reason).
 
 ## `draft` step 1: check the issue
 
-```bash
-gh issue view <issue> --repo <owner>/<repo> --json state,labels,closedByPullRequestsReferences
-```
-
-`closedByPullRequestsReferences` lists every pull request that closes this issue, from the moment one opens. A `state`
-of `CLOSED` is a closed finding. Go back to [step 1](SKILL.md#1-check-the-issue).
+**Read the issue's state, its labels and `closedByPullRequestsReferences`.** A `state` of `CLOSED` is a closed
+finding, and an entry in `closedByPullRequestsReferences` is a pull request that already answers it. Go back to
+[step 1](SKILL.md#1-check-the-issue).
 
 ## `draft` step 3: the address in `sources`
 
@@ -113,11 +104,11 @@ Go back to [step 3](SKILL.md#3-write-the-record-or-the-edit).
 
 `publishing.base` is the repository, as `https://github.com/<owner>/<repo>`.
 
-```bash
-gh pr create --repo <owner>/<repo> --head <branch> --title "<the record, in one line>" --body-file <path>
-```
+**Open one pull request on that repository from your branch**, with the record as its title in one line and the body
+from its file. **Write `Closes #<issue>` in the body**, so merging it closes the finding.
 
-**Write `Closes #<issue>` in the body.** GitHub closes the finding when somebody merges the pull request, and leaves
-the link to it on the issue.
+**Check the pull request.** The response gives its URL. Read the issue's `closedByPullRequestsReferences` again, and
+it lists the pull request. Where it does not, report the pull request's URL and that the issue is unlinked, and open no
+second pull request.
 
-The command prints the pull request's URL. Go back to [step 4](SKILL.md#4-open-the-pull-request).
+Go back to [step 4](SKILL.md#4-open-the-pull-request).
