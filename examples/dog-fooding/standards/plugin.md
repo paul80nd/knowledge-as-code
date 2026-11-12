@@ -55,9 +55,8 @@ no plugin, because it writes to the tracker and to the records.
 - A skill **SHOULD** state the outcome each step achieves.
 - A skill **SHOULD** name the API or the client a step uses, where reaching the outcome depends on it.
 - A skill that writes to a tracker **MUST** have the session read the response to each write back.
-- Where the write set a description, that check **MUST** confirm the description is stored as Markdown.
-- Where the write set or kept a mark, that check **MUST** confirm the mark is still on the item.
-- Where the write posted a comment, that check **MUST** confirm the comment came back as Markdown.
+- That check **MUST** confirm what the write touched: a description stored as Markdown, a mark still on the item,
+  and a comment come back as Markdown.
 - Where a check fails, a skill **MUST** have the session report the field and the item's link.
 - Where a check fails, a skill **MUST NOT** have the session file the item again, because the item already exists.
 - A skill triaging findings **MUST** follow this rule as well, although it ships in no plugin.
