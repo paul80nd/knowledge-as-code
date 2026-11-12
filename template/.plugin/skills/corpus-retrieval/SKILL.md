@@ -47,12 +47,12 @@ for another shell fails in yours. Each platform below states what you could not 
 
 ### GitHub
 
-| Fact                                                                                   | Why it matters                                           |
-|----------------------------------------------------------------------------------------|----------------------------------------------------------|
-| `base` is the repository, as `https://github.com/<owner>/<repo>`                       | the owner and the repository address the contents API    |
-| The REST contents API serves a file at a ref, through `repos/<owner>/<repo>/contents/` | `gh` reaches it with the sign-in it already has          |
-| The media type `application/vnd.github.raw` makes the response the file                | without it the response is JSON describing the file      |
-| A public repository answers without credentials                                        | a private one answers only where you are signed in to it |
+| Fact                                                                                                     | Why it matters                                                  |
+|----------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| `base` is the repository, as `https://github.com/<owner>/<repo>`                                         | the owner and the repository address the contents API           |
+| The REST contents API serves a file at a ref, through `repos/<owner>/<repo>/contents/`                   | `gh` reaches it with the sign-in it already has                 |
+| The media type `application/vnd.github.raw` makes the response the file                                  | without it the response is JSON describing the file             |
+| The REST API answers for a public repository without credentials, and `gh` asks for a sign-in either way | a private repository answers only where you are signed in to it |
 
 ### Azure DevOps
 

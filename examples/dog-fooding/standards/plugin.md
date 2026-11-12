@@ -55,8 +55,9 @@ no plugin, because it writes to the tracker and to the records.
 - A skill **SHOULD** state the outcome each step achieves.
 - A skill **SHOULD** name the API or the client a step uses, where reaching the outcome depends on it.
 - A skill that writes to a tracker **MUST** have the session read the response to each write back.
-- That check **MUST** cover the description stored as Markdown, the mark still on the item, and a comment returned as
-  Markdown, wherever the write set one of them.
+- Where the write set a description, that check **MUST** confirm the description is stored as Markdown.
+- Where the write set or kept a mark, that check **MUST** confirm the mark is still on the item.
+- Where the write posted a comment, that check **MUST** confirm the comment came back as Markdown.
 - Where a check fails, a skill **MUST** have the session report the field and the item's link.
 - Where a check fails, a skill **MUST NOT** have the session file the item again, because the item already exists.
 - A skill triaging findings **MUST** follow this rule as well, although it ships in no plugin.
@@ -433,8 +434,10 @@ broke it.
 - [ ] Every skill's description names each case that triggers it, and none twice.
 - [ ] No skill states a command for a step, `harvest-findings` included, and every literal value one quotes is one a
       session could not derive.
-- [ ] Every skill that writes to a tracker has the session read each write back, check the description's format, the
-      mark and a comment's format, and report the field and the link where a check fails without filing again.
+- [ ] Every skill that writes to a tracker has the session read each write back, and check the description's format,
+      the mark and a comment's format.
+- [ ] Every skill that writes to a tracker has the session report the field and the link where a check fails, and file
+      nothing again.
 - [ ] Every instruction a skill reading an export gives can be followed by a session that can read a file and nothing
       else, apart from reading the change a review is asked about, and the `gh` or `az` call that files an issue or
       fetches a record's published source.
@@ -604,11 +607,12 @@ word. Whoever receives the issue decides where it belongs, and writes the record
 needs. `framework` is there for what no type holds: the tool, the schema, the plugin and the skills themselves.
 
 The label is how a person filters and how triage reads its queue, and the block in the body is what makes a finding
-findable when the label never arrived. `gh issue create` refuses a label the target repository does not have, and a
-corpus published from somebody else's repository has whatever labels its maintainer chose. So a finding is filed
-unmarked rather than lost, and triage searches the body for the block as well as the backlog for the mark. The block is
-the contract either way, which is why a platform calling a label something else costs nothing: an Azure tag and a
-GitHub label mean the same thing, and the shape in the body is what both of them point at.
+findable when the label never arrived. `gh` refuses a label the target repository does not have, the REST API drops
+one silently for an account without push access, and a corpus published from somebody else's repository has whatever
+labels its maintainer chose. So a finding is filed unmarked rather than lost, and triage searches the body for the
+block as well as the backlog for the mark. The block is the contract either way, which is why a platform calling a
+label something else costs nothing: an Azure tag and a GitHub label mean the same thing, and the shape in the body is
+what both of them point at.
 
 A drafted record names the issue it came from because a reviewer is being asked to accept something an agent wrote.
 `eng:pol-AGNT.PROV` wants that review to be a check rather than an act of faith, and `eng:pol-AGNT.UNPROV` refuses a

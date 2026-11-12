@@ -9,18 +9,19 @@ yours.
 
 ## What GitHub does
 
-| Fact                                                                                     | Why it matters                                                       |
-|------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `base` is the repository, as `https://github.com/<owner>/<repo>`                         | the owner and the repository are what the issue is filed against     |
-| GitHub refuses a label the repository does not have, and refuses the whole issue with it | a repository nobody set up for requests has no `kac:deviation` label |
-| GitHub stores an issue body as the Markdown it was sent                                  | the block reaches the record with its fences, so it needs no marking |
+| Fact                                                                                   | Why it matters                                                       |
+|----------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| `base` is the repository, as `https://github.com/<owner>/<repo>`                       | the owner and the repository are what the issue is filed against     |
+| `gh` refuses a label the repository does not have, and refuses the whole issue with it | a repository nobody set up for requests has no `kac:deviation` label |
+| The REST API drops every label silently for an account without push access             | the check on the issue is what shows a label that did not land       |
+| GitHub stores an issue body as the Markdown it was sent                                | the block reaches the record with its fences, so it needs no marking |
 
 ## File the issue
 
 **Open one issue on that repository**, with your title, the body from the file character for character, and the label
 `kac:deviation`. `gh` is the client that signs in to GitHub.
 
-**Where GitHub refuses the label, open the issue once more with no label.** The refusal names the label, and nothing
+**Where the client refuses the label, open the issue once more with no label.** The refusal names the label, and nothing
 was filed, so the second attempt is the only issue. Say in your reply that you filed it unlabelled and why, because the
 work is waiting on the answer.
 

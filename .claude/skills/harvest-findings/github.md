@@ -9,18 +9,19 @@ yours. `gh` is the client that signs in to GitHub.
 
 ## What GitHub does
 
-| Fact                                                                                                                  | Why it matters                                                                      |
-|-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                              | every read and write addresses `<owner>/<repo>`                                     |
-| GitHub refuses a label the repository does not have, and refuses a whole edit where one label in it is missing        | every label is made before step 8 applies the first                                 |
-| Creating a label that already exists fails, unless the request updates it. `gh label create` does that with `--force` | making all seven every time then costs one call each and changes nothing            |
-| An issue list returns 30 issues unless it asks for more. Ask for 200                                                  | a read that returned as many as it asked for has more behind it, and step 1 says so |
-| Search treats `kac-finding` as two words                                                                              | a body search for the block returns any issue that mentions a finding               |
-| Adding a label adds it to the set the issue has                                                                       | `kac:finding` stays on                                                              |
-| GitHub has no areas                                                                                                   | the queue is the whole repository, and nothing is bounced                           |
-| An issue body and a comment are stored as the Markdown they were sent                                                 | the block reads as it was written, and a comment needs no marking                   |
-| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens             | it shows a finding a pull request already answers while the issue is still open     |
-| A pull request whose body says `Closes #<issue>` closes that issue on merge                                           | merging settles the finding, and the issue keeps a link to the pull request         |
+| Fact                                                                                                         | Why it matters                                                                                      |
+|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                     | every read and write addresses `<owner>/<repo>`                                                     |
+| `gh` refuses a label the repository does not have, and refuses a whole edit where one label in it is missing | every label is made before step 8 applies the first                                                 |
+| The REST API drops every label silently for an account without push access                                   | the check after each write is what shows a label that did not land                                  |
+| Creating a label that already exists fails, unless the request asks to update a label already there          | a request that updates one can be sent for all seven labels and changes nothing                     |
+| An issue list returns 30 issues unless it asks for more                                                      | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so |
+| Search treats `kac-finding` as two words                                                                     | a body search for the block returns any issue that mentions a finding                               |
+| Adding a label adds it to the set the issue has                                                              | `kac:finding` stays on                                                                              |
+| GitHub has no areas                                                                                          | the queue is the whole repository, and nothing is bounced                                           |
+| An issue body and a comment are stored as the Markdown they were sent                                        | the block reads as it was written, and a comment needs no marking                                   |
+| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens    | it shows a finding a pull request already answers while the issue is still open                     |
+| A pull request whose body says `Closes #<issue>` closes that issue on merge                                  | merging settles the finding, and the issue keeps a link to the pull request                         |
 
 ## Signing in
 
@@ -32,7 +33,8 @@ yours. `gh` is the client that signs in to GitHub.
 **Read the names of every label the repository has**, up to 100. Count the missing ones from the table below into what
 you tell the person you are about to write.
 
-**Once they have agreed, create each missing label** with the colour and the description the table gives.
+**Once they have agreed, create each missing label** with the colour and the description the table gives. A request
+that updates a label already there may send all seven instead.
 
 | Label                 | Colour   | Description                                            |
 |-----------------------|----------|--------------------------------------------------------|
