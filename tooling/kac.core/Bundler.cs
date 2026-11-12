@@ -146,6 +146,11 @@ public static class Bundler
                          + "the export lacks the types it reads. Add it under metadata.components, naming those "
                          + "types in requires.");
 
+        foreach (var absent in declared.Where(c => c.View is null)
+                     .Where(c => !source.PluginTree.Any(f => Owns(c.Path, f.Path))))
+            problems.Add($"{ManifestFile} declares the component '{absent.Path}', and the plugin tree holds nothing "
+                         + "there. Remove it from metadata.components, or restore its files.");
+
         foreach (var view in declared.Where(c => c.View is not null))
         {
             if (!View.Known.Contains(view.View, StringComparer.Ordinal))
