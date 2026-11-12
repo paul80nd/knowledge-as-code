@@ -1,6 +1,6 @@
 # Rules the standards of example-dogfooding state
 
-example-dogfooding 0.100.0 states 86 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-dogfooding 0.101.0 states 87 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
@@ -43,6 +43,7 @@ Each heading gives a standard's id, title and status. Each line under it gives a
 - A skill reading an export only reads files, and one that calls gh or az says what it does without them
 - A skill reads a rule's keyword as what departing from it costs
 - A skill says what its corpus did not carry
+- A skill states what a step achieves and what the session could not infer, and gives no command
 - A skill states what it is for, and the reason for each rule it gives
 - A skill writes back to the tracker the corpus states
 - plugin.json declares every component and the types it reads

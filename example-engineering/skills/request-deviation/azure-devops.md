@@ -3,72 +3,72 @@
 Read this where the tracker of the corpus owning the clause has a `target` of `azure-devops`. You have the body in a
 file, and a yes to it.
 
-`base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`. The organisation follows the
-host, and the project follows the organisation.
+This file states what each step achieves and what Azure DevOps does that you could not work out, and gives no command.
+Write each command yourself, for the shell and the client you have, because a command written for another shell fails
+in yours.
 
-## The patch file
+## What Azure DevOps does
 
-**File it through the REST API with `az rest`, so the body stays Markdown.** Azure DevOps reads a description as HTML
-unless the work item marks it Markdown, and HTML loses the fences around the `kac-deviation` block that the record is
-written from.
+| Fact                                                                                                                                                                              | Why it matters                                                                                                      |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`                                                                                             | the organisation follows the host, and the project follows the organisation                                         |
+| Only the REST API sets `/multilineFieldsFormat/System.Description`                                                                                                                | without it Azure stores the description as HTML, which loses the fences around the block the record is written from |
+| A work item is created at `_apis/wit/workitems/$Issue` under the project, with `api-version=7.1`                                                                                  | `$Issue` is literal: a `$` and the work item type. A shell that expands it sends a request naming no type           |
+| The request is a JSON patch: an array of `add` operations, sent as `application/json-patch+json`                                                                                  | the endpoint refuses any other shape                                                                                |
+| Title and body go into the patch as JSON strings: a backslash before each backslash and each double quote, `\n` for each line break, `\t` for each tab                            | a raw quote or line break ends the string early, and the patch is refused or the body is cut                        |
+| A tag is what Azure calls a label, and Azure creates a tag it does not already have                                                                                               | the mark always lands, so a request here is never filed unmarked                                                    |
+| An area path is the project and `area` joined by `\`, every `/` in `area` written as `\`, and the project name decoded                                                            | Azure Boards separates an area path with backslashes, and `Engineering%20Standards` names `Engineering Standards`   |
+| Inside a JSON string each `\` of the area path is written twice                                                                                                                   | an `area` of `kac-it-swdev/subteam` goes in as `"<project>\\kac-it-swdev\\subteam"`                                 |
+| In a URL the project stays percent-encoded, as `base` gives it                                                                                                                    | a decoded space breaks the URL                                                                                      |
+| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as its `--resource`                                                                   | it tells `az` which token signs the call                                                                            |
+| `az rest` signs in through `az login`, and a personal access token set up for `az devops login` does not reach it                                                                 | a sign-in failure is fixed by `az login`, and by nothing else                                                       |
+| On Windows `az` runs as `az.cmd`, so `cmd.exe` reads every argument again                                                                                                         | `cmd.exe` cuts an argument at `&`, even inside quotes, so pass a second query parameter apart from the URL          |
+| `az` reads an argument that opens with `@` from the file it names, and sends the text itself where it cannot read the file. PowerShell reads a bare `@` as its splatting operator | a body that never left its file shows only in the response                                                          |
+| A Markdown description comes back with its HTML escaped: `>` as `&gt;`, so `provenance: >` reads `provenance: &gt;`                                                               | compare the body after decoding `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;` and then `&amp;`                        |
 
-Write a JSON patch file with your own file tool, as you wrote the body. It is an array, and each entry adds one value
-to the new work item:
+## Write the patch
 
-```json
-[
-  { "op": "add", "path": "/fields/System.Title", "value": "<the title>" },
-  { "op": "add", "path": "/fields/System.Description", "value": "<the body>" },
-  { "op": "add", "path": "/multilineFieldsFormat/System.Description", "value": "Markdown" },
-  { "op": "add", "path": "/fields/System.Tags", "value": "kac:deviation" }
-]
-```
+**Write the patch to a file with your own file tool**, as you wrote the body. It adds these values to the new work
+item, one `add` operation each:
 
-**Write the title and the body as JSON strings.** Put a backslash before each backslash and each double quote, and
-write each line break as `\n` and each tab as `\t`. The body is the one you showed and had a yes to, character for
-character.
-
-**A tag is what this platform calls a label**, so `System.Tags` takes the mark. Azure creates a tag it does not
-already have.
-
-## The area path
+| Path                                        | Value                                   |
+|---------------------------------------------|-----------------------------------------|
+| `/fields/System.Title`                      | the title                               |
+| `/fields/System.Description`                | the body you showed and had a yes to    |
+| `/multilineFieldsFormat/System.Description` | `Markdown`                              |
+| `/fields/System.Tags`                       | `kac:deviation`                         |
+| `/fields/System.AreaPath`                   | the area path, only where `area` is set |
 
 **`area` says which area path inside the project the item belongs to**, because one project can give one backlog to
-any number of corpora.
+any number of corpora. Leave the entry out where `area` is null, and the item lands in the project's default area.
 
-Where the tracker states one, add one more entry to the patch:
+## Create the work item
 
-```json
-  { "op": "add", "path": "/fields/System.AreaPath", "value": "<project>\\<area>" }
-```
+**Create one work item of type `Issue` through the REST API**, from the patch file. `az rest` is the client that reaches
+it with the sign-in `az` already has.
 
-The value is the project and the area, joined by a backslash.
+**Where Azure refuses the area, create it once more without the `System.AreaPath` entry.** The area may not exist, or
+you may not be able to file into it. Nothing was created, so the second attempt is the only work item. Say in your
+reply that it landed in the project's default area, and why.
 
-* **Decode the project name.** `base` arrives percent-encoded, and a base ending `Engineering%20Standards` names the
-  project `Engineering Standards`.
-* **Convert every forward slash in `area` to a backslash.** Azure Boards separates an area path with backslashes.
-* **Write each backslash twice**, because the value is a JSON string. An `area` of `kac-it-swdev/subteam` goes in as
-  `"<project>\\kac-it-swdev\\subteam"`.
+## Check the work item
 
-**Leave the entry out where `area` is null.** The item then lands in the project's default area.
+The response is the new work item. Read it back, and check three things:
 
-## The call
+* **`multilineFieldsFormat."System.Description"` is `markdown`**, in upper or lower case.
+* **`fields."System.Description"` is the body you sent**, once decoded. A description reading `@` and a path is a body
+  that never left its file.
+* **`fields."System.Tags"` includes `kac:deviation`.**
 
-```bash
-az rest --method post --url 'https://dev.azure.com/<org>/<project>/_apis/wit/workitems/$Issue?api-version=7.1' --resource 499b84ac-1321-427f-aa17-267ca6975798 --headers Content-Type=application/json-patch+json --body @<patch path>
-```
+**Where a check fails, report the field, what it holds, and the link at `_links.html.href`, and file nothing again.**
+The work item exists, and a second copy is a duplicate the owner has to close. Whoever is with you can correct the one
+that is there.
 
-* **Single-quote the URL.** `$Issue` is the work item type, and a shell expands it inside double quotes.
-* **Copy `<project>` from `base` as it is.** It sits in a URL, so it stays percent-encoded.
-* **`--resource` is the application id of Azure DevOps.** It tells `az` which token to sign the call with.
+The work item's `id` and the link at `_links.html.href` are what you give in your reply.
 
-The response is the new work item. Its `id` and the link at `_links.html.href` are what you give in your reply.
+## Where filing fails
 
-**Send it again without the `System.AreaPath` entry where the area is refused**, because it does not exist or you
-cannot file into it. Say in your reply that the item landed in the project's default area, and why.
-
-**`az rest` signs in through `az login`.** A personal access token set up for `az devops` does not reach it. Where the
-call fails on sign-in or on permission, print the body, and say that `az login` is the sign-in this route needs. Where
-it fails for any other reason, print the body and say so.
+**A failure on sign-in or on permission ends with the body printed**, and with `az login` named as the sign-in this
+route needs. A failure for any other reason ends with the body printed and the reason given.
 
 Then say what you did, as `SKILL.md` describes.

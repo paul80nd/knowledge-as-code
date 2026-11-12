@@ -34,6 +34,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/dog-fooding/tools/lint/zizmor.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/29f0105cc056da899dd705564632fa90825ae60f/examples/dog-fooding/tools/lint/zizmor.md"
   }
 }

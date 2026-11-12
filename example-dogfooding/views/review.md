@@ -433,6 +433,23 @@ Controls: none.
 - A skill **MUST** say that an empty search states only that the estate has not written this down.
 - A skill **MUST NOT** read an obligation out of a record about something else.
 
+### A skill states what a step achieves and what the session could not infer, and gives no command
+
+Cite as `std-PLUGIN.COMMAND`.
+
+Controls: none.
+
+- A skill **MUST** state no command for a step, not even as an example, because a command fails in any shell its author did not test.
+- A skill **MAY** quote a literal value the session could not derive, such as a search string, a WIQL condition, an application id or a field path.
+- A skill **SHOULD** open each platform file with the facts about that platform a session could not infer, each with its reason.
+- A skill **SHOULD** state the outcome each step achieves.
+- A skill **SHOULD** name the API or the client a step uses, where reaching the outcome depends on it.
+- A skill that writes to a tracker **MUST** have the session read the response to each write back.
+- That check **MUST** confirm what the write touched: a description stored as Markdown, a mark still on the item, and a comment come back as Markdown.
+- Where a check fails, a skill **MUST** have the session report the field and the item's link.
+- Where a check fails, a skill **MUST NOT** have the session file the item again, because the item already exists.
+- A skill triaging findings **MUST** follow this rule as well, although it ships in no plugin.
+
 ### A skill states what it is for, and the reason for each rule it gives
 
 Cite as `std-PLUGIN.REASON`.
@@ -860,7 +877,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/29f0105cc056da899dd705564632fa90825ae60f/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1042,7 +1059,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/29f0105cc056da899dd705564632fa90825ae60f/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1090,7 +1107,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/a4f39dd9ca673b2fde5efdbfa52db4df17015797/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/29f0105cc056da899dd705564632fa90825ae60f/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 

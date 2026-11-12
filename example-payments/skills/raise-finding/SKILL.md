@@ -95,7 +95,8 @@ DevOps that is a repository inside a project, and the backlog is the project, so
 ## Write the body
 
 The body opens with a fenced block a person can read and a later run can copy without rereading the prose. Then three
-headings, in this order, with nothing between the block and the first of them.
+headings, in this order, with nothing between the block and the first of them. The `Title:` line below is the issue's
+title, and the body starts at the fence.
 
 `````
 Title: Rider does not re-read an .editorconfig changed from a shell
@@ -156,13 +157,20 @@ Leave the copy under `${CLAUDE_PLUGIN_ROOT}` as it is, and offer no edit to it, 
 Write the body to a file first, because passing it inline turns every backtick and quote in the block into a quoting
 problem.
 
-**Read the file for the `target` of the tracker you picked, and no other.** Each holds one platform's command, and
+**Read the file for the `target` of the tracker you picked, and no other.** Each states one platform's facts, and
 three trackers in one export can name three platforms.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/github.md        # target github: gh issue create, and the label
-${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/azure-devops.md  # target azure-devops: az rest, and the area path
+${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/github.md        # target github: the label, and the check on the issue
+${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/azure-devops.md  # target azure-devops: REST, the area path, the check
 ```
+
+**Neither file gives a command.** Each states what filing achieves, the facts about its platform you could not work
+out, and a check on what the platform sends back. Write each command for the shell and the client you have, because a
+command written for another shell fails in yours.
+
+**Read the issue back once it is filed, and file nothing a second time.** Where a check fails, report the field and
+the link. The issue already exists, so a second attempt leaves two.
 
 Where the file for that target is missing, the plugin is not assembled as it should be. Say so, and print the body.
 
@@ -180,7 +188,8 @@ finding read out to somebody still reaches the people who can act on it.
 ## Say what you did
 
 Name the issue you opened and its URL, or the repository the body still needs pasting on. Say where you filed it
-unlabelled or in the project's default area, and which parts of `provenance` you could not reach.
+unlabelled or in the project's default area, which check failed and on which field, and which parts of `provenance` you
+could not reach.
 
 **Say that it is untriaged.** A repository may route a new issue onto a board or past somebody who decides what
 happens to it, and none of that is visible from here. Hand the person you are with the URL, so they can place it.
