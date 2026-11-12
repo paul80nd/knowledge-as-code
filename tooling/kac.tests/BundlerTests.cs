@@ -309,6 +309,23 @@ public class BundlerTests
             export: [Manifest("glossary")]).Problems));
 
     [Fact]
+    public void A_component_the_plugin_tree_holds_no_file_for_is_refused()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Component("skills/look", "glossary"), Component("skills/gone", "glossary"))),
+                ("skills/look/SKILL.md", "declared")
+            ],
+            export: [Manifest("glossary")],
+            asGiven: true);
+
+        Assert.Contains("'skills/gone'", Assert.Single(plan.Problems));
+        Assert.Empty(plan.Included);
+    }
+
+    [Fact]
     public void A_file_outside_the_skill_and_hook_directories_needs_no_component()
     {
         var plan = Plan(
@@ -946,10 +963,35 @@ public class BundlerTests
             : files;
     }
 
+    /// <summary>
+    /// Writes a file for each declared component the plugin tree has none for, so a test lists only the files it is
+    /// about. <paramref name="asGiven"/> leaves the plugin tree exactly as listed.
+    /// </summary>
     private static BundlePlan Plan(
         (string Path, string Content)[] plugin,
-        (string Path, string Content)[] export) =>
-        Bundler.Plan(new BundleSource([.. plugin.Select(File)], [.. export.Select(File)]));
+        (string Path, string Content)[] export,
+        bool asGiven = false) =>
+        Bundler.Plan(new BundleSource(
+            [.. (asGiven ? plugin : [.. plugin, .. Filled(plugin)]).Select(File)], [.. export.Select(File)]));
+
+    /// <summary>
+    /// A path whose last segment has an extension is the component's one file, and any other is its directory.
+    /// </summary>
+    private static IEnumerable<(string, string)> Filled((string Path, string Content)[] plugin)
+    {
+        var manifest = plugin.Where(f => f.Path == Bundler.ManifestFile).Select(f => JsonRead.Parse(f.Content));
+        var components = manifest.SelectMany(m =>
+            JsonRead.Object(m?["metadata"])?["components"] as JsonArray ?? []);
+
+        foreach (var component in components.OfType<JsonObject>())
+        {
+            if (JsonRead.Str(component["view"]) is not null) continue;
+            if (JsonRead.Str(component["path"]) is not { } path) continue;
+            if (plugin.Any(f => f.Path == path || f.Path.StartsWith(path + "/", StringComparison.Ordinal))) continue;
+
+            yield return (Path.HasExtension(path) ? path : $"{path}/SKILL.md", "A component.");
+        }
+    }
 
     private static BundleFile File((string Path, string Content) f) =>
         new(f.Path, Encoding.UTF8.GetBytes(f.Content));

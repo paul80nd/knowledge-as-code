@@ -51,6 +51,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`kac bundle` refuses a component whose files are missing.** A component declared under `metadata.components` in
+  `plugin.json` still shipped when the plugin tree had no file at its path. `bundle.json` listed it under `included`,
+  and the plugin manifest kept its entry, so the plugin advertised a component it did not contain. `bundle` now names
+  the path, writes nothing and exits `1`. Remove the entry from `metadata.components`, or restore its files. A view
+  needs no file, because `bundle` writes it.
 - **`kac report coverage` names the rules a corpus inherits without adopting `standards`.** It read an imported rule's
   `Covers` citations under the key the corpus's own schema gave the type. A consumer declining `standards` has no such
   schema, so `Covered by` named the standard whole where an inherited rule covered the clause. `report` now reads the

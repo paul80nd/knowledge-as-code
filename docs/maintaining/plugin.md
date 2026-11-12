@@ -54,6 +54,7 @@ Each refusal exits `1` and writes nothing. [Known limits](../use/cli/bundle.md#k
 * an export at a format version this build does not read
 * a component reading a type at a shape version the export does not have, or at a shape that is not a whole number
 * a file under `skills/` or `hooks/` that no component claims
+* a component, other than a view, whose `path` has no file in the plugin tree
 * a view this build does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
 
 ## What it promises a consumer
@@ -271,6 +272,7 @@ type trim.
 * A bundle declaring a view this tool does not write is refused
 * A bundle whose plugin tree already holds a view's file is refused
 * A bundle whose plugin tree holds a skill no component declares is refused
+* A bundle declaring a component the plugin tree holds no file for is refused
 
 ## Unspecified
 

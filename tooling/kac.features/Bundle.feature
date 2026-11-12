@@ -459,3 +459,11 @@ Scenario: A bundle whose plugin tree holds a skill no component declares is refu
   When I bundle
   Then it refuses
   And nothing is written
+
+Scenario: A bundle declaring a component the plugin tree holds no file for is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And ".plugin/skills/glossary-lookup" is deleted
+  When I bundle
+  Then it refuses
+  And nothing is written

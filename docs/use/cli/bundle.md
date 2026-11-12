@@ -224,6 +224,7 @@ Every other key in the manifest survives untouched.
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry, or at one that is not a whole number
 * a file under `skills/` or `hooks/` that no component claims
+* a component, other than a view, whose `path` has no file in the plugin tree
 * a view `bundle` does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
 
 Where the format versions differ, the message gives both. Rebuild an export that is behind the tool with
