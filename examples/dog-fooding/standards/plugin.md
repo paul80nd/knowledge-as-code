@@ -44,6 +44,23 @@ no plugin, because it writes to the tracker and to the records.
   write-back or review whose order a rule fixes.
 - A skill's description **SHOULD** name each case that triggers it, and each case once.
 
+### COMMAND: A skill states what a step achieves and what the session could not infer, and gives no command
+
+- A skill **MUST** state no command for a step, not even as an example, because a command fails in any shell its
+  author did not test.
+- A skill **MAY** quote a literal value the session could not derive, such as a search string, a WIQL condition, an
+  application id or a field path.
+- A skill **SHOULD** open each platform file with the facts about that platform a session could not infer, each with
+  its reason.
+- A skill **SHOULD** state the outcome each step achieves.
+- A skill **SHOULD** name the API or the client a step uses, where reaching the outcome depends on it.
+- A skill that writes to a tracker **MUST** have the session read the response to each write back.
+- That check **MUST** cover the description stored as Markdown, the mark still on the item, and a comment returned as
+  Markdown, wherever the write set one of them.
+- Where a check fails, a skill **MUST** have the session report the field and the item's link.
+- Where a check fails, a skill **MUST NOT** have the session file the item again, because the item already exists.
+- A skill triaging findings **MUST** follow this rule as well, although it ships in no plugin.
+
 ### READS: A skill reading an export only reads files, and one that calls `gh` or `az` says what it does without them
 
 - A skill **MUST** leave the choice of search tool to the session.
@@ -414,6 +431,10 @@ broke it.
 - [ ] Every skill states what it is for and the intent of the type it reads, and gives the reason for each rule.
 - [ ] Every numbered list in a skill is an order that the type it reads, or a rule here, fixes.
 - [ ] Every skill's description names each case that triggers it, and none twice.
+- [ ] No skill states a command for a step, `harvest-findings` included, and every literal value one quotes is one a
+      session could not derive.
+- [ ] Every skill that writes to a tracker has the session read each write back, check the description's format, the
+      mark and a comment's format, and report the field and the link where a check fails without filing again.
 - [ ] Every instruction a skill reading an export gives can be followed by a session that can read a file and nothing
       else, apart from reading the change a review is asked about, and the `gh` or `az` call that files an issue or
       fetches a record's published source.
@@ -507,6 +528,16 @@ that missed a case gains a reason, or loses a step. Steps stay where the order i
 review, and a write-back whose order a rule above fixes. The description is the one part of a skill in every session's
 context, so it names each case that triggers it once. [writing-for-agents] is the reference for that text. This
 standard cites it and does not restate it, because it changes upstream.
+
+A skill gives no command because the session runs in a shell its author cannot see. On Azure DevOps in PowerShell,
+five commands written for `sh` failed as written across two runs, and the session adapted a command to its own shell
+more reliably than it ran one written for another. What a session cannot work out is what the framework needs to
+survive the round trip: a description stored as Markdown, a mark that a tag write can drop, an entity a Markdown body
+still comes back with. So a platform file states those facts and their reasons, each step states its outcome, and a
+literal value the session could not derive is quoted as a value. A check on the response tells the session that its
+own command worked. Filing again after a failed check leaves two items where one was wanted, so the session reports
+the field and the link and stops. `harvest-findings` ships in no plugin, and its sessions meet the same shells, so the
+rule binds it too.
 
 A router serves a session that knows the corpus exists and has a question, but not which type answers it. Every
 bundled skill puts its description in every session, so one router costs one description where a lookup for each rarely
@@ -693,6 +724,10 @@ standard.
 
 ## Changelog
 
+- 2026-11-12: a skill states no command for a step, and may quote a literal value a session could not derive. Each
+  platform file opens on the facts a session could not infer, and each step states its outcome. A skill that writes
+  to a tracker has the session read each write back, and report a failed check without filing again. The rule binds
+  `harvest-findings` as well.
 - 2026-10-30: a review checks the rules a `local-hook` control names, because a developer can bypass a hook.
 - 2026-10-28: triage reads its queue from the corpus's own area, and compares the area wherever it compares two
   addresses. A finding that belongs in another area of the same project is bounced there by its area path, with a
