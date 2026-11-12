@@ -985,7 +985,8 @@ public class BundlerTests
 
         foreach (var component in components.OfType<JsonObject>())
         {
-            if (component["view"] is not null || JsonRead.Str(component["path"]) is not { } path) continue;
+            if (JsonRead.Str(component["view"]) is not null) continue;
+            if (JsonRead.Str(component["path"]) is not { } path) continue;
             if (plugin.Any(f => f.Path == path || f.Path.StartsWith(path + "/", StringComparison.Ordinal))) continue;
 
             yield return (Path.HasExtension(path) ? path : $"{path}/SKILL.md", "A component.");
