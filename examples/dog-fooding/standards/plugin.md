@@ -124,6 +124,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 ### DECLARE: `plugin.json` declares every component and the types it reads
 
 - Every skill directory and hook directory in the plugin tree **MUST** appear under `metadata.components`.
+- Every component under `metadata.components` other than a view **MUST** have a file at its `path` in the plugin tree.
 - A component **MUST** name every record type it opens a file of, at the shape version it reads, as `glossary@1`: in
   `requires` where it cannot work without the type, and in `optional` where it can.
 - A view **MUST** be declared as a component whose `view` names it and whose `path` is where `kac bundle` writes it.
@@ -727,6 +728,7 @@ standard.
 
 ## Changelog
 
+- 2026-11-12: every component `plugin.json` declares, other than a view, has a file at its path in the plugin tree.
 - 2026-11-12: a skill states no command for a step, and may quote a literal value a session could not derive. Each
   platform file opens on the facts a session could not infer, and each step states its outcome. A skill that writes
   to a tracker has the session read each write back, and report a failed check without filing again. The rule binds
