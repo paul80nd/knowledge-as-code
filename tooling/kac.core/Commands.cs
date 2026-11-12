@@ -81,15 +81,16 @@ public static class Commands
     /// <summary>
     /// Write the corpus to <c>.dist/export/</c>. <paramref name="now"/> and <paramref name="commit"/> are stamped into
     /// the manifest as given, and <paramref name="commit"/> is null where git could not answer.
+    /// <paramref name="origin"/> is the repository's own remote, or null where it has none.
     /// <paramref name="dirty"/> is asked about the paths the export reads, and answers null where the tree could not be
     /// asked, which the manifest records as unknown rather than clean.
     /// </summary>
-    public static int Export(string corpusRoot, string? type, DateTime now, string? commit,
+    public static int Export(string corpusRoot, string? type, DateTime now, string? commit, string? origin,
         Func<IReadOnlyList<string>, bool?> dirty)
     {
         var corpus = Corpus.Load(corpusRoot);
         var (inherited, missing) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
-        var publishing = Publishing.For(corpus.Descriptor, commit);
+        var publishing = Publishing.For(corpus.Descriptor, commit, origin);
         var changed = dirty(Reads(corpusRoot));
 
         var plan = Exporter.Plan(corpus, publishing, type,
@@ -191,7 +192,7 @@ public static class Commands
         if (request.Owner is null) NoGitAuthor("new", author);
 
         var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
-            Git.Run(dir, "remote", "get-url", "origin")?.Trim(), author.Owner, asker);
+            Git.Origin(dir), author.Owner, asker);
         if (answered.Failed) return Fail(answered.Problem);
         var answers = answered.Answers;
 

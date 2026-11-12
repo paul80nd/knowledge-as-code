@@ -81,6 +81,13 @@ Scenario: A part line carries the link to its part, spelled for the target
   Then it succeeds
   And the "gls-search.query" line of ".dist/export/glossary/terms.jsonl" states "links" as {"human":"https://dev.azure.com/acme/Standards/_wiki/wikis/KaC?pagePath=%2Fglossary%2Fsearch&anchor=query"}
 
+Scenario: A wiki's manifest names the repository its records are read from
+  Given the export fixture corpus
+  And the corpus publishes to "azure-devops-wiki" at "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
+  When I export from a repository whose origin is "https://acme@dev.azure.com/acme/Standards/_git/kac-corpus"
+  Then it succeeds
+  And ".dist/export/manifest.json" states "publishing.repository" as "https://dev.azure.com/acme/Standards/_git/kac-corpus"
+
 Scenario: Each of the three versions is read from its own source
   Given the export fixture corpus
   And the corpus states content-version "2.3.4"

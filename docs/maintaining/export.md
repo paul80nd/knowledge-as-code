@@ -27,6 +27,8 @@ export is built to do, and the scenario proving each behaviour. [`export`](../us
   [A cross-reference is read](../reference/export.md#a-cross-reference-is-read-never-inferred)
 * It writes each part line's link, spelled for the publishing target.
   [The address](../reference/export.md#the-address)
+* It names the repository an Azure DevOps wiki publishes from, read from the git `origin`.
+  [Ingredients for a fetch](../reference/export.md#ingredients-for-a-fetch)
 
 ## What it refuses
 
@@ -64,6 +66,7 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
 * export.exclude withholds the records it names
 * A cross-reference adds to seeAlso only where it names a part
 * A part line carries the link to its part, spelled for the target
+* A wiki's manifest names the repository its records are read from
 * Each of the three versions is read from its own source
 * What the corpus consumes travels under the shortcode of the corpus that wrote it
 * export.exclude withholds this corpus's own records alone

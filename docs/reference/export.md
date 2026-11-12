@@ -174,7 +174,7 @@ read, filed against and resolved at the producer's addresses, never the consumin
 
 The keys at the root stay what this corpus says about itself. An entry written by a producer that predates `tracker` is
 derived from the `publishing` beside it, by the rule [`tracker`](#tracker) below states. One that predates `reposBase`
-states `null`.
+states `null` there, and one that predates `publishing.repository` states `null` for it.
 
 ## The manifest
 
@@ -406,9 +406,14 @@ The rules joining the base to a path, and the anchor rule for a part, belong to 
 
 ### Ingredients for a fetch
 
-The manifest has `base`, `pathPrefix` and `ref`. To fetch a record's source, join `pathPrefix` ahead of the
-record's `path`, then ask the client that authenticates to `target` for that file at that `ref`. `gh` does it for
+The manifest has `base`, `pathPrefix`, `ref` and `repository`. To fetch a record's source, join `pathPrefix` ahead of
+the record's `path`. Then ask the client that authenticates to `target` for that file at that `ref`. `gh` does it for
 GitHub and `az rest` for both Azure DevOps targets. Where you have no such client, quote the link a person follows.
+
+The repository to ask is `base` on `github` and `azure-devops`. On `azure-devops-wiki`, `base` is the wiki, and
+`repository` is the Azure Repos repository its pages are read from, as
+`https://dev.azure.com/<org>/<project>/_git/<repo>`. `export` reads it from the corpus's git `origin`. `repository` is
+`null` on every other target, and where the corpus has no `origin` or one that names no Azure DevOps repository.
 
 ### The human form as a template
 

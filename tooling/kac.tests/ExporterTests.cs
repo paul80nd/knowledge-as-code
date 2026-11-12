@@ -883,21 +883,54 @@ public class ExporterTests
     [Fact]
     public void A_wiki_line_links_the_page_rather_than_the_file()
     {
-        var wiki = Publishing.For(
-            new CorpusDescriptor
-            {
-                PublishingTarget = Publishing.AzureDevOpsWiki,
-                Base = "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
-            },
-            "0123456789abcdef0123456789abcdef01234567");
-
         var plan = Exporter.Plan(
-            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), wiki, null, Run);
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Wiki(origin: null), null, Run);
 
         Assert.Equal(
             "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC?pagePath=%2Fglossary%2Fgls-one&anchor=alpha",
             Assert.Single(Lines(plan)).GetProperty("links").Text("human"));
     }
+
+    [Theory]
+    [InlineData("https://acme@dev.azure.com/acme/Standards/_git/kac-corpus")]
+    [InlineData("git@ssh.dev.azure.com:v3/acme/Standards/kac-corpus")]
+    public void A_wiki_manifest_names_the_repository_its_origin_points_at(string origin)
+    {
+        var publishing = PublishingBlock(Wiki(origin));
+
+        Assert.Equal("https://dev.azure.com/acme/Standards/_git/kac-corpus", publishing.Text("repository"));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("https://example.com/acme/kac-corpus.git")]
+    public void A_wiki_manifest_names_no_repository_where_its_origin_is_missing_or_unread(string? origin)
+    {
+        var publishing = PublishingBlock(Wiki(origin));
+
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("repository").ValueKind);
+    }
+
+    [Fact]
+    public void A_repository_manifest_names_no_repository_beside_its_base()
+    {
+        var publishing = PublishingBlock(Published);
+
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("repository").ValueKind);
+    }
+
+    private static Publishing? Wiki(string? origin) => Publishing.For(
+        new CorpusDescriptor
+        {
+            PublishingTarget = Publishing.AzureDevOpsWiki,
+            Base = "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
+        },
+        "0123456789abcdef0123456789abcdef01234567", origin);
+
+    /// <summary>The manifest's <c>publishing</c> block for a one-term glossary exported through it.</summary>
+    private static JsonElement PublishingBlock(Publishing? publishing) =>
+        JsonDocument.Parse(Single(Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), publishing,
+            null, Run), Exporter.ManifestFile).Content).RootElement.GetProperty("publishing");
 
     [Fact]
     public void A_corpus_that_publishes_nowhere_writes_null_links_on_its_part_lines()

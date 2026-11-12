@@ -70,6 +70,9 @@ public static class Git
     /// </summary>
     public static string? Prefix(string root) => Run(root, "rev-parse", "--show-prefix")?.Trim();
 
+    /// <summary>The URL of the repository's <c>origin</c> remote, or null where it has none.</summary>
+    public static string? Origin(string root) => Run(root, "remote", "get-url", "origin")?.Trim();
+
     /// <summary>Null where git could not answer, which is not the same as clean.</summary>
     public static bool? Dirty(string root) =>
         Run(root, "status", "--porcelain") is { } status ? status.Trim().Length > 0 : null;

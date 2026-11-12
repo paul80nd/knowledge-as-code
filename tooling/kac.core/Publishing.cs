@@ -50,6 +50,12 @@ public sealed class Publishing
     /// </summary>
     public string? PathPrefix => _prefix is { Length: > 0 } ? _prefix[1..] : null;
 
+    /// <summary>
+    /// The Azure Repos repository an <c>azure-devops-wiki</c> publishes from, where an agent reads a record's source.
+    /// Null on every other target, whose <c>Base</c> is already the repository, and where the origin names none.
+    /// </summary>
+    public string? Repository { get; private init; }
+
     private Publishing(string publishedBase, string? pathPrefix)
     {
         _base = publishedBase.TrimEnd('/');
@@ -58,9 +64,10 @@ public sealed class Publishing
 
     /// <summary>
     /// Null where the corpus has no addressable published form: no target, a target nothing builds links for, no base,
-    /// a base the target cannot join, or no <c>gitRef</c>.
+    /// a base the target cannot join, or no <c>gitRef</c>. <paramref name="origin"/> is the repository's own remote,
+    /// or null where it has none.
     /// </summary>
-    public static Publishing? For(CorpusDescriptor descriptor, string? gitRef)
+    public static Publishing? For(CorpusDescriptor descriptor, string? gitRef, string? origin = null)
     {
         if (descriptor.PublishingTarget is not { } target) return null;
         if (!Addressable.Contains(target, StringComparer.Ordinal)) return null;
@@ -68,7 +75,12 @@ public sealed class Publishing
         if (gitRef is not { Length: > 0 }) return null;
         if (!Joinable(target, published)) return null;
 
-        return new Publishing(published, descriptor.PathPrefix) { Target = target, Ref = gitRef };
+        return new Publishing(published, descriptor.PathPrefix)
+        {
+            Target = target,
+            Ref = gitRef,
+            Repository = target.Equals(AzureDevOpsWiki, StringComparison.Ordinal) ? BaseFrom(AzureDevOps, origin) : null
+        };
     }
 
     /// <summary>
