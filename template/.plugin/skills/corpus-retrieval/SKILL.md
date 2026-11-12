@@ -28,7 +28,7 @@ you need.
 | `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none`                           |
 | `base`          | string or null | the repository the corpus publishes from, or the wiki where `target` is `azure-devops-wiki` |
 | `repository`    | string or null | the repository an `azure-devops-wiki` publishes from, and `null` on every other target      |
-| `pathPrefix`    | string or null | the corpus's folder inside that repository                                                  |
+| `pathPrefix`    | string or null | the corpus's folder inside the repository it publishes from                                 |
 | `ref`           | string or null | the commit the export was taken at                                                          |
 | `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace                                   |
 

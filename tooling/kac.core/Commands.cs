@@ -192,7 +192,7 @@ public static class Commands
         if (request.Owner is null) NoGitAuthor("new", author);
 
         var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
-            Git.Run(dir, "remote", "get-url", "origin")?.Trim(), author.Owner, asker);
+            Git.Origin(dir), author.Owner, asker);
         if (answered.Failed) return Fail(answered.Problem);
         var answers = answered.Answers;
 
