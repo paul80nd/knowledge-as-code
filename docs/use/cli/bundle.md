@@ -124,8 +124,14 @@ wrote .dist/plugin/hooks/breadcrumb.txt
 wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
 wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
+wrote .dist/plugin/skills/ask-the-corpus/adrs.md
+wrote .dist/plugin/skills/ask-the-corpus/data.md
+wrote .dist/plugin/skills/ask-the-corpus/explanations.md
 wrote .dist/plugin/skills/ask-the-corpus/glossary.md
+wrote .dist/plugin/skills/ask-the-corpus/integrations.md
+wrote .dist/plugin/skills/ask-the-corpus/offerings.md
 wrote .dist/plugin/skills/ask-the-corpus/retrieval.md
+wrote .dist/plugin/skills/ask-the-corpus/services.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
 wrote .dist/plugin/skills/raise-finding/azure-devops.md
 wrote .dist/plugin/skills/raise-finding/github.md
@@ -138,8 +144,11 @@ bundle: trimmed skills/ask-the-corpus/fixes.md: the export carries no fixes.
 bundle: trimmed skills/ask-the-corpus/deviations.md: the export carries no deviations.
 bundle: trimmed skills/ask-the-corpus/reports.md: the export carries no reports.
 bundle: trimmed skills/ask-the-corpus/runbooks.md: the export carries no runbooks.
+bundle: trimmed skills/ask-the-corpus/nfrs.md: the export carries no nfrs.
+bundle: trimmed skills/ask-the-corpus/postmortems.md: the export carries no postmortems.
+bundle: trimmed skills/ask-the-corpus/tools.md: the export carries no tools.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 44 files to .dist/plugin/ as example-libraries 0.36.0. 4 components included, 10 trimmed.
+bundle: wrote 50 files to .dist/plugin/ as example-libraries 0.37.0. 10 components included, 13 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -162,14 +171,14 @@ says where each name comes from.
 ### The components that shipped
 
 `example-engineering` exports ADRs, controls, glossary, policies, reports and standards. It ships `ask-the-corpus` with
-the reference file for each of controls, glossary, policies, reports and standards. Its export has standards, so it
-also ships both views and `standards-review`, which reads the review view. It has no deviations, fixes, processes or
-runbooks, so the four reference files for those are trimmed. The closing line counts what survived:
+the reference file for each of those types. Its export has standards, so it also ships both views and
+`standards-review`, which reads the review view. The reference file for every other type is trimmed. The closing line
+counts what survived:
 
 <!-- transcript: examples/engineering, kac bundle -->
 
 ```text
-bundle: wrote 80 files to .dist/plugin/ as example-engineering 0.52.0. 12 components included, 4 trimmed.
+bundle: wrote 81 files to .dist/plugin/ as example-engineering 0.53.0. 13 components included, 12 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -181,7 +190,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 <!-- transcript: examples/engineering, jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bundle.json -->
 
 ```text
-{"kept":["skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/ask-the-corpus/standards.md","skills/ask-the-corpus/policies.md","skills/ask-the-corpus/controls.md","skills/ask-the-corpus/glossary.md","skills/ask-the-corpus/reports.md","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/ask-the-corpus/processes.md","skills/ask-the-corpus/fixes.md","skills/ask-the-corpus/deviations.md","skills/ask-the-corpus/runbooks.md"]}
+{"kept":["skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/ask-the-corpus/standards.md","skills/ask-the-corpus/policies.md","skills/ask-the-corpus/controls.md","skills/ask-the-corpus/glossary.md","skills/ask-the-corpus/reports.md","skills/ask-the-corpus/adrs.md","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/ask-the-corpus/processes.md","skills/ask-the-corpus/fixes.md","skills/ask-the-corpus/deviations.md","skills/ask-the-corpus/runbooks.md","skills/ask-the-corpus/data.md","skills/ask-the-corpus/explanations.md","skills/ask-the-corpus/integrations.md","skills/ask-the-corpus/nfrs.md","skills/ask-the-corpus/offerings.md","skills/ask-the-corpus/postmortems.md","skills/ask-the-corpus/services.md","skills/ask-the-corpus/tools.md"]}
 ```
 
 To see which assembled file reads the parts file one type exports, search for it:

@@ -1,5 +1,5 @@
 ---
-trigger: Use before you debug or file a finding on a problem, or when given an error or asked what problems are known.
+trigger: Use before you debug or file a finding, or when given an error.
 ---
 
 # Asking whether a problem is already solved

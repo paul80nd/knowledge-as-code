@@ -1,5 +1,5 @@
 ---
-trigger: Use before you write or change code or a build, or when asked what rule applies or which standards exist.
+trigger: Use before you write code or a build, or when asked what rule applies.
 ---
 
 # Answering from a standard

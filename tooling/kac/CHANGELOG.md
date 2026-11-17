@@ -35,10 +35,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
-- **The plugin answers every type through `ask-the-corpus`.** The template's six lookup skills and `corpus-retrieval`
-  become reference files of the router, one per type, and a record's published source is fetched through its
-  `retrieval.md`. A corpus that runs `kac update` receives the new plugin tree, and a plugin it bundles ships
-  `ask-the-corpus`, `raise-finding`, `request-deviation` and `standards-review`. A session that loaded
+- **The plugin answers every type through `ask-the-corpus`.** The router has a reference file for each type the
+  template sends, and a record's published source is fetched through its `retrieval.md`. The six lookup skills and
+  `corpus-retrieval` become those files, and the nine types that had no reader get one, so a corpus exporting only
+  ADRs ships a plugin that reads them. A corpus that runs `kac update` receives the new plugin tree, and a plugin it
+  bundles ships `ask-the-corpus`, `raise-finding`, `request-deviation` and `standards-review`. A session that loaded
   `standards-lookup` by name now loads `ask-the-corpus`.
 
 ### Fixed
