@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.34.0",
+    "contentVersion": "0.35.0",
     "types": [
       "adrs",
       "data",
@@ -36,24 +36,45 @@
       "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
     },
     {
-      "path": "skills/request-deviation",
-      "requires": [],
-      "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
-    },
-    {
       "path": "skills/ask-the-corpus",
       "requires": [],
-      "note": "Sends a question with no known place to the lookup skill for its type, and reads corpus/deviations/, corpus/reports/ and corpus/runbooks/ through the reference files beside it where the export carries them. It needs no type of its own, so it supports the lookup skills and travels only where at least one of them did."
+      "note": "Sends a question with no known place to the lookup skill for its type, or to the reference file beside it for a type no lookup reads. kac bundle writes its description from the trigger line of each reference file that travelled. It needs no type of its own, so it travels only where something it routes to did."
     },
     {
       "path": "hooks",
-      "requires": [
-        "glossary"
-      ],
-      "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up. A PreToolUse hook printing the build index at the first tool call of the main session and of each subagent, and again after a compaction, where views/build-index.md survived. Both travel with the glossary, so a corpus exporting standards and no glossary ships neither."
+      "requires": [],
+      "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the corpus is here before it has a question. A PreToolUse hook printing the build index at the first tool call of the main session and of each subagent, and again after a compaction, where views/build-index.md survived. They name no type, so they travel wherever a component reading one did."
     }
   ],
   "trimmed": [
+    {
+      "path": "skills/request-deviation",
+      "requires": [
+        "standards|policies"
+      ],
+      "reason": "the export carries no standards or policies"
+    },
+    {
+      "path": "skills/ask-the-corpus/deviations.md",
+      "requires": [
+        "deviations@1"
+      ],
+      "reason": "the export carries no deviations"
+    },
+    {
+      "path": "skills/ask-the-corpus/reports.md",
+      "requires": [
+        "reports@2"
+      ],
+      "reason": "the export carries no reports"
+    },
+    {
+      "path": "skills/ask-the-corpus/runbooks.md",
+      "requires": [
+        "runbooks@3"
+      ],
+      "reason": "the export carries no runbooks"
+    },
     {
       "path": "skills/controls-lookup",
       "requires": [

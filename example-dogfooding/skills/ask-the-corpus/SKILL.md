@@ -1,9 +1,6 @@
 ---
 name: ask-the-corpus
-description: Send a question to the part of this corpus that answers it, when you do not know which record holds the
-  answer. Use when someone asks "anything I should know before I change X", whether a rule has an accepted exception,
-  or what the corpus covers as a whole. Use it as well, unprompted, after a change that leaves a record here
-  describing something that is no longer true.
+description: "Send a question to the part of this corpus that answers it, when you do not know which record holds the answer. Use when someone asks \"anything I should know before I change X\". Use it as well, unprompted, after a change that leaves a record here describing something that is no longer true. Use when someone asks whether a rule has an accepted exception. Use when someone asks what the corpus covers as a whole, or what nothing covers. Use when something is failing now and someone needs the agreed first step."
 ---
 
 # Asking the corpus a question you cannot place
@@ -49,8 +46,8 @@ Match the question to a row, then go where the row says. Read a reference file o
 | Something is broken. What do I do first                          | runbooks   | `runbooks.md`      |
 | Anything I should know before I change X                         | any        | the next section   |
 
-**Where the row's skill did not ship, say so, and name the type it needed.** That type is not in `types`, so the
-corpus does not export it. Say that as the answer.
+**Where the row's skill or reference file did not ship, say so, and name the type it needed.** That type is not in
+`types`, so the corpus does not export it. Say that as the answer.
 
 ## Ask about the thing you are about to change
 

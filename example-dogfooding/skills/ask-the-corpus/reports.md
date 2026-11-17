@@ -1,3 +1,7 @@
+---
+trigger: Use when someone asks what the corpus covers as a whole, or what nothing covers.
+---
+
 # Answering from a report
 
 A report answers a question about the corpus as a whole, such as which clauses nothing covers, with the verdicts a

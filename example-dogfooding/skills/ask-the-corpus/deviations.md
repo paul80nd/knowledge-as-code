@@ -1,3 +1,7 @@
+---
+trigger: Use when someone asks whether a rule has an accepted exception.
+---
+
 # Reading a deviation
 
 A deviation records a rule broken on purpose: what is done instead, the risk a named person accepted, and the day it
