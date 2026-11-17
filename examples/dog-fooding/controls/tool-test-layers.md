@@ -28,8 +28,8 @@ Each layer asserts something different about the same corpus.
   suite, without anyone asking for it".
 * `std-PLUGIN.FROZEN` says a skill "**MUST** report a `status`
   its type does not treat as in force" and "**MUST** report a review date that has passed, where its type exports
-  one". `PluginSkillStalenessTests` holds each lookup skill to both, deriving what it owes from the schema, down to
-  the key each type's export writes the date under.
+  one". `PluginSkillStalenessTests` holds each skill reading one type to both, deriving what it owes from the schema,
+  down to the key each type's export writes the date under.
 
 ## How it works
 

@@ -162,10 +162,10 @@ jobs:
             exit 1
           fi
 
-          # A skill supporting the lookups has nothing to support here, and leaves with the last of them.
+          # request-deviation reads standards or policies, and this corpus holds neither.
           if ! jq -e '[.included[].path] | index("skills/request-deviation") == null' \
             .dist/plugin/bundle.json > /dev/null; then
-            echo "a supporting skill shipped where no lookup did, so no clause reaches the reader"
+            echo "request-deviation shipped where no standard or policy did, so it has no clause to ask about"
             exit 1
           fi
 

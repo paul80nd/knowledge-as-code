@@ -66,7 +66,7 @@ working tree, and an installed `kac` does not.
 ## Reading this corpus as a plugin while you change it
 
 The plugin a session here already carries is served from the `marketplace` branch, which holds what is on `main`. A
-branch editing this corpus leaves that copy behind, so `standards-lookup` answers with a record you have already
+branch editing this corpus leaves that copy behind, so `ask-the-corpus` answers with a record you have already
 rewritten. Build the plugin here and install it as a marketplace of your own, and a session reads the working tree
 instead. `export` reads the `.imports/` that `restore` fetches, so a clean clone runs the block above first.
 

@@ -187,7 +187,7 @@ questions:
       Which of the bundled skills ends up in every plugin, whatever record types my corpus exports?
     answer: >-
       raise-finding. It is standalone: it reads no export, so it ships whatever the corpus adopted. The supporting
-      skills (corpus-retrieval, request-deviation) leave with the last lookup skill.
+      skill, ask-the-corpus, leaves with the last of its reference files.
     doc:
       page: docs/use/skills.md
       anchor: what-travels-inside-a-plugin

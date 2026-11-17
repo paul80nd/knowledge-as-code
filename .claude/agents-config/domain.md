@@ -23,7 +23,7 @@ constraint on the code, and do not add one to record a change you make to the co
 
 ## `GLOSSARY.md` is the corpus glossary
 
-Where a skill reads `GLOSSARY.md`, ask the `glossary-lookup` skill instead. It searches the glossary records that
+Where a skill reads `GLOSSARY.md`, ask the `ask-the-corpus` skill instead. It searches the glossary records that
 travel with the `example-dogfooding` plugin. Ask it wherever your output names a domain concept: an issue title, a
 refactor proposal, a test name.
 

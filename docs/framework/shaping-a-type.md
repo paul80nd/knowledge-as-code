@@ -315,7 +315,7 @@ reading taken on the day somebody wrote it, and an export cannot say how old it 
 A fix records a problem somebody has solved, with a resolution somebody has verified. It exists so the next person to
 meet the symptom finds the answer before they spend an hour on the cause.
 
-`symptom-keywords` is what a lookup searches on. The sections follow the order a reader works in. They match on
+`symptom-keywords` is what a session searches on. The sections follow the order a reader works in. They match on
 `Symptom`, check that the `Environment` and the `Cause` are theirs, then act on the `Resolution`. `Why it happens` is
 optional, and says what class of problem this one belongs to.
 

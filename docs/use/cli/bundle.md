@@ -148,7 +148,7 @@ bundle: trimmed skills/ask-the-corpus/nfrs.md: the export carries no nfrs.
 bundle: trimmed skills/ask-the-corpus/postmortems.md: the export carries no postmortems.
 bundle: trimmed skills/ask-the-corpus/tools.md: the export carries no tools.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 50 files to .dist/plugin/ as example-libraries 0.37.0. 10 components included, 13 trimmed.
+bundle: wrote 50 files to .dist/plugin/ as example-libraries 0.37.1. 10 components included, 13 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -178,7 +178,7 @@ counts what survived:
 <!-- transcript: examples/engineering, kac bundle -->
 
 ```text
-bundle: wrote 81 files to .dist/plugin/ as example-engineering 0.53.0. 13 components included, 12 trimmed.
+bundle: wrote 81 files to .dist/plugin/ as example-engineering 0.53.1. 13 components included, 12 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:

@@ -37,8 +37,8 @@ generated blocks derived from these files.
    paraphrases the specification `lineage:` cites can drop a word the source states.
 2. Make the change in the schema language where that language can express it. Run [prc-change-the-tool] where it
    cannot: a question the expression grammar cannot ask, or a fault one fixed message cannot name. Run
-   [prc-change-a-skill] as well where the change alters what the type exports, because a lookup skill restates the
-   exported sections.
+   [prc-change-a-skill] as well where the change alters what the type exports, because the type's reference file
+   restates the exported sections.
 3. Search every tree for the words the old value used, and make each place that restates it agree: each type page and
    `_template.md`, `_tiers.yaml`, and `docs/framework/`. Nothing compares one statement with another. Both pages are
    `seed`, so nothing compares the copies either. Count the trees from the files, because which have a type depends
@@ -71,7 +71,7 @@ reading the shape before it has to be told.
 
 * [prc-add-a-type] is the wider job a schema file is one part of. Its steps 3 and 4 set the bar for measuring a whole
   type against its sources.
-* [prc-change-a-skill] changes the lookup skill that restates a type's exported sections.
+* [prc-change-a-skill] changes the reference file that restates a type's exported sections.
 * [prc-change-the-tool] adds a rule the expression grammar cannot ask.
 * [std-CONFIG.COPIES] states what you must do for a type page and a
   `_template.md`, because both live in every tree that adopted the type. Step 3 is where that applies.

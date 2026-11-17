@@ -112,7 +112,7 @@ export:
     Resolution: full
     Why it happens: full
   notes: >
-    `symptom-keywords` is what a lookup searches on, and the field this type exports for.
+    `symptom-keywords` is what a session searches on, and the field this type exports for.
     See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#fixes>.
 index:
   columns: [id, title, applies-to, status, review-by]
