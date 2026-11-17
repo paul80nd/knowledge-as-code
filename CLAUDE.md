@@ -100,22 +100,22 @@ write the issue where they say one belongs. The record itself lands in
 [`examples/dog-fooding/deviations/`](examples/dog-fooding/deviations/) once they have accepted it.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
-`examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
-changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)
-carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
-skill does.
+`examples/dog-fooding` leaves the installed plugin behind, so `ask-the-corpus` can answer with a record that branch has
+already changed. [That corpus's own
+README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it) carries the loop that
+installs the working tree instead, and says what to rebuild after a record changes and after a skill does.
 
 ## Where a skill or a page let you down
 
 A session here is the only reader who can tell what this repository's guidance is missing. **Where the page lives
-decides where you say so.** A lookup or a record comes from the plugin, a read-only copy, so it gets an issue. The
+decides where you say so.** An answer or a record comes from the plugin, a read-only copy, so it gets an issue. The
 agent configuration gets one too, because every session meets it the same way. The `CLAUDE.md` files, the playbooks
 under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the writing skills are one edit away, so they get a
 word in the reply that closes the session.
 
 Raise a finding for whichever of these happened:
 
-* a question a lookup should have answered and could not, or a lookup you only thought of afterwards
+* a question `ask-the-corpus` should have answered and could not, or one you only thought to ask afterwards
 * a record that is missing, or one whose wording sent you the wrong way
 * something the plugin cannot do that would have made it worth reaching for
 * something about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/)
@@ -181,4 +181,4 @@ not list. Three files carry that configuration:
 * [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, mapped onto the labels the
   tracker has.
 * [`domain.md`](.claude/agents-config/domain.md): single-context. The `CLAUDE.md` files describe the domain, and
-  `glossary-lookup` stands in for the `GLOSSARY.md` the skills read and write.
+  `ask-the-corpus` stands in for the `GLOSSARY.md` the skills read and write.

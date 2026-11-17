@@ -16,7 +16,7 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 | none   | nothing                                                             | the without-arm of the same run as the plugin arm                                |
 
 **The hook arm is the plugin that ships, so the trial reports the plugin's lead from it.** The plugin arm measures the
-lookup alone. The hook and plugin arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin
+skills alone. The hook and plugin arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin
 arm's copy, so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index at the
 first tool call of the session, whichever tool the call uses, and at the first tool call of each subagent. A plugin
 whose bundle trimmed the build index ships no `hooks/build-index.json`, as `examples/library` does. `stage.sh` warns
@@ -386,7 +386,8 @@ The prefix of a grader's file name says what it measures:
 | `task-`   | the session did the task it was given                          | task           |
 | `comply-` | the files the session wrote comply with the rule               | compliance     |
 | `cite-`   | the final reply contains the id of the record the rule sits in | citation       |
-| `fired-`  | the session invoked a lookup skill or `ask-the-corpus`         | firing         |
+| `fired-`  | the session loaded `ask-the-corpus`                            | firing         |
+| `routed-` | the session read the reference file for the case's type        | routing        |
 
 **Graders whose names share the part before `--` are alternatives.** The set passes where one of them does. A file
 can arrive through `Write` or through `Bash`, so `comply-contract--written` and `comply-contract--shell` each look for
@@ -405,18 +406,34 @@ A `regex` grader reads the final reply by default, which is `target: last_messag
 write `target: { source: file, path: <path> }`. `regrade.mjs` reads no other target, and no `match` other than
 `contains` and `not_contains`. A `tool_used` grader's `min` is 1 by default, and its `max` is unlimited.
 
-A `fired-` grader is a `tool_used` grader on `Skill`, whose `input_match` accepts every lookup skill and
-`ask-the-corpus`. A session can reach the record through any of them, and the grader asks whether it consulted the
-corpus at all. The skill names are the folder names under `$CORPUS/.dist/plugin/skills/`, which step 1 writes. This is
-`fired-lookup.md`:
+A `fired-` grader is a `tool_used` grader on `Skill` whose `input_match` accepts `ask-the-corpus`, so the tool runs it
+in the plugin arm alone. A `routed-` grader is a `tool_used` grader on `Read` whose `input_match` accepts the case
+type's reference file, `skills/ask-the-corpus/<type>.md`, with either path separator. A session that loaded the router
+and never opened that file fired and did not route. The tool runs a `routed-` grader in every arm, and it fails
+wherever the plugin is absent, so the trial reads `routed` from the plugin and hook arms alone.
+
+A case whose task is an action skill, such as `request-deviation`, accepts that skill as an alternative in both sets.
+The skill names are the folder names under `$CORPUS/.dist/plugin/skills/`, which step 1 writes. These are
+`fired-router.md` and `routed-reference.md` for a case about a standard:
 
 ```markdown
 ---
 type: tool_used
 tool: Skill
-input_match: '"skill"\s*:\s*"(?:[\w-]+:)?(?:[\w-]+-lookup|ask-the-corpus)"'
+input_match: '"skill"\s*:\s*"(?:[\w-]+:)?ask-the-corpus"'
 ---
 ```
+
+```markdown
+---
+type: tool_used
+tool: Read
+input_match: '"file_path"\s*:\s*"[^"]*skills(?:/|\\\\)ask-the-corpus(?:/|\\\\)standards\.md"'
+---
+```
+
+Up to method 9, a `fired-` grader accepted every lookup skill as well as `ask-the-corpus`, and no case had a `routed-`
+grader, so firing in those runs is not strictly comparable with later ones.
 
 **A grader tests what the rule asks for, wherever the session could reasonably have done it.** The adopting corpus's
 run overturned 36 verdicts, and each fault in this table caused some of them:
@@ -431,8 +448,8 @@ run overturned 36 verdicts, and each fault in this table caused some of them:
 | `comply-` | read files in the workspace alone, where a sanctioned store outside it receives the value by design |
 | either    | watch `Write` and `Edit` alike, because a session editing a scaffold file calls `Edit`              |
 
-`claude plugin eval` scores every grader together, and leaves a `fired-` grader out of a two-arm score. The trial
-reads each grader's verdict, and ignores the tool's score.
+`claude plugin eval` scores every grader together. It leaves a `fired-` grader out of a two-arm score, and scores a
+`routed-` grader in both arms. The trial reads each grader's verdict, and ignores the tool's score.
 
 ## Scoring
 
@@ -456,7 +473,7 @@ The hook arm's lead over an arm is its compliance rate minus that arm's, on the 
 beside it and never added in, because the plugin's skills teach a session to cite and the prose and none arms have
 nothing that does. The controls are reported in fields of their own, so a none arm that follows general practice by
 default cannot close the gap on the house cases. The plugin arm's lead over an arm is measured the same way. The hook
-arm's lead over the plugin arm is what the build index adds to the lookup.
+arm's lead over the plugin arm is what the build index adds to the skills.
 
 ## Adjudication
 
@@ -517,6 +534,8 @@ controls have no type fields, because a control tests general practice, which no
 | `<kind>.<arm>.citation_rate`            | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
 | `<kind>.plugin.fired`                   | the plugin sessions of that kind where every `fired-` grader passed                   |
 | `<kind>.hook.fired`                     | the hook sessions of that kind where every `fired-` grader passed                     |
+| `<kind>.plugin.routed`                  | the plugin sessions of that kind where every `routed-` grader or set passed           |
+| `<kind>.hook.routed`                    | the hook sessions of that kind where every `routed-` grader or set passed             |
 | `<kind>.lead_over_prose`                | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
 | `<kind>.lead_over_none`                 | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
 | `<kind>.graders_lead_over_<arm>`        | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
@@ -541,7 +560,7 @@ follows general practice.
 A run of one session per case is too small to judge a lead by. The pilot reports one so that the full pass can be
 priced and its grading checked.
 
-The plugin arm's lead, `house.lead_over_<arm>`, measures the lookup alone. The build index helps where
+The plugin arm's lead, `house.lead_over_<arm>`, measures the skills alone. The build index helps where
 `house.hook_lead_over_plugin` is above 0. Read it case by case. For this repository's cases, read it against the
 scenarios in [`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case. The cases of
 another corpus have no scenarios there.

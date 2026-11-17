@@ -164,8 +164,8 @@ glossary treated as load-bearing, and validation that fails rather than warns.
 
 Structure does not make a record easier for an agent to understand. An agent reads prose as a person does. Structure
 makes a record addressable and selectable. A rule's id lets an agent cite the exact rule it followed, and lets a
-reviewer point back at it. A standard's `applies-to` lets a lookup pick the standards that bind the service being
-changed.
+reviewer point back at it. A standard's `applies-to` lets `ask-the-corpus` pick the standards that bind the service
+being changed.
 
 None of it replaces human ownership.
 

@@ -9,7 +9,7 @@ public class PluginSkillStalenessTests
     private static readonly string Plugin = Path.Combine(Repo.Root, "template", ".plugin");
 
     /// <summary>
-    /// Every lookup skill writes this heading about its own noun, so the words after it are the type's.
+    /// A skill reading one type writes this heading about its own noun, so the words after it are the type's.
     /// </summary>
     private const string Opens = "## Say when ";
     private const string Closes = " is unsettled";
@@ -86,7 +86,7 @@ public class PluginSkillStalenessTests
         var status = type.Fields.GetValueOrDefault("status");
         var settled = status?.InForce
                       ?? throw new InvalidOperationException(
-                          $"'{type.Folder}' has a lookup skill, and '.schema/{type.Folder}.yaml' declares no "
+                          $"'{type.Folder}' has a skill reading it, and '.schema/{type.Folder}.yaml' declares no "
                           + "'status:' range with an 'in-force:' value beside it. Declare both, and say in that "
                           + "skill's staleness section what every other value means.");
 

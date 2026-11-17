@@ -17,15 +17,15 @@ and its skills look a record up when an agent decides to. The sections below say
 Knowledge is used at distinct moments in the work, by different readers. Each moment needs a different slice of the
 corpus, delivered a different way.
 
-| Moment         | Who                                        | What they need                                                                  |
-|----------------|--------------------------------------------|---------------------------------------------------------------------------------|
-| **Design**     | an agent or engineer choosing an approach  | the decisions already made, the policies that bind, the targets to meet         |
-| **Build**      | an agent writing code                      | every rule that applies to the code being changed, wherever the rule is filed   |
-| **Review**     | a reviewer, human or AI                    | the rules to check the change against, each with an id to cite                  |
-| **Operate**    | whoever is on call                         | the runbook, and whether anybody has hit this failure before                    |
-| **Contribute** | an agent or engineer writing back          | the level of detail a record is written at, and the route for a finding         |
-| **Assure**     | the corpus owner, or an auditor            | which policies have no standard, which rules no control proves, what is stale   |
-| **Learn**      | a person new to the team                   | the domain and the house style, read as a wiki                                  |
+| Moment         | Who                                       | What they need                                                                |
+|----------------|-------------------------------------------|-------------------------------------------------------------------------------|
+| **Design**     | an agent or engineer choosing an approach | the decisions already made, the policies that bind, the targets to meet       |
+| **Build**      | an agent writing code                     | every rule that applies to the code being changed, wherever the rule is filed |
+| **Review**     | a reviewer, human or AI                   | the rules to check the change against, each with an id to cite                |
+| **Operate**    | whoever is on call                        | the runbook, and whether anybody has hit this failure before                  |
+| **Contribute** | an agent or engineer writing back         | the level of detail a record is written at, and the route for a finding       |
+| **Assure**     | the corpus owner, or an auditor           | which policies have no standard, which rules no control proves, what is stale |
+| **Learn**      | a person new to the team                  | the domain and the house style, read as a wiki                                |
 
 The use cases for each moment, and for each type, are written as features under
 [`trials/use-cases/`](https://github.com/paul80nd/knowledge-as-code/tree/main/trials/use-cases). Each one names the
@@ -72,14 +72,14 @@ loaded early and left unused draws on the agent's attention for the rest of the 
 pointer at the moment of use, and the agent reads the full text the pointer names. This follows Anthropic's guidance on
 [context engineering][ctx] and on [progressive disclosure in skills][skills].
 
-| Moment                                  | When it arrives                        | What reaches the agent                             | Where the full text is              |
-|-----------------------------------------|----------------------------------------|----------------------------------------------------|-------------------------------------|
-| **Build**                               | the session's first tool call          | an index of every standard rule, by title          | the standard, read through a lookup |
-| **Review**                              | somebody asks for a review             | the review view, in full, in a reviewer of its own | the review view                     |
-| **Design, operate, contribute, assure** | the agent decides to look something up | a lookup skill's answer                            | the record                          |
-| **Learn**                               | a person opens the corpus              | the published corpus, read as a wiki               | the record                          |
+| Moment                                  | When it arrives                        | What reaches the agent                             | Where the full text is                     |
+|-----------------------------------------|----------------------------------------|----------------------------------------------------|--------------------------------------------|
+| **Build**                               | the session's first tool call          | an index of every standard rule, by title          | the standard, read through `ask-the-corpus` |
+| **Review**                              | somebody asks for a review             | the review view, in full, in a reviewer of its own | the review view                            |
+| **Design, operate, contribute, assure** | the agent decides to look something up | the answer `ask-the-corpus` gives                  | the record                                 |
+| **Learn**                               | a person opens the corpus              | the published corpus, read as a wiki               | the record                                 |
 
-A moment whose lookups keep missing in a trial moves to a pointer the plugin pushes. Tracked in [epic #940][e940].
+A moment where a trial shows the agent rarely asks moves to a pointer the plugin pushes. Tracked in [epic #940][e940].
 
 ## Views generated for each moment
 

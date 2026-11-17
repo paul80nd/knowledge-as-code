@@ -315,8 +315,8 @@ else
   echo "round-trip: this plugin ships no build index, so the build-index hook prints nothing."
 fi
 
-# Everything above is read from the manifests and holds for any corpus. Each lookup below is written about the corpus
-# holding the records its skill was written for.
+# Everything above is read from the manifests and holds for any corpus. Each arm below is written about the corpus
+# holding the records its question was written for.
 
 line_of() {
   grep -n "\"id\": *\"$2\"" "$1" | cut -d: -f1
@@ -603,7 +603,7 @@ case "$CORPUS" in
       fi
     done
 
-    echo "round-trip: no lookup is written for $CORPUS. The install, the components and the links are what it proves."
+    echo "round-trip: no arm is written for $CORPUS. The install, the components and the links are what it proves."
     ;;
 esac
 

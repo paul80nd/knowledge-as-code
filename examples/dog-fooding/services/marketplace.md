@@ -70,8 +70,8 @@ an agent that finds a record wrong raises an issue.
 * **A plugin does not update until its `content-version` moves.** Claude Code offers an update only when a manifest's
   `version` string changes. The publish job compares each built version against the branch and stops where every one
   matches.
-* **The export is frozen at bundle time.** Editing a corpus on a branch leaves the installed plugin behind, so a lookup
-  can return a record that branch has already changed.
+* **The export is frozen at bundle time.** Editing a corpus on a branch leaves the installed plugin behind, so
+  `ask-the-corpus` can return a record that branch has already changed.
 
 [svc-kac]: kac.md
 [tol-checkout]: ../tools/workflows/checkout.md

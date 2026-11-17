@@ -71,15 +71,17 @@ cp -R "$lf/cases/." "$lf/stage/plugin/evals/"
 # The result files score.mjs and merge.mjs read. The plugin stage has the fixture's own paths, the prose stage
 # Windows paths with backslashes, and the hook stage Windows paths with forward slashes. Each stage gives its file, its
 # ablation, its folder, its path separator and its cost, then a verdict per case and arm, as task comply cite fired.
+# A fifth value gives routed where it differs from fired.
 mkdir -p "$lf/results"
 node -e '
 const { writeFileSync } = require("node:fs");
 function stage(file, ablation, root, sep, cost, verdicts) {
   const run = (v) => {
-    const [task, comply, cite, fired] = v.split(" ").map((x) => x === "1");
+    const [task, comply, cite, fired, routed = fired] = v.split(" ").map((x) => x === "1");
     return { costUsd: 0.25, turns: 3, error: null, tracePath: [root, "kept", "trace.jsonl"].join(sep),
       graders: [{ name: "task-answers", passed: task }, { name: "comply-owner", passed: comply },
-        { name: "cite-record", passed: cite }, { name: "fired-lookup", passed: fired }] };
+        { name: "cite-record", passed: cite }, { name: "fired-router", passed: fired },
+        { name: "routed-reference", passed: routed }] };
   };
   const arms = ([w, wo]) => (wo === undefined ? { with: [run(w)] } : { with: [run(w)], without: [run(wo)] });
   const result = { partial: false, claudeVersion: "2.1.292", costUsd: cost,
@@ -89,7 +91,7 @@ function stage(file, ablation, root, sep, cost, verdicts) {
   writeFileSync(`${process.argv[1]}/${file}`, JSON.stringify(result, null, 2) + "\n");
 }
 stage("plugin.json", "with-without", process.argv[2], "/", 1.25, { "house/case-a": ["1 1 1 1", "1 0 0 0"],
-  "control/case-b": ["1 1 1 1", "1 1 0 0"], "house/case-d": ["1 1 0 1", "1 0 0 0"],
+  "control/case-b": ["1 1 1 1", "1 1 0 0"], "house/case-d": ["1 1 0 1 0", "1 0 0 0"],
   "house/case-e": ["1 0 1 0", "1 1 0 0"] });
 stage("prose.json", "none", "C:\\Users\\Some One\\stage\\prose", "\\", 0.5, { "house/case-a": ["1 0 0 0"],
   "control/case-b": ["1 1 0 0"], "house/case-d": ["1 0 0 0"], "house/case-e": ["1 0 0 0"] });
@@ -250,13 +252,15 @@ both 'score.mjs' score node "$scripts/score.mjs" -a '{in}/adjudication.tsv' -k '
   '{in}/results/plugin.json' '{in}/results/prose.json' '{out}' '{in}/cases/excluded.tsv'
 aggregate=$dir/score-crlf/aggregate.md
 has "$aggregate" '| `claude_version` | 2.1.292 |' 'score.mjs reads the Claude Code version'
-has "$aggregate" '| `method` | 9 |' 'score.mjs gives the version of the method'
+has "$aggregate" '| `method` | 10 |' 'score.mjs gives the version of the method'
 has "$aggregate" '| `cases` | 4 |' 'score.mjs counts the cases'
 has "$aggregate" '| `excluded_cases` | 1 |' 'score.mjs counts the cases excluded.tsv lists'
 has "$aggregate" '| `adjudicated` | 1 |' 'score.mjs reads adjudication.tsv'
 has "$aggregate" '| `house.plugin.sessions` | 3 |' 'score.mjs reads a case kind from a POSIX path'
 has "$aggregate" '| `control.prose.sessions` | 1 |' 'score.mjs reads a case kind from a path with backslashes'
 has "$aggregate" '| `house.hook.sessions` | 3 |' 'score.mjs reads a case kind from a Windows path with slashes'
+has "$aggregate" '| `house.plugin.fired` | 2 |' 'score.mjs counts the sessions that loaded the router'
+has "$aggregate" '| `house.plugin.routed` | 1 |' "score.mjs counts the sessions that read the type's reference file"
 has "$aggregate" '| `house.lead_over_prose` | 0.67 |' "score.mjs gives the plugin arm's lead over prose"
 has "$aggregate" '| `house.lead_over_none` | 0.34 |' "score.mjs gives the plugin arm's lead over none"
 has "$aggregate" '| `control.lead_over_none` | 0.00 |' "score.mjs gives the plugin arm's lead on the controls"

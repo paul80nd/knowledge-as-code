@@ -100,9 +100,9 @@ plugins. That is how this repository proves the publishing half of its own tool 
 somebody deciding whether to adopt the framework can install one and ask it questions.
 
 A plugin includes the export, and whatever is in the plugin's tree can read it, so what each one ships follows from the
-types that reach its export. `library` ships the glossary lookup alone. `engineering` adds the policy and standards
-lookups. `payments` adds the fix lookup to those three, because a corpus consuming `engineering` takes its records into
-its own export. `dog-fooding` adopts the rest and ships all six. A skill whose type reaches neither the corpus nor its
+types that reach its export. Each ships `ask-the-corpus` with a reference file for every type in its export. A corpus
+consuming `engineering` takes its records into its own export, so `payments` and `dog-fooding` also ship the reference
+files for the types `engineering` exports. A skill or reference file whose type reaches neither the corpus nor its
 imports is trimmed, and `bundle.json` inside the plugin names every component that was dropped and the type it needed.
 
 Each corpus says in its own `description` what it is. `kac pack` and `kac bundle` write that into the package and the

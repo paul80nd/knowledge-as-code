@@ -126,13 +126,10 @@ export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**This plugin ships one lookup skill.** `library` exports `adrs`, `offerings`, `explanations`, `glossary`,
-`integrations` and `services`, and `glossary-lookup` is the only skill that reads any of them. `kac bundle` trims the
-controls, fix, policy, process and standards skills, because this corpus holds none of those types. What is agreed and
-unbuilt:
+**This plugin reads every type `library` exports.** The export has `adrs`, `data`, `explanations`, `glossary`,
+`integrations`, `offerings` and `services`, and `ask-the-corpus` ships a reference file for each. `kac bundle` trims
+the reference file for every other type, because this corpus holds none of them. What is agreed and unbuilt:
 
-* **A skill for a type that already travels.** An ADR, an offering, an explanation, an integration and a service each
-  reach the plugin as data, and nothing in it answers a question about one.
 * **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
   and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the
   first adopters, and it is a pipeline of its own rather than a translation of the GitHub one.
