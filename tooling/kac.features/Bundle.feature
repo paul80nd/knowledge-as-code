@@ -94,18 +94,19 @@ Scenario: A reference file whose type the export lacks is trimmed, and its skill
   And the bundle trims "skills/glossary-lookup/decisions.md" because "the export carries no adrs"
   And ".dist/plugin/skills/glossary-lookup/decisions.md" does not exist
 
-Scenario: A skill's description gains the trigger of each reference file that travelled
+Scenario: A skill lists the trigger of each reference file that travelled beside its description
   Given the bundle fixture corpus
   And it has been exported
   And the plugin tree has a reference file "skills/glossary-lookup/terms.md" reading "glossary" with the trigger "Use it for a term."
   And the plugin tree has a reference file "skills/glossary-lookup/decisions.md" reading "adrs" with the trigger "Use it for a decision."
   When I bundle
-  Then the bundled "skills/glossary-lookup/SKILL.md" has the description "Look a term up in the glossary that travels with this plugin. Use it for a term."
+  Then the bundled "skills/glossary-lookup/SKILL.md" has "description" set to "Look a term up in the glossary that travels with this plugin."
+  And the bundled "skills/glossary-lookup/SKILL.md" has "when_to_use" set to "Use it for a term."
 
-Scenario: A description passing the cap once its triggers are added is refused
+Scenario: A listing passing the cap once its triggers are added is refused
   Given the bundle fixture corpus
   And it has been exported
-  And the plugin tree has a reference file "skills/glossary-lookup/terms.md" reading "glossary" with a trigger of 1000 characters
+  And the plugin tree has a reference file "skills/glossary-lookup/terms.md" reading "glossary" with a trigger of 1500 characters
   When I bundle
   Then it refuses
   And nothing is written

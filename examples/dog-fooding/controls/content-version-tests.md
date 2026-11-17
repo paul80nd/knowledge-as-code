@@ -49,9 +49,9 @@ in each direction against corpora built in memory.
 
 The bundle test decides what the bundle includes with `kac bundle`'s own plan, run over the working tree's plugin tree
 and export. That export includes what each corpus consumes, built from the producer's folder here. So an edit to
-`controls-lookup` asks for a move in every corpus whose export includes a control, its own or inherited, and in no
-other. The test runs the plan a second time, with each changed file as it stood at the merge base, and counts a file
-only where the two plans write it differently.
+`ask-the-corpus/controls.md` asks for a move in every corpus whose export includes a control, its own or inherited, and
+in no other. The test runs the plan a second time, with each changed file as it stood at the merge base, and counts a
+file only where the two plans write it differently.
 
 The `tool` job runs it under `dotnet test --project tooling/kac.tests`. That job checks out with `fetch-depth: 0` and
 names the target branch in `KAC_BASE_REF`, because a shallow checkout keeps no base to compare against. A job that
@@ -82,7 +82,8 @@ the minor. A file the branch deleted is not in the working plugin tree, so delet
 move here.
 
 `kac bundle` writes `plugin.json` with only the components it keeps. An edit to the entry of a component the corpus
-trims, such as `controls-lookup` in a corpus with no controls, leaves the bundled manifest as it was and passes.
+trims, such as `ask-the-corpus/controls.md` in a corpus with no controls, leaves the bundled manifest as it was and
+passes.
 
 Only the corpora under `examples/` are read. `template/` states no `content-version`, and a fixture corpus under
 `tooling/` states one as part of the fixture.

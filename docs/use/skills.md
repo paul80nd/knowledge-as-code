@@ -12,23 +12,17 @@ that export. An install gets the ones whose record types the corpus exported.
 
 `Requires` names the record types a skill opens a file of. A skill requiring none is one of two things.
 **`standalone`** reads no export and serves whoever is holding the plugin, so it ships whatever the corpus adopted.
-**`supporting`** exists for the lookup skills and follows the last of them out.
+**`supporting`** exists for the components that read a type, such as the reference files of `ask-the-corpus`, and
+follows the last of them out.
 [What decides whether a component ships](cli/bundle.md#what-decides-whether-a-component-ships) gives the trim rules.
 
 <!-- BEGIN GENERATED: skills-in-the-plugin -->
 
 | Skill               | What it answers                                                                                                                      | Requires                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
-| `corpus-retrieval`  | Fetch the published source of a record this corpus export summarises                                                                 | supporting                |
-| `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                        | `glossary@1`              |
 | `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone                |
 | `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | `standards` or `policies` |
-| `ask-the-corpus`    | Send a question to the part of this corpus that answers it, when you do not know which record holds the answer                       | supporting                |
-| `controls-lookup`   | Find out what proves a rule here, in the controls that travel with this plugin                                                       | `controls@3`              |
-| `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`                 |
-| `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`              |
-| `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@2`             |
-| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@3`             |
+| `ask-the-corpus`    | Answer from the organisation's recorded knowledge, which travels with this plugin as data                                            | supporting                |
 | `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@3`             |
 
 <!-- END GENERATED: skills-in-the-plugin -->

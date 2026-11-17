@@ -21,16 +21,25 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`kac bundle` ships a skill's reference file only where the export carries its type.** A file inside a skill
   directory, such as `skills/ask-the-corpus/runbooks.md`, can be declared as its own component in `plugin.json`, and a
-  component declared inside a trimmed one leaves with it. `ask-the-corpus` now declares its three reference files this
+  component declared inside a trimmed one leaves with it. `ask-the-corpus` declares each of its reference files this
   way, so a corpus exporting no runbooks ships the router without the runbook file. The hooks no longer need a
   glossary, and ship wherever a component reading a type does.
-- **`kac bundle` writes a skill's description from its reference files.** Each reference file states a `trigger:` in
-  its frontmatter, and `bundle` adds the trigger of each one that shipped to the end of the skill's `description:`. A
-  session then sees only the questions the plugin can answer. A description over 1,024 characters, the Agent Skills
-  specification's maximum, stops the run.
+- **`kac bundle` lists a skill's reference files beside its description.** Each reference file states a `trigger:` in
+  its frontmatter, and `bundle` writes the trigger of each one that shipped into the skill's `when_to_use:`. A session
+  then sees only the questions the plugin can answer. A description over 1,024 characters, the Agent Skills
+  specification's maximum, stops the run, and so does a description and `when_to_use` over the 1,536 Claude Code
+  lists.
 - **A `requires` entry can name alternatives.** `standards|policies` is met by either type, so a component ships where
   the export carries any of them. `request-deviation` now declares it, and ships only where the export has a clause
   for it to ask about. An entry with an empty alternative stops the run.
+
+### Changed
+
+- **The plugin answers every type through `ask-the-corpus`.** The template's six lookup skills and `corpus-retrieval`
+  become reference files of the router, one per type, and a record's published source is fetched through its
+  `retrieval.md`. A corpus that runs `kac update` receives the new plugin tree, and a plugin it bundles ships
+  `ask-the-corpus`, `raise-finding`, `request-deviation` and `standards-review`. A session that loaded
+  `standards-lookup` by name now loads `ask-the-corpus`.
 
 ### Fixed
 

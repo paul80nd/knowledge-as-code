@@ -102,22 +102,19 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
-### ROUTER: A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
+### ROUTER: A router reads each type from a file it loads when a question is routed there
 
-- A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill
-  shipped.
-- Where that lookup did not ship, a router **MUST** say so and name the type it needed.
-- A router **MUST** read a type that no lookup skill reads from a reference file beside its `SKILL.md`.
+- A router **MUST** read each type it answers from a reference file beside its `SKILL.md`.
 - A router **MUST** read a reference file only when a question is routed to it, because a file costs a session nothing
   until it is read.
 - Where the reference file for a type did not ship, a router **MUST** say so and name the type it needed.
 - A router **MUST** declare each reference file as its own component, requiring the type that file reads at the shape
   it reads.
 - A reference file **MUST** state a `trigger:` in its frontmatter, naming the case that sends a question to it.
-- A router's own description **MUST** name only the cases that reach no reference file, because `kac bundle` adds the
-  trigger of each reference file that shipped.
+- A router's own description **MUST** name only the cases that reach no reference file, because `kac bundle` lists the
+  trigger of each reference file that shipped beside it.
 - A router answering from a report **MUST** compare each version in the report's `sources` with `manifest.json`.
-- A router answering from a report **MUST** fetch the report's body through `corpus-retrieval`, and answer from it.
+- A router answering from a report **MUST** fetch the report's body through its `retrieval.md`, and answer from it.
 - A router answering from a report **MUST NOT** rebuild the report's answer from the records of other types.
 - Where the body cannot be fetched, a router **MUST** give the report's title, its `generated.at` and its link.
 - Where the body cannot be fetched, a router **MUST NOT** state a limit of the report.
@@ -455,10 +452,9 @@ broke it.
 - [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.
 - [ ] Every skill names the parts file of the type it requires, and no other.
 - [ ] Every skill says what its corpus did not include, from `types` in `manifest.json`.
-- [ ] Every router sends a question it can place to the lookup for that type, and says which type is missing where
-      the lookup did not ship.
-- [ ] Every type a router reads with no lookup is read from a reference file it loads only when routed there, and that
-      file is its own component requiring the type at the shape it reads.
+- [ ] Every type a router answers is read from a reference file it loads only when routed there, and that file is its
+      own component requiring the type at the shape it reads. The router says which type is missing where the file
+      did not ship.
 - [ ] Every reference file states a `trigger:`, and the router's own description names only the cases no reference
       file names.
 - [ ] Every answer a router gives from a report compares the report's `sources` with `manifest.json`, comes from the
@@ -528,8 +524,8 @@ facts.
 
 The session is why a skill names a property of the answer and not a tool. A session with no Grep tool met a
 **MUST**-shaped instruction naming one, and its only options were to ignore the instruction or to stop. The machine is
-why a skill reading an export asks for no shell. Each lookup skill promises at the top that there is nothing to install
-and nothing to run, and a Windows reader with no `grep` is who that promise is for.
+why a skill reading an export asks for no shell. The router promises at the top that there is nothing to install and
+nothing to run, and a Windows reader with no `grep` is who that promise is for.
 
 A skill that files an issue or fetches a record's published source cannot make that promise. Its work is a call to a
 platform, and no file read makes one. So it runs `gh` or `az`, which a reader on that platform is usually signed in to
@@ -552,11 +548,10 @@ own command worked. Filing again after a failed check leaves two items where one
 the field and the link and stops. `harvest-findings` ships in no plugin, and its sessions meet the same shells, so the
 rule binds it too.
 
-A router serves a session that knows the corpus exists and has a question, but not which type answers it. Every
-bundled skill puts its description in every session, so one router costs one description where a lookup for each rarely
-asked type would cost one each. A known need still goes to its lookup, because the lookup states that type's fields and
-reasons. A type with no lookup is read from a file beside the router, which costs nothing until a question is routed to
-it, and a new type joins as one more file. A report is the quick route to a whole-corpus answer, because its value is
+A router serves a session with a question about the corpus, whichever type answers it. Every bundled skill puts its
+description in every session, so one router costs one description where a skill for each type would cost one each.
+Each type is read from a file beside the router, which states that type's fields and reasons, costs nothing until a
+question is routed to it, and joins as one more file. A report is the quick route to a whole-corpus answer, because its value is
 the verdicts and limits a person wrote, and a rebuild from the standards and controls has neither. Its body does not
 travel, so the router fetches it, and where it cannot, it gives the report's place and leaves its limits unstated
 rather than inferring them. Without the fetch it still answers from the export, because the index entry says which
@@ -564,7 +559,7 @@ report exists, how old it is and which versions it is true of.
 
 A reviewer is the one skill whose input is not in the plugin. The change it reviews lives in the repository's history,
 and every session reading that history already has a way to do it. So the skill names the change as what differs from
-a fixed point, and leaves the session to read it, the same way a lookup leaves it the search.
+a fixed point, and leaves the session to read it, the same way a reference file leaves it the search.
 
 A reviewer leaves a rule out only where a check runs without a person, and nobody can bypass it. `ci` and
 `runtime-alert` run by themselves.
@@ -580,21 +575,21 @@ reads.
 
 `requires` has three states, and the manifest rules keep them apart. A component that opens a type's files names the
 shape it reads them at, so a moved key stops the build before it gets to a reader. A component that needs the type
-present and opens none of its files names it bare. `request-deviation` asks about a clause a lookup found, which is a
-standard's rule or a policy's clause, so it names `standards|policies` and ships where either did. A component that
+present and opens none of its files names it bare. `request-deviation` asks about a clause the router found, which is
+a standard's rule or a policy's clause, so it names `standards|policies` and ships where either did. A component that
 reads no export at all declares nothing.
 
-That third state covers two different questions, so `standalone` separates them. `corpus-retrieval`, the router and
-the hooks read no export and exist for the components that do. A bundle that kept them after the last of those left
+That third state covers two different questions, so `standalone` separates them. The router and the hooks read no
+export of their own and exist for the components that do. A bundle that kept them after the last of those left
 would ship a skill nothing can call and a breadcrumb naming nothing to ask. `raise-finding` reads no export and serves
 whoever installed the plugin, and a corpus with no record at all is the one a session most needs a route to report.
 Declaring it standalone keeps that route open. `docs/maintaining/plugin.md` describes how `kac bundle` acts on all of
 them.
 
-A router reads a type with no lookup through a reference file, and each file is a component of its own, so a type the
-export lacks takes its file with it and the router stays. The router's description is the one part a session sees
-before it loads the skill, so `kac bundle` writes it from the router's own cases and the trigger of each file that
-shipped. A corpus exporting no runbooks then never offers a session a runbook it cannot read.
+Each reference file is a component of its own, so a type the export lacks takes its file with it and the router
+stays. The router's description and its `when_to_use` are the one part a session sees before it loads the skill, so
+`kac bundle` lists the trigger of each file that shipped beside the router's own cases. A corpus exporting no runbooks
+then never offers a session a runbook it cannot read.
 
 `optional` is a fourth state, for a type a component reads where it is present and does without where it is not. The
 review view lists the controls checking each rule, and a corpus exporting no controls still needs its rules reviewed.
@@ -657,8 +652,8 @@ Both skills write the platform mechanics out in full, and neither cites the othe
 bundle that kept `raise-finding` may have dropped the other, so a citation across would sometimes point at a file the
 reader does not have. The cost is that a mistake in one of them has to be corrected twice.
 
-A skill may still send a reader to one the bundle can trim, and `raise-finding` sends one to `fix-lookup` before it
-files anything about a problem. What the rule above refuses is the silent version. The citation says which type the
+A skill may still send a reader to a file the bundle can trim, and `raise-finding` sends one to the fixes through
+`ask-the-corpus` before it files anything about a problem. What the rule above refuses is the silent version. The citation says which type the
 absent skill needed, so a reader who does not have it reads that as an answer instead of a broken instruction.
 
 The organisation boundary is the one rule here that no clause states. A deviation register is what one organisation
@@ -687,7 +682,7 @@ all. Every type requires it, so a record without one fails `kac validate`, and i
 the record, which is the one thing an agent may not decide. So the skill asks the person running it and writes what
 they say.
 
-Triage writes marks and comments across a whole backlog, so it is bounded by where it travels. A lookup answers from
+Triage writes marks and comments across a whole backlog, so it is bounded by where it travels. The router answers from
 the copy beside it and writes nothing. `raise-finding` writes one issue and asks first. In a consumer's installed
 plugin `tracker.base` addresses the backlog of whoever published the corpus, so a consumer running triage would mark
 up a stranger's repository. Shipping triage in a plugin at all is therefore the thing to refuse. It travels into the
@@ -744,6 +739,8 @@ standard.
 
 ## Changelog
 
+- 2026-11-17: the router reads every type it answers through a reference file, and fetches a record's published
+  source through its `retrieval.md`. `kac bundle` lists each reference file's trigger in the router's `when_to_use`.
 - 2026-11-17: a router declares each reference file as its own component, requiring the type that file reads, and
   each file states a `trigger:` that `kac bundle` adds to the router's description. A component working from any one
   of several types names them in one `requires` entry, separated by `|`.
