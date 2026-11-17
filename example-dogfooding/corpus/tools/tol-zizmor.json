@@ -10,7 +10,7 @@
     "packages": [
       {
         "purl": "pkg:pypi/zizmor",
-        "versions": "1.31.x"
+        "versions": "1.32.x"
       }
     ],
     "homepage": "https://docs.zizmor.sh",
@@ -34,6 +34,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows and each `dependabot.yml`, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5fda7bc7c4a11c9966435bb0f1421a0a0dbd5ca2/examples/dog-fooding/tools/lint/zizmor.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/305ff84c00e8b83e4870712e37cb4c3aa923c7e1/examples/dog-fooding/tools/lint/zizmor.md"
   }
 }
