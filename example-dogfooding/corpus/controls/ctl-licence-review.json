@@ -29,6 +29,6 @@
     "Coverage and gaps": "Nothing compares `licence` with the list automatically, so a reviewer who skips the step lets a refused licence merge. No field on a tool record says whether the tool ships, so the reviewer reads the project files to decide. A review leaves no record of the check unless the reviewer comments on the pull request.\n\nThe check reads the direct packages alone. A package that arrives as a dependency of one of them has no tool record, and nothing reads its licence."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/305ff84c00e8b83e4870712e37cb4c3aa923c7e1/examples/dog-fooding/controls/licence-review.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/18647d5ec17fdb1e166c2f50bdf324789e0b1fc7/examples/dog-fooding/controls/licence-review.md"
   }
 }
