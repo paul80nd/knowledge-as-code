@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:pypi/zensical, versions: 0.0.72 }
+  - { purl: pkg:pypi/zensical, versions: 0.1.x }
 homepage: https://zensical.org/
 licence: MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 AND ISC AND W3C
 licence-declared: MIT
@@ -29,17 +29,19 @@ repository root.
 
 Zensical comes from the team behind Material for MkDocs, and reads the `mkdocs.yml` that MkDocs and Material read. It
 renders the theme's `features:` and `palette:` blocks, builds the search index, and writes a redirect page for each
-entry in `redirect_maps`. The redirect page keeps the anchor. `theme.variant: modern` selects Zensical's own theme.
+entry in `redirect_maps`. The redirect page keeps the anchor. `theme.variant: modern` selects Zensical's own theme,
+which ships as a separate package, `zensical-ui`. Each Zensical release pins one `zensical-ui` version exactly, so the
+Zensical pin also fixes the theme.
 
 `strict: true` turns a dead link or a dead anchor into a failed build. A page the navigation does not list passes the
 build, so `NavigationTests` in `kac.tests` covers that case.
 
 ## Status
 
-Approved at 0.0.72 alone, the version `docs/requirements.txt` pins. Zensical publishes a release every few days and
-makes no promise about stability or about how long it reads `mkdocs.yml`. Below 0.1.0 any release may change
-behaviour, so [std-A11Y] asks for a new assessment at each one. Each Dependabot pull request meets the strict build,
-and moves this entry's version with a new assessment, before it merges.
+Approved across 0.1.x, the line `docs/requirements.txt` pins. Zensical calls 0.1.0 a beta for three months, and makes
+no promise about how long it reads `mkdocs.yml`. [std-A11Y] asks for a new assessment at each new minor version. A
+Dependabot pull request for a patch release merges once the strict build passes. One for a new minor version also
+moves this entry's range, with a new assessment, before it merges.
 
 `mkdocs.yml` still builds the site under MkDocs 1.6.1 with Material 9.7.7, in Material's look, so leaving Zensical is a
 change to `docs/requirements.txt` and to the build command in two workflows. The review date falls before Material's
@@ -47,10 +49,13 @@ critical fixes end on 2027-05-05.
 
 ## Accessibility
 
-Assessed against [WCAG 2.2 AA] at 0.0.72 with the `modern` variant. The site was built with the pinned version, its HTML
-read, and five pages audited with axe-core 4.10.2 in headless Chrome, in both colour schemes. The pages are the home
-page, the CLI reference, the changelog, getting started and the checks reference. [std-A11Y] states the rules the
-assessment checks against.
+Assessed against [WCAG 2.2 AA] at 0.1.0, which pins `zensical-ui` 0.0.41, with the `modern` variant. The site was built
+with the pinned version, its HTML read, and five pages audited with axe-core 4.10.2 in headless Chrome, in both colour
+schemes. The pages are the home page, the CLI reference, the changelog, getting started and the checks reference.
+[std-A11Y] states the rules the assessment checks against.
+
+A build with 0.0.72 differs from it only in the generator tag and the script bundle. Its HTML and stylesheets are
+otherwise identical, and the same audit reports the same findings on both.
 
 The theme supplies what a Markdown author cannot. `<html lang="en">` states the language of every page. A "Skip to
 content" link is first in the keyboard tab order. The header logo is an image whose alternative text is the site's
@@ -64,8 +69,8 @@ on the dark, below the 4.5:1 WCAG asks of text. The colour is the theme's `indig
 tried, `blue`, `deep-purple`, `teal` and `black`, fail as badly or worse, so the shortfall is left for the theme to
 fix, and `extra.css` overrides no colour.
 
-Two more things fall short. Nobody has run the site through a screen reader. A Mermaid diagram renders as an SVG that
-the theme gives no text alternative, so the prose beside it is the only way to read what it says.
+Two more things fall short. Nobody has run the site through a screen reader. A Mermaid diagram renders as an SVG with
+no label, `<title>` or `<desc>`, so the prose beside it is the only way to read what it says.
 
 ## Where it is used
 
@@ -81,8 +86,8 @@ the theme gives no text alternative, so the prose beside it is the only way to r
 
 ## Licence and obligations
 
-The package declares MIT, and its own code is MIT. The wheel also ships five icon sets under
-`zensical/templates/.icons/`, each with its own licence file: Material Design Icons from the Pictogrammers under
+Zensical and `zensical-ui` each declare MIT, and their own code is MIT. `zensical-ui` also ships five icon sets under
+`zensical_ui/templates/.icons/`, each with its own licence file: Material Design Icons from the Pictogrammers under
 Apache-2.0, Font Awesome Free under CC-BY-4.0, GitHub's Octicons under MIT, Simple Icons under CC0-1.0 and Lucide under
 ISC. An icon put on a page comes under its own set's terms, and CC-BY-4.0 asks for attribution.
 
@@ -90,7 +95,7 @@ The theme's JavaScript reaches every published page. Its licence file names clip
 under Apache-2.0, and focus-visible under the W3C Software Notice. Material's bundle shipped the same four packages.
 Every licence the site ships is one `eng:std-DEPS` allows.
 
-The compiled core bundles 308 Rust components, listed in the CycloneDX file the wheel carries under `sboms/`. Each is
+The compiled core bundles Rust components, listed in the CycloneDX file under `sboms/` in Zensical's wheel. Each is
 under a permissive licence, or offers one as a choice, and none reaches the published site.
 
 ## Related
