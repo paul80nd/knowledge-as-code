@@ -38,9 +38,6 @@ public class PluginSkillFieldTests
             var path = JsonRead.Str(component?["path"]) ?? "";
             if (!path.StartsWith("skills/", StringComparison.Ordinal)) continue;
 
-            // A reference file is read through its skill, and holds no field table of its own.
-            if (Path.HasExtension(path)) continue;
-
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
 
@@ -67,7 +64,9 @@ public class PluginSkillFieldTests
     public void Its_field_table_states_the_type_the_exporter_writes(string skill, string type)
     {
         var schema = Schema.Load(Repo.Root);
-        var file = Path.Combine(Plugin, "skills", skill, "SKILL.md");
+        var file = Path.HasExtension(skill)
+            ? Path.Combine(Plugin, "skills", skill)
+            : Path.Combine(Plugin, "skills", skill, "SKILL.md");
 
         Assert.Equal(Sorted(Expected(schema, schema.ByFolder[type])), Sorted(Stated(file)));
     }

@@ -3,7 +3,7 @@
 # wildcard. The first matching rule wins, so a rule carving a file out of a folder sits above the folder's rule.
 
 # The template's shape. Increment when a corpus has to respond: a file added, removed, renamed or moved between layers.
-version: 26
+version: 27
 
 # The oldest kac that reads this manifest. The template is fetched rather than shipped, so the two version apart.
 minimum-tool: "0.6.0"
@@ -105,7 +105,7 @@ rules:
       findings filed against the corpus and drafts the record one of them asks for, which is work only
       the maintainer holding the source can do. `writing-in-the-tool` and `writing-the-docs` describe C#
       and a documentation site that no corpus has, and `i-want-to` routes to this repository's own
-      processes where a corpus reads its own through `process-lookup`. The catch-all withholds those
+      processes where a corpus reads its own through `ask-the-corpus`. The catch-all withholds those
       three. A skill is addressed the same way from any repository root, so these land where they were
       read and need no `to:`.
 

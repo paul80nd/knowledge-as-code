@@ -70,11 +70,14 @@ public static class Bundler
     /// <summary>At the plugin root, because <c>.claude-plugin/</c> holds the manifest and nothing else.</summary>
     public const string RecordFile = "bundle.json";
 
-    /// <summary>
-    /// The most characters a skill's description may hold once its reference files' triggers are added. It is the
-    /// Agent Skills specification's maximum, and Claude Code's skill listing truncates at 1,536.
-    /// </summary>
+    /// <summary>The most characters a skill's <c>description:</c> may hold: the Agent Skills specification's maximum.</summary>
     public const int DescriptionCap = 1024;
+
+    /// <summary>
+    /// The most characters Claude Code's skill listing shows of a skill's <c>description:</c> and <c>when_to_use:</c>
+    /// together. It truncates past this, so the triggers a bundle writes must fit inside it.
+    /// </summary>
+    public const int ListingCap = 1536;
 
     public static bool InSourceTree(string rel) =>
         rel.Equals(SourceDir, StringComparison.Ordinal)
@@ -508,9 +511,9 @@ public static class Bundler
 
     /// <summary>
     /// The <c>SKILL.md</c> of each surviving skill holding a surviving reference file with a <c>trigger:</c>, rewritten
-    /// so its description ends with those triggers in component order. Keyed by the file's path in the plugin tree. A
-    /// description over <see cref="DescriptionCap"/>, or a skill with no description to add to, is added to
-    /// <paramref name="problems"/>.
+    /// so its <c>when_to_use:</c> ends with those triggers in component order. Keyed by the file's path in the plugin
+    /// tree. A skill with no description, a description over <see cref="DescriptionCap"/>, or a listing over
+    /// <see cref="ListingCap"/> is added to <paramref name="problems"/>.
     /// </summary>
     private static Dictionary<string, string> Describe(
         IReadOnlyList<BundleFile> tree, IReadOnlyList<PluginComponent> included, List<string> problems)
@@ -530,24 +533,39 @@ public static class Bundler
 
             var path = $"{skill.Path}/SKILL.md";
             var text = Text(tree, path)?.Replace("\r\n", "\n", StringComparison.Ordinal);
-            if (Yaml.Str(Yaml.Get(Front(text), "description")) is not { Length: > 0 } opening || text is null)
+            var front = Front(text);
+            var references = string.Join(", ", triggers.Select(t => t.Path));
+            if (Yaml.Str(Yaml.Get(front, "description")) is not { Length: > 0 } description || text is null)
             {
-                problems.Add($"{path} states no description, so there is nothing to add the trigger lines of "
-                             + $"{string.Join(", ", triggers.Select(t => t.Path))} to. Give it a description: line.");
+                problems.Add($"{path} states no description, so the trigger lines of {references} have nothing to "
+                             + "be listed beside. Give it a description: line.");
                 continue;
             }
 
-            var description = string.Join(' ', triggers.Select(t => t.Trigger).Prepend(opening.Trim()));
+            description = description.Trim();
             if (description.Length > DescriptionCap)
             {
                 problems.Add(string.Format(CultureInfo.InvariantCulture,
-                    "{0} would carry a {1:N0}-character description once the trigger lines of {2} are added, and a "
-                    + "skill's description holds at most {3:N0}. Shorten the description or a trigger line.",
-                    path, description.Length, string.Join(", ", triggers.Select(t => t.Path)), DescriptionCap));
+                    "{0} has a {1:N0}-character description, and a skill's description holds at most {2:N0}. "
+                    + "Shorten it.", path, description.Length, DescriptionCap));
                 continue;
             }
 
-            described[path] = Redescribed(text, description);
+            var whenToUse = string.Join(' ', triggers.Select(t => t.Trigger)
+                .Prepend(Yaml.Str(Yaml.Get(front, "when_to_use"))?.Trim() ?? "")
+                .Where(s => s.Length > 0));
+
+            var listed = description.Length + 1 + whenToUse.Length;
+            if (listed > ListingCap)
+            {
+                problems.Add(string.Format(CultureInfo.InvariantCulture,
+                    "{0} would list {1:N0} characters once the trigger lines of {2} are added, and Claude Code lists "
+                    + "at most {3:N0} of a skill's description and when_to_use together. Shorten the description or "
+                    + "a trigger line.", path, listed, references, ListingCap));
+                continue;
+            }
+
+            described[path] = WithKey(text, "when_to_use", whenToUse);
         }
 
         return described;
@@ -568,21 +586,29 @@ public static class Bundler
     }
 
     /// <summary>
-    /// The skill with its <c>description:</c> entry, and any line indented beneath it, replaced by one line. The value
-    /// is a JSON string, which YAML reads as a double-quoted scalar. Every other byte is kept.
+    /// The skill with <paramref name="key"/>, and any line indented beneath it, replaced by one line, or that line added
+    /// after <c>description:</c> where the key is absent. The value is a JSON string, which YAML reads as a
+    /// double-quoted scalar. Every other byte is kept.
     /// </summary>
-    private static string Redescribed(string text, string description)
+    private static string WithKey(string text, string key, string value)
     {
         var end = text.IndexOf("\n---\n", 3, StringComparison.Ordinal);
         var lines = text[4..(end + 1)].Split('\n').ToList();
 
-        var from = lines.FindIndex(l => l.StartsWith("description:", StringComparison.Ordinal));
-        var to = from + 1;
-        while (to < lines.Count && lines[to].StartsWith(' ')) to++;
+        var from = lines.FindIndex(l => l.StartsWith(key + ":", StringComparison.Ordinal));
+        if (from < 0)
+        {
+            from = lines.FindIndex(l => l.StartsWith("description:", StringComparison.Ordinal)) + 1;
+            while (from < lines.Count && lines[from].StartsWith(' ')) from++;
+        }
+        else
+        {
+            var to = from + 1;
+            while (to < lines.Count && lines[to].StartsWith(' ')) to++;
+            lines.RemoveRange(from, to - from);
+        }
 
-        lines.RemoveRange(from, to - from);
-        lines.Insert(from, $"description: {JsonValue.Create(description).ToJsonString(Quoted)}");
-
+        lines.Insert(from, $"{key}: {JsonValue.Create(value).ToJsonString(Quoted)}");
         return $"---\n{string.Join('\n', lines)}{text[(end + 1)..]}";
     }
 

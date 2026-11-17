@@ -184,7 +184,7 @@ public static class Reports
     /// <summary>
     /// Whether an imported type's parts are clauses, read from the keys its producer wrote on each line. A consumer
     /// declining the type has no schema for it, and a type renamed on either side keeps the keys.
-    /// <c>policy-lookup</c> reads the same two keys.
+    /// The plugin's <c>policies.md</c> reads the same two keys.
     /// </summary>
     private static bool CarriesClauses(InheritedType type) =>
         type.PartLines.Any(line => JsonRead.Parse(line) is { } json
@@ -462,7 +462,7 @@ public static class Reports
     /// <summary>
     /// Every rule a <c>Covers</c> line ties to a clause, keyed by the clause. The label is the one the field
     /// <c>implements</c> mirrors. An inherited rule states its clauses under <c>covers</c> on its line, which a consumer
-    /// declining the type reads too. <c>standards-lookup</c> reads the same key.
+    /// declining the type reads too. The plugin's <c>standards.md</c> reads the same key.
     /// </summary>
     private static Dictionary<string, List<string>> RuleCovers(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)

@@ -178,11 +178,11 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
         Assert.Equal(outputs, string.Join(", ", printed));
     }
 
-    [Then(@"the bundled ""(.*)"" has the description ""(.*)""")]
-    public void ThenTheBundledSkillHasTheDescription(string path, string description)
+    [Then(@"the bundled ""(.*)"" has ""(.*)"" set to ""(.*)""")]
+    public void ThenTheBundledSkillHasTheKeySetTo(string path, string key, string value)
     {
         var text = ws.Read($".dist/plugin/{path}");
-        Assert.Equal(description, Yaml.Str(Yaml.Get(Yaml.Load(text.Split("---\n")[1]), "description")));
+        Assert.Equal(value, Yaml.Str(Yaml.Get(Yaml.Load(text.Split("---\n")[1]), key)));
     }
 
     [Then(@"the bundle includes ""(.*)""")]

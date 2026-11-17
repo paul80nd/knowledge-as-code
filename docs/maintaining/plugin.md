@@ -24,7 +24,7 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It trims a component declared inside a trimmed one, such as a skill's reference file.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
-* It adds the `trigger:` of each surviving reference file to the end of its skill's `description:`.
+* It writes the `trigger:` of each surviving reference file into its skill's `when_to_use:`.
   [A skill's reference files](../use/cli/bundle.md#a-skills-reference-files)
 * It ships a component reading no type while a component reading one survives, and trims it with the last of them,
   unless the component is standalone.
@@ -60,7 +60,7 @@ Each refusal exits `1` and writes nothing. [Known limits](../use/cli/bundle.md#k
 * an export at a format version this build does not read
 * a component reading a type at a shape version the export does not have, or at a shape that is not a whole number
 * a `requires` entry naming an empty alternative
-* a skill whose description passes 1,024 characters once its reference files' triggers are added
+* a skill whose description passes 1,024 characters, or whose description and listed triggers pass 1,536
 * a file under `skills/` or `hooks/` that no component claims
 * a component, other than a view, whose `path` has no file in the plugin tree
 * a view this build does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
@@ -179,8 +179,8 @@ A view is a file `View` renders into the plugin from the export, after the trim.
   its record's What it checks section names. A control checks them only at the status in force, and only where it runs
   as `ci` or `runtime-alert`. The `standards-review` skill reads the view whole in a forked subagent, and gives the
   instructions itself.
-* **The build index names a skill only where one survived.** It names the surviving lookup skill that reads standards,
-  and the rules file inside the plugin where none did.
+* **The build index names a skill only where one survived.** It names the surviving skill that reads standards, by its
+  directory where a reference file inside it does, and the rules file inside the plugin where none did.
 
 ## The plugin's version
 
@@ -242,8 +242,8 @@ it would name records a session has no skill to open.
 * A requirement naming alternatives is met by any one the export carries
 * A requirement naming an empty alternative is refused
 * A reference file whose type the export lacks is trimmed, and its skill stays
-* A skill's description gains the trigger of each reference file that travelled
-* A description passing the cap once its triggers are added is refused
+* A skill lists the trigger of each reference file that travelled beside its description
+* A listing passing the cap once its triggers are added is refused
 * A component reading a type only a consumed corpus exports ships
 * A component reading no type ships beside one that reads a type
 * A component reading no type leaves with the last component reading one

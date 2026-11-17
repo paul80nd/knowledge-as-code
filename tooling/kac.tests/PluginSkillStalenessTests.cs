@@ -14,6 +14,9 @@ public class PluginSkillStalenessTests
     private const string Opens = "## Say when ";
     private const string Closes = " is unsettled";
 
+    /// <summary>The heading every reference file of <c>ask-the-corpus</c> gives its staleness section.</summary>
+    private const string Current = "## Say whether it is current";
+
     private const string Taken = "generatedAt";
 
     /// <summary>
@@ -31,9 +34,6 @@ public class PluginSkillStalenessTests
         {
             var path = JsonRead.Str(component?["path"]) ?? "";
             if (!path.StartsWith("skills/", StringComparison.Ordinal)) continue;
-
-            // A reference file says whether a record is current in its own outline, not in this section.
-            if (Path.HasExtension(path)) continue;
 
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
@@ -58,7 +58,7 @@ public class PluginSkillStalenessTests
     public void Its_staleness_section_names_every_field_its_type_exports(string skill, string type)
     {
         var schema = Schema.Load(Repo.Root);
-        var section = Section(Path.Combine(Plugin, "skills", skill, "SKILL.md"));
+        var section = Section(File(skill));
 
         var expected = Carried(schema.ByFolder[type]).Append(Taken).Order(StringComparer.Ordinal);
         var missing = expected.Where(key => !section.Contains(key, StringComparison.Ordinal)).ToList();
@@ -72,7 +72,7 @@ public class PluginSkillStalenessTests
     public void Its_staleness_section_names_every_unsettled_status_its_type_declares(string skill, string type)
     {
         var schema = Schema.Load(Repo.Root);
-        var section = Section(Path.Combine(Plugin, "skills", skill, "SKILL.md"));
+        var section = Section(File(skill));
 
         var missing = Unsettled(schema.ByFolder[type])
             .Where(value => !section.Contains($"status: {value}", StringComparison.Ordinal)).ToList();
@@ -109,13 +109,19 @@ public class PluginSkillStalenessTests
         else if (fields.Contains("review-by")) yield return "review-by";
     }
 
+    /// <summary>A reference file is the component's own path, and a skill is the <c>SKILL.md</c> inside it.</summary>
+    private static string File(string skill) =>
+        Path.HasExtension(skill) ? Path.Combine(Plugin, "skills", skill) : Path.Combine(Plugin, "skills", skill, "SKILL.md");
+
     private static string Section(string path)
     {
         var lines = Files.ReadLf(path).Split('\n');
 
-        var from = Array.FindIndex(lines, l =>
-            l.StartsWith(Opens, StringComparison.Ordinal) && l.EndsWith(Closes, StringComparison.Ordinal));
-        Assert.True(from >= 0, $"{path} holds no '{Opens}… {Closes}' section.");
+        var from = Path.GetFileName(path) == "SKILL.md"
+            ? Array.FindIndex(lines, l =>
+                l.StartsWith(Opens, StringComparison.Ordinal) && l.EndsWith(Closes, StringComparison.Ordinal))
+            : Array.FindIndex(lines, l => l == Current);
+        Assert.True(from >= 0, $"{path} holds no '{Opens}… {Closes}' or '{Current}' section.");
 
         var to = Array.FindIndex(lines, from + 1, l => l.StartsWith("## ", StringComparison.Ordinal));
         return string.Join('\n', lines[(from + 1)..(to < 0 ? lines.Length : to)]);

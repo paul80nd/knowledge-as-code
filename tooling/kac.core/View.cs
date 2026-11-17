@@ -186,8 +186,8 @@ public static class View
     private static string Corpus(Source source) => source.Manifest.Corpus ?? "this corpus";
 
     /// <summary>
-    /// The lookup skill reading standards where one survived the trim, and the rules file inside the plugin where none
-    /// did.
+    /// The skill reading standards where one survived the trim, named by its directory where a reference file inside it
+    /// reads them, and the rules file inside the plugin where none did.
     /// </summary>
     private static string ReadFullText(Source source)
     {
@@ -196,7 +196,8 @@ public static class View
             .FirstOrDefault(c => c.Requires.Any(r => Bundler.Alternatives(r) is [{ Type: Standards }]));
 
         if (skill is not null)
-            return $"The {skill.Path["skills/".Length..]} skill returns a rule's obligations by its standard's id.";
+            return $"The {skill.Path["skills/".Length..].Split('/')[0]} skill returns a rule's obligations by its "
+                   + "standard's id.";
 
         var file = Type(source, Standards)?.PartsFile;
         return $"`{source.CorpusRoot}/{file}` inside this plugin lists a rule's obligations, under its standard's id.";

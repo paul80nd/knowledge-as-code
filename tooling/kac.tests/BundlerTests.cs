@@ -270,9 +270,9 @@ public class BundlerTests
     }
 
     [Fact]
-    public void A_skill_s_description_gains_the_trigger_of_each_reference_file_that_travelled()
+    public void A_skill_lists_the_trigger_of_each_reference_file_that_travelled_beside_its_description()
     {
-        var plan = Plan(
+        var text = Text(Plan(
             plugin:
             [
                 (Bundler.ManifestFile, Source(
@@ -282,15 +282,15 @@ public class BundlerTests
                 ("skills/ask/runbooks.md", Reference("Use it when something is broken now.")),
                 ("skills/ask/reports.md", Reference("Use it for what the corpus covers."))
             ],
-            export: [Manifest("runbooks", "reports")]);
+            export: [Manifest("runbooks", "reports")]), "skills/ask/SKILL.md");
 
-        Assert.Equal("Route a question. Use it when something is broken now. Use it for what the corpus covers.",
-            Description(Text(plan, "skills/ask/SKILL.md")));
+        Assert.Equal("Route a question.", Key(text, "description"));
+        Assert.Equal("Use it when something is broken now. Use it for what the corpus covers.", Key(text, "when_to_use"));
     }
 
     [Fact]
-    public void A_trimmed_reference_file_adds_nothing_to_the_description()
-        => Assert.Equal("Route a question. Use it when something is broken now.", Description(Text(Plan(
+    public void A_trimmed_reference_file_lists_no_trigger()
+        => Assert.Equal("Use it when something is broken now.", Key(Text(Plan(
             plugin:
             [
                 (Bundler.ManifestFile, Source(
@@ -300,10 +300,22 @@ public class BundlerTests
                 ("skills/ask/runbooks.md", Reference("Use it when something is broken now.")),
                 ("skills/ask/reports.md", Reference("Use it for what the corpus covers."))
             ],
-            export: [Manifest("runbooks")]), "skills/ask/SKILL.md")));
+            export: [Manifest("runbooks")]), "skills/ask/SKILL.md"), "when_to_use"));
 
     [Fact]
-    public void Rewriting_the_description_leaves_the_rest_of_the_skill_as_it_was()
+    public void A_trigger_follows_a_when_to_use_the_skill_states()
+        => Assert.Equal("Use it on a Monday. Use it when something is broken now.", Key(Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"))),
+                ("skills/ask/SKILL.md",
+                    "---\nname: ask\ndescription: Route a question.\nwhen_to_use: Use it\n  on a Monday.\n---\n\nBody.\n"),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now."))
+            ],
+            export: [Manifest("runbooks")]), "skills/ask/SKILL.md"), "when_to_use"));
+
+    [Fact]
+    public void Listing_the_triggers_leaves_the_rest_of_the_skill_as_it_was()
     {
         var text = Text(Plan(
             plugin:
@@ -314,25 +326,36 @@ public class BundlerTests
             ],
             export: [Manifest("runbooks")]), "skills/ask/SKILL.md");
 
-        Assert.StartsWith("---\nname: ask\ndescription: ", text, StringComparison.Ordinal);
-        Assert.EndsWith("---\n\n# Ask\n\nThe body.\n", text, StringComparison.Ordinal);
+        Assert.Equal(
+            "---\nname: ask\ndescription: Route a question.\nwhen_to_use: \"Use it when something is broken now.\"\n"
+            + "---\n\n# Ask\n\nThe body.\n", text);
     }
 
     [Fact]
-    public void A_description_over_the_cap_once_its_triggers_are_added_stops_the_run()
+    public void A_description_over_the_specification_s_cap_stops_the_run()
+        => Assert.Contains(Bundler.DescriptionCap.ToString("N0", CultureInfo.InvariantCulture), Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"))),
+                ("skills/ask/SKILL.md", Skill(new string('a', Bundler.DescriptionCap + 1))),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now."))
+            ],
+            export: [Manifest("runbooks")]).Problems));
+
+    [Fact]
+    public void A_listing_over_the_cap_once_its_triggers_are_added_stops_the_run()
     {
         var problem = Assert.Single(Plan(
             plugin:
             [
                 (Bundler.ManifestFile, Source(Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"))),
-                ("skills/ask/SKILL.md", Skill(new string('a', Bundler.DescriptionCap - 10))),
-                ("skills/ask/runbooks.md", Reference("Use it when something is broken now."))
+                ("skills/ask/SKILL.md", Skill(new string('a', Bundler.DescriptionCap))),
+                ("skills/ask/runbooks.md", Reference(new string('b', Bundler.ListingCap - Bundler.DescriptionCap)))
             ],
             export: [Manifest("runbooks")]).Problems);
 
-        Assert.Contains("skills/ask/SKILL.md", problem);
         Assert.Contains("skills/ask/runbooks.md", problem);
-        Assert.Contains(Bundler.DescriptionCap.ToString("N0", CultureInfo.InvariantCulture), problem);
+        Assert.Contains(Bundler.ListingCap.ToString("N0", CultureInfo.InvariantCulture), problem);
     }
 
     [Fact]
@@ -828,6 +851,19 @@ public class BundlerTests
             export: Standards(controls: false)), "views/build-index.md"));
 
     [Fact]
+    public void A_build_index_names_the_skill_a_reference_file_reading_standards_sits_in()
+        => Assert.Contains("The ask skill returns a rule's obligations by its standard's id.", Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Component("skills/ask"), Component("skills/ask/standards.md", "standards@3"),
+                        BuildIndexView())),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/standards.md", "# Answering from a standard\n")
+            ],
+            export: Standards(controls: false)), "views/build-index.md"));
+
+    [Fact]
     public void A_build_index_with_no_lookup_skill_names_the_rules_file()
         => Assert.Contains("`corpus/standards/rules.jsonl` inside this plugin lists a rule's obligations", Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(BuildIndexView()))],
@@ -1203,8 +1239,8 @@ public class BundlerTests
 
     private static string Reference(string trigger) => $"---\ntrigger: {trigger}\n---\n\n# Answering\n";
 
-    private static string Description(string skill) =>
-        Yaml.Str(Yaml.Get(Yaml.Load(skill.Split("---\n")[1]), "description")) ?? "";
+    private static string Key(string skill, string key) =>
+        Yaml.Str(Yaml.Get(Yaml.Load(skill.Split("---\n")[1]), key)) ?? "";
 
     [Fact]
     public void An_author_with_no_address_travels_with_the_key_the_export_states()

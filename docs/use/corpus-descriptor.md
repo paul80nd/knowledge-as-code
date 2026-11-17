@@ -421,7 +421,7 @@ status. A consumer sees no sign of a record the list withheld.
 | `draft`   | whose `status` is `draft`            |
 | `overdue` | whose `review-by` is in the past     |
 
-Set it where a draft would be read as an answer, as a `fix` in draft would be by `fix-lookup`.
+Set it where a draft would be read as an answer, as a `fix` in draft would be by `ask-the-corpus`.
 
 ## `plugin`
 
