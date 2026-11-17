@@ -105,8 +105,12 @@ jqr '.included[] | select(.path | startswith("skills/")) | .path' "$BUNDLE" > "$
 while read -r skill; do
   [ -n "$skill" ] || continue
 
-  SKILL_FILE="$ROOT/$skill/SKILL.md"
-  [ -f "$SKILL_FILE" ] || fail "$skill holds no SKILL.md."
+  # A reference file is a component of its own, held to the same parts-file rule as a skill.
+  case "$skill" in
+    *.md) SKILL_FILE="$ROOT/$skill" ;;
+    *) SKILL_FILE="$ROOT/$skill/SKILL.md" ;;
+  esac
+  [ -f "$SKILL_FILE" ] || fail "the installed plugin holds no ${SKILL_FILE#"$ROOT/"}."
 
   jqr --arg p "$skill" '.included[] | select(.path == $p) | .requires[]' "$BUNDLE" \
     | sed 's/@.*//' > "$WORK/requires.txt"
