@@ -31,6 +31,6 @@
     "Conformance checklist": "- [ ] Every PSP client in the repository is configured with a timeout.\n- [ ] A decline is not retried, confirmed by a test.\n- [ ] The retry policy stops at its configured limit, and backs off between attempts.\n- [ ] Calls to the PSP stop for the configured period once the failure rate passes its threshold.\n- [ ] A forced timeout in a test environment leaves the payment marked unknown.\n- [ ] The resolver clears an unknown outcome within its configured window, and alerts when it cannot.\n- [ ] The checkout shows a pending message while the outcome is unknown."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4706cec2a28a5379361098c109419195620414b5/examples/payments/standards/authorisation/psp-timeouts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/cbfbc650df56ca60c2b07c750302e74bd3e30750/examples/payments/standards/authorisation/psp-timeouts.md"
   }
 }

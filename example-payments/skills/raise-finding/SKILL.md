@@ -1,8 +1,8 @@
 ---
 name: raise-finding
 description: File something you noticed about this corpus as an issue on the tracker that corpus states. Use when a
-  record here is wrong, missing or out of date, or a lookup answered badly or not at all, and when someone asks you to
-  raise a finding or report it back.
+  record here is wrong, missing or out of date, or `ask-the-corpus` answered badly or not at all, and when someone asks
+  you to raise a finding or report it back.
 ---
 
 # Filing a finding on the corpus
@@ -45,7 +45,7 @@ A fix that is wrong is still a finding, and so is one whose resolution failed, o
 ## Decide that it is a finding
 
 A finding is something you observed that the corpus does not already say: a record that contradicts the estate, a rule
-that misfired on real work, a question a lookup should have answered, a page that sent you the wrong way.
+that misfired on real work, a question `ask-the-corpus` should have answered, a page that sent you the wrong way.
 
 Three other things each have a better route:
 

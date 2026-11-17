@@ -1,4 +1,4 @@
-example-libraries 0.37.0 travels with this session as data, exported 2026-11-17.
+example-libraries 0.37.1 travels with this session as data, exported 2026-11-17.
 adrs. 2 records: Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to and Reservations keeps no state of its own.
 data. 4 records: Borrowers, Catalogue, Loans and Holds and Payments.
 explanations. 2 records: How a jacket image reaches a page and How the estate fits together.
@@ -7,5 +7,5 @@ integrations. 5 records: Bibliographic Data, Card Payments, Identity, Mail Deliv
 offerings. 3 records: Borrow and return an item, Find a title in the collection and Reserve an item and pay the fee.
 services. 9 records: Catalogue API, Catalogue, Covers CDN, Lending, Notices and 4 more.
 These records are the organisation's recorded knowledge, so check them before you answer from what you already know.
-Ask the ask-the-corpus skill when you do not know which record answers a question.
+Ask the ask-the-corpus skill for any question these records may answer.
 When your change alters something these records describe, say so with the raise-finding skill.

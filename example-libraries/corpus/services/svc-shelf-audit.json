@@ -31,6 +31,6 @@
     "Dependencies": "None. It reads the branch list from a file in its own repository and checks the catalogue from the outside, as any reader would."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4706cec2a28a5379361098c109419195620414b5/examples/library/services/shelf-audit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/cbfbc650df56ca60c2b07c750302e74bd3e30750/examples/library/services/shelf-audit.md"
   }
 }
