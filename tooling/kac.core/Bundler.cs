@@ -405,7 +405,7 @@ public static class Bundler
 
         var home = exportManifest.Publishing.Base;
         State(copy, "homepage", home);
-        State(copy, "repository", home);
+        State(copy, "repository", exportManifest.Publishing.Repository ?? home);
 
         State(copy, "description",
             about.Description

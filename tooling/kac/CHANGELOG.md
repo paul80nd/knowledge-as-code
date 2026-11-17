@@ -32,6 +32,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the export carries any of them. `request-deviation` now declares it, and ships only where the export has a clause
   for it to ask about. An entry with an empty alternative stops the run.
 
+### Fixed
+
+- **`kac bundle` names the repository an Azure DevOps wiki corpus is read from.** The plugin manifest's `repository`
+  was the wiki's address, the same as `homepage`. It is now the Git repository `kac export` names in
+  `publishing.repository`, and stays `publishing.base` on every other target.
+
 ## 0.45.0 - 2026-11-12
 
 ### Added

@@ -33,8 +33,9 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It builds a plugin with every component trimmed, and warns.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
-* It fills the plugin manifest's identity from the descriptor, through the export, with `homepage` and `repository`
-  from `publishing.base`. It removes a key the corpus declared nothing for, bar `author`, `description` and `version`.
+* It fills the plugin manifest's identity from the descriptor, through the export, with `homepage` from
+  `publishing.base`. `repository` is the Git repository of an `azure-devops-wiki` corpus, and `publishing.base` on any
+  other target. It removes a key the corpus declared nothing for, bar `author`, `description` and `version`.
   [The plugin manifest](../use/cli/bundle.md#the-plugin-manifest)
 * It cuts the plugin manifest's components to the ones that survived, and keeps every key it does not know.
   [The plugin manifest](#the-plugin-manifest)

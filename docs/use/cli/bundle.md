@@ -210,13 +210,14 @@ claude plugin validate ./.dist --strict
 `metadata.components`. `bundle` fills in who the plugin is from [`.corpus.yaml`](../corpus-descriptor.md), through the
 export:
 
-| Manifest key                                      | Comes from                   |
-|---------------------------------------------------|------------------------------|
-| `name`                                            | `corpus`                     |
-| `version`                                         | `content-version`            |
-| `displayName`, `description`, `license`, `author` | the four keys beside them    |
-| `homepage`, `repository`                          | `publishing.base`            |
-| `keywords`                                        | the types the export carried |
+| Manifest key                                      | Comes from                                                                              |
+|---------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `name`                                            | `corpus`                                                                                |
+| `version`                                         | `content-version`                                                                       |
+| `displayName`, `description`, `license`, `author` | the four keys beside them                                                               |
+| `homepage`                                        | `publishing.base`                                                                       |
+| `repository`                                      | the Git repository of an `azure-devops-wiki` corpus, and `publishing.base` on any other |
+| `keywords`                                        | the types the export carried                                                            |
 
 **`bundle` removes a key the corpus declared nothing for.** Three keys are the exceptions:
 

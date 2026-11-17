@@ -650,6 +650,19 @@ public class BundlerTests
     }
 
     [Fact]
+    public void A_corpus_publishing_from_another_repository_names_that_repository()
+    {
+        var written = Written(
+            Plan(plugin: [(Bundler.ManifestFile, Source())],
+                export: [About(repository: "https://dev.azure.com/acme/Platform/_git/knowledge")]),
+            Bundler.ManifestFile);
+
+        Assert.Equal("https://example.com/corpus", written.GetProperty("homepage").GetString());
+        Assert.Equal("https://dev.azure.com/acme/Platform/_git/knowledge",
+            written.GetProperty("repository").GetString());
+    }
+
+    [Fact]
     public void The_keywords_are_the_types_the_export_carried()
         => Assert.Equal(["knowledge-as-code", "glossary", "policies"],
             Written(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest("glossary", "policies")]),
@@ -1225,7 +1238,7 @@ public class BundlerTests
 
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
 
-    private static (string, string) About() =>
+    private static (string, string) About(string? repository = null) =>
         (Exporter.ManifestFile,
             $$"""
               {
@@ -1238,7 +1251,10 @@ public class BundlerTests
                   "author": { "name": "Paul Law", "url": "https://example.com/paul" },
                   "license": "MIT"
                 },
-                "publishing": { "base": "https://example.com/corpus" },
+                "publishing": {
+                  "base": "https://example.com/corpus",
+                  "repository": {{(repository is null ? "null" : $"\"{repository}\"")}}
+                },
                 "types": [{"type":"glossary","shapeVersion":1,"records":1}]
               }
               """);
