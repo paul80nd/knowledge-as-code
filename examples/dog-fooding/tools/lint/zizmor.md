@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 packages:
-  - { purl: pkg:pypi/zizmor, versions: 1.31.x }
+  - { purl: pkg:pypi/zizmor, versions: 1.32.x }
 homepage: https://docs.zizmor.sh
 licence: MIT
 licence-declared: MIT
