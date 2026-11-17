@@ -16,7 +16,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/deviations/<shortcode>/<record>.json # one a corpus
 Each deviation is its own file, because a deviation is read whole. There is no flat file of parts. Where `deviations`
 is not in `types` in `manifest.json`, this corpus exports none, so say that and stop.
 
-## Find the deviations that bear on the question
+## Find the record
 
 Search `${CLAUDE_PLUGIN_ROOT}/corpus/deviations/` and read every file that hits.
 
@@ -24,6 +24,9 @@ Search `${CLAUDE_PLUGIN_ROOT}/corpus/deviations/` and read every file that hits.
   `std-CONFIG.PIN`, so the record's id alone finds every clause of it.
 * **Search the service id in `applies-to`**, as `svc-kac`, where the question is about one service.
 * **Search the subject** where you know neither, as `SDK` or `package`. The sections are in the author's own words.
+
+Where no deviation matches, the rule applies as written. A departure the work in front of you is about to make from a
+`MUST` or `MUST NOT` needs one accepted. Where `request-deviation` shipped, send that departure to it.
 
 ## Read the record
 
@@ -58,6 +61,9 @@ alone, so it is the one place an export says who accepted a risk.
 **Search a bracketed id inside a section**, as `[ctl-secret-scanner]`. The export drops the link definitions, so the
 id alone is the cross-reference.
 
+**Read the prefix on a `departs-from` entry.** An entry with a prefix, as `eng:pol-AUTV.REPRO`, names a clause the
+corpus with that shortcode wrote. Name the corpus in words.
+
 ## Say whether it is current
 
 A deviation is current where its `status` is the `inForce` value and its `review-by` has not passed. `inForce` is a
@@ -65,8 +71,10 @@ string, `null`, or absent, on the `deviations` entry of `types` in `manifest.jso
 it from the export every time. Read `inForce`, `status` and `review-by`, and say what you saw:
 
 * **The `inForce` value**: accepted and in force. Give `owner`, `accepted-on` and `review-by`.
-* **`draft`**: asked for and accepted by nobody. It permits nothing, so a departure resting on it is not yet allowed.
-* **`closed`**: it ended on `closed-on`. The rule applies again, unless another deviation covers the same clause.
+* **`status: draft`**: asked for and accepted by nobody. It permits nothing, so a departure resting on it is not yet
+  allowed.
+* **`status: closed`**: it ended on `closed-on`. The rule applies again, unless another deviation covers the same
+  clause.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written, and say it permits
   nothing.
 * **`review-by` before today**: the acceptance is due again and nobody has renewed it. The status stays as it was,
@@ -82,17 +90,13 @@ deviation closed or renewed since that day still reads here as it was. Say that 
 link `links.human`. Where `review-by` falls between `generatedAt` and today, say so as well, because that is the case
 most likely to have moved.
 
-## Read the prefix on an id
+## Fetch the source
 
-A deviation under a shortcode folder was written by the corpus with that `shortcode` in `sources` in `manifest.json`.
-An entry in `departs-from` with a prefix, as `eng:pol-AUTV.REPRO`, names a clause that corpus wrote. Name the corpus in
-words.
+`assigned-to`, who does the work that closes the deviation, stays in the record. So does its `Related` section.
 
-## Say what stayed behind
+Where the question needs either, read `${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/retrieval.md` and follow it,
+bringing the deviation's `path`. A deviation under a shortcode folder is published by that corpus, so it reads that
+corpus's publishing block. Link `links.human` beside what you quote.
 
-`assigned-to`, who does the work that closes the deviation, stays in the record. So does its `Related` section. Link
-`links.human` for either.
-
-Where no deviation matches, say so, name the corpus and every entry in `sources` you searched, and say that an empty
-search states only that nobody has written a deviation down. A departure the work in front of you is about to make
-from a `MUST` or `MUST NOT` needs one accepted. Where `request-deviation` shipped, send that departure to it.
+**Where the record cannot be fetched**, link `links.human` and say that `assigned-to` and `Related` did not come with
+the plugin. State neither from your own reasoning.

@@ -1,17 +1,11 @@
----
-name: corpus-retrieval
-description: Fetch the published source of a record this corpus export summarises. Load it from a lookup skill that
-  has found what it was asked for and needs the words the export left behind.
----
-
 # Reading a record's published source
 
 An export is a copy taken on a day. A type carries as much of a record as a reader needs to judge it, and the rest
-stays in the corpus that published it. This skill fetches the rest, so an answer can quote what the record says rather
-than what the summary suggests. Every type reads the same way.
+stays in the corpus that published it. Fetch the rest, so an answer can quote what the record says rather than what
+the summary suggests. Every type reads the same way.
 
-**The skill that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came from a
-parts file.
+**The reference file that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came
+from a parts file.
 
 Fetching runs `gh` on GitHub or `az` on Azure DevOps. Where neither can run, ask whoever is with you for the section
 you need.
@@ -43,7 +37,7 @@ Only GitHub serves a public repository's source without credentials. Everywhere 
 the platform fetches it. That client is already there: it is the one that opens an issue or a work item when something
 needs writing back.
 
-This skill gives no command. Write the fetch yourself, for the shell and the client you have, because a command written
+This file gives no command. Write the fetch yourself, for the shell and the client you have, because a command written
 for another shell fails in yours. Each platform below states what you could not work out.
 
 ### GitHub

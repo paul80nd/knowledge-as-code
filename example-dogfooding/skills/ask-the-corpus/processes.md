@@ -1,17 +1,12 @@
 ---
-name: process-lookup
-description: Find the procedure for a planned task, in the processes that travel with this plugin. Use when someone
-  asks how a task is carried out here, or which processes there are. Use it as well, unprompted, before you carry out
-  a planned task somebody here may already have written down.
+trigger: Use before a planned task that may be written down, or when asked how a task is done or which processes exist.
 ---
 
-# Finding the process for a task
+# Following a process
 
 A process states how the estate carries out a planned task. Work in the shape it sets out, and judge each step against
 the work in front of you, because a step states an outcome and the means are yours. Find the one process written for
 the task, then quote and cite it, so the person you work with can see whose order you are working to.
-
-The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                       # what this export is, and where each corpus publishes
@@ -19,21 +14,38 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<record>.json             # one process t
 ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<shortcode>/<record>.json # one process a corpus this one consumes wrote
 ```
 
-Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
+The export has the trigger and the prerequisites, which decide whether a process is yours. The steps stay in the
+published record, so a process found here is not ready to follow until you fetch it.
 
-## Find the one process for the task
+## Find the record
 
 A process is written for one task, so look for the single one whose trigger is your situation. Two processes followed
 together interleave two orders, and each assumes the state the other left out. A task done because something broke is a
-runbook's, and a runbook is its own type.
+runbook's, and a runbook is its own type: read `runbooks.md`.
 
 Each process is its own file, because a process is read whole. Search `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`, and
 read the files that hit.
 
+**Read the trigger to test a task in hand.** Where the question is whether a task in hand already has a process, read
+the `When to use this` of each process on its subject. Two processes can achieve similar things from different triggers.
+
+**Where someone asks which processes the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`.** Each file is one
+process. A file under `corpus/processes/<shortcode>/` came from a corpus this one consumes, and it counts as fully as
+one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:prc-release`. Answer with each process's
+id and `fields.title`, so a reader can open each one.
+
+**Where someone asks what nothing covers, read `reports.md`, and stop here.** Coverage is a question about the whole
+corpus, and a report is what answers it.
+
+Where no process matches, offer the task as one worth a process. An empty search states only that the estate has not
+written this down: it supplies no order.
+
+## Read the record
+
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 Both section keys are always present, because this type requires both sections.
 
-| Key                          | Type                     | What it holds                                                                                        |
+| Field                        | Type                     | What it holds                                                                                        |
 |------------------------------|--------------------------|------------------------------------------------------------------------------------------------------|
 | `fields.id`                  | string                   | the address to cite the process by                                                                   |
 | `fields.title`               | string                   | what the process achieves                                                                            |
@@ -53,31 +65,7 @@ similar things. The trigger says which one was written for your situation.
 **Check `Prerequisites` before anybody starts.** Say what is missing before the first step, because a gap found after
 four steps leaves the work half done.
 
-## Read the steps from the published record
-
-The export has the trigger and the prerequisites, which decide whether the process is yours. `Steps`, `Verification`
-and any rollback stay in the published record. Load `corpus-retrieval` to fetch it. It reads the record at the commit
-the export was taken at, so the steps you get are the ones written beside the trigger you read. Quote `links.human` to
-a person. Work only from the steps you fetched. A plausible order written from the trigger looks the same to a reader
-as the one their colleagues follow.
-
-## Read the prefix on an id
-
-**A prefix names the corpus that wrote the process.** `eng:prc-release` was published by the corpus with shortcode
-`eng`, and a bare `prc-release` was written here. `eng:prc-release` is at
-`${CLAUDE_PLUGIN_ROOT}/corpus/processes/eng/prc-release.json`. Look the `shortcode` up in `sources` in `manifest.json`,
-and name that corpus in words.
-
-## Say what stayed behind
-
-`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
-published process for the rest.
-
-* **Every process's Steps, Verification and If it goes wrong** stay in the record.
-* **The services in `applies-to`** are here only where `services` travelled. Otherwise report the ids alone.
-* **A runbook for something broken** is here only where `runbooks` travelled, and no skill here reads it.
-
-## Say when a process is unsettled
+## Say whether it is current
 
 Read the `status` that puts a process in force from `inForce`, a string, `null`, or absent, on the `processes` entry of
 `types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
@@ -99,23 +87,24 @@ the key existed has none. Say so, and give `status` as written. Call no process 
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
-## List the processes that travelled
+## Fetch the source
 
-**Where someone asks which processes the estate has, list `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`.** Each file is
-one process. A file under `corpus/processes/<shortcode>/` came from a corpus this one consumes, and it counts as fully
-as one written here. Its `fields.id` is bare, so cite it with the prefix, as `eng:prc-release`.
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published process for the rest.
 
-Answer with each process's id and `fields.title`, so a reader can open each one.
+* **Every process's `Steps`, `Verification` and `If it goes wrong`** stay in the record.
+* **The services in `applies-to`** are here only where `services` travelled. Otherwise report the ids alone.
+* **A runbook for something broken** is here only where `runbooks` travelled.
 
-**Read the trigger to test a task in hand.** Where the question is whether a task in hand already has a process,
-read the `When to use this` of each process on its subject. Two processes can achieve similar things from different
-triggers.
+**Fetch the record for every process you work to, because the steps are only there.** Read
+`${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/retrieval.md` and follow it, bringing the process's `path`. A process
+under a shortcode folder is published by that corpus, so the fetch reads that corpus's publishing block. It reads the
+record at the commit the export was taken at, so the steps you get are the ones written beside the trigger you read.
+Quote `links.human` to a person.
 
-**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
-whole corpus, and a report is what answers it.
+**Work only from the steps you fetched.** A plausible order written from the trigger looks the same to a reader as the
+one their colleagues follow.
 
-## Say when there is nothing
-
-Where no process matches, say that nothing in this export describes a procedure for the task. Name the corpus and every
-entry in `sources` from `manifest.json`, so the reader knows what was searched. An empty search states only that the
-estate has not written this down: it supplies no order. Offer the task as one worth a process.
+**Where the record cannot be fetched**, give the process's `id`, `title` and `links.human`, and say that its steps did
+not come with the plugin. State no steps of your own. Ask the reader to open the link, or to paste the steps so you can
+work through them together.

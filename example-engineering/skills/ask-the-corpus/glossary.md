@@ -1,8 +1,5 @@
 ---
-name: glossary-lookup
-description: Look a term up in the knowledge corpus glossary that travels with this plugin. Use when someone asks what a
-  word means here, how two words differ, or which terms there are. Use it as well, unprompted, when a noun in this
-  repository names something in the business that you cannot define from the code around it.
+trigger: Use when asked what a term means, how two differ or which exist, or on a business noun the code cannot define.
 ---
 
 # Looking a term up in the glossary
@@ -11,8 +8,6 @@ A glossary states what the estate means by its words. Use the entry as the meani
 meaning inferred from usage is fluent and often belongs to some other estate. Quote and cite the entry, so the person
 you work with can check you read it correctly.
 
-The corpus travels with this plugin as data. There is nothing to install and nothing to run.
-
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl               # one line of JSON per term. Search this
@@ -20,11 +15,10 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json             # one glossary t
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<shortcode>/<record>.json # one glossary a corpus this one consumes wrote
 ```
 
-Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
+## Find the record
 
-## Find the term
-
-`terms.jsonl` contains this corpus's terms and those of every corpus it consumes, so one file reaches them all.
+`terms.jsonl` contains this corpus's terms and those of every corpus it consumes, so one file reaches them all. A term
+from a consumed corpus carries its prefix on `id`, `record` and every `seeAlso` value, as `eng:gls-estate.borrower`.
 
 **A term answers to more than its heading.** `also` gives other names for the same thing, and `avoid` gives a name the
 corpus has dropped. Search both before you say a word is undefined, because the word you were asked about often sits in
@@ -32,6 +26,29 @@ corpus has dropped. Search both before you say a word is undefined, because the 
 
 **Read the `title` of every hit before you use it.** The field names in this file are ordinary English words: `title`,
 `record`, `definition`, `status`, `type`. A search for one of those matches every line in the file.
+
+**Where the corpus has not defined your word, say so in the spelling you were asked about.** Quote the nearest entry,
+and say what it defines. Whether your word means what that entry means is a ruling for the glossary's owner. Where no
+entry comes near, answer from the code if you can, marked as your reading of the code, and offer the term as one worth
+adding to the glossary.
+
+### List the glossaries that travelled
+
+**Where someone asks which terms the estate defines, group `terms.jsonl` by `record`.** Each group is one glossary,
+and each line in it is one term, under its `title`. A glossary whose record sits under `corpus/glossary/<shortcode>/`
+came from a corpus this one consumes. Its terms are in the same file under its prefix. A line gives no glossary title,
+so read `fields.title`, a string, from the glossary's own file.
+
+Answer with each glossary's id and title, and each term's `id` and `title`, so a reader can open each one.
+
+**Read the definition to test a meaning in hand.** Where the question is whether a meaning in hand is already
+defined, read the `definition` and `not` of each entry on its subject, and compare the wording. A term with the right
+title can still mean something else here.
+
+**Where someone asks what nothing covers, read `reports.md`, and stop here.** Coverage is a question about the whole
+corpus, and a report is what answers it.
+
+## Read the record
 
 Each line is one entry of a glossary:
 
@@ -56,30 +73,7 @@ Each line is one entry of a glossary:
 corpus exported before a key existed can lack `also`, `avoid` and `links`, and `shortcode` is absent on a term written
 here. Read a missing `also` or `avoid` as a `null` one: the corpus said nothing there.
 
-## Read the prefix on an id
-
-**A prefix names the corpus that wrote the entry.** `eng:gls-estate.borrower` was published by the corpus with
-shortcode `eng`, and a bare `gls-estate.borrower` was written here. The prefix is on `id`, `record` and every `seeAlso`
-value. Look its `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
-
-**A record file sits under its producer's shortcode.** `eng:gls-estate` is
-`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and a bare `gls-estate` is
-`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/gls-estate.json`.
-
-## Read every entry that shares a title
-
-The file's order carries no ranking, so read every hit before you answer. One estate defines *record* as a thing on a
-shelf, and another as a markdown file under version control. Open the owning record for each hit, and read two things:
-
-* **`fields.narrows`.** Where one glossary narrows the other, the narrower entry wins wherever its context applies. A
-  consuming corpus narrowing a term it inherited is the ordinary case.
-* **`sections.Scope`.** Where neither narrows the other, the two are separate words with one spelling. The right entry
-  is the one whose Scope admits the thing being asked about.
-
-Where the question does not settle the context, give both meanings, and say which glossary and which corpus each came
-from.
-
-## Answer
+Answer from the entry in this order:
 
 * **Give the definition, then the `not` line**, because a reader who gets only the definition applies the term to
   things it excludes.
@@ -89,15 +83,21 @@ from.
   without decoding an id.
 * **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids.
 
-Quote `links.human` to link the term. It lands on the term's own heading. To read the source, load `corpus-retrieval`
-and bring it the line's `path` and `anchor`. A line with no `links` goes there too.
+### Read every entry that shares a title
 
-## Say what stayed behind
+The file's order carries no ranking, so read every hit before you answer. One estate defines *record* as a thing on a
+shelf, and another as a markdown file under version control. Open the owning record for each hit, and read two things:
 
-`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
-published glossary for the rest. Every section of a glossary except its Scope stays in the record.
+* **`fields.narrows`, a string or null.** It is the id of the more general glossary this one narrows. Where one
+  glossary narrows the other, the narrower entry wins wherever its context applies. A consuming corpus narrowing a
+  term it inherited is the ordinary case.
+* **`sections.Scope`, a string of markdown.** Where neither narrows the other, the two are separate words with one
+  spelling. The right entry is the one whose Scope admits the thing being asked about.
 
-## Say when an entry is unsettled
+Where the question does not settle the context, give both meanings, and say which glossary and which corpus each came
+from.
+
+## Say whether it is current
 
 Read the `status` that puts an entry in force from `inForce`, a string, `null`, or absent, on the `glossary` entry of
 `types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
@@ -114,31 +114,14 @@ the key existed has none. Say so, and give `status` as written. Call no entry in
 
 The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
-## Say when the nearest entry is about something else
+## Fetch the source
 
-Where the corpus has not defined your word, say so in the spelling you were asked about. Quote the nearest entry, and
-say what it defines. Whether your word means what that entry means is a ruling for the glossary's owner. A nearest
-entry passed off as the entry is a definition nobody wrote.
+Every section of a glossary except its Scope stays in the record. `types` in `manifest.json` lists what travelled.
+Read it before you say anything is missing, and send the reader to the published glossary for the rest.
 
-## List the glossaries that travelled
+Quote `links.human` to link the term. It lands on the term's own heading.
 
-**Where someone asks which terms the estate defines, group `terms.jsonl` by `record`.** Each group is one glossary,
-and each line in it is one term, under its `title`. A glossary whose record sits under `corpus/glossary/<shortcode>/`
-came from a corpus this one consumes. Its terms are in the same file under its prefix, and they count as fully as the
-ones written here. A line gives no glossary title, so read `fields.title`, a string, from the glossary's own file.
-
-Answer with each glossary's id and title, and each term's `id` and `title`, so a reader can open each one.
-
-**Read the definition to test a meaning in hand.** Where the question is whether a meaning in hand is already
-defined, read the `definition` and `not` of each entry on its subject, and compare the wording. A term with the right
-title can still mean something else here.
-
-**Where someone asks what nothing covers, load `ask-the-corpus`, and stop here.** Coverage is a question about the
-whole corpus, and a report is what answers it.
-
-## Say when there is nothing
-
-Where no entry matches, say the term is defined nowhere in this export. Name the corpus and every entry in `sources`
-from `manifest.json`, so the reader knows what was searched. An empty search states only that the estate has not
-written this down. Answer from the code if you can, marked as your reading of the code, and offer the term as one worth
-adding to the glossary.
+To read the source, read `${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/retrieval.md` and follow it, bringing the line's
+`path` and `anchor`. A line with no `links` goes there too. Where the fetch fails, give the entry as it travelled, say
+that the rest of the glossary did not come with the plugin, and send the reader to `links.human` where the line has
+one.

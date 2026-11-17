@@ -1,4 +1,4 @@
-example-dogfooding 0.104.0 travels with this session as data, exported 2026-11-17.
+example-dogfooding 0.105.0 travels with this session as data, exported 2026-11-17.
 controls. 18 records: Nothing checks a page or the output for accessibility, Every workflow passes actionlint, A pinned component's assessment names the version it is pinned at, A version carries the changelog section its release publishes, Every corpus whose export, lock or bundle changed has moved its content-version and 13 more.
 controls (from eng). 9 records: Nothing checks that an alert names an owner and a first action, Nothing checks that an interface change carries a version and a notice, Nothing checks that a .NET build collects coverage, Nothing checks that a running service reports its commit, Nothing checks that an image is named by digest and 4 more.
 deviations. 14 records: The reasoning behind a decision lives in the commit that made it, A consumer of the export gets no notice period, A generated file keeps no record of the run that wrote it, Everything here runs on GitHub, and nothing says how it would leave, There is no incident process, so everything is handled informally and 9 more.
@@ -15,5 +15,5 @@ adrs (from eng). 1 record: Knowledge as code: a structured, validated wiki that 
 glossary (from eng). 33 entries across 2 records: Engineering and Knowledge as code.
 policies (from eng). 276 entries across 24 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 19 more.
 These records are the organisation's recorded knowledge, so check them before you answer from what you already know.
-Ask the ask-the-corpus skill when you do not know which record answers a question, and a lookup skill such as glossary-lookup for a known need.
+Ask the ask-the-corpus skill when you do not know which record answers a question.
 When your change alters something these records describe, say so with the raise-finding skill.

@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.35.0",
+    "contentVersion": "0.36.0",
     "types": [
       "adrs",
       "data",
@@ -19,18 +19,6 @@
   },
   "included": [
     {
-      "path": "skills/corpus-retrieval",
-      "requires": [],
-      "note": "Reaches the published source of a record the export summarises. It names no type, so it supports the lookup skills and travels only where at least one of them did."
-    },
-    {
-      "path": "skills/glossary-lookup",
-      "requires": [
-        "glossary@1"
-      ],
-      "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
-    },
-    {
       "path": "skills/raise-finding",
       "requires": [],
       "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
@@ -38,7 +26,14 @@
     {
       "path": "skills/ask-the-corpus",
       "requires": [],
-      "note": "Sends a question with no known place to the lookup skill for its type, or to the reference file beside it for a type no lookup reads. kac bundle writes its description from the trigger line of each reference file that travelled. It needs no type of its own, so it travels only where something it routes to did."
+      "note": "Answers a question from the corpus, reading each exported type through the reference file beside it, and fetches a record's published source through retrieval.md. kac bundle lists the trigger line of each reference file that travelled beside its description. It needs no type of its own, so it travels only where something it reads did."
+    },
+    {
+      "path": "skills/ask-the-corpus/glossary.md",
+      "requires": [
+        "glossary@1"
+      ],
+      "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
     },
     {
       "path": "hooks",
@@ -53,6 +48,41 @@
         "standards|policies"
       ],
       "reason": "the export carries no standards or policies"
+    },
+    {
+      "path": "skills/ask-the-corpus/standards.md",
+      "requires": [
+        "standards@3"
+      ],
+      "reason": "the export carries no standards"
+    },
+    {
+      "path": "skills/ask-the-corpus/policies.md",
+      "requires": [
+        "policies@2"
+      ],
+      "reason": "the export carries no policies"
+    },
+    {
+      "path": "skills/ask-the-corpus/controls.md",
+      "requires": [
+        "controls@3"
+      ],
+      "reason": "the export carries no controls"
+    },
+    {
+      "path": "skills/ask-the-corpus/processes.md",
+      "requires": [
+        "processes@2"
+      ],
+      "reason": "the export carries no processes"
+    },
+    {
+      "path": "skills/ask-the-corpus/fixes.md",
+      "requires": [
+        "fixes@2"
+      ],
+      "reason": "the export carries no fixes"
     },
     {
       "path": "skills/ask-the-corpus/deviations.md",
@@ -74,41 +104,6 @@
         "runbooks@3"
       ],
       "reason": "the export carries no runbooks"
-    },
-    {
-      "path": "skills/controls-lookup",
-      "requires": [
-        "controls@3"
-      ],
-      "reason": "the export carries no controls"
-    },
-    {
-      "path": "skills/fix-lookup",
-      "requires": [
-        "fixes@2"
-      ],
-      "reason": "the export carries no fixes"
-    },
-    {
-      "path": "skills/policy-lookup",
-      "requires": [
-        "policies@2"
-      ],
-      "reason": "the export carries no policies"
-    },
-    {
-      "path": "skills/process-lookup",
-      "requires": [
-        "processes@2"
-      ],
-      "reason": "the export carries no processes"
-    },
-    {
-      "path": "skills/standards-lookup",
-      "requires": [
-        "standards@3"
-      ],
-      "reason": "the export carries no standards"
     },
     {
       "path": "skills/standards-review",

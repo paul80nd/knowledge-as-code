@@ -17,7 +17,7 @@ Only an index entry travels. The body stays in the corpus that published it, so 
 exists, how old it is and how far it was checked, and you fetch the body to answer from it. Where `reports` is not in
 `types` in `manifest.json`, this corpus exports none, so say that and stop.
 
-## Find the report that answers the question
+## Find the record
 
 Read every file under `${CLAUDE_PLUGIN_ROOT}/corpus/reports/`. There are few, and each is short.
 
@@ -25,10 +25,9 @@ Read every file under `${CLAUDE_PLUGIN_ROOT}/corpus/reports/`. There are few, an
 * **Read `generated.report`** where it is there. It names the `kac report` the content started from, as `coverage` or
   `frameworks`.
 
-Where none matches, say that no report here answers the question, and name the corpus and every entry in `sources` you
-searched.
+Where none matches, say that no report here answers the question.
 
-## Read the index entry
+## Read the record
 
 Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
 
@@ -56,7 +55,9 @@ Each entry in `sources` has `resource`, a string naming the corpus, and `version
 `trust` is worked out from `verified` at export. A check made before `generated.at` does not count, so a report edited
 after its last check reads `unverified` even where `verified` lists a person.
 
-## Say whether it is true of this corpus
+## Say whether it is current
+
+### Compare the versions it is true of
 
 Compare each entry in `sources` with `manifest.json`, which needs no network call:
 
@@ -68,27 +69,33 @@ Where every version matches, the report is true of the corpus installed here. Wh
 past the report. Name each corpus, the version the report is true of and the version installed, and say the report may
 miss what changed between them.
 
+### Read its status
+
 Read the `status` that puts a report in force from `inForce`, a string, `null`, or absent, on the `reports` entry of
 `types` in `manifest.json`. The schema can change it, so take it from the export every time.
 
 * **The `inForce` value**: in force. Answer from it.
-* **`draft`**: nobody has checked it. Say so before you give any of it.
-* **`stale`**: the corpus has moved past it. Say so before you give any of it.
+* **`status: draft`**: nobody has checked it. Say so before you give any of it.
+* **`status: stale`**: the corpus has moved past it. Say so before you give any of it.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
 the key existed has none. Say so, and give `status` as written. Call no report in force on the strength of its status.
 `draft` and `stale` still mean what the bullets above say.
 
-## Fetch the body and answer from it
+**Quote `generatedAt` from `manifest.json` beside any of these.** The index entry reads as it stood that day, so a
+report regenerated or marked `stale` since still reads here as it was. Say that the record may have moved since.
 
-Load `corpus-retrieval` and bring it the report's `path`. A report under a shortcode folder is published by that
-corpus, so it reads that corpus's publishing block.
+## Fetch the source
+
+The body stays behind, so fetch it before you answer. Read `${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/retrieval.md`
+and follow it, bringing the report's `path`. A report under a shortcode folder is published by that corpus, so it reads
+that corpus's publishing block.
 
 Answer from the body. Quote its `Limits` section, and any section saying what it leaves open, because those say how far
 the reader can rely on the answer. Give `generated.at`, `trust` and the version comparison beside it, and link
 `links.human`.
 
 **Where the body cannot be fetched**, give the report's `title`, the date in `generated.at` and `links.human`. Say that
-you could not read its limits, and state none of them. Any answer you then build from the lookups is yours, without the
-report's verdicts, so say so where you give one.
+you could not read its limits, and state none of them. Any answer you then build from the other reference files, such
+as `standards.md` and `controls.md`, is yours, without the report's verdicts, so say so where you give one.

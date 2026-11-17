@@ -34,11 +34,10 @@ print the body and stop.
 ## Check whether the corpus already says it
 
 **Search the fixes before you file anything about a problem**, because a problem somebody already wrote down is
-answered in the export beside you. Load `fix-lookup` and give it your symptom. Where it returns a fix that resolves
-the problem, follow it and file nothing.
+answered in the export beside you. Load `ask-the-corpus` and give it your symptom. Where it returns a fix that
+resolves the problem, follow it and file nothing.
 
-Where this plugin has no `fix-lookup`, the corpus declined the `fixes` type, and `types` in `manifest.json` says so.
-The finding is then the only route.
+Where `fixes` is not in `types` in `manifest.json`, the corpus declined the type, and the finding is the only route.
 
 A fix that is wrong is still a finding, and so is one whose resolution failed, or one your words did not reach. Say in
 `## What I saw` which fix you read and which words missed it.

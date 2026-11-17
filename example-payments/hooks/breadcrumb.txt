@@ -1,4 +1,4 @@
-example-payments 0.48.0 travels with this session as data, exported 2026-11-17.
+example-payments 0.49.0 travels with this session as data, exported 2026-11-17.
 fixes. 2 records: One order shows two authorisations on the cardholder's statement and The reconciliation reports breaks on refunds issued just before midnight UTC.
 nfrs. 3 records: A customer waits under a second to hear whether their card was accepted, A recovered ledger loses at most five minutes of payments and A refund reaches the PSP within the hour.
 offerings. 2 records: Pay for an order with a card and Get money back for an order.
@@ -12,5 +12,5 @@ glossary (from eng). 33 entries across 2 records: Engineering and Knowledge as c
 policies (from eng). 276 entries across 24 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 19 more.
 reports (from eng). 1 record: Framework coverage.
 These records are the organisation's recorded knowledge, so check them before you answer from what you already know.
-Ask the ask-the-corpus skill when you do not know which record answers a question, and a lookup skill such as glossary-lookup for a known need.
+Ask the ask-the-corpus skill when you do not know which record answers a question.
 When your change alters something these records describe, say so with the raise-finding skill.

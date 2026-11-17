@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.104.0",
+  "version": "0.105.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.104.0",
+    "contentVersion": "0.105.0",
     "types": [
       "controls",
       "deviations",
@@ -24,18 +24,6 @@
   },
   "included": [
     {
-      "path": "skills/corpus-retrieval",
-      "requires": [],
-      "note": "Reaches the published source of a record the export summarises. It names no type, so it supports the lookup skills and travels only where at least one of them did."
-    },
-    {
-      "path": "skills/glossary-lookup",
-      "requires": [
-        "glossary@1"
-      ],
-      "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
-    },
-    {
       "path": "skills/raise-finding",
       "requires": [],
       "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
@@ -50,7 +38,49 @@
     {
       "path": "skills/ask-the-corpus",
       "requires": [],
-      "note": "Sends a question with no known place to the lookup skill for its type, or to the reference file beside it for a type no lookup reads. kac bundle writes its description from the trigger line of each reference file that travelled. It needs no type of its own, so it travels only where something it routes to did."
+      "note": "Answers a question from the corpus, reading each exported type through the reference file beside it, and fetches a record's published source through retrieval.md. kac bundle lists the trigger line of each reference file that travelled beside its description. It needs no type of its own, so it travels only where something it reads did."
+    },
+    {
+      "path": "skills/ask-the-corpus/standards.md",
+      "requires": [
+        "standards@3"
+      ],
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
+    },
+    {
+      "path": "skills/ask-the-corpus/policies.md",
+      "requires": [
+        "policies@2"
+      ],
+      "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+    },
+    {
+      "path": "skills/ask-the-corpus/controls.md",
+      "requires": [
+        "controls@3"
+      ],
+      "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+    },
+    {
+      "path": "skills/ask-the-corpus/processes.md",
+      "requires": [
+        "processes@2"
+      ],
+      "note": "Reads a process from corpus/processes/, and fetches its steps through retrieval.md, because a process export carries the trigger and not the order."
+    },
+    {
+      "path": "skills/ask-the-corpus/fixes.md",
+      "requires": [
+        "fixes@2"
+      ],
+      "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
+    },
+    {
+      "path": "skills/ask-the-corpus/glossary.md",
+      "requires": [
+        "glossary@1"
+      ],
+      "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
     },
     {
       "path": "skills/ask-the-corpus/deviations.md",
@@ -72,41 +102,6 @@
         "runbooks@3"
       ],
       "note": "Answers from corpus/runbooks/ when something is failing now."
-    },
-    {
-      "path": "skills/controls-lookup",
-      "requires": [
-        "controls@3"
-      ],
-      "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit. Where someone asks what nothing covers across the corpus, it reads corpus/reports/ through ask-the-corpus/reports.md."
-    },
-    {
-      "path": "skills/fix-lookup",
-      "requires": [
-        "fixes@2"
-      ],
-      "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit. Where no fix matches, or something is broken now, it reads corpus/runbooks/ through ask-the-corpus/runbooks.md."
-    },
-    {
-      "path": "skills/policy-lookup",
-      "requires": [
-        "policies@2"
-      ],
-      "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
-    },
-    {
-      "path": "skills/process-lookup",
-      "requires": [
-        "processes@2"
-      ],
-      "note": "Reads a process from corpus/processes/ and hands the steps to corpus-retrieval, because a process export carries the trigger and not the order."
-    },
-    {
-      "path": "skills/standards-lookup",
-      "requires": [
-        "standards@3"
-      ],
-      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it. Lists the standards from views/build-index.md where that view survived."
     },
     {
       "path": "skills/standards-review",

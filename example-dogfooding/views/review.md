@@ -358,22 +358,20 @@ Controls: none.
 - Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
 - What a hook pushes **SHOULD** state facts, because Claude Code passes it to the session as context.
 
-### A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
+### A router reads each type from a file it loads when a question is routed there
 
 Cite as `std-PLUGIN.ROUTER`.
 
 Controls: none.
 
-- A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill shipped.
-- Where that lookup did not ship, a router **MUST** say so and name the type it needed.
-- A router **MUST** read a type that no lookup skill reads from a reference file beside its `SKILL.md`.
+- A router **MUST** read each type it answers from a reference file beside its `SKILL.md`.
 - A router **MUST** read a reference file only when a question is routed to it, because a file costs a session nothing until it is read.
 - Where the reference file for a type did not ship, a router **MUST** say so and name the type it needed.
 - A router **MUST** declare each reference file as its own component, requiring the type that file reads at the shape it reads.
 - A reference file **MUST** state a `trigger:` in its frontmatter, naming the case that sends a question to it.
-- A router's own description **MUST** name only the cases that reach no reference file, because `kac bundle` adds the trigger of each reference file that shipped.
+- A router's own description **MUST** name only the cases that reach no reference file, because `kac bundle` lists the trigger of each reference file that shipped beside it.
 - A router answering from a report **MUST** compare each version in the report's `sources` with `manifest.json`.
-- A router answering from a report **MUST** fetch the report's body through `corpus-retrieval`, and answer from it.
+- A router answering from a report **MUST** fetch the report's body through its `retrieval.md`, and answer from it.
 - A router answering from a report **MUST NOT** rebuild the report's answer from the records of other types.
 - Where the body cannot be fetched, a router **MUST** give the report's title, its `generated.at` and its link.
 - Where the body cannot be fetched, a router **MUST NOT** state a limit of the report.
@@ -882,7 +880,7 @@ Controls: none.
 - A change **MUST** reach each environment below production by promotion from the one before it.
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment.
 - The pipeline definition **MUST** be committed to the repository, and reviewed like the code.
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/81e3225f93aa2d4685a50de9baca9911415bd100/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema, other than a flag change made under [pol-PIPE](https://github.com/paul80nd/knowledge-as-code/blob/de18cf6b2aa58aa72ff4dfec5a2a22fa92d27734/examples/engineering/policies/delivery/pipe-pipeline-to-production.md#clauses).FLAGS.
 - A team changing production by hand to restore service, where the pipeline is unavailable or its delay would extend an outage, **MUST** record a deviation at the time.
 - A team **MUST** commit a hand change made to restore service to the repository before the incident closes.
 
@@ -1064,7 +1062,7 @@ Controls: none.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/81e3225f93aa2d4685a50de9baca9911415bd100/examples/engineering/standards/common/dependencies.md#conformance-checklist).
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](https://github.com/paul80nd/knowledge-as-code/blob/de18cf6b2aa58aa72ff4dfec5a2a22fa92d27734/examples/engineering/standards/common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
@@ -1112,7 +1110,7 @@ Cite as `eng:std-OBS.PII`.
 Controls: none.
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/81e3225f93aa2d4685a50de9baca9911415bd100/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label. [std-SECRET.NOWHERE](https://github.com/paul80nd/knowledge-as-code/blob/de18cf6b2aa58aa72ff4dfec5a2a22fa92d27734/examples/engineering/standards/common/secret-handling.md#nowhere-nowhere-else-holds-a-secret) states where a secret may appear.
 
 ## eng:std-PR: A pull request carries its reasoning and one accountable approval
 

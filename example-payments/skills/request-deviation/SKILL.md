@@ -45,8 +45,7 @@ Five other things each have their own route:
 
 * **A clause you think is wrong** is a finding, and `raise-finding` files it. A finding reports what you noticed. A
   request asks somebody to carry a risk.
-* **A clause you may have misread** needs its wording again. Ask `standards-lookup` or `policy-lookup`, and read what it
-  obliges.
+* **A clause you may have misread** needs its wording again. Ask `ask-the-corpus` for it, and read what it obliges.
 * **A departure from a `SHOULD` or `SHOULD NOT` in a standard** needs nobody's acceptance. Say why in the change, and
   file nothing here.
 * **A shortcut that breaks no clause** is technical debt. It is still recorded, dated and owned, with `none` in
@@ -56,8 +55,8 @@ Five other things each have their own route:
 
 ## Read the clause before you ask
 
-**Quote the clause in the words the export has.** Ask `standards-lookup` or `policy-lookup` for it, because an owner
-reading a paraphrase has to go and check the rule before they can answer.
+**Quote the clause in the words the export has.** Ask `ask-the-corpus` for it, because an owner reading a paraphrase
+has to go and check the rule before they can answer.
 
 **Read the record's own exceptions.** A policy's export has its `Exceptions` section whole, and a standard's rule says
 in its own words where it admits a departure. Some commitments admit none, and the record names them. Where yours is

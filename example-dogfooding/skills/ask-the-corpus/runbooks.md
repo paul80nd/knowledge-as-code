@@ -13,12 +13,10 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/<record>.json             # one runbook th
 ${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/<shortcode>/<record>.json # one a corpus this one consumes wrote
 ```
 
-Each runbook is its own file, and there is no flat file of parts. Of the sections, only `Symptoms` and `Impact` travel.
-The steps and the `Afterwards` and `Related` sections stay in the corpus that published the runbook, because a reader
-who has found the right runbook fetches it whole. Where `runbooks` is not in `types` in
+Each runbook is its own file, and there is no flat file of parts. Where `runbooks` is not in `types` in
 `manifest.json`, this corpus exports none, so say that and stop.
 
-## Find the runbook that matches the symptom
+## Find the record
 
 Search `${CLAUDE_PLUGIN_ROOT}/corpus/runbooks/` and read every file that hits.
 
@@ -49,8 +47,7 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 | `path`                       | string                   | where the runbook sits in its own repository                                                                          |
 | `links`                      | object, or null          | the built link to that runbook, under `human`                                                                         |
 
-`Symptoms` and `Impact` are always present, because the type requires them. A runbook under a shortcode folder was
-written by the corpus with that `shortcode` in `sources` in `manifest.json`. Name that corpus in words.
+`Symptoms` and `Impact` are always present, because the type requires them.
 
 ## Say whether it is current
 
@@ -58,8 +55,8 @@ Read the `status` that puts a runbook in force from `inForce`, a string, `null`,
 `types` in `manifest.json`. The schema can change it, so take it from the export every time.
 
 * **The `inForce` value**: in force. Answer from it.
-* **`draft`**: nobody has settled it. Say so before you give any of it.
-* **`retired`**: stood down. Say so, and search again for the runbook that replaced it.
+* **`status: draft`**: nobody has settled it. Say so before you give any of it.
+* **`status: retired`**: stood down. Say so, and search again for the runbook that replaced it.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
@@ -73,11 +70,14 @@ these, and say the record may have moved since.
 **Give who walked it and how, from `by` and `method`.** A `tabletop` walk read the steps against the system and never
 caused the fault, so a step that only the fault exercises is untried.
 
-## Fetch the steps and answer from them
+## Fetch the source
 
-Quote the runbook's `id`, `title`, the symptom that matched and its `Impact`. Then load `corpus-retrieval` and bring
-it the runbook's `path`. A runbook under a shortcode folder is published by that corpus, so it reads that corpus's
-publishing block.
+Of the sections, only `Symptoms` and `Impact` travel. The steps and the `Afterwards` and `Related` sections stay in the
+corpus that published the runbook, because a reader who has found the right runbook fetches it whole.
+
+Quote the runbook's `id`, `title`, the symptom that matched and its `Impact`. Then read
+`${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/retrieval.md` and follow it, bringing the runbook's `path`. A runbook
+under a shortcode folder is published by that corpus, so it reads that corpus's publishing block.
 
 Answer from the fetched record. `Immediate actions`, the section after `Impact`, is what to do first. Give the steps
 in the order the runbook gives them, and link `links.human`.
