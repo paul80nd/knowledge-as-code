@@ -14,7 +14,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, writeSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 
-const method = 9;
+const method = 10;
 
 // Prints a message to stderr and exits. The write is synchronous, so the exit cannot cut the message off.
 function stop(status, message) {
@@ -121,6 +121,7 @@ function sessions(result, only) {
       runs.forEach((run, i) => {
         rows.push([kind, arm, kase.name, i + 1, run.error === null || run.error === undefined ? "0" : "1",
           verdict(run, "task-"), verdict(run, "comply-"), verdict(run, "cite-"), verdict(run, "fired-"),
+          verdict(run, "routed-"),
           present(run.costUsd) ? run.costUsd : 0, present(run.turns) ? run.turns : ""].map(cell));
       });
     }
@@ -164,8 +165,8 @@ const rows = graded.map((row) => {
   used.add(key);
   return [...row, read.verdict];
 });
-const header = ["kind", "arm", "case", "run", "error", "task", "comply", "cite", "fired", "cost_usd", "turns",
-  "adjudicated"];
+const header = ["kind", "arm", "case", "run", "error", "task", "comply", "cite", "fired", "routed", "cost_usd",
+  "turns", "adjudicated"];
 writeFileSync(`${out}/sessions.tsv`, [header, ...rows].map((r) => r.join("\t") + "\n").join(""));
 for (const key of byHand.keys()) {
   if (!used.has(key)) {
@@ -190,7 +191,7 @@ const costTotal = given.reduce((sum, f) => sum + (results.get(f).costUsd ?? 0), 
 const cost = Math.sign(costTotal) * Math.round(Math.abs(costTotal)) / 100;
 
 const excludedCases = excluded.join(" ").split(/\s+/).filter((w) => w !== "").length;
-const adjudicated = rows.filter((r) => r[11] !== "").length;
+const adjudicated = rows.filter((r) => r.at(-1) !== "").length;
 
 // A number to two decimal places as C's printf writes it, so an exact tie goes to the even digit.
 function fixed2(x) {
@@ -205,7 +206,7 @@ function fixed2(x) {
 const kinds = ["house", "control"];
 const arms = ["plugin", "hook", "prose", "none"];
 const tally = () => ({ sessions: 0, errors: 0, graded: 0, done: 0, complied: 0, gradersDone: 0, gradersComplied: 0,
-  overturned: 0, cited: 0, fired: 0 });
+  overturned: 0, cited: 0, fired: 0, routed: 0 });
 const count = {};
 for (const k of kinds.flatMap((kind) => arms.map((arm) => `${kind}.${arm}`))) count[k] = tally();
 // Each case's folder in the stage, from the first result file that ran it.
@@ -278,7 +279,7 @@ if (pagesDir !== "" && existsSync(pagesDir)) {
 const cases = new Set();
 let total = 0;
 let misplaced = "";
-for (const [kind, arm, kase, , error, task, comply, cite, fired, , , byHandVerdict] of rows) {
+for (const [kind, arm, kase, , error, task, comply, cite, fired, routed, , , byHandVerdict] of rows) {
   const k = `${kind}.${arm}`;
   const c = (count[k] ??= tally());
   const t = kind === "house" ? byType.get(`${arm}.${typeOf.get(kase)}`) : undefined;
@@ -311,6 +312,7 @@ for (const [kind, arm, kase, , error, task, comply, cite, fired, , , byHandVerdi
   if (cite === "1") c.cited++;
   if (cite === "1" && t !== undefined) t.cited++;
   if (fired === "1") c.fired++;
+  if (routed === "1") c.routed++;
 }
 if (misplaced !== "") {
   writeFileSync(`${out}/aggregate.md`, "");
@@ -352,6 +354,8 @@ for (const kind of kinds) {
   }
   row(`${kind}.plugin.fired`, count[`${kind}.plugin`].fired);
   row(`${kind}.hook.fired`, count[`${kind}.hook`].fired);
+  row(`${kind}.plugin.routed`, count[`${kind}.plugin`].routed);
+  row(`${kind}.hook.routed`, count[`${kind}.hook`].routed);
   row(`${kind}.lead_over_prose`, lead(compliance.plugin, compliance.prose));
   row(`${kind}.lead_over_none`, lead(compliance.plugin, compliance.none));
   row(`${kind}.graders_lead_over_prose`, lead(gradersCompliance.plugin, gradersCompliance.prose));
