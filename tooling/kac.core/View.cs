@@ -193,7 +193,7 @@ public static class View
     {
         var skill = source.Included
             .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))
-            .FirstOrDefault(c => c.Requires.Any(r => r.Split('@')[0] == Standards));
+            .FirstOrDefault(c => c.Requires.Any(r => Bundler.Alternatives(r) is [{ Type: Standards }]));
 
         if (skill is not null)
             return $"The {skill.Path["skills/".Length..]} skill returns a rule's obligations by its standard's id.";

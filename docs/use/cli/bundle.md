@@ -31,16 +31,31 @@ reads, as `requires`, and ships only where the export contains every one of them
   glossary of its own ships the glossary skill where it consumes a corpus that has one.
 * **An entry may name a shape, as `glossary@1`.** The component then reads that type's files at shape version 1. A bare
   `glossary` asks only that the type is present. Both are trimmed where the export has no glossary.
+* **An entry may name alternatives, as `standards|policies`.** Any one of them meets it, and the component is trimmed
+  only where the export has none. `request-deviation` declares this, because a clause it asks about is a standard's
+  rule or a policy's clause.
 * **A trimmed component's files leave with it.** The trim matches the declared path and everything beneath it, on whole
-  segments, so `skills/a` does not take `skills/ab`.
+  segments, so `skills/a` does not take `skills/ab`. A component declared inside a trimmed one leaves too.
 * **Every skill and hook needs a component.** A run stops on a file under `skills/` or `hooks/` that no component
   claims, because nothing would trim it. A file anywhere else, such as a README or a licence, ships whatever the corpus
   adopted.
-* **A component naming no type supports the lookups, unless it is standalone.** `ask-the-corpus`, `corpus-retrieval`
-  and `request-deviation` ship wherever a component reading a type shipped, and leave with the last of them. The trim
-  reports that as `no component it supports survived`. `raise-finding` declares `"standalone": true` and always ships.
+* **A component naming no type supports the ones that do, unless it is standalone.** `ask-the-corpus`,
+  `corpus-retrieval` and the hooks ship wherever a component reading a type shipped, and leave with the last of them.
+  The trim reports that as `no component it supports survived`. `raise-finding` declares `"standalone": true` and
+  always ships.
 * **A run that trims every component warns and still builds.** The empty plugin installs, and `bundle.json` lists each
   component it dropped and the type that component needed.
+
+### A skill's reference files
+
+A reference file is a Markdown file inside a skill's directory that the skill reads for one type, such as
+`skills/ask-the-corpus/runbooks.md`. Each is declared as its own component requiring that type, so a corpus exporting
+no runbooks ships the router without its runbook file.
+
+Each reference file opens with a `trigger:` in its frontmatter, naming the question that sends a session to it.
+`bundle` adds the trigger of each reference file that shipped to the end of its skill's `description:`, so the skill
+offers only what its plugin can answer. A description longer than 1,024 characters, the
+[Agent Skills specification](https://agentskills.io/specification)'s maximum, stops the run.
 
 ### Views
 
@@ -106,24 +121,22 @@ wrote .dist/plugin/hooks/breadcrumb.txt
 wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
 wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
-wrote .dist/plugin/skills/ask-the-corpus/deviations.md
-wrote .dist/plugin/skills/ask-the-corpus/reports.md
-wrote .dist/plugin/skills/ask-the-corpus/runbooks.md
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
 wrote .dist/plugin/skills/raise-finding/azure-devops.md
 wrote .dist/plugin/skills/raise-finding/github.md
-wrote .dist/plugin/skills/request-deviation/SKILL.md
-wrote .dist/plugin/skills/request-deviation/azure-devops.md
-wrote .dist/plugin/skills/request-deviation/github.md
+bundle: trimmed skills/request-deviation: the export carries no standards or policies.
+bundle: trimmed skills/ask-the-corpus/deviations.md: the export carries no deviations.
+bundle: trimmed skills/ask-the-corpus/reports.md: the export carries no reports.
+bundle: trimmed skills/ask-the-corpus/runbooks.md: the export carries no runbooks.
 bundle: trimmed skills/controls-lookup: the export carries no controls.
 bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 50 files to .dist/plugin/ as example-libraries 0.32.1. 6 components included, 6 trimmed.
+bundle: wrote 44 files to .dist/plugin/ as example-libraries 0.35.0. 5 components included, 10 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -145,15 +158,16 @@ says where each name comes from.
 
 ### The components that shipped
 
-`example-engineering` exports controls, glossary, policies and standards, so it ships a lookup skill for each, beside
-the four skills that name no type of their own. Its export has standards, so it also ships both views and
-`standards-review`, which reads the review view. It has no fixes and no processes, so `fix-lookup` and
-`process-lookup` are trimmed. The closing line counts what survived:
+`example-engineering` exports ADRs, controls, glossary, policies, reports and standards. It ships a lookup skill for
+controls, glossary, policies and standards, and the router with its reports file. Its export has standards, so it also
+ships both views and `standards-review`, which reads the review view. It has no deviations, fixes, processes or
+runbooks, so `fix-lookup`, `process-lookup` and the router's deviations and runbooks files are trimmed. The closing
+line counts what survived:
 
 <!-- transcript: examples/engineering, kac bundle -->
 
 ```text
-bundle: wrote 82 files to .dist/plugin/ as example-engineering 0.48.0. 12 components included, 2 trimmed.
+bundle: wrote 80 files to .dist/plugin/ as example-engineering 0.51.0. 13 components included, 4 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -165,7 +179,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 <!-- transcript: examples/engineering, jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bundle.json -->
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/ask-the-corpus/reports.md","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/ask-the-corpus/deviations.md","skills/ask-the-corpus/runbooks.md","skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:
@@ -223,6 +237,8 @@ Every other key in the manifest survives untouched.
 * an export with no manifest, or one naming no corpus because `.corpus.yaml` states no `corpus`
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry, or at one that is not a whole number
+* a `requires` entry naming an empty alternative, as `standards|`
+* a skill whose description passes 1,024 characters once its reference files' triggers are added
 * a file under `skills/` or `hooks/` that no component claims
 * a component, other than a view, whose `path` has no file in the plugin tree
 * a view `bundle` does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses

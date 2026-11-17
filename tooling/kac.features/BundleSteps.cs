@@ -138,6 +138,19 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
     [Given(@"the plugin tree has a standalone component ""(.*)""")]
     public void GivenThePluginTreeHasAStandaloneComponent(string path) => AddComponent(path, standalone: true);
 
+    [Given(@"the plugin tree has a reference file ""(.*)"" reading ""(.*)"" with the trigger ""(.*)""")]
+    public void GivenThePluginTreeHasAReferenceFile(string path, string type, string trigger)
+    {
+        ws.Write($".plugin/{path}", $"---\ntrigger: {trigger}\n---\n\n# Answering\n");
+        var manifest = ws.ReadJson(PluginManifest);
+        Components(manifest).Add(new JsonObject { ["path"] = path, ["requires"] = new JsonArray(type) });
+        ws.WriteJson(PluginManifest, manifest);
+    }
+
+    [Given(@"the plugin tree has a reference file ""(.*)"" reading ""(.*)"" with a trigger of (\d+) characters")]
+    public void GivenThePluginTreeHasAReferenceFileWithALongTrigger(string path, string type, int length)
+        => GivenThePluginTreeHasAReferenceFile(path, type, new string('a', length));
+
     [When("I bundle")]
     public void WhenIBundle() => ws.Run(Commands.Bundle);
 
@@ -163,6 +176,13 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
         var index = ws.Read($"{Dist.Plugin}/{BuildIndexHook.RenderedFile}");
         var printed = _hookRuns.Select(run => run == index ? "index" : run == "" ? "nothing" : run);
         Assert.Equal(outputs, string.Join(", ", printed));
+    }
+
+    [Then(@"the bundled ""(.*)"" has the description ""(.*)""")]
+    public void ThenTheBundledSkillHasTheDescription(string path, string description)
+    {
+        var text = ws.Read($".dist/plugin/{path}");
+        Assert.Equal(description, Yaml.Str(Yaml.Get(Yaml.Load(text.Split("---\n")[1]), "description")));
     }
 
     [Then(@"the bundle includes ""(.*)""")]

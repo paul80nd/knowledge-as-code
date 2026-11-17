@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -78,6 +79,24 @@ public class BundlerTests
                 ("hooks/hooks.json", "{}")
             ],
             export: [Manifest("glossary")]), Breadcrumb.RenderedFile));
+
+    [Fact]
+    public void A_hook_requiring_nothing_travels_with_a_reference_file_and_no_glossary()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("hooks"), Component("skills/ask"), Component("skills/ask/adrs.md", "adrs"))),
+                ("hooks/hooks.json", "{}"),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/adrs.md", Reference("Use it for a decision."))
+            ],
+            export: [Manifest("adrs")]);
+
+        Assert.Contains("hooks", plan.Included.Select(c => c.Path));
+        Assert.Contains("adrs. 1 record.", Text(plan, Breadcrumb.RenderedFile));
+    }
 
     [Fact]
     public void A_plugin_with_no_hook_carries_no_breadcrumb()
@@ -172,6 +191,159 @@ public class BundlerTests
         => Assert.Contains("a shape version is a whole number", Assert.Single(Plan(
             plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@one")))],
             export: [Manifest("glossary")]).Problems));
+
+    [Fact]
+    public void A_requirement_naming_alternatives_is_met_by_either_one()
+        => Assert.Equal(["skills/ask"], Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/ask", "standards@1|policies@1")))],
+            export: [Manifest("policies")]).Included.Select(c => c.Path));
+
+    [Fact]
+    public void A_requirement_naming_alternatives_trims_only_where_the_export_carries_none_of_them()
+        => Assert.Equal("the export carries no standards or policies",
+            Assert.Single(Plan(
+                plugin: [(Bundler.ManifestFile, Source(Component("skills/ask", "standards@1|policies@1")))],
+                export: [Manifest("glossary")]).Trimmed).Reason);
+
+    [Fact]
+    public void An_alternative_at_a_shape_the_export_does_not_carry_stops_the_run()
+        => Assert.Contains("'policies' shape version 2",
+            Assert.Single(Plan(
+                plugin: [(Bundler.ManifestFile, Source(Component("skills/ask", "standards@1|policies@2")))],
+                export: [Manifest("policies")]).Problems));
+
+    [Fact]
+    public void An_empty_alternative_is_reported_against_the_manifest()
+        => Assert.Contains("'standards@1|'",
+            Assert.Single(Plan(
+                plugin: [(Bundler.ManifestFile, Source(Component("skills/ask", "standards@1|")))],
+                export: [Manifest("standards")]).Problems));
+
+    [Fact]
+    public void A_reference_file_whose_type_the_export_lacks_is_trimmed_and_its_skill_stays()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"),
+                    Component("skills/look", "glossary"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it for a runbook."))
+            ],
+            export: [Manifest("glossary")]);
+
+        Assert.Equal(["skills/ask", "skills/look"], plan.Included.Select(c => c.Path));
+        Assert.Equal("the export carries no runbooks", Assert.Single(plan.Trimmed).Reason);
+        Assert.DoesNotContain($"{Dist.PluginDir}/skills/ask/runbooks.md", plan.Files.Select(f => f.Path));
+    }
+
+    [Fact]
+    public void A_reference_file_keeps_its_skill_where_no_other_reader_survives()
+        => Assert.Equal(["skills/ask", "skills/ask/runbooks.md"], Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"),
+                    Component("skills/look", "glossary"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it for a runbook."))
+            ],
+            export: [Manifest("runbooks")]).Included.Select(c => c.Path));
+
+    [Fact]
+    public void A_component_inside_a_trimmed_one_is_trimmed_with_it()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("skills/ask", "adrs"), Component("skills/ask/runbooks.md", "runbooks"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it for a runbook."))
+            ],
+            export: [Manifest("runbooks")]);
+
+        Assert.Empty(plan.Included);
+        Assert.Equal("it sits inside skills/ask, which was trimmed",
+            plan.Trimmed.Single(t => t.Path == "skills/ask/runbooks.md").Reason);
+    }
+
+    [Fact]
+    public void A_skill_s_description_gains_the_trigger_of_each_reference_file_that_travelled()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"),
+                    Component("skills/ask/reports.md", "reports"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now.")),
+                ("skills/ask/reports.md", Reference("Use it for what the corpus covers."))
+            ],
+            export: [Manifest("runbooks", "reports")]);
+
+        Assert.Equal("Route a question. Use it when something is broken now. Use it for what the corpus covers.",
+            Description(Text(plan, "skills/ask/SKILL.md")));
+    }
+
+    [Fact]
+    public void A_trimmed_reference_file_adds_nothing_to_the_description()
+        => Assert.Equal("Route a question. Use it when something is broken now.", Description(Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(
+                    Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"),
+                    Component("skills/ask/reports.md", "reports"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now.")),
+                ("skills/ask/reports.md", Reference("Use it for what the corpus covers."))
+            ],
+            export: [Manifest("runbooks")]), "skills/ask/SKILL.md")));
+
+    [Fact]
+    public void Rewriting_the_description_leaves_the_rest_of_the_skill_as_it_was()
+    {
+        var text = Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"))),
+                ("skills/ask/SKILL.md", Skill("Route a question.")),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now."))
+            ],
+            export: [Manifest("runbooks")]), "skills/ask/SKILL.md");
+
+        Assert.StartsWith("---\nname: ask\ndescription: ", text, StringComparison.Ordinal);
+        Assert.EndsWith("---\n\n# Ask\n\nThe body.\n", text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void A_description_over_the_cap_once_its_triggers_are_added_stops_the_run()
+    {
+        var problem = Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/ask"), Component("skills/ask/runbooks.md", "runbooks"))),
+                ("skills/ask/SKILL.md", Skill(new string('a', Bundler.DescriptionCap - 10))),
+                ("skills/ask/runbooks.md", Reference("Use it when something is broken now."))
+            ],
+            export: [Manifest("runbooks")]).Problems);
+
+        Assert.Contains("skills/ask/SKILL.md", problem);
+        Assert.Contains("skills/ask/runbooks.md", problem);
+        Assert.Contains(Bundler.DescriptionCap.ToString("N0", CultureInfo.InvariantCulture), problem);
+    }
+
+    [Fact]
+    public void A_skill_with_no_reference_file_keeps_its_description_byte_for_byte()
+    {
+        const string skill = "---\nname: look\ndescription: Read a term.\n  It wraps here.\n---\n\nBody.\n";
+
+        Assert.Equal(skill, Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary"))), ("skills/look/SKILL.md", skill)],
+            export: [Manifest("glossary")]), "skills/look/SKILL.md"));
+    }
 
     [Fact]
     public void A_component_requiring_nothing_travels_beside_one_that_earned_its_place()
@@ -1012,6 +1184,14 @@ public class BundlerTests
 
     private static string Standalone(string path) =>
         $$"""{"path":"{{path}}","requires":[],"standalone":true}""";
+
+    private static string Skill(string description) =>
+        $"---\nname: ask\ndescription: {description}\n---\n\n# Ask\n\nThe body.\n";
+
+    private static string Reference(string trigger) => $"---\ntrigger: {trigger}\n---\n\n# Answering\n";
+
+    private static string Description(string skill) =>
+        Yaml.Str(Yaml.Get(Yaml.Load(skill.Split("---\n")[1]), "description")) ?? "";
 
     [Fact]
     public void An_author_with_no_address_travels_with_the_key_the_export_states()

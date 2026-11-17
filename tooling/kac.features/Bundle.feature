@@ -68,6 +68,48 @@ Scenario: A trim takes whole path segments
   When I bundle
   Then ".dist/plugin/skills/decision-lookup-notes/SKILL.md" exists
 
+Scenario: A requirement naming alternatives is met by any one the export carries
+  Given the bundle fixture corpus
+  And it has been exported
+  And the component "skills/decision-lookup" requires "adrs|glossary@1"
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/decision-lookup"
+
+Scenario: A requirement naming an empty alternative is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And the component "skills/decision-lookup" requires "adrs|"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A reference file whose type the export lacks is trimmed, and its skill stays
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a reference file "skills/glossary-lookup/decisions.md" reading "adrs" with the trigger "Use it for a decision."
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/glossary-lookup"
+  And the bundle trims "skills/glossary-lookup/decisions.md" because "the export carries no adrs"
+  And ".dist/plugin/skills/glossary-lookup/decisions.md" does not exist
+
+Scenario: A skill's description gains the trigger of each reference file that travelled
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a reference file "skills/glossary-lookup/terms.md" reading "glossary" with the trigger "Use it for a term."
+  And the plugin tree has a reference file "skills/glossary-lookup/decisions.md" reading "adrs" with the trigger "Use it for a decision."
+  When I bundle
+  Then the bundled "skills/glossary-lookup/SKILL.md" has the description "Look a term up in the glossary that travels with this plugin. Use it for a term."
+
+Scenario: A description passing the cap once its triggers are added is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a reference file "skills/glossary-lookup/terms.md" reading "glossary" with a trigger of 1000 characters
+  When I bundle
+  Then it refuses
+  And nothing is written
+
 Scenario: A component reading a type only a consumed corpus exports ships
   Given the export-inherited fixture corpus
   And it has been exported

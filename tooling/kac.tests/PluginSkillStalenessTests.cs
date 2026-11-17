@@ -32,11 +32,14 @@ public class PluginSkillStalenessTests
             var path = JsonRead.Str(component?["path"]) ?? "";
             if (!path.StartsWith("skills/", StringComparison.Ordinal)) continue;
 
+            // A reference file says whether a record is current in its own outline, not in this section.
+            if (Path.HasExtension(path)) continue;
+
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
 
-            // A skill naming no type reads no record and reports no staleness.
-            if (requires.Count == 0) continue;
+            // A skill naming no type, or accepting any of several, reads no record of its own.
+            if (requires.Count == 0 || requires.Any(r => r.Contains('|', StringComparison.Ordinal))) continue;
 
             // One skill writes one staleness section, so a second type would put its values somewhere this test
             // does not read.

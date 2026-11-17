@@ -1,3 +1,7 @@
+---
+trigger: Use when something is failing now and someone needs the agreed first step.
+---
+
 # Answering from a runbook
 
 A runbook is the response to a failure, written down before the failure happened. Somebody reads it under pressure, so

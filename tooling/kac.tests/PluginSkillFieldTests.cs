@@ -38,11 +38,14 @@ public class PluginSkillFieldTests
             var path = JsonRead.Str(component?["path"]) ?? "";
             if (!path.StartsWith("skills/", StringComparison.Ordinal)) continue;
 
+            // A reference file is read through its skill, and holds no field table of its own.
+            if (Path.HasExtension(path)) continue;
+
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
 
-            // A skill naming no type reads no parts file and holds no field table.
-            if (requires.Count == 0) continue;
+            // A skill naming no type, or accepting any of several, reads no parts file and holds no field table.
+            if (requires.Count == 0 || requires.Any(r => r.Contains('|', StringComparison.Ordinal))) continue;
 
             if (requires.Count != 1)
                 throw new InvalidOperationException(
