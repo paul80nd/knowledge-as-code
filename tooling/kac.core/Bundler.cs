@@ -70,6 +70,12 @@ public static class Bundler
     /// <summary>At the plugin root, because <c>.claude-plugin/</c> holds the manifest and nothing else.</summary>
     public const string RecordFile = "bundle.json";
 
+    /// <summary>
+    /// The most characters a skill's description may hold once its reference files' triggers are added. It is the
+    /// Agent Skills specification's maximum, and Claude Code's skill listing truncates at 1,536.
+    /// </summary>
+    public const int DescriptionCap = 1024;
+
     public static bool InSourceTree(string rel) =>
         rel.Equals(SourceDir, StringComparison.Ordinal)
         || rel.StartsWith(SourceDir + "/", StringComparison.Ordinal);
@@ -172,24 +178,39 @@ public static class Bundler
 
             foreach (var entry in component.Requires.Concat(component.Optional ?? []))
             {
-                var (type, shape) = Need(entry);
-                var held = carried.FirstOrDefault(c => string.Equals(c.Type, type, StringComparison.Ordinal));
-                if (held is null)
+                var alternatives = Alternatives(entry);
+                if (alternatives.Any(a => a.Type.Length == 0))
                 {
-                    if (component.Requires.Contains(entry, StringComparer.Ordinal)) missing.Add(type);
+                    problems.Add($"{ManifestFile} declares '{component.Path}' against '{entry}', which names an "
+                                 + "empty alternative. Write each as '<type>@<version>', separated by '|'.");
                     continue;
                 }
 
-                if (shape is null) continue;
+                var held = (from a in alternatives
+                    let found = carried.FirstOrDefault(c => string.Equals(c.Type, a.Type, StringComparison.Ordinal))
+                    where found is not null
+                    select (a.Type, a.Shape, Found: found)).ToList();
 
-                if (!int.TryParse(shape, out var wanted))
-                    problems.Add($"{ManifestFile} declares '{component.Path}' against '{entry}', and a shape "
-                                 + "version is a whole number. Write it as '<type>@<version>'.");
-                else if (wanted != held.ShapeVersion)
-                    problems.Add($"{ManifestFile} declares '{component.Path}' against '{type}' shape version "
-                                 + $"{wanted}, and the export carries version {held.ShapeVersion}. Write the component "
-                                 + "against the shape the export carries, or bundle an export built at "
-                                 + $"version {wanted}.");
+                if (held.Count == 0)
+                {
+                    if (component.Requires.Contains(entry, StringComparer.Ordinal))
+                        missing.AddRange(alternatives.Select(a => a.Type));
+                    continue;
+                }
+
+                foreach (var (type, shape, found) in held)
+                {
+                    if (shape is null) continue;
+
+                    if (!int.TryParse(shape, out var wanted))
+                        problems.Add($"{ManifestFile} declares '{component.Path}' against '{entry}', and a shape "
+                                     + "version is a whole number. Write it as '<type>@<version>'.");
+                    else if (wanted != found.ShapeVersion)
+                        problems.Add($"{ManifestFile} declares '{component.Path}' against '{type}' shape version "
+                                     + $"{wanted}, and the export carries version {found.ShapeVersion}. Write the "
+                                     + "component against the shape the export carries, or bundle an export built "
+                                     + $"at version {wanted}.");
+                }
             }
 
             if (missing.Count == 0)
@@ -208,6 +229,17 @@ public static class Bundler
                 trimmed.Add(new TrimmedComponent(supporting.Path, supporting.Requires,
                     "no component it supports survived"));
             }
+
+        // A reference file is read through the skill it sits in, so it cannot travel without that skill.
+        foreach (var nested in included.ToList())
+            if (trimmed.FirstOrDefault(t => nested.Path.StartsWith(t.Path + "/", StringComparison.Ordinal)) is { } outer)
+            {
+                included.Remove(nested);
+                trimmed.Add(new TrimmedComponent(nested.Path, nested.Requires,
+                    $"it sits inside {outer.Path}, which was trimmed"));
+            }
+
+        var described = Describe(source.PluginTree, included, problems);
 
         if (problems.Count > 0) return new BundlePlan([], "", null, [], [], [], problems);
 
@@ -239,7 +271,9 @@ public static class Bundler
         var files = (from file in source.PluginTree
             where file.Path != ManifestFile
             where !trimmed.Any(t => Owns(t.Path, file.Path))
-            select file with { Path = $"{Dist.PluginDir}/{file.Path}" }).ToList();
+            select described.TryGetValue(file.Path, out var skill)
+                ? Utf8($"{Dist.PluginDir}/{file.Path}", skill)
+                : file with { Path = $"{Dist.PluginDir}/{file.Path}" }).ToList();
 
         // The export is copied byte for byte, so the two copies of it stay comparable.
         files.AddRange(source.Export.Select(file => file with { Path = $"{Dist.PluginDir}/{corpusRoot}/{file.Path}" }));
@@ -371,7 +405,7 @@ public static class Bundler
 
         var home = exportManifest.Publishing.Base;
         State(copy, "homepage", home);
-        State(copy, "repository", home);
+        State(copy, "repository", exportManifest.Publishing.Repository ?? home);
 
         State(copy, "description",
             about.Description
@@ -459,14 +493,103 @@ public static class Bundler
         JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
 
     /// <summary>
-    /// The shape is null where the entry names none. A bare <c>glossary</c> needs the type and opens none of its files,
+    /// The types one <c>requires</c> entry accepts, any one of which meets it, as <c>standards@3|policies@2</c>. The
+    /// shape is null where an alternative names none. A bare <c>glossary</c> needs the type and opens none of its files,
     /// so a shape change must not refuse it. The version stays a string, so a bad one is reported.
     /// </summary>
-    private static (string Type, string? Shape) Need(string entry)
+    public static IReadOnlyList<(string Type, string? Shape)> Alternatives(string entry) =>
+    [
+        .. entry.Split('|').Select(alternative =>
+        {
+            var at = alternative.IndexOf('@');
+            return at < 0 ? (alternative.Trim(), null) : (alternative[..at].Trim(), (string?)alternative[(at + 1)..].Trim());
+        })
+    ];
+
+    /// <summary>
+    /// The <c>SKILL.md</c> of each surviving skill holding a surviving reference file with a <c>trigger:</c>, rewritten
+    /// so its description ends with those triggers in component order. Keyed by the file's path in the plugin tree. A
+    /// description over <see cref="DescriptionCap"/>, or a skill with no description to add to, is added to
+    /// <paramref name="problems"/>.
+    /// </summary>
+    private static Dictionary<string, string> Describe(
+        IReadOnlyList<BundleFile> tree, IReadOnlyList<PluginComponent> included, List<string> problems)
     {
-        var at = entry.IndexOf('@');
-        return at < 0 ? (entry, null) : (entry[..at], entry[(at + 1)..]);
+        var described = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        foreach (var skill in included.Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal)
+                                                  && !c.Path["skills/".Length..].Contains('/', StringComparison.Ordinal)))
+        {
+            var triggers = (from reference in included
+                where reference.Path.StartsWith(skill.Path + "/", StringComparison.Ordinal)
+                let trigger = Yaml.Str(Yaml.Get(Front(Text(tree, reference.Path)), "trigger"))
+                where trigger is { Length: > 0 }
+                select (reference.Path, Trigger: trigger.Trim())).ToList();
+
+            if (triggers.Count == 0) continue;
+
+            var path = $"{skill.Path}/SKILL.md";
+            var text = Text(tree, path)?.Replace("\r\n", "\n", StringComparison.Ordinal);
+            if (Yaml.Str(Yaml.Get(Front(text), "description")) is not { Length: > 0 } opening || text is null)
+            {
+                problems.Add($"{path} states no description, so there is nothing to add the trigger lines of "
+                             + $"{string.Join(", ", triggers.Select(t => t.Path))} to. Give it a description: line.");
+                continue;
+            }
+
+            var description = string.Join(' ', triggers.Select(t => t.Trigger).Prepend(opening.Trim()));
+            if (description.Length > DescriptionCap)
+            {
+                problems.Add(string.Format(CultureInfo.InvariantCulture,
+                    "{0} would carry a {1:N0}-character description once the trigger lines of {2} are added, and a "
+                    + "skill's description holds at most {3:N0}. Shorten the description or a trigger line.",
+                    path, description.Length, string.Join(", ", triggers.Select(t => t.Path)), DescriptionCap));
+                continue;
+            }
+
+            described[path] = Redescribed(text, description);
+        }
+
+        return described;
     }
+
+    /// <summary>
+    /// The frontmatter of a Markdown file as YAML, or null where the file is missing or does not open with
+    /// <c>---</c>.
+    /// </summary>
+    private static YamlDotNet.RepresentationModel.YamlNode? Front(string? text)
+    {
+        if (text is null) return null;
+        text = text.Replace("\r\n", "\n", StringComparison.Ordinal);
+        if (!text.StartsWith("---\n", StringComparison.Ordinal)) return null;
+
+        var end = text.IndexOf("\n---\n", 3, StringComparison.Ordinal);
+        return end < 0 ? null : Yaml.Load(text[4..(end + 1)]);
+    }
+
+    /// <summary>
+    /// The skill with its <c>description:</c> entry, and any line indented beneath it, replaced by one line. The value
+    /// is a JSON string, which YAML reads as a double-quoted scalar. Every other byte is kept.
+    /// </summary>
+    private static string Redescribed(string text, string description)
+    {
+        var end = text.IndexOf("\n---\n", 3, StringComparison.Ordinal);
+        var lines = text[4..(end + 1)].Split('\n').ToList();
+
+        var from = lines.FindIndex(l => l.StartsWith("description:", StringComparison.Ordinal));
+        var to = from + 1;
+        while (to < lines.Count && lines[to].StartsWith(' ')) to++;
+
+        lines.RemoveRange(from, to - from);
+        lines.Insert(from, $"description: {JsonValue.Create(description).ToJsonString(Quoted)}");
+
+        return $"---\n{string.Join('\n', lines)}{text[(end + 1)..]}";
+    }
+
+    private static readonly JsonSerializerOptions Quoted = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 
     /// <summary>A component with no <c>path</c> is skipped, because a trim acts on the path.</summary>
     private static List<PluginComponent> Components(JsonNode? node)

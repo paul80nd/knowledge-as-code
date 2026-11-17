@@ -19,8 +19,13 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 * It copies the export into the plugin under `metadata.corpusRoot`, byte for byte.
   [What it does](../use/cli/bundle.md#what-it-does)
 * It trims a component whose `requires` names a type the export lacks, with every file under its path, on whole
-  segments. The export includes what the corpus consumes, so a type only a consumed corpus wrote meets a `requires`.
+  segments. An entry naming alternatives, as `standards|policies`, is met by any one of them. The export includes what
+  the corpus consumes, so a type only a consumed corpus wrote meets a `requires`.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
+* It trims a component declared inside a trimmed one, such as a skill's reference file.
+  [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
+* It adds the `trigger:` of each surviving reference file to the end of its skill's `description:`.
+  [A skill's reference files](../use/cli/bundle.md#a-skills-reference-files)
 * It ships a component reading no type while a component reading one survives, and trims it with the last of them,
   unless the component is standalone.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
@@ -28,8 +33,9 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It builds a plugin with every component trimmed, and warns.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
-* It fills the plugin manifest's identity from the descriptor, through the export, with `homepage` and `repository`
-  from `publishing.base`. It removes a key the corpus declared nothing for, bar `author`, `description` and `version`.
+* It fills the plugin manifest's identity from the descriptor, through the export, with `homepage` from
+  `publishing.base`. `repository` is the Git repository of an `azure-devops-wiki` corpus, and `publishing.base` on any
+  other target. It removes a key the corpus declared nothing for, bar `author`, `description` and `version`.
   [The plugin manifest](../use/cli/bundle.md#the-plugin-manifest)
 * It cuts the plugin manifest's components to the ones that survived, and keeps every key it does not know.
   [The plugin manifest](#the-plugin-manifest)
@@ -53,6 +59,8 @@ Each refusal exits `1` and writes nothing. [Known limits](../use/cli/bundle.md#k
 * no export, an export with no manifest, or one naming no corpus
 * an export at a format version this build does not read
 * a component reading a type at a shape version the export does not have, or at a shape that is not a whole number
+* a `requires` entry naming an empty alternative
+* a skill whose description passes 1,024 characters once its reference files' triggers are added
 * a file under `skills/` or `hooks/` that no component claims
 * a component, other than a view, whose `path` has no file in the plugin tree
 * a view this build does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
@@ -214,6 +222,10 @@ that can only refuse.
 is the one where a session most needs a route to report, so it is standalone. Standalone does not exempt it from the
 type trim.
 
+**Why not ship the hooks wherever the export has a record.** The hooks name no type, so they support the components
+that read one, as the router does. A plugin whose export carries only types no skill reads ships no breadcrumb, because
+it would name records a session has no skill to open.
+
 **Why not an archive.** A marketplace points at a path, so a directory needs nothing unpacked before a question.
 
 ## Specified by
@@ -227,6 +239,11 @@ type trim.
 * A bundle rebuilds .dist/plugin/ whole
 * A component reading a type the export lacks is trimmed with its files
 * A trim takes whole path segments
+* A requirement naming alternatives is met by any one the export carries
+* A requirement naming an empty alternative is refused
+* A reference file whose type the export lacks is trimmed, and its skill stays
+* A skill's description gains the trigger of each reference file that travelled
+* A description passing the cap once its triggers are added is refused
 * A component reading a type only a consumed corpus exports ships
 * A component reading no type ships beside one that reads a type
 * A component reading no type leaves with the last component reading one

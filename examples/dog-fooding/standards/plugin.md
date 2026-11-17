@@ -110,7 +110,12 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 - A router **MUST** read a type that no lookup skill reads from a reference file beside its `SKILL.md`.
 - A router **MUST** read a reference file only when a question is routed to it, because a file costs a session nothing
   until it is read.
-- A router **MUST** declare each type a reference file reads in `optional`, at the shape that file reads.
+- Where the reference file for a type did not ship, a router **MUST** say so and name the type it needed.
+- A router **MUST** declare each reference file as its own component, requiring the type that file reads at the shape
+  it reads.
+- A reference file **MUST** state a `trigger:` in its frontmatter, naming the case that sends a question to it.
+- A router's own description **MUST** name only the cases that reach no reference file, because `kac bundle` adds the
+  trigger of each reference file that shipped.
 - A router answering from a report **MUST** compare each version in the report's `sources` with `manifest.json`.
 - A router answering from a report **MUST** fetch the report's body through `corpus-retrieval`, and answer from it.
 - A router answering from a report **MUST NOT** rebuild the report's answer from the records of other types.
@@ -129,6 +134,8 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
   `requires` where it cannot work without the type, and in `optional` where it can.
 - A view **MUST** be declared as a component whose `view` names it and whose `path` is where `kac bundle` writes it.
 - A component that needs a type present and opens none of its files **MUST** name that type bare.
+- A component that works from any one of several types **MUST** name them in one `requires` entry, separated by `|`,
+  as `standards|policies`.
 - A component that reads no export at all **MUST** declare `requires` empty.
 - A component that reads no export and supports no other component **MUST** declare `standalone` true.
 - A component entry **MUST** have a `note` saying what it reads.
@@ -450,14 +457,17 @@ broke it.
 - [ ] Every skill says what its corpus did not include, from `types` in `manifest.json`.
 - [ ] Every router sends a question it can place to the lookup for that type, and says which type is missing where
       the lookup did not ship.
-- [ ] Every type a router reads with no lookup is read from a reference file it loads only when routed there, and is
-      named in `optional` at that file's shape.
+- [ ] Every type a router reads with no lookup is read from a reference file it loads only when routed there, and that
+      file is its own component requiring the type at the shape it reads.
+- [ ] Every reference file states a `trigger:`, and the router's own description names only the cases no reference
+      file names.
 - [ ] Every answer a router gives from a report compares the report's `sources` with `manifest.json`, comes from the
       fetched body, and states no limit it could not read.
 - [ ] Every router sends a change that makes a record wrong to `raise-finding`, naming the record.
 - [ ] Every skill directory and hook directory in the plugin tree is declared under `metadata.components`.
 - [ ] Every `requires` entry names a type at the shape version it reads, bare where it opens none of that type's
-      files, and empty where the component reads no export.
+      files, and empty where the component reads no export. A component working from any one of several types names
+      them in one entry, separated by `|`.
 - [ ] Every type a component reads only where the export carries it is named in `optional`, at the shape it reads.
 - [ ] Every view is declared as a component naming it in `view`, and is written by `kac bundle` from the export alone.
 - [ ] Every hook runs under a POSIX shell alone, prints a file `kac bundle` rendered, and writes only under
@@ -570,15 +580,21 @@ reads.
 
 `requires` has three states, and the manifest rules keep them apart. A component that opens a type's files names the
 shape it reads them at, so a moved key stops the build before it gets to a reader. A component that needs the type
-present and opens none of its files names it bare, which is what the breadcrumb hook does. A component that reads no
-export at all declares nothing.
+present and opens none of its files names it bare. `request-deviation` asks about a clause a lookup found, which is a
+standard's rule or a policy's clause, so it names `standards|policies` and ships where either did. A component that
+reads no export at all declares nothing.
 
-That third state covers two different questions, so `standalone` separates them. `corpus-retrieval` and
-`request-deviation` read no export and exist for the lookup skills. One fetches a record's published source and the
-other asks the owner of a clause a lookup found, so a bundle that kept either after the last lookup skill left would
-ship a skill nothing can call. `raise-finding` reads no export and serves whoever installed the plugin, and a corpus
-with no record at all is the one a session most needs a route to report. Declaring it standalone keeps that route open.
-`docs/maintaining/plugin.md` describes how `kac bundle` acts on all of them.
+That third state covers two different questions, so `standalone` separates them. `corpus-retrieval`, the router and
+the hooks read no export and exist for the components that do. A bundle that kept them after the last of those left
+would ship a skill nothing can call and a breadcrumb naming nothing to ask. `raise-finding` reads no export and serves
+whoever installed the plugin, and a corpus with no record at all is the one a session most needs a route to report.
+Declaring it standalone keeps that route open. `docs/maintaining/plugin.md` describes how `kac bundle` acts on all of
+them.
+
+A router reads a type with no lookup through a reference file, and each file is a component of its own, so a type the
+export lacks takes its file with it and the router stays. The router's description is the one part a session sees
+before it loads the skill, so `kac bundle` writes it from the router's own cases and the trigger of each file that
+shipped. A corpus exporting no runbooks then never offers a session a runbook it cannot read.
 
 `optional` is a fourth state, for a type a component reads where it is present and does without where it is not. The
 review view lists the controls checking each rule, and a corpus exporting no controls still needs its rules reviewed.
@@ -728,6 +744,9 @@ standard.
 
 ## Changelog
 
+- 2026-11-17: a router declares each reference file as its own component, requiring the type that file reads, and
+  each file states a `trigger:` that `kac bundle` adds to the router's description. A component working from any one
+  of several types names them in one `requires` entry, separated by `|`.
 - 2026-11-12: every component `plugin.json` declares, other than a view, has a file at its path in the plugin tree.
 - 2026-11-12: a skill states no command for a step, and may quote a literal value a session could not derive. Each
   platform file opens on the facts a session could not infer, and each step states its outcome. A skill that writes

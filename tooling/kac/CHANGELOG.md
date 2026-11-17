@@ -15,6 +15,29 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **`kac bundle` ships a skill's reference file only where the export carries its type.** A file inside a skill
+  directory, such as `skills/ask-the-corpus/runbooks.md`, can be declared as its own component in `plugin.json`, and a
+  component declared inside a trimmed one leaves with it. `ask-the-corpus` now declares its three reference files this
+  way, so a corpus exporting no runbooks ships the router without the runbook file. The hooks no longer need a
+  glossary, and ship wherever a component reading a type does.
+- **`kac bundle` writes a skill's description from its reference files.** Each reference file states a `trigger:` in
+  its frontmatter, and `bundle` adds the trigger of each one that shipped to the end of the skill's `description:`. A
+  session then sees only the questions the plugin can answer. A description over 1,024 characters, the Agent Skills
+  specification's maximum, stops the run.
+- **A `requires` entry can name alternatives.** `standards|policies` is met by either type, so a component ships where
+  the export carries any of them. `request-deviation` now declares it, and ships only where the export has a clause
+  for it to ask about. An entry with an empty alternative stops the run.
+
+### Fixed
+
+- **`kac bundle` names the repository an Azure DevOps wiki corpus is read from.** The plugin manifest's `repository`
+  was the wiki's address, the same as `homepage`. It is now the Git repository `kac export` names in
+  `publishing.repository`, and stays `publishing.base` on every other target.
+
 ## 0.45.0 - 2026-11-12
 
 ### Added

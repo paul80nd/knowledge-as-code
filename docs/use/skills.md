@@ -17,19 +17,19 @@ that export. An install gets the ones whose record types the corpus exported.
 
 <!-- BEGIN GENERATED: skills-in-the-plugin -->
 
-| Skill               | What it answers                                                                                                                      | Requires      |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| `corpus-retrieval`  | Fetch the published source of a record this corpus export summarises                                                                 | supporting    |
-| `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                        | `glossary@1`  |
-| `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone    |
-| `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | supporting    |
-| `ask-the-corpus`    | Send a question to the part of this corpus that answers it, when you do not know which record holds the answer                       | supporting    |
-| `controls-lookup`   | Find out what proves a rule here, in the controls that travel with this plugin                                                       | `controls@3`  |
-| `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`     |
-| `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`  |
-| `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@2` |
-| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@3` |
-| `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@3` |
+| Skill               | What it answers                                                                                                                      | Requires                  |
+|---------------------|--------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
+| `corpus-retrieval`  | Fetch the published source of a record this corpus export summarises                                                                 | supporting                |
+| `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                        | `glossary@1`              |
+| `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone                |
+| `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | `standards` or `policies` |
+| `ask-the-corpus`    | Send a question to the part of this corpus that answers it, when you do not know which record holds the answer                       | supporting                |
+| `controls-lookup`   | Find out what proves a rule here, in the controls that travel with this plugin                                                       | `controls@3`              |
+| `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`                 |
+| `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`              |
+| `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@2`             |
+| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@3`             |
+| `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@3`             |
 
 <!-- END GENERATED: skills-in-the-plugin -->
 

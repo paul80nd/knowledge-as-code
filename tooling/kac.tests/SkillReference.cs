@@ -49,9 +49,12 @@ internal static partial class SkillReference
             var path = component?["path"]?.GetValue<string>() ?? "";
             if (!path.StartsWith("skills/", StringComparison.Ordinal)) continue;
 
+            // A reference file belongs to the skill it sits in, which has the row.
+            if (Path.HasExtension(path)) continue;
+
             var name = path["skills/".Length..];
             var requires = (component?["requires"] as JsonArray ?? [])
-                .Select(r => $"`{r?.GetValue<string>()}`")
+                .Select(r => string.Join(" or ", (r?.GetValue<string>() ?? "").Split('|').Select(a => $"`{a}`")))
                 .ToList();
 
             // An empty `requires` reads no export, and `standalone` says which of two reasons that is. The words
