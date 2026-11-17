@@ -32,6 +32,6 @@
     "Scope": "The three test projects under `tooling/`. `kac` itself and every corpus here are outside it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/de18cf6b2aa58aa72ff4dfec5a2a22fa92d27734/examples/dog-fooding/deviations/test-projects-read-the-disk.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4706cec2a28a5379361098c109419195620414b5/examples/dog-fooding/deviations/test-projects-read-the-disk.md"
   }
 }

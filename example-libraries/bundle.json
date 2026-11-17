@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.36.0",
+  "version": "0.37.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.36.0",
+    "contentVersion": "0.37.0",
     "types": [
       "adrs",
       "data",
@@ -34,6 +34,48 @@
         "glossary@1"
       ],
       "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+    },
+    {
+      "path": "skills/ask-the-corpus/adrs.md",
+      "requires": [
+        "adrs@1"
+      ],
+      "note": "Reads an ADR from corpus/adrs/, says whether it is in force, and follows a supersession to the ADR now in force."
+    },
+    {
+      "path": "skills/ask-the-corpus/data.md",
+      "requires": [
+        "data@2"
+      ],
+      "note": "Reads a data record from corpus/data/: who owns the data, its classification, whether it is personal, and where it goes."
+    },
+    {
+      "path": "skills/ask-the-corpus/explanations.md",
+      "requires": [
+        "explanations@2"
+      ],
+      "note": "Reads an explanation from corpus/explanations/ as a map, and answers from the records it links to."
+    },
+    {
+      "path": "skills/ask-the-corpus/integrations.md",
+      "requires": [
+        "integrations@2"
+      ],
+      "note": "Reads an integration from corpus/integrations/: what a vendor's system does, who calls it, and the fallback when it fails."
+    },
+    {
+      "path": "skills/ask-the-corpus/offerings.md",
+      "requires": [
+        "offerings@1"
+      ],
+      "note": "Reads an offering from corpus/offerings/: what a customer gets, and the services that deliver it."
+    },
+    {
+      "path": "skills/ask-the-corpus/services.md",
+      "requires": [
+        "services@2"
+      ],
+      "note": "Reads a service from corpus/services/: what it does, its repositories, what it calls, and how its failure reaches a person."
     },
     {
       "path": "hooks",
@@ -104,6 +146,27 @@
         "runbooks@3"
       ],
       "reason": "the export carries no runbooks"
+    },
+    {
+      "path": "skills/ask-the-corpus/nfrs.md",
+      "requires": [
+        "nfrs@5"
+      ],
+      "reason": "the export carries no nfrs"
+    },
+    {
+      "path": "skills/ask-the-corpus/postmortems.md",
+      "requires": [
+        "postmortems@1"
+      ],
+      "reason": "the export carries no postmortems"
+    },
+    {
+      "path": "skills/ask-the-corpus/tools.md",
+      "requires": [
+        "tools@4"
+      ],
+      "reason": "the export carries no tools"
     },
     {
       "path": "skills/standards-review",

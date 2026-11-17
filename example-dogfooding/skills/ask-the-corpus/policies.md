@@ -1,5 +1,5 @@
 ---
-trigger: Use before designing for secrets, access, data or production, or asked what is allowed or what policies exist.
+trigger: Use before designing for secrets, access or data, or asked what is allowed.
 ---
 
 # Answering from a policy

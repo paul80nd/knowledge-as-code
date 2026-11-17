@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.105.0",
+  "version": "0.106.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.105.0",
+    "contentVersion": "0.106.0",
     "types": [
       "controls",
       "deviations",
@@ -104,6 +104,27 @@
       "note": "Answers from corpus/runbooks/ when something is failing now."
     },
     {
+      "path": "skills/ask-the-corpus/adrs.md",
+      "requires": [
+        "adrs@1"
+      ],
+      "note": "Reads an ADR from corpus/adrs/, says whether it is in force, and follows a supersession to the ADR now in force."
+    },
+    {
+      "path": "skills/ask-the-corpus/services.md",
+      "requires": [
+        "services@2"
+      ],
+      "note": "Reads a service from corpus/services/: what it does, its repositories, what it calls, and how its failure reaches a person."
+    },
+    {
+      "path": "skills/ask-the-corpus/tools.md",
+      "requires": [
+        "tools@4"
+      ],
+      "note": "Reads a tool from corpus/tools/: whether new work may use it, the version approved, and the licence that applies."
+    },
+    {
       "path": "skills/standards-review",
       "requires": [
         "standards@3"
@@ -130,5 +151,48 @@
       "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the corpus is here before it has a question. A PreToolUse hook printing the build index at the first tool call of the main session and of each subagent, and again after a compaction, where views/build-index.md survived. They name no type, so they travel wherever a component reading one did."
     }
   ],
-  "trimmed": []
+  "trimmed": [
+    {
+      "path": "skills/ask-the-corpus/data.md",
+      "requires": [
+        "data@2"
+      ],
+      "reason": "the export carries no data"
+    },
+    {
+      "path": "skills/ask-the-corpus/explanations.md",
+      "requires": [
+        "explanations@2"
+      ],
+      "reason": "the export carries no explanations"
+    },
+    {
+      "path": "skills/ask-the-corpus/integrations.md",
+      "requires": [
+        "integrations@2"
+      ],
+      "reason": "the export carries no integrations"
+    },
+    {
+      "path": "skills/ask-the-corpus/nfrs.md",
+      "requires": [
+        "nfrs@5"
+      ],
+      "reason": "the export carries no nfrs"
+    },
+    {
+      "path": "skills/ask-the-corpus/offerings.md",
+      "requires": [
+        "offerings@1"
+      ],
+      "reason": "the export carries no offerings"
+    },
+    {
+      "path": "skills/ask-the-corpus/postmortems.md",
+      "requires": [
+        "postmortems@1"
+      ],
+      "reason": "the export carries no postmortems"
+    }
+  ]
 }

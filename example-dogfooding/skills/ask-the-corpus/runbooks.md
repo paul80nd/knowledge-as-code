@@ -1,5 +1,5 @@
 ---
-trigger: Use when something is failing now and someone needs the agreed first step.
+trigger: Use when something is failing now and needs the agreed first step.
 ---
 
 # Answering from a runbook

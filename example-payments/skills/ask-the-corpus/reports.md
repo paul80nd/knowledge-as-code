@@ -1,5 +1,5 @@
 ---
-trigger: Use when someone asks what the corpus covers as a whole, or what nothing covers.
+trigger: Use when asked what the corpus covers, or what nothing covers.
 ---
 
 # Answering from a report

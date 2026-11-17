@@ -1,5 +1,5 @@
 ---
-trigger: Use before changing a check, CI job or checked rule, or when asked what checks a rule, or what nothing checks.
+trigger: Use before changing a check or CI job, or asked what checks a rule.
 ---
 
 # Reading a control

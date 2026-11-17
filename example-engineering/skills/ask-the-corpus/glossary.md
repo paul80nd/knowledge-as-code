@@ -1,5 +1,5 @@
 ---
-trigger: Use when asked what a term means, how two differ or which exist, or on a business noun the code cannot define.
+trigger: Use when asked what a term means, or on a noun the code cannot define.
 ---
 
 # Looking a term up in the glossary

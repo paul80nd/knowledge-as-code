@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.52.0",
+  "version": "0.53.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.52.0",
+    "contentVersion": "0.53.0",
     "types": [
       "adrs",
       "controls",
@@ -70,6 +70,13 @@
       "note": "Answers a question about the corpus as a whole from corpus/reports/."
     },
     {
+      "path": "skills/ask-the-corpus/adrs.md",
+      "requires": [
+        "adrs@1"
+      ],
+      "note": "Reads an ADR from corpus/adrs/, says whether it is in force, and follows a supersession to the ADR now in force."
+    },
+    {
       "path": "skills/standards-review",
       "requires": [
         "standards@3"
@@ -124,6 +131,62 @@
         "runbooks@3"
       ],
       "reason": "the export carries no runbooks"
+    },
+    {
+      "path": "skills/ask-the-corpus/data.md",
+      "requires": [
+        "data@2"
+      ],
+      "reason": "the export carries no data"
+    },
+    {
+      "path": "skills/ask-the-corpus/explanations.md",
+      "requires": [
+        "explanations@2"
+      ],
+      "reason": "the export carries no explanations"
+    },
+    {
+      "path": "skills/ask-the-corpus/integrations.md",
+      "requires": [
+        "integrations@2"
+      ],
+      "reason": "the export carries no integrations"
+    },
+    {
+      "path": "skills/ask-the-corpus/nfrs.md",
+      "requires": [
+        "nfrs@5"
+      ],
+      "reason": "the export carries no nfrs"
+    },
+    {
+      "path": "skills/ask-the-corpus/offerings.md",
+      "requires": [
+        "offerings@1"
+      ],
+      "reason": "the export carries no offerings"
+    },
+    {
+      "path": "skills/ask-the-corpus/postmortems.md",
+      "requires": [
+        "postmortems@1"
+      ],
+      "reason": "the export carries no postmortems"
+    },
+    {
+      "path": "skills/ask-the-corpus/services.md",
+      "requires": [
+        "services@2"
+      ],
+      "reason": "the export carries no services"
+    },
+    {
+      "path": "skills/ask-the-corpus/tools.md",
+      "requires": [
+        "tools@4"
+      ],
+      "reason": "the export carries no tools"
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.49.0",
+  "version": "0.50.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.49.0",
+    "contentVersion": "0.50.0",
     "types": [
       "fixes",
       "nfrs",
@@ -82,6 +82,41 @@
       "note": "Answers a question about the corpus as a whole from corpus/reports/."
     },
     {
+      "path": "skills/ask-the-corpus/adrs.md",
+      "requires": [
+        "adrs@1"
+      ],
+      "note": "Reads an ADR from corpus/adrs/, says whether it is in force, and follows a supersession to the ADR now in force."
+    },
+    {
+      "path": "skills/ask-the-corpus/nfrs.md",
+      "requires": [
+        "nfrs@5"
+      ],
+      "note": "Reads an NFR from corpus/nfrs/: the target a service or an offering commits to, and whether it binds."
+    },
+    {
+      "path": "skills/ask-the-corpus/offerings.md",
+      "requires": [
+        "offerings@1"
+      ],
+      "note": "Reads an offering from corpus/offerings/: what a customer gets, and the services that deliver it."
+    },
+    {
+      "path": "skills/ask-the-corpus/postmortems.md",
+      "requires": [
+        "postmortems@1"
+      ],
+      "note": "Reads a postmortem from corpus/postmortems/, and fetches its timeline and actions through retrieval.md, because neither travels."
+    },
+    {
+      "path": "skills/ask-the-corpus/services.md",
+      "requires": [
+        "services@2"
+      ],
+      "note": "Reads a service from corpus/services/: what it does, its repositories, what it calls, and how its failure reaches a person."
+    },
+    {
       "path": "skills/standards-review",
       "requires": [
         "standards@3"
@@ -129,6 +164,34 @@
         "runbooks@3"
       ],
       "reason": "the export carries no runbooks"
+    },
+    {
+      "path": "skills/ask-the-corpus/data.md",
+      "requires": [
+        "data@2"
+      ],
+      "reason": "the export carries no data"
+    },
+    {
+      "path": "skills/ask-the-corpus/explanations.md",
+      "requires": [
+        "explanations@2"
+      ],
+      "reason": "the export carries no explanations"
+    },
+    {
+      "path": "skills/ask-the-corpus/integrations.md",
+      "requires": [
+        "integrations@2"
+      ],
+      "reason": "the export carries no integrations"
+    },
+    {
+      "path": "skills/ask-the-corpus/tools.md",
+      "requires": [
+        "tools@4"
+      ],
+      "reason": "the export carries no tools"
     }
   ]
 }

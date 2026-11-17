@@ -1,9 +1,8 @@
 ---
 name: ask-the-corpus
-description: Answer from the organisation's recorded knowledge, which travels with this plugin as data. Use when
-  someone asks "anything I should know before I change X". Use it as well, unprompted, after a change that leaves a
-  record here describing something that is no longer true.
-when_to_use: "Use before you write or change code or a build, or when asked what rule applies or which standards exist. Use before designing for secrets, access, data or production, or asked what is allowed or what policies exist. Use before changing a check, CI job or checked rule, or when asked what checks a rule, or what nothing checks. Use before you debug or file a finding on a problem, or when given an error or asked what problems are known. Use when asked what a term means, how two differ or which exist, or on a business noun the code cannot define. Use when someone asks what the corpus covers as a whole, or what nothing covers."
+description: Answer from the organisation's recorded knowledge. Use when asked "anything I should know before I
+  change X", and after a change that leaves a record here untrue.
+when_to_use: "Use before you write code or a build, or when asked what rule applies. Use before designing for secrets, access or data, or asked what is allowed. Use before changing a check or CI job, or asked what checks a rule. Use before you debug or file a finding, or when given an error. Use when asked what a term means, or on a noun the code cannot define. Use when asked what the corpus covers, or what nothing covers. Use before a design choice, or when asked why something was decided. Use before a change to a service's speed or uptime, or asked its target. Use when asked what a customer-facing feature does or what delivers it. Use when asked whether something failed before, and what went wrong. Use before changing a service, or asked what it does, calls or keeps."
 ---
 
 # Answering from the corpus
@@ -33,19 +32,28 @@ shipped under `included`, and each one left out under `trimmed`, with the reason
 
 Match the question to a row, then read the file the row names. Read a reference file only when a row sends you to it.
 
-| The question                                                     | Type       | Read               |
-|------------------------------------------------------------------|------------|--------------------|
-| What is the rule for X. What must I build to                     | standards  | `standards.md`     |
-| Are we allowed to X. What are we committed to                    | policies   | `policies.md`      |
-| What checks this rule. Is it enforced                            | controls   | `controls.md`      |
-| How do we carry out this planned task                            | processes  | `processes.md`     |
-| Has anyone hit this problem. What does this error mean           | fixes      | `fixes.md`         |
-| What does this word mean here                                    | glossary   | `glossary.md`      |
-| Is there an accepted exception to this rule. Is it still current | deviations | `deviations.md`    |
-| What does the corpus cover. Which clauses have nothing behind it | reports    | `reports.md`       |
-| Something is broken. What do I do first                          | runbooks   | `runbooks.md`      |
-| Does my change meet the standards                                | standards  | `standards-review` |
-| Anything I should know before I change X                         | any        | the next section   |
+| The question                                                     | Type         | Read               |
+|------------------------------------------------------------------|--------------|--------------------|
+| What is the rule for X. What must I build to                     | standards    | `standards.md`     |
+| Are we allowed to X. What are we committed to                    | policies     | `policies.md`      |
+| What checks this rule. Is it enforced                            | controls     | `controls.md`      |
+| How do we carry out this planned task                            | processes    | `processes.md`     |
+| Has anyone hit this problem. What does this error mean           | fixes        | `fixes.md`         |
+| What does this word mean here                                    | glossary     | `glossary.md`      |
+| Is there an accepted exception to this rule. Is it still current | deviations   | `deviations.md`    |
+| What does the corpus cover. Which clauses have nothing behind it | reports      | `reports.md`       |
+| Something is broken. What do I do first                          | runbooks     | `runbooks.md`      |
+| Why was this decided. What was it chosen over                    | adrs         | `adrs.md`          |
+| How may this data be stored or sent. Who owns it                 | data         | `data.md`          |
+| How do these parts of the estate fit together                    | explanations | `explanations.md`  |
+| What happens when this vendor's system fails                     | integrations | `integrations.md`  |
+| What target must this service meet                               | nfrs         | `nfrs.md`          |
+| What does this feature give a customer. What delivers it         | offerings    | `offerings.md`     |
+| Has this failed before. What went wrong                          | postmortems  | `postmortems.md`   |
+| What does this service do. What depends on it                    | services     | `services.md`      |
+| May I use this tool or package. Which version                    | tools        | `tools.md`         |
+| Does my change meet the standards                                | standards    | `standards-review` |
+| Anything I should know before I change X                         | any          | the next section   |
 
 `standards-review` is a skill of its own. Load it.
 
@@ -59,8 +67,7 @@ records about X, then read each record through the route for its type.
 
 * **Name X as the records would**: a service, a file, a pipeline, a tool or a rule. Take its id where you know one.
 * **Search `${CLAUDE_PLUGIN_ROOT}/corpus/` for that name or id.** Each hit's directory under `corpus/` is its type.
-* **Read each hit through the row for its type.** Where no row covers the type, read the record's file whole, quote
-  what it says, and link its `links.human`.
+* **Read each hit through the row for its type.**
 
 **Read every deviation the search returns.** An accepted deviation changes what is right for X. A change that closes
 one, or relies on one, is something the person asking needs to know before the work starts.

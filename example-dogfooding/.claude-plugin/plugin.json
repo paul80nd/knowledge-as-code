@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-dogfooding",
   "displayName": "Example Dogfooding",
-  "version": "0.105.0",
+  "version": "0.106.0",
   "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
   "author": {
     "name": "Paul Law",
@@ -111,6 +111,27 @@
           "runbooks@3"
         ],
         "note": "Answers from corpus/runbooks/ when something is failing now."
+      },
+      {
+        "path": "skills/ask-the-corpus/adrs.md",
+        "requires": [
+          "adrs@1"
+        ],
+        "note": "Reads an ADR from corpus/adrs/, says whether it is in force, and follows a supersession to the ADR now in force."
+      },
+      {
+        "path": "skills/ask-the-corpus/services.md",
+        "requires": [
+          "services@2"
+        ],
+        "note": "Reads a service from corpus/services/: what it does, its repositories, what it calls, and how its failure reaches a person."
+      },
+      {
+        "path": "skills/ask-the-corpus/tools.md",
+        "requires": [
+          "tools@4"
+        ],
+        "note": "Reads a tool from corpus/tools/: whether new work may use it, the version approved, and the licence that applies."
       },
       {
         "path": "skills/standards-review",
