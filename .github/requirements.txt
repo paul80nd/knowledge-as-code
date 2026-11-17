@@ -5,4 +5,4 @@
 # actionlint runs in the same job and is not here: it is a Go binary with no pip package, so the job
 # pins its version in the `go install` line and the header there says what it pins today.
 yamllint==1.38.0
-zizmor==1.31.1
+zizmor==1.32.0
