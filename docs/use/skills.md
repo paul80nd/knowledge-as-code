@@ -22,7 +22,7 @@ follows the last of them out.
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
 | `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone                |
 | `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | `standards` or `policies` |
-| `ask-the-corpus`    | Answer from the organisation's recorded knowledge, which travels with this plugin as data                                            | supporting                |
+| `ask-the-corpus`    | Answer from the organisation's recorded knowledge                                                                                    | supporting                |
 | `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@3`             |
 
 <!-- END GENERATED: skills-in-the-plugin -->

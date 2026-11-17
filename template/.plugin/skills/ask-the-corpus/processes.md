@@ -1,5 +1,5 @@
 ---
-trigger: Use before a planned task that may be written down, or when asked how a task is done or which processes exist.
+trigger: Use before a planned task, or when asked how a task is done here.
 ---
 
 # Following a process
