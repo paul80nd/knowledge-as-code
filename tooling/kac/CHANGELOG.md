@@ -41,6 +41,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   ADRs ships a plugin that reads them. A corpus that runs `kac update` receives the new plugin tree, and a plugin it
   bundles ships `ask-the-corpus`, `raise-finding`, `request-deviation` and `standards-review`. A session that loaded
   `standards-lookup` by name now loads `ask-the-corpus`.
+- **The breadcrumb sends every question to the router where no lookup ships.** `kac bundle` writes the breadcrumb a
+  session reads at its start. Where a plugin announces a router and no lookup, the breadcrumb now asks the session to
+  load the router for any question its records may answer. Where a lookup is announced too, the breadcrumb still sends a
+  known need to the lookup, and a question with no known place to the router.
 
 ### Fixed
 

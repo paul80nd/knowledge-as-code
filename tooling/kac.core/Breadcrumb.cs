@@ -54,9 +54,10 @@ public static class Breadcrumb
 
         var knownNeed = $"a lookup skill such as {Join(lookups)} for a known need";
 
-        if (routers.Count > 0)
-            lines.Add($"Ask {Skills(routers)} when you do not know which record answers a question"
-                      + (lookups.Count > 0 ? $", and {knownNeed}." : "."));
+        if (routers.Count > 0 && lookups.Count > 0)
+            lines.Add($"Ask {Skills(routers)} when you do not know which record answers a question, and {knownNeed}.");
+        else if (routers.Count > 0)
+            lines.Add($"Ask {Skills(routers)} for any question these records may answer.");
         else if (lookups.Count > 0)
             lines.Add($"Ask {knownNeed}.");
 
@@ -66,7 +67,7 @@ public static class Breadcrumb
         return string.Join("\n", lines) + "\n";
     }
 
-    /// <summary>The role of a skill that sends a question with no known place to the reader that answers it.</summary>
+    /// <summary>The role of a skill that sends a question to the reader that answers it.</summary>
     public const string Router = "router";
 
     /// <summary>The role of a skill that reads one type, for a need the session can already place.</summary>

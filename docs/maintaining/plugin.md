@@ -110,11 +110,11 @@ standards (from eng). 42 entries across 13 records: An interface is described by
 * **It names no record type.** Counts, names, shortcodes and skills are read off the export and the surviving
   components, so a type this tool has never heard of gets a line.
 
-| `announce`     | The breadcrumb asks a session to load the skill                | In the template   |
-|----------------|----------------------------------------------------------------|-------------------|
-| `"router"`     | for a question whose record the session cannot place           | `ask-the-corpus`  |
-| `"lookup"`     | for a known need, named as an example of a lookup              | `glossary-lookup` |
-| `"write-back"` | when the session's change alters something a record describes  | `raise-finding`   |
+| `announce`     | The breadcrumb asks a session to load the skill                                 | In the template  |
+|----------------|---------------------------------------------------------------------------------|------------------|
+| `"router"`     | for any question, or, where a lookup ships too, one it cannot place             | `ask-the-corpus` |
+| `"lookup"`     | for a known need, named as an example of a lookup                               | none             |
+| `"write-back"` | when the session's change alters something a record describes                   | `raise-finding`  |
 
 `true` reads as `"lookup"`, so a manifest written before the roles keeps its line. Any other value announces nothing.
 
@@ -218,7 +218,7 @@ reader is the corpus's own maintainer holding the source. [`new`](../use/cli/new
 under `.claude/skills/` and [`update`](../use/cli/update.md) keeps it current. A consumer install would ship a skill
 that can only refuse.
 
-**Why not trim `raise-finding` with the lookups.** It supports nothing and serves the reader. A corpus with no records
+**Why not trim `raise-finding` with the reference files.** It supports nothing and serves the reader. A corpus with no records
 is the one where a session most needs a route to report, so it is standalone. Standalone does not exempt it from the
 type trim.
 

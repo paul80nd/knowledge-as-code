@@ -43,8 +43,8 @@ public class BreadcrumbTests
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Router, Glossary]));
 
     [Fact]
-    public void A_router_with_no_announced_lookup_is_named_alone()
-        => Assert.Contains("Ask the ask-the-corpus skill when you do not know which record answers a question.\n",
+    public void A_router_with_no_announced_lookup_takes_every_question()
+        => Assert.Contains("Ask the ask-the-corpus skill for any question these records may answer.\n",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Router]));
 
     [Fact]
