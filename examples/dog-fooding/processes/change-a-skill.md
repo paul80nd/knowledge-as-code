@@ -92,6 +92,12 @@ one says moves neither. One nothing sends moves nothing.
 14. Run the test layers, one `kac` invocation at a time. Adding or removing a file under `template/.plugin/` changes
     `expected-tree.txt`, and moving `manifest.yaml` changes `expected-descriptor.yaml`, so run the golden fixtures with
     `GITHUB_ACTIONS=true`.
+    * If you changed a tracker platform file, a `github.md` or an `azure-devops.md`, test it with a fresh session on
+      each platform it covers. The session follows the skill with no other help, and writes one test item. No test
+      layer reaches a tracker.
+    * Test an `azure-devops.md` against an organisation backed by Entra ID and against one with no Entra ID tenant.
+      The second refuses a client the first accepts.
+    * Record each result in the pull request's Evidence, without naming the organisation.
 15. Run [prc-pull-request].
 
 ## Verification

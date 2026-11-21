@@ -3,25 +3,39 @@
 Read this where the tracker has a `target` of `github`. Each section serves one step of `SKILL.md`, and ends by sending
 you back to it.
 
-This file states what each step achieves and what GitHub does that you could not work out, and gives no command. Write
-each command yourself, for the shell and the client you have, because a command written for another shell fails in
-yours. `gh` is the client that signs in to GitHub.
+This file states what each step achieves, the client known to reach it, and what GitHub does that you could not work
+out. It gives no command. Write each command yourself, for the shell and the client you have, because a command written
+for another shell fails in yours.
+
+## The client
+
+**`gh` is the preferred client.** It was tested against a public repository on github.com.
+
+**Any other client may do the work**, such as GitHub's MCP server or the REST API, where every check this file states
+passes.
+
+| Client | What is known                                                                               |
+|--------|---------------------------------------------------------------------------------------------|
+| `gh`   | refuses a label the repository does not have, and refuses a whole edit where one is missing |
+
+**Install nothing.** Where no client is signed in to GitHub, print what you produced. Installing changes the reader's
+machine.
 
 ## What GitHub does
 
-| Fact                                                                                                         | Why it matters                                                                                                     |
-|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
-| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                     | every read and write addresses `<owner>/<repo>`                                                                    |
-| `gh` refuses a label the repository does not have, and refuses a whole edit where one label in it is missing | every label is made before step 8 applies the first                                                                |
-| The REST API drops every label silently for an account without push access                                   | the check after each write is what shows a label that did not land                                                 |
-| Creating a label that already exists fails, unless the request asks to update a label already there          | a request that updates one can be sent for all seven labels and changes nothing                                    |
-| An issue list returns 30 issues unless it asks for more                                                      | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so                |
-| Search does not index the text inside a fenced code block                                                    | a search for `kac-finding` never reaches the block, so the second read lists the issues and reads each body itself |
-| Adding a label adds it to the set the issue has                                                              | `kac:finding` stays on                                                                                             |
-| GitHub has no areas                                                                                          | the queue is the whole repository, and nothing is bounced                                                          |
-| An issue body and a comment are stored as the Markdown they were sent                                        | the block reads as it was written, and a comment needs no marking                                                  |
-| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens    | it shows a finding a pull request already answers while the issue is still open                                    |
-| A pull request whose body says `Closes #<issue>` closes that issue on merge                                  | merging settles the finding, and the issue keeps a link to the pull request                                        |
+| Fact                                                                                                      | Why it matters                                                                                                     |
+|-----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`                                  | every read and write addresses `<owner>/<repo>`                                                                    |
+| A client may refuse a label the repository does not have                                                  | every label is made before step 8 applies the first                                                                |
+| GitHub drops every label silently for an account without push access                                      | the check after each write is what shows a label that did not land                                                 |
+| Creating a label that already exists fails, unless the request asks to update a label already there       | a request that updates one can be sent for all seven labels and changes nothing                                    |
+| A list of issues comes 30 at a time unless it asks for more                                               | a read that returned as many as it asked for has more behind it, so step 1 asks for 200 and says so                |
+| Search does not index the text inside a fenced code block                                                 | a search for `kac-finding` never reaches the block, so the second read lists the issues and reads each body itself |
+| Adding a label adds it to the set the issue has                                                           | `kac:finding` stays on                                                                                             |
+| GitHub has no areas                                                                                       | the queue is the whole repository, and nothing is bounced                                                          |
+| An issue body and a comment are stored as the Markdown they were sent                                     | the block reads as it was written, and a comment needs no marking                                                  |
+| `closedByPullRequestsReferences` lists every pull request that closes an issue, from the moment one opens | it shows a finding a pull request already answers while the issue is still open                                    |
+| A pull request whose body says `Closes #<issue>` closes that issue on merge                               | merging settles the finding, and the issue keeps a link to the pull request                                        |
 
 ## Signing in
 
@@ -30,8 +44,8 @@ yours. `gh` is the client that signs in to GitHub.
 
 ## Making the labels
 
-**Read the names of every label the repository has**, up to 100. Count the missing ones from the table below into what
-you tell the person you are about to write.
+**Read the names of the repository's labels that start `kac:`**, up to 100. Count the missing ones from the table
+below into what you tell the person you are about to write.
 
 **Once they have agreed, create each missing label** with the colour and the description the table gives. A request
 that updates a label already there may send all seven instead.

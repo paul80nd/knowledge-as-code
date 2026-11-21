@@ -27,6 +27,20 @@ follows the last of them out.
 
 <!-- END GENERATED: skills-in-the-plugin -->
 
+### The tracker clients
+
+`raise-finding` and `request-deviation` file an issue, and `ask-the-corpus` fetches a record's published source. Each
+runs a client for the platform, signed in with the credential the reader already has. Each names the client it
+prefers, and accepts any other client whose result passes the skill's checks.
+
+| Platform     | Preferred client                              | Signs in through                                                  |
+|--------------|-----------------------------------------------|-------------------------------------------------------------------|
+| GitHub       | `gh`                                          | `gh auth login`                                                   |
+| Azure DevOps | the `azure-devops` extension to the Azure CLI | `az login`, or a personal access token through `az devops login` |
+
+A skill installs nothing. Where no client can run, it prints the text it would have filed. The `azure-devops`
+extension sends usage events to the organisation on every call it makes.
+
 ### Copying the review view to `CODING_STANDARDS.md`
 
 `standards-review` checks a change against the review view: the file [`bundle`](cli/bundle.md#views) writes at

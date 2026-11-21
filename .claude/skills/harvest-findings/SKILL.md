@@ -42,8 +42,8 @@ both in your reply before you write anything.
 * **Test the corpus, never the publishing address.** A corpus published as a wiki or a documentation site has no
   repository in `publishing.base`, and its maintainer still has a tracker and the source.
 
-**Every invocation needs the tracker's client, signed in.** The platform file says how to check. Where the client is
-missing, print what you produced and say which invocation you could not finish.
+**Every invocation needs a client for the tracker's platform, signed in.** The platform file names the one it prefers,
+and says how to check. Where no client can run, print what you produced and say which invocation you could not finish.
 
 ## The platform files
 
@@ -58,9 +58,10 @@ before the first read. Each of its sections is headed by the step it serves, and
 
 Both files sit beside this one, in the base directory this skill was loaded from.
 
-**Neither file gives a command.** Each states what a step achieves, the facts about its platform you could not work
-out, and a check on what the platform sends back. Write each command for the shell and the client you have, because a
-command written for another shell fails in yours.
+**Neither file gives a command.** Each states what a step achieves, the client known to reach the platform, the facts
+about it you could not work out, and a check on what the platform sends back. Any client you have may do the work,
+where every check passes. Write each command for the shell and the client you have, because a command written for
+another shell fails in yours.
 
 **Read every write back, and repeat none of them.** Where a check fails, report the field and the link, and write
 nothing more to that item. The write already landed in part, so a second attempt leaves two comments or two routes.
@@ -209,8 +210,8 @@ findings that are halves of one problem read as two unrelated tickets on their o
 
 **An empty queue is an answer.** Say the queue is empty and stop.
 
-**Given one issue, read it on its own as well as the queue.** Classify it alone, and show a one-row table. Refuse one
-already labelled `kac:triaged`.
+**Given one issue, read it on its own as well as the queue.** Run all three reads, because a duplicate shows only
+against the rest. Classify the issue alone, and show a one-row table. Refuse one already labelled `kac:triaged`.
 
 ### 2. Read the block in each body
 
@@ -264,6 +265,8 @@ A finding saying the answer is wrong is `kac:route-record`.
 `kac:route-record`, and the draft moves the control's `mechanism` once the check exists.
 
 ### 5. Read the level of detail
+
+**Skip this step where the finding touches no record**, as a framework finding does, and go on to step 6.
 
 **Read `## Level of detail and cadence` on the type page of the record the finding touches.** The page is
 `<folder>.md` at the corpus root. The section says what one step, rule or part of that type contains, and where finer
@@ -364,16 +367,16 @@ conditions: a person reads every word first, and the body contains none of the f
 [Read the addresses](#read-the-addresses) normalises them. They are equal where a problem with `kac` and a problem with
 a record are filed in the same place.
 
-**Every case kept here still gets `kac:triaged` and `kac:route-framework`, as step 8 applies them.** A finding left
-without `kac:triaged` in this corpus's area stays in the queue and is re-read, re-commented and re-drafted on every
-run. A bounced finding is the one exception, because it leaves the area.
+**Every case kept here still gets `kac:triaged`, `kac:route-framework` and the comment, as step 8 applies them.** A
+finding left without `kac:triaged` in this corpus's area stays in the queue and is re-read, re-commented and
+re-drafted on every run. A bounced finding is the one exception, because it leaves the area.
 
-**Where `framework.base` is `null`, this corpus states no address for the framework.** Mark the finding, draft the
-upstream body, and say in your reply that nobody named a tracker for it. The fix is a `framework:` block in
-`.corpus.yaml`.
+**Where `framework.base` is `null`, this corpus states no address for the framework.** Mark the finding, post the
+upstream body as a comment, as step 8 posts one, and say in your reply that nobody named a tracker for it. The fix is
+a `framework:` block in `.corpus.yaml`.
 
-**Where they are equal, the finding is already where framework work is filed.** Mark it and stop. There is nothing to
-copy.
+**Where they are equal, the finding is already where framework work is filed.** Mark it and comment the reason, as
+step 8 does, then stop. There is nothing to copy.
 
 **Where only the areas differ, bounce the work item to the framework's area, and stop.**
 [Read the addresses](#read-the-addresses) shows the bounce. It takes no label here. The work item stays inside the
