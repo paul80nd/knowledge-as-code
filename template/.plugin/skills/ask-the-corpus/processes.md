@@ -76,9 +76,10 @@ Read the `status` that puts a process in force from `inForce`, a string, `null`,
 * **`status: retired`**: the process was stood down. Find what replaced it, and quote that.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 * **`last-rehearsed: never`**: nobody has followed this end to end, so the first person to run it is testing it.
-* **`last-rehearsed.at` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
-* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed.at`,
-  and say nothing here answers that.
+* **`last-rehearsed.at` older than a `quarterly` or `annual` frequency allows**: the process has drifted out of its own
+  cadence.
+* **`rehearsal-frequency: on-change` or `per-release`**: an event sets this cadence, so no date makes it stale. Ask what
+  has changed, or which release has shipped, since `last-rehearsed.at`, and say nothing here answers that.
 * **`last-rehearsed.by`**: who followed it last, and the one to ask where a step reads wrong.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
