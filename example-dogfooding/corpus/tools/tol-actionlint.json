@@ -33,6 +33,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913/examples/dog-fooding/tools/lint/actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/59bd465c96483e31c5787e1ecf456ad4bc5a7592/examples/dog-fooding/tools/lint/actionlint.md"
   }
 }

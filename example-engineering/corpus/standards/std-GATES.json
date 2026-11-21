@@ -35,6 +35,6 @@
     "Conformance checklist": "- [ ] A push triggers the build with no manual step.\n- [ ] Branch policy lists the build and the test suite as required checks.\n- [ ] The build passes from a clean clone on a fresh agent.\n- [ ] Every skipped, excluded or suppressed check names a deviation.\n- [ ] Every test guarded off a platform states why in the guard, and a required check runs it on a platform where it\n      can.\n- [ ] Every such deviation is open, owned by an individual, and inside its review date.\n- [ ] The last defect fix in this repository has a test that fails without the fix."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913/examples/engineering/standards/common/build-gates.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/59bd465c96483e31c5787e1ecf456ad4bc5a7592/examples/engineering/standards/common/build-gates.md"
   }
 }

@@ -37,7 +37,7 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 | `fields.severity`            | string                   | the severity it is written for, as `sev3`                                                                             |
 | `fields.applies-to`          | list of strings, or null | the service ids it covers                                                                                             |
 | `fields.last-rehearsed`      | object, or string        | the last walk: `at`, `by` and `method` are strings, `method` null where the record left it out. Or the string `never` |
-| `fields.rehearsal-frequency` | string                   | how often it is walked, as `on-change` or `quarterly`                                                                 |
+| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`                                                                   |
 | `fields.requires-tools`      | list of strings, or null | what the reader installs before starting                                                                              |
 | `fields.requires-access`     | list of strings, or null | the permissions the reader needs before starting                                                                      |
 | `fields.tags`                | list of strings, or null | the word a reader arrives with                                                                                        |
