@@ -1,6 +1,6 @@
 # Rules the standards of example-dogfooding state
 
-example-dogfooding 0.106.1 states 87 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The ask-the-corpus skill returns a rule's obligations by its standard's id.
+example-dogfooding 0.107.0 states 87 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The ask-the-corpus skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
@@ -40,7 +40,7 @@ Each heading gives a standard's id, title and status. Each line under it gives a
 - A hook runs in a POSIX shell, and pushes a view once to each agent
 - A router reads each type from a file it loads when a question is routed there
 - A skill names the type of every field it describes
-- A skill reading an export only reads files, and one that calls gh or az says what it does without them
+- A skill reading an export only reads files, and one that calls a platform says what it does without a client
 - A skill reads a rule's keyword as what departing from it costs
 - A skill says what its corpus did not carry
 - A skill states what a step achieves and what the session could not infer, and gives no command

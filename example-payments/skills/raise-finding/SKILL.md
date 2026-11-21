@@ -18,8 +18,8 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it con
 
 Use that path exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-Writing the body needs nothing installed. Filing it runs `gh` on GitHub or `az` on Azure DevOps. Where neither can run,
-print the whole body, because the body is the valuable part.
+Writing the body needs nothing installed. Filing it runs a client for the tracker's platform, and each platform file
+names the one it prefers. Where no client can run, print the whole body, because the body is the valuable part.
 
 The sections below run in order. Each one decides whether the next is needed.
 
@@ -148,6 +148,9 @@ Each key of the block, in this order:
 **Keep the three sections short**: what you saw, what you were doing, and who it might bite. Three sentences each is
 plenty, because somebody triages the note.
 
+**Write a placeholder in braces, as `{org}`.** Azure DevOps removes text inside angle brackets when it stores a body,
+even inside a code span.
+
 ## File it
 
 Use the client that already signs in to the platform, with the credential it already has. Ask nobody for a credential.
@@ -164,12 +167,18 @@ ${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/github.md        # target github: the
 ${CLAUDE_PLUGIN_ROOT}/skills/raise-finding/azure-devops.md  # target azure-devops: REST, the area path, the check
 ```
 
-**Neither file gives a command.** Each states what filing achieves, the facts about its platform you could not work
-out, and a check on what the platform sends back. Write each command for the shell and the client you have, because a
-command written for another shell fails in yours.
+**Neither file gives a command.** Each states what filing achieves, the client known to reach the platform, the facts
+about it you could not work out, and a check on what the platform sends back. Any client you have may file the item,
+where every check passes. Write each command for the shell and the client you have, because a command written for
+another shell fails in yours.
 
-**Read the issue back once it is filed, and file nothing a second time.** Where a check fails, report the field and
-the link. The issue already exists, so a second attempt leaves two.
+**Read the item back once it is filed, and file nothing a second time.** The item exists once. Its body reads back as
+the Markdown you sent, apart from trailing whitespace, with the block's fences intact. It has the mark, unless you filed
+it unmarked. Where a check fails, report the field and the link. The item already exists, so a second attempt leaves
+two.
+
+**A create that fails, or returns no id, may still have made the item.** Look for it by its title among the newest
+items on that tracker before you say nothing was filed. Where it is there, run the checks on it.
 
 Where the file for that target is missing, the plugin is not assembled as it should be. Say so, and print the body.
 
@@ -178,11 +187,11 @@ Where the file for that target is missing, the plugin is not assembled as it sho
 A `target` of `none` names a corpus with no backlog this export can address. Print the whole body, name the corpus it
 belongs to, and ask whoever is with you where it goes.
 
-### Where neither `gh` nor `az` can run
+### Where no client can run
 
-This covers a client that is not installed, and a session that cannot run a command at all. Print the whole body, name
-the repository it belongs on, and say that you could not file it. Ask whoever is with you to paste it, because a
-finding read out to somebody still reaches the people who can act on it.
+This covers a client that is not installed or not signed in, and a session that cannot run a command at all. Print the
+whole body, name the repository it belongs on, and say that you could not file it. Ask whoever is with you to paste it,
+because a finding read out to somebody still reaches the people who can act on it.
 
 ## Say what you did
 

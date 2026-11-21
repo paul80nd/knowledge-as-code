@@ -7,8 +7,9 @@ the summary suggests. Every type reads the same way.
 **The reference file that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came
 from a parts file.
 
-Fetching runs `gh` on GitHub or `az` on Azure DevOps. Where neither can run, ask whoever is with you for the section
-you need.
+Fetching runs a client for the platform that publishes the record. Each platform below names the client it prefers,
+and any other client that returns the file may stand in. Where no client can run, ask whoever is with you for the
+section you need.
 
 ## Take the publishing block of the corpus that wrote it
 
@@ -26,7 +27,7 @@ you need.
 | `ref`           | string or null | the commit the export was taken at                                                          |
 | `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace                                   |
 
-A key with no value is `null`, and the key is still there.
+A key with no value is `null`. An export written before a key existed leaves it out, so read a missing key as `null`.
 
 ## Fetch the file at its ref
 
@@ -42,6 +43,8 @@ for another shell fails in yours. Each platform below states what you could not 
 
 ### GitHub
 
+**`gh` is the preferred client.** It was tested against a public repository on github.com.
+
 | Fact                                                                                                     | Why it matters                                                  |
 |----------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
 | `base` is the repository, as `https://github.com/<owner>/<repo>`                                         | the owner and the repository address the contents API           |
@@ -51,23 +54,31 @@ for another shell fails in yours. Each platform below states what you could not 
 
 ### Azure DevOps
 
-| Fact                                                                                                              | Why it matters                                                                  |
-|-------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| `az repos` has no command for a file's content, and `az devops invoke` and `az rest` both reach the REST API      | the REST API is the only route                                                  |
-| The [Git Items API] serves a file, and names the parameters that address a path at a commit                       | it is the resource to fetch from                                                |
-| The media type `text/plain` makes the response the file                                                           | without it the response describes the file                                      |
-| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as `--resource`       | it tells `az` which token signs the call                                        |
-| `az rest` signs in through `az login`, and a token set up for `az devops login` does not reach it                 | a sign-in failure is fixed by `az login`                                        |
-| An `azure-devops-wiki` record is read from `repository` through the Git Items API, at `ref`, under `pathPrefix`   | `base` is the wiki, and the file sits in the repository behind it               |
-| Where `repository` is `null`, the [Wikis API] lists the project's wikis and the repository each is published from | the export was taken where the corpus had no `origin` it could read             |
-| `az devops invoke` refuses a response that is not JSON unless it writes the response to a file                    | `az rest` with `text/plain` as its `Accept` header returns the file in one call |
+**The `azure-devops` extension to the Azure CLI is the preferred client.** Its `az devops invoke` reaches the REST API
+with the sign-in `az login` gave it, or with a personal access token set up through `az devops login`. It was tested,
+signed in through `az login` alone, against an `azure-devops-wiki` corpus in an organisation with no Entra ID tenant.
+Install nothing: where the extension is missing, say so, then use another client you have or ask for the section.
 
-### Where neither `gh` nor `az` fetches it
+| Fact                                                                                                                            | Why it matters                                                                   |
+|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `az repos` has no command for a file's content                                                                                  | the REST API is the only route                                                   |
+| The [Git Items API] serves a file, and names the parameters that address a path at a commit                                     | it is the resource to fetch from                                                 |
+| `az devops invoke` reaches it as the `git` area and the `items` resource, with `project` and `repositoryId` as route parameters | the route names the repository, and the path and the commit are query parameters |
+| `az devops invoke` refuses a response that is not JSON unless it writes the response to a file                                  | ask for JSON with `includeContent=true`, and the file's text is in `content`     |
+| The media type `text/plain` makes the response the file                                                                         | without it the response describes the file                                       |
+| Every call names an `api-version`. `7.1` is the version the tracker skills were tested at                                       | a later version the server serves may stand in                                   |
+| A credential the organisation refuses is answered with a sign-in page as HTML, status 203, and not with a 401                   | a response that is not JSON, or not the record, is a refused sign-in             |
+| `az rest` reaches an organisation backed by Entra ID only. Elsewhere it is sent a sign-in page, and exits 0                     | it is a client for an organisation known to be backed by Entra ID                |
+| An `azure-devops-wiki` record is read from `repository` through the Git Items API, at `ref`, under `pathPrefix`                 | `base` is the wiki, and the file sits in the repository behind it                |
+| Where `repository` is `null`, the [Wikis API] lists the project's wikis and the repository each is published from               | the export was taken where the corpus had no `origin` it could read              |
+| On Windows `az` runs as `az.cmd`, and `cmd.exe` cuts an argument at `&`, even inside quotes                                     | pass each query parameter as its own argument                                    |
 
-This covers a client that is not installed, one the repository refuses, and a session that cannot run a command at
-all. Say that you found the record and cannot read it, name the platform, and quote the human link. Ask whoever is
-with you to paste the section you need. Answer only from what the record says, because a reader cannot tell a guess
-about its steps from the corpus.
+### Where no client fetches it
+
+This covers a client that is not installed or not signed in, one the repository refuses, and a session that cannot run
+a command at all. Say that you found the record and cannot read it, name the platform, and quote the human link. Ask
+whoever is with you to paste the section you need. Answer only from what the record says, because a reader cannot tell
+a guess about its steps from the corpus.
 
 ## Check what you got
 

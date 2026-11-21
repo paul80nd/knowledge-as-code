@@ -3,23 +3,36 @@
 Read this where the tracker of the corpus owning the clause has a `target` of `github`. You have the body in a file,
 and a yes to it.
 
-This file states what each step achieves and what GitHub does that you could not work out, and gives no command. Write
-each command yourself, for the shell and the client you have, because a command written for another shell fails in
-yours.
+This file states what filing achieves, the client known to reach it, and what GitHub does that you could not work out.
+It gives no command. Write each command yourself, for the shell and the client you have, because a command written for
+another shell fails in yours.
+
+## The client
+
+**`gh` is the preferred client.** It was tested against a public repository on github.com.
+
+**Any other client may file the issue**, such as GitHub's MCP server or the REST API, where every check under
+[Check the issue](#check-the-issue) passes.
+
+| Client | What is known                                                                   |
+|--------|---------------------------------------------------------------------------------|
+| `gh`   | refuses an issue naming a label the repository does not have, and files nothing |
+
+**Install nothing.** Where no client is signed in to GitHub, print the body. Installing changes the reader's machine.
 
 ## What GitHub does
 
-| Fact                                                                                   | Why it matters                                                       |
-|----------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `base` is the repository, as `https://github.com/<owner>/<repo>`                       | the owner and the repository are what the issue is filed against     |
-| `gh` refuses a label the repository does not have, and refuses the whole issue with it | a repository nobody set up for requests has no `kac:deviation` label |
-| The REST API drops every label silently for an account without push access             | the check on the issue is what shows a label that did not land       |
-| GitHub stores an issue body as the Markdown it was sent                                | the block reaches the record with its fences, so it needs no marking |
+| Fact                                                                 | Why it matters                                                       |
+|----------------------------------------------------------------------|----------------------------------------------------------------------|
+| `base` is the repository, as `https://github.com/<owner>/<repo>`     | the owner and the repository are what the issue is filed against     |
+| A repository nobody set up for requests has no `kac:deviation` label | a client that refuses an unknown label refuses the whole issue       |
+| GitHub drops every label silently for an account without push access | the check on the issue is what shows a label that did not land       |
+| GitHub stores an issue body as the Markdown it was sent              | the block reaches the record with its fences, so it needs no marking |
 
 ## File the issue
 
 **Open one issue on that repository**, with your title, the body from the file character for character, and the label
-`kac:deviation`. `gh` is the client that signs in to GitHub.
+`kac:deviation`.
 
 **Where the client refuses the label, open the issue once more with no label.** The refusal names the label, and nothing
 was filed, so the second attempt is the only issue. Say in your reply that you filed it unlabelled and why, because the
@@ -29,7 +42,8 @@ work is waiting on the answer.
 
 Read the issue back, and check two things:
 
-* **The body opens on the line ```` ```yaml kac-deviation ````**, so the block arrived with its fences.
+* **The body is the file you sent**, apart from trailing whitespace. It opens on the line
+  ```` ```yaml kac-deviation ````.
 * **The labels include `kac:deviation`**, unless you filed it unlabelled.
 
 **Where a check fails, report the field and the issue's URL, and file nothing again.** The issue exists, and a second
