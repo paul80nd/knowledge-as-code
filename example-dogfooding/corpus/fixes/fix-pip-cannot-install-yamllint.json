@@ -41,6 +41,6 @@
     "Why it happens": "The `lint` job installs Python 3.13 before it installs the requirements, so CI never sees this failure. `.github/requirements.txt` records what that job installs, not what a laptop can run. Dependabot moves both pins, so the minimum Python version rises again whenever yamllint or zizmor drops an old one."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4/examples/dog-fooding/fixes/pip-cannot-install-yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913/examples/dog-fooding/fixes/pip-cannot-install-yamllint.md"
   }
 }

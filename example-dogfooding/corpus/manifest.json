@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.107.0",
+  "contentVersion": "0.108.0",
   "mechanismVersion": 28,
-  "commit": "e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4",
+  "commit": "6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913",
   "dirty": false,
-  "generatedAt": "2026-11-21T10:23:16Z",
+  "generatedAt": "2026-11-21T11:13:49Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4",
+    "ref": "6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913",
     "repository": null
   },
   "reposBase": "https://github.com/paul80nd",
@@ -41,13 +41,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.54.0",
+      "contentVersion": "0.55.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "e93ce3191ae45f4c4d3de8f8ebce6f4af05c6cb4",
+        "ref": "6e7a6ae459ca39c0a1647e60b0d76fb1f7d70913",
         "repository": null
       },
       "reposBase": null,
