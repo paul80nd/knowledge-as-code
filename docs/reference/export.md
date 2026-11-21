@@ -408,7 +408,8 @@ The rules joining the base to a path, and the anchor rule for a part, belong to 
 
 The manifest has `base`, `pathPrefix`, `ref` and `repository`. To fetch a record's source, join `pathPrefix` ahead of
 the record's `path`. Then ask the client that authenticates to `target` for that file at that `ref`. `gh` does it for
-GitHub and `az rest` for both Azure DevOps targets. Where you have no such client, quote the link a person follows.
+GitHub, and `az devops invoke` from the Azure CLI's `azure-devops` extension for both Azure DevOps targets. Any other
+client that returns the file works as well. Where you have no such client, quote the link a person follows.
 
 The repository to ask is `base` on `github` and `azure-devops`. On `azure-devops-wiki`, `base` is the wiki, and
 `repository` is the Azure Repos repository its pages are read from, as

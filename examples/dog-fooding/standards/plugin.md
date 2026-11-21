@@ -61,7 +61,7 @@ no plugin, because it writes to the tracker and to the records.
 - Where a check fails, a skill **MUST NOT** have the session file the item again, because the item already exists.
 - A skill triaging findings **MUST** follow this rule as well, although it ships in no plugin.
 
-### READS: A skill reading an export only reads files, and one that calls `gh` or `az` says what it does without them
+### READS: A skill reading an export only reads files, and one that calls a platform says what it does without a client
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
@@ -73,10 +73,12 @@ no plugin, because it writes to the tracker and to the records.
 - A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the
   change under review.
 - Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
-- A skill that files an issue or fetches a record's published source **MAY** run `gh` or `az` to make that call, even
-  where it also reads an export.
-- A skill that files an issue or fetches a record's published source **MUST** say what it hands the reader where
-  neither `gh` nor `az` can run.
+- A skill that files an issue or fetches a record's published source **MAY** run a client for that platform, such as
+  `gh`, `az` or an MCP server, to make that call, even where it also reads an export.
+- A skill that files an issue or fetches a record's published source **SHOULD** name the client it prefers, and the
+  environments that client was tested against.
+- A skill that files an issue or fetches a record's published source **MUST** say what it hands the reader where no
+  client can run.
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
 
@@ -443,10 +445,12 @@ broke it.
 - [ ] Every skill that writes to a tracker has the session report the field and the link where a check fails, and file
       nothing again.
 - [ ] Every instruction a skill reading an export gives can be followed by a session that can read a file and nothing
-      else, apart from reading the change a review is asked about, and the `gh` or `az` call that files an issue or
+      else, apart from reading the change a review is asked about, and the client call that files an issue or
       fetches a record's published source.
-- [ ] Every skill that files an issue or fetches a record's published source says what it hands the reader where
-      neither `gh` nor `az` can run.
+- [ ] Every skill that files an issue or fetches a record's published source names the client it prefers, and where
+      that client was tested.
+- [ ] Every skill that files an issue or fetches a record's published source says what it hands the reader where no
+      client can run.
 - [ ] Every skill reviewing a change names it as what differs from a fixed point, and names no tool for reading it.
 - [ ] Every path a skill names opens on `${CLAUDE_PLUGIN_ROOT}`.
 - [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.
@@ -528,8 +532,10 @@ why a skill reading an export asks for no shell. The router promises at the top 
 nothing to run, and a Windows reader with no `grep` is who that promise is for.
 
 A skill that files an issue or fetches a record's published source cannot make that promise. Its work is a call to a
-platform, and no file read makes one. So it runs `gh` or `az`, which a reader on that platform is usually signed in to
-already. Where neither can run, it hands the reader the body to file by hand, or asks them to paste the record.
+platform, and no file read makes one. So it runs a client for that platform, which a reader is usually signed in to
+already. It names the client it prefers and accepts any other, because readers reach one platform through different
+clients, and a client one organisation accepts another can refuse. Where no client can run, it hands the reader the
+body to file by hand, or asks them to paste the record.
 
 The session is also why a skill states its intent and the reason for each rule. A session meets cases the author never
 saw, and a reason is what it can apply to the next one. A step covers only the case it was written for, so a skill
@@ -739,6 +745,8 @@ standard.
 
 ## Changelog
 
+- 2026-11-21: a skill that files an issue or fetches a record's published source may run any client for that platform,
+  names the one it prefers and where it was tested, and says what it hands the reader where no client can run.
 - 2026-11-17: the router reads every type it answers through a reference file, and fetches a record's published
   source through its `retrieval.md`. `kac bundle` lists each reference file's trigger in the router's `when_to_use`.
 - 2026-11-17: a router declares each reference file as its own component, requiring the type that file reads, and

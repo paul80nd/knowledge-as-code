@@ -51,6 +51,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac bundle` names the repository an Azure DevOps wiki corpus is read from.** The plugin manifest's `repository`
   was the wiki's address, the same as `homepage`. It is now the Git repository `kac export` names in
   `publishing.repository`, and stays `publishing.base` on every other target.
+- **The tracker skills reach an Azure DevOps organisation with no Entra ID tenant.** `raise-finding`,
+  `request-deviation` and `ask-the-corpus` sent every call through `az rest`, and such an organisation answers its token
+  with a sign-in page. Each now prefers the Azure CLI's `azure-devops` extension, signed in through `az login` or a
+  personal access token, and accepts any client whose result passes its checks. Each platform file states where its
+  preferred client was tested. A body writes a placeholder in braces, because Azure DevOps removes text in angle
+  brackets.
 
 ## 0.45.0 - 2026-11-12
 

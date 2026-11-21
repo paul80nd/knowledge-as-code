@@ -3,9 +3,31 @@
 Read this where the tracker has a `target` of `azure-devops`. Each section serves one step of `SKILL.md`, and ends by
 sending you back to it.
 
-This file states what each step achieves and what Azure DevOps does that you could not work out, and gives no command.
-Write each command yourself, for the shell and the client you have, because a command written for another shell fails
-in yours.
+This file states what each step achieves, the client known to reach it, and what Azure DevOps does that you could not
+work out. It gives no command. Write each command yourself, for the shell and the client you have, because a command
+written for another shell fails in yours.
+
+## The client
+
+**The `azure-devops` extension to the Azure CLI is the preferred client.** It signs in with the sign-in `az login` gave
+it, or with a personal access token set up through `az devops login`. Its WIQL queries, reads, comments, tag writes and
+area moves were tested, signed in through `az login` alone, against an organisation with no Entra ID tenant. Opening a
+pull request through it was not.
+
+**Any other client may do the work**, where every check this file states passes.
+
+| Client                       | What is known                                                                                                            |
+|------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `az devops invoke`           | reaches a route by its area and resource: `wit` with `wiql`, `workItemsBatch`, `comments` or `classificationNodes`       |
+| `az devops invoke`           | cannot address one existing work item, because it picks the create route and asks for `type`. `workItemsBatch` reads one |
+| `az devops invoke`           | turns `7.1-preview.4` into `7.1.4` and fails. Comments take `7.1-preview`, and `7.1` is refused                          |
+| `az boards work-item update` | writes `System.Tags` and `System.AreaPath` on one work item. Its `--fields` replaces the whole tag set                   |
+| `az boards work-item show`   | reads one work item by its id                                                                                            |
+| `az rest`                    | reaches an organisation backed by Entra ID only. Elsewhere it is sent a sign-in page, and exits 0                        |
+| Microsoft's MCP server       | needs an organisation backed by Entra ID, except in its personal access token mode. It sets the Markdown format itself   |
+
+**Install nothing.** Where the extension is missing, say so, then use another client you have or print what you
+produced. Installing changes the reader's machine, and a managed machine may forbid it.
 
 ## The organisation, the project and the area path
 
@@ -29,20 +51,22 @@ the project alone as its area path.
 
 | Fact                                                                                                                                                                              | Why it matters                                                                                             |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| `az rest` takes the application id of Azure DevOps, `499b84ac-1321-427f-aa17-267ca6975798`, as its `--resource`                                                                   | it tells `az` which token signs the call                                                                   |
-| `az rest` signs in through `az login`, and a personal access token set up for `az devops login` does not reach it                                                                 | a sign-in failure is fixed by `az login`, and by nothing else                                              |
-| `az boards` and `az repos` come from the `azure-devops` extension, and `az rest` needs none                                                                                       | a missing extension fails before the call is made                                                          |
+| A credential the organisation refuses is answered with a sign-in page as HTML, status 203, and not with a 401                                                                     | a response that is not JSON is a refused sign-in, whatever the client's exit code says                     |
+| Every call names an `api-version`. These calls were tested at `7.1`, and comments at `7.1-preview`                                                                                | a later version the server serves may stand in, where every check passes                                   |
 | On Windows `az` runs as `az.cmd`, so `cmd.exe` reads every argument again                                                                                                         | `cmd.exe` cuts an argument at `&`, even inside quotes, so pass a second query parameter apart from the URL |
 | `$expand` and `$Issue` are literal                                                                                                                                                | a shell that expands a `$` name sends a request without it                                                 |
 | `az` reads an argument that opens with `@` from the file it names, and sends the text itself where it cannot read the file. PowerShell reads a bare `@` as its splatting operator | a body that never left its file shows only in the response                                                 |
 | A JMESPath query naming `System.Tags` needs escaping that differs between shells                                                                                                  | a field read out of the JSON a call returns needs no escaping in any shell                                 |
 | A tag is what this platform calls a label, and Azure creates a tag it does not already have                                                                                       | there is no label to make, and no finding is filed unmarked                                                |
 | `fields."System.Tags"` is one string, its tags separated by `; `                                                                                                                  | a tag is found by splitting it                                                                             |
-| A write to `System.Tags` may replace the set it finds                                                                                                                             | a write that sends only the new tags can take `kac:finding` off                                            |
+| A write to `System.Tags` replaces the set it finds                                                                                                                                | a write that sends only the new tags takes `kac:finding` off                                               |
 | `Closed`, `Done` and `Removed` close an item in every process Azure ships                                                                                                         | Agile closes an Issue as `Closed`, and Basic as `Done`                                                     |
 | A work item is read at `_apis/wit/workitems/<id>` with `api-version=7.1`, and `$expand=relations` brings its links                                                                | the links are where a linked pull request shows                                                            |
 | `multilineFieldsFormat."System.Description"` says how the body is stored                                                                                                          | a Markdown body and an HTML body are read differently                                                      |
-| A comment is posted at `_apis/wit/workItems/<id>/comments` with `format=markdown` and `api-version=7.1-preview.4`, as `application/json` whose one key is `text`                  | `format=markdown` stores it as Markdown, so a backtick, a quotation mark and a fence all survive           |
+| A comment is posted at `_apis/wit/workItems/<id>/comments` with `format=markdown` and a `7.1-preview` `api-version`, as `application/json` whose one key is `text`                | `format=markdown` stores it as Markdown, so a backtick, a quotation mark and a fence all survive           |
+| A stored comment escapes its HTML: `>` comes back as `&gt;` and `&` as `&amp;`                                                                                                    | compare the comment after decoding, as the Markdown case of the body does                                  |
+| Text inside angle brackets, such as `<org>`, is removed when a description is stored, inside a code span as well                                                                  | write a placeholder in a comment in braces, as `{org}`                                                     |
+| `#` and a number in a description or a comment links to that work item in the same organisation                                                                                   | name a duplicate as `#<id>`, and write the full URL of an issue on any other tracker                       |
 | A JSON string takes a backslash before each backslash and each double quote, `\n` for each line break and `\t` for each tab                                                       | a raw quote or line break ends the string early, and the comment is refused or cut                         |
 | `System.AreaPath` is a plain field, so any client that updates a work item sets it                                                                                                | a bounce needs no REST call                                                                                |
 | A linked pull request is a relation whose `attributes.name` is `Pull Request` and whose `rel` is `ArtifactLink`. Its `url` ends with the pull request's id, after the last `%2F`  | that relation is what shows a finding a pull request already answers                                       |
@@ -51,9 +75,10 @@ the project alone as its area path.
 
 ## Signing in
 
-**Know that `az` is signed in through `az login`** before the first read, because `az rest` reaches nothing without
-it. Where it is not, say that `az login` is the sign-in this skill needs. Go back to
-[Find the corpus first](SKILL.md#find-the-corpus-first).
+**Know that your client is signed in to the organisation** before the first read. The preferred client takes the
+sign-in `az login` gave it, or a token set up through `az devops login`. A read answered with a sign-in page is a
+refused sign-in. Where no client is signed in, name both sign-ins the preferred client can use, and say which
+invocation you could not finish. Go back to [Find the corpus first](SKILL.md#find-the-corpus-first).
 
 ## Making the labels
 
@@ -96,7 +121,8 @@ posted the same way.
 **Write the comment to a JSON file with your own file tool**, as its one key `text`, written as a JSON string. Then
 post it through the REST API as Markdown.
 
-**Check the comment the call returns.** Its `format` is `markdown`, and its `text` reads as the comment you wrote.
+**Check the comment the call returns.** Its `format` is `markdown`, and its `text`, once decoded, reads as the comment
+you wrote.
 Where either check fails, report the field and the work item's link, and post nothing again. The comment is there, and
 a second leaves two.
 
