@@ -206,12 +206,11 @@ still go wrong, what makes that survivable, and what has to be true for it to en
 say so in it. A departure with nothing compensating it is an unmanaged risk, and the owner has to know that first.
 
 **`## Who is asking` names the agent, the session, the repository, its commit and the work.** Add `manifest.json`'s
-own `commit`, because that says which export you read the clause from. Your session's id is `${CLAUDE_SESSION_ID}`,
-which Claude Code fills in as this skill loads. A subagent gets its parent's id, so it names that session and says it
-is a subagent of it. Where the id still reads as a placeholder, your host supplied none, so write "in a session whose
-id it cannot read". Name anything else you cannot reach as well. One fixed phrase lets a reviewer tell a session with
-no id from one that did not say. A deviation record has no such section, so whoever writes the record keeps it in the
-issue.
+own `commit`, because that says which export you read the clause from. This session's id is `${CLAUDE_SESSION_ID}`.
+A subagent sees its parent's id here, so it names that session and says it is a subagent of it. Where the id above is a
+dollar sign and a name in braces, your host supplied none, so write "in a session whose id it cannot read". Name
+anything else you cannot reach as well. One fixed phrase lets a reviewer tell a session with no id from one that did
+not say. A deviation record has no such section, so whoever writes the record keeps it in the issue.
 
 **Write a placeholder in braces, as `{org}`.** Azure DevOps removes text inside angle brackets when it stores a body,
 even inside a code span.

@@ -142,10 +142,10 @@ Each key of the block, in this order:
   list does not show.
 * **`provenance`** names the agent, the session, the repository you worked in, its commit, and what you were doing.
   Add `manifest.json`'s own `commit` where the finding is about the corpus, because that says which export you read.
-  Your session's id is `${CLAUDE_SESSION_ID}`, which Claude Code fills in as this skill loads. A subagent gets its
-  parent's id, so it names that session and says it is a subagent of it. Where the id still reads as a placeholder,
-  your host supplied none, so write "in a session whose id it cannot read". Name anything else you cannot reach as
-  well. One fixed phrase lets a reviewer tell a session with no id from one that did not say.
+  This session's id is `${CLAUDE_SESSION_ID}`. A subagent sees its parent's id here, so it names that session and
+  says it is a subagent of it. Where the id above is a dollar sign and a name in braces, your host supplied none, so
+  write "in a session whose id it cannot read". Name anything else you cannot reach as well. One fixed phrase lets a
+  reviewer tell a session with no id from one that did not say.
 * **`applies-to`** and `tags` are optional, and go after `provenance` in that order. The block takes no other key.
 
 **Keep the three sections short**: what you saw, what you were doing, and who it might bite. Three sentences each is
