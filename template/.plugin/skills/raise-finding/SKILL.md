@@ -106,7 +106,7 @@ source: session
 confidence: unverified
 looks-like: fixes
 provenance: >
-  Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, in paul80nd/knowledge-as-code at 24dcea21,
+  Claude Code, in session 3f9c2a71-5e4b-4d08-9b6e-c1a7d2e8f405, in paul80nd/knowledge-as-code at 24dcea21,
   editing .editorconfig from a shell while the developer had the repository open in Rider.
 tags: [ editorconfig, formatting, rider ]
 ```
@@ -142,7 +142,10 @@ Each key of the block, in this order:
   list does not show.
 * **`provenance`** names the agent, the session, the repository you worked in, its commit, and what you were doing.
   Add `manifest.json`'s own `commit` where the finding is about the corpus, because that says which export you read.
-  Name any of those you cannot reach, so a reviewer can tell a session with no id from one that did not say.
+  Your session's id is `${CLAUDE_SESSION_ID}`, which Claude Code fills in as this skill loads. A subagent gets its
+  parent's id, so it names that session and says it is a subagent of it. Where the id still reads as a placeholder,
+  your host supplied none, so write "in a session whose id it cannot read". Name anything else you cannot reach as
+  well. One fixed phrase lets a reviewer tell a session with no id from one that did not say.
 * **`applies-to`** and `tags` are optional, and go after `provenance` in that order. The block takes no other key.
 
 **Keep the three sections short**: what you saw, what you were doing, and who it might bite. Three sentences each is

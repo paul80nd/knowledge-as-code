@@ -366,7 +366,7 @@ source: session
 confidence: unverified
 looks-like: fixes
 provenance: >
-  Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, in paul80nd/knowledge-as-code at 24dcea21,
+  Claude Code, in session 3f9c2a71-5e4b-4d08-9b6e-c1a7d2e8f405, in paul80nd/knowledge-as-code at 24dcea21,
   editing .editorconfig from a shell while the developer had the repository open in Rider.
 tags: [ editorconfig, formatting, rider ]
 ```
@@ -745,6 +745,7 @@ standard.
 
 ## Changelog
 
+- 2026-11-21: the worked finding names its session by a UUID, the form of id Claude Code supplies.
 - 2026-11-21: a skill that files an issue or fetches a record's published source may run any client for that platform,
   names the one it prefers and where it was tested, and says what it hands the reader where no client can run.
 - 2026-11-17: the router reads every type it answers through a reference file, and fetches a record's published

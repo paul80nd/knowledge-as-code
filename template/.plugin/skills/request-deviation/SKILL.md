@@ -170,7 +170,7 @@ after it. Where it does not arrive, the choice is to re-accept the risk or to wr
 
 ## Who is asking
 
-Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, working in acme/payments at 4f1c9ad, designing the
+Claude Code, in session b84e1d27-0c63-4f9a-a512-7e3d9c46f0b8, working in acme/payments at 4f1c9ad, designing the
 settlement import. The export beside it was taken at 89d6f54.
 `````
 
@@ -206,9 +206,12 @@ still go wrong, what makes that survivable, and what has to be true for it to en
 say so in it. A departure with nothing compensating it is an unmanaged risk, and the owner has to know that first.
 
 **`## Who is asking` names the agent, the session, the repository, its commit and the work.** Add `manifest.json`'s
-own `commit`, because that says which export you read the clause from. Name any of those you cannot reach, so a
-reviewer can tell a session with no id from one that did not say. A deviation record has no such section, so whoever
-writes the record keeps it in the issue.
+own `commit`, because that says which export you read the clause from. Your session's id is `${CLAUDE_SESSION_ID}`,
+which Claude Code fills in as this skill loads. A subagent gets its parent's id, so it names that session and says it
+is a subagent of it. Where the id still reads as a placeholder, your host supplied none, so write "in a session whose
+id it cannot read". Name anything else you cannot reach as well. One fixed phrase lets a reviewer tell a session with
+no id from one that did not say. A deviation record has no such section, so whoever writes the record keeps it in the
+issue.
 
 **Write a placeholder in braces, as `{org}`.** Azure DevOps removes text inside angle brackets when it stores a body,
 even inside a code span.
