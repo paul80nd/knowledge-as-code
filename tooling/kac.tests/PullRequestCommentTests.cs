@@ -7,6 +7,13 @@ public class PullRequestCommentTests
 {
     private const string Marker = "<!-- kac validate: example-dogfooding -->";
 
+    /// <summary>The thread property as <c>kac</c> writes it.</summary>
+    private const string Property = """{"kac.validate":{"type":"System.String","value":"example-dogfooding"}}""";
+
+    /// <summary>The same property as the Azure Pipelines listing returns it.</summary>
+    private const string Listed =
+        """ "properties": { "kac.validate": { "$type": "System.String", "$value": "example-dogfooding" } }""";
+
     private const string Findings = "### `kac validate`: 1 error, 0 warnings\n\n| table |\n";
 
     private const string Clean = "### `kac validate`: the corpus validated with no errors or warnings\n";
@@ -247,10 +254,11 @@ public class PullRequestCommentTests
 
         using var body = JsonDocument.Parse(fake.Calls[1].Body ?? "{}");
         var comment = body.RootElement.GetProperty("comments")[0];
-        Assert.Equal(Marker + "\n" + Findings, comment.GetProperty("content").GetString());
+        Assert.Equal(Findings, comment.GetProperty("content").GetString());
         Assert.Equal(0, comment.GetProperty("parentCommentId").GetInt32());
         Assert.Equal(1, comment.GetProperty("commentType").GetInt32());
         Assert.Equal(1, body.RootElement.GetProperty("status").GetInt32());
+        Assert.Equal(Property, body.RootElement.GetProperty("properties").GetRawText());
         Assert.True(said?.Ok);
     }
 
@@ -260,12 +268,41 @@ public class PullRequestCommentTests
         var fake = new FakeApi(
             ("GET", "/threads?api-version=7.1", 200,
                 "{ \"value\": [ { \"id\": 3, \"comments\": [ { \"id\": 1, \"content\": \"hello\" } ] }, "
-                + $$"""{ "id": 8, "comments": [ { "id": 1, "content": "{{Marker}}\nold" } ] } ] }"""),
-            ("PATCH", "/threads/8/comments/1?api-version=7.1", 200, "{}"));
+                + $$"""{ "id": 8, {{Listed}}, "comments": [ { "id": 1, "content": "old" } ] } ] }"""),
+            ("PATCH", "/threads/8/comments/1?api-version=7.1", 200, "{}"),
+            ("PATCH", "/threads/8?api-version=7.1", 200, "{}"));
 
         new PullRequestComment(AzurePr, fake.Send).Post("example-dogfooding", Findings, hasFindings: true);
 
-        Assert.Equal(Marker + "\n" + Findings, Field(fake.Calls[1].Body, "content"));
+        Assert.Equal(Findings, Field(fake.Calls[1].Body, "content"));
+    }
+
+    [Fact]
+    public void Azure_Pipelines_updates_a_thread_found_by_its_marker_and_gives_it_the_property()
+    {
+        var fake = AzureWithEarlierThread();
+
+        new PullRequestComment(AzurePr, fake.Send).Post("example-dogfooding", Findings, hasFindings: true);
+
+        Assert.Equal(Findings, Field(fake.Calls[1].Body, "content"));
+        using var thread = JsonDocument.Parse(fake.Calls[2].Body ?? "{}");
+        Assert.Equal(Property, thread.RootElement.GetProperty("properties").GetRawText());
+    }
+
+    [Fact]
+    public void An_Azure_Pipelines_thread_for_another_corpus_is_not_updated()
+    {
+        var fake = new FakeApi(
+            ("GET", "/threads?api-version=7.1", 200,
+                """
+                { "value": [ { "id": 8, "properties": { "kac.validate": { "$type": "System.String",
+                  "$value": "example-library" } }, "comments": [ { "id": 1, "content": "old" } ] } ] }
+                """),
+            ("POST", "/threads?api-version=7.1", 200, "{}"));
+
+        new PullRequestComment(AzurePr, fake.Send).Post("example-dogfooding", Findings, hasFindings: true);
+
+        Assert.Equal("POST", fake.Calls[^1].Method);
     }
 
     [Fact]
@@ -276,7 +313,7 @@ public class PullRequestCommentTests
         new PullRequestComment(AzurePr, fake.Send).Post("example-dogfooding", Clean, hasFindings: false);
 
         Assert.Equal(["GET", "PATCH", "PATCH"], fake.Calls.Select(c => c.Method));
-        Assert.Equal(Marker + "\n" + Clean, Field(fake.Calls[1].Body, "content"));
+        Assert.Equal(Clean, Field(fake.Calls[1].Body, "content"));
         Assert.EndsWith("/pullRequests/42/threads/8?api-version=7.1", fake.Calls[2].Url);
         Assert.Equal(4, Number(fake.Calls[2].Body, "status"));
     }

@@ -77,17 +77,19 @@ public class AnnotationTests
         => Assert.Null(Annotator.Detect(name => name == variable ? value : null));
 
     [Fact]
-    public void The_comment_body_is_a_table_of_the_errors_and_warnings_under_their_counts()
+    public void The_comment_body_lists_the_errors_and_warnings_by_file_under_their_counts()
         => Assert.Equal(
             "### ❌ `kac validate` for example-dogfooding: 1 error, 2 warnings\n"
             + "\n"
-            + "| Severity | File | Check | Message |\n"
-            + "|----------|------|-------|---------|\n"
-            + "| ❌ error | `examples/dog-fooding/adrs/0001-first.md:1` | `required-field` | missing 'owner'. |\n"
-            + "| ⚠️ warning | `examples/dog-fooding/adrs/0001-first.md:4` | `retire-not-delete` | retire it. |\n"
-            + "| ⚠️ warning | `examples/dog-fooding/services/kac.md` | `critical-service-is-alerted` | "
-            + "emits nothing. |\n",
-            GitHub.Table("example-dogfooding",
+            + "**`examples/dog-fooding/adrs/0001-first.md`**\n"
+            + "\n"
+            + "- ❌ **error** at line 1, `required-field`: missing 'owner'.\n"
+            + "- ⚠️ **warning** at line 4, `retire-not-delete`: retire it.\n"
+            + "\n"
+            + "**`examples/dog-fooding/services/kac.md`**\n"
+            + "\n"
+            + "- ⚠️ **warning**, `critical-service-is-alerted`: emits nothing.\n",
+            GitHub.Body("example-dogfooding",
             [
                 Warning("services/kac.md", null, "critical-service-is-alerted", "emits nothing."),
                 Of(Sev.Info, ".corpus.yaml", null, "import-capped", "capped at 1.x."),
@@ -98,13 +100,13 @@ public class AnnotationTests
     [Fact]
     public void A_run_with_warnings_alone_heads_its_comment_body_with_the_warning_icon()
         => Assert.StartsWith("### ⚠️ `kac validate` for example-dogfooding: 0 errors, 1 warning\n",
-            GitHub.Table("example-dogfooding", [Warning("a.md", 1, "c", "m.")]));
+            GitHub.Body("example-dogfooding", [Warning("a.md", 1, "c", "m.")]));
 
     [Fact]
     public void A_run_with_no_error_or_warning_has_a_one_line_comment_body()
         => Assert.Equal(
             "### ✅ `kac validate` for example-dogfooding: the corpus validated with no errors or warnings\n",
-            GitHub.Table("example-dogfooding",
+            GitHub.Body("example-dogfooding",
                 [Of(Sev.Info, ".corpus.yaml", null, "import-capped", "capped at 1.x.")]));
 
     [Theory]
@@ -117,9 +119,35 @@ public class AnnotationTests
         => Assert.Equal(name, (GitHub with { CorpusPrefix = prefix }).Named(declared));
 
     [Fact]
-    public void The_comment_body_escapes_a_pipe_and_a_line_break_in_a_cell()
-        => Assert.EndsWith("| `examples/dog-fooding/a\\|b.md:1` | `c` | one \\| two<br>three |\n",
-            GitHub.Table("example-dogfooding", [Warning("a|b.md", 1, "c", "one | two\r\nthree")]));
+    public void A_line_break_in_a_message_stays_in_its_bullet()
+        => Assert.EndsWith("- ⚠️ **warning** at line 1, `c`: one | two\n  three\n  four\n",
+            GitHub.Body("example-dogfooding", [Warning("a.md", 1, "c", "one | two\r\nthree\rfour")]));
+
+    [Fact]
+    public void The_comment_body_lists_fifty_findings_and_sends_the_reader_to_the_build_log_for_the_rest()
+    {
+        var body = GitHub.Body("example-dogfooding",
+            [.. Enumerable.Range(1, 60).Select(n => Warning("a.md", n, "c", "m."))]);
+
+        Assert.Contains("at line 50,", body);
+        Assert.DoesNotContain("at line 51,", body);
+        Assert.EndsWith("\nThis comment lists 50 of the 60 findings. The build log lists them all.\n", body);
+    }
+
+    [Fact]
+    public void The_comment_body_stops_listing_before_GitHub_would_refuse_it()
+    {
+        var body = GitHub.Body("example-dogfooding",
+            [.. Enumerable.Range(1, 20).Select(n => Warning("a.md", n, "c", new string('x', 5_000)))]);
+
+        Assert.True(body.Length < 65_536);
+        Assert.EndsWith(" of the 20 findings. The build log lists them all.\n", body);
+    }
+
+    [Fact]
+    public void A_run_that_lists_every_finding_says_nothing_of_the_build_log()
+        => Assert.DoesNotContain("build log",
+            GitHub.Body("example-dogfooding", [.. Enumerable.Range(1, 50).Select(n => Warning("a.md", n, "c", "m."))]));
 
     private static readonly Annotator Azure = new(CiPlatform.AzurePipelines, "examples/dog-fooding/", "");
 

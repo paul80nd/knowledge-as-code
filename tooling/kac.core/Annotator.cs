@@ -14,12 +14,13 @@ public enum CiPlatform
 public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string SchemaPrefix)
 {
     /// <summary>
-    /// A Markdown table of the errors and warnings, in file order, under a heading with their counts. A run with
-    /// neither is one line, which is what an earlier comment is updated to once its findings have gone. Each icon sits
-    /// beside the word it repeats, as std-A11Y.COLOUR asks of colour. <paramref name="corpus"/> names it in the
-    /// heading, from <see cref="Named"/>.
+    /// The errors and warnings as Markdown, under a heading with their counts: a bold line for each file, in order, and
+    /// a bullet for each finding in it, so a message wraps in a narrow pane or an email. A run with neither is one
+    /// line, which is what an earlier comment is updated to once its findings have gone. Each icon sits beside the word
+    /// it repeats, as std-A11Y.COLOUR asks of colour. <paramref name="corpus"/> names it in the heading, from
+    /// <see cref="Named"/>.
     /// </summary>
-    public string Table(string corpus, IReadOnlyList<Finding> findings)
+    public string Body(string corpus, IReadOnlyList<Finding> findings)
     {
         var shown = findings.Where(f => f.Severity is Sev.Error or Sev.Warning)
             .OrderBy(f => f.File).ThenBy(f => f.Line ?? 0).ToList();
@@ -28,21 +29,34 @@ public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string 
 
         var errors = shown.Count(f => f.Severity is Sev.Error);
         var warnings = shown.Count - errors;
-        var summary = new System.Text.StringBuilder()
+        var body = new System.Text.StringBuilder()
             .Append($"### {(errors > 0 ? ErrorIcon : WarningIcon)} `kac validate` for {corpus}: ")
-            .Append($"{Counted.Of(errors, "error")}, {Counted.Of(warnings, "warning")}\n\n")
-            .Append("| Severity | File | Check | Message |\n")
-            .Append("|----------|------|-------|---------|\n");
+            .Append($"{Counted.Of(errors, "error")}, {Counted.Of(warnings, "warning")}\n");
 
+        var listed = 0;
+        string? file = null;
         foreach (var f in shown)
         {
-            var at = Path(f.File) + (f.Line is { } n ? $":{n}" : "");
-            var severity = f.Severity is Sev.Error ? $"{ErrorIcon} error" : $"{WarningIcon} warning";
-            summary.Append($"| {severity} | `{Cell(at)}` | `{Cell(f.Check.Value)}` | {Cell(f.Message)} |\n");
+            var entry = (f.File == file ? "" : $"\n**`{Path(f.File)}`**\n\n") + Bullet(f);
+            if (listed == MaxListed || body.Length + entry.Length > MaxLength) break;
+
+            body.Append(entry);
+            file = f.File;
+            listed++;
         }
 
-        return summary.ToString();
+        if (listed < shown.Count)
+            body.Append($"\nThis comment lists {listed} of the {Counted.Of(shown.Count, "finding")}. ")
+                .Append("The build log lists them all.\n");
+
+        return body.ToString();
     }
+
+    /// <summary>How many findings the comment lists before it sends the reader to the build log.</summary>
+    private const int MaxListed = 50;
+
+    /// <summary>GitHub refuses a comment over 65,536 characters, and the marker and the last line need room.</summary>
+    private const int MaxLength = 60_000;
 
     /// <summary>
     /// What the comment calls the corpus: the <c>corpus:</c> its descriptor <paramref name="declared"/>, else its path
@@ -55,9 +69,14 @@ public sealed record Annotator(CiPlatform Platform, string CorpusPrefix, string 
 
     private const string ErrorIcon = "❌", WarningIcon = "⚠️";
 
-    /// <summary>A pipe would end the cell and a line break the row.</summary>
-    private static string Cell(string text) =>
-        text.Replace("|", "\\|").Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
+    /// <summary>A line break in the message is indented, so the line after it stays in the bullet.</summary>
+    private static string Bullet(Finding f)
+    {
+        var severity = f.Severity is Sev.Error ? $"{ErrorIcon} **error**" : $"{WarningIcon} **warning**";
+        var at = f.Line is { } n ? $" at line {n}" : "";
+        var message = f.Message.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", "\n  ");
+        return $"- {severity}{at}, `{f.Check.Value}`: {message}\n";
+    }
 
     /// <summary>
     /// The platform running this process, read through <paramref name="variable"/>, or null for a local run. GitHub

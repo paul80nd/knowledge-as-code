@@ -41,7 +41,7 @@ public static class Commands
         if (!json && annotator is not null && comment is not null)
         {
             var name = annotator.Named(corpus.Descriptor.Name);
-            Comment(comment, name, annotator.Table(name, findings),
+            Comment(comment, name, annotator.Body(name, findings),
                 findings.Any(f => f.Severity is Sev.Error or Sev.Warning));
         }
 
@@ -64,9 +64,9 @@ public static class Commands
         items.Count == 1 ? items[0] : string.Join(", ", items.Take(items.Count - 1)) + " and " + items[^1];
 
     /// <summary>A comment that could not be posted is reported and leaves the exit code alone.</summary>
-    private static void Comment(PullRequestComment comment, string corpus, string table, bool hasFindings)
+    private static void Comment(PullRequestComment comment, string corpus, string body, bool hasFindings)
     {
-        if (comment.Post(corpus, table, hasFindings) is not { } said) return;
+        if (comment.Post(corpus, body, hasFindings) is not { } said) return;
         if (said.Ok) Account(said.Message);
         else Note(said.Message);
     }

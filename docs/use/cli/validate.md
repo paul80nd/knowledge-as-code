@@ -126,20 +126,26 @@ repository, so a corpus in a subfolder still lands on the right file.
 
 ### A pull request comment
 
-On a pull request with an error or a warning, `validate` also posts one comment listing them. The comment is a Markdown
-table with a row per finding, giving the severity, the file and line, the check and the message. Its heading names the
+On a pull request with an error or a warning, `validate` also posts one comment listing them. Its heading names the
 corpus and gives the counts. The name is `corpus:` from `.corpus.yaml`. Where that is not set, it is the corpus's folder
 in the repository, or "this corpus" for a corpus at the repository's root.
+
+Under the heading, each file with a finding has a bold line, and each finding in it is a bullet. A bullet gives the
+severity, the line, the check and the message. A list wraps in a narrow pane and in a notification email.
+
+The comment lists the first 50 findings, and fewer where their messages would pass GitHub's limit of 65,536 characters.
+Its last line then says how many it listed. The build log has every finding.
 
 An icon stands beside each severity word and the heading: ❌ for an error, ⚠️ for a warning and ✅ for a clean run. The
 word is always there, so the icon is never the only cue.
 
-A hidden line naming the corpus marks the comment, so each later run updates the same one. Once the findings have gone,
-the comment says the corpus validated with no errors or warnings. A clean pull request with no earlier comment gets
-none, and `validate` never deletes one. Each corpus in a repository keeps a comment of its own.
+Each later run updates the same comment. Once the findings have gone, the comment says the corpus validated with no
+errors or warnings. A clean pull request with no earlier comment gets none, and `validate` never deletes one. Each
+corpus in a repository keeps a comment of its own.
 
-On Azure Pipelines the comment opens a thread. The thread is active while the corpus has findings. A clean run closes
-it, and a run that finds them again makes it active.
+On GitHub, a hidden line naming the corpus opens the comment, and the next run finds it by that line. On Azure
+Pipelines, the comment opens a thread, and a `kac.validate` property on the thread names the corpus. The thread is
+active while the corpus has findings. A clean run closes it, and a run that finds them again makes it active.
 
 `validate` posts only where the pipeline passes a token to the step and grants it the permission:
 
@@ -228,16 +234,18 @@ Under Azure Pipelines the same finding is written as:
 ##vso[task.logissue type=error;sourcepath=adrs/0001-knowledge-as-code.md;linenumber=1;code=required-field]missing required field 'owner'.
 ```
 
-Where that is the run's only finding, the pull request comment on either platform reads:
+Where that is the run's only finding, the pull request comment on GitHub reads:
 
 ```markdown
 <!-- kac validate: acme-corpus -->
 ### ❌ `kac validate` for acme-corpus: 1 error, 0 warnings
 
-| Severity | File | Check | Message |
-|----------|------|-------|---------|
-| ❌ error | `adrs/0001-knowledge-as-code.md:1` | `required-field` | missing required field 'owner'. |
+**`adrs/0001-knowledge-as-code.md`**
+
+- ❌ **error** at line 1, `required-field`: missing required field 'owner'.
 ```
+
+On Azure Pipelines the comment is the same without its first line.
 
 ### The findings as JSON
 
