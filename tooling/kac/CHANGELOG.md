@@ -45,6 +45,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   session reads at its start. Where a plugin announces a router and no lookup, the breadcrumb now asks the session to
   load the router for any question its records may answer. Where a lookup is announced too, the breadcrumb still sends a
   known need to the lookup, and a question with no known place to the router.
+- **The pull request comment `kac validate` posts reads in a narrow pane and an email.** The comment lists the findings
+  under a bold line for each file, with a bullet for each finding, so a long message wraps. It lists the first 50, or
+  fewer before GitHub's 65,536-character limit, and sends you to the build log for the rest. On Azure Pipelines a thread
+  property names the corpus, so the notification email no longer shows the hidden marker. A thread an earlier version
+  posted is still found by its marker, and gains the property on its next update.
 
 ### Fixed
 

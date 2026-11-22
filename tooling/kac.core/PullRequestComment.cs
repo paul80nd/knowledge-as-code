@@ -80,8 +80,9 @@ public sealed record PullRequest(CiPlatform Platform, string Api, string Number,
 }
 
 /// <summary>
-/// Keeps one comment per corpus on a pull request, found again by a hidden marker naming the corpus. It never deletes
-/// one. <paramref name="send"/> is null where the pipeline passed no token.
+/// Keeps one comment per corpus on a pull request, and never deletes one. On GitHub a hidden marker naming the corpus
+/// opens the comment. On Azure Pipelines a property naming it is on the thread, because the notification email shows
+/// the marker as text. <paramref name="send"/> is null where the pipeline passed no token.
 /// </summary>
 public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, HttpAnswer>? send)
 {
@@ -100,12 +101,12 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
                 : null;
 
         var marker = $"<!-- kac validate: {corpus} -->";
-        var body = marker + "\n" + summary;
+        var body = pullRequest.Platform is CiPlatform.GitHub ? marker + "\n" + summary : summary;
 
         Earlier? earlier;
         try
         {
-            var (found, refused) = Find(send, marker);
+            var (found, refused) = Find(send, corpus, marker);
             if (refused is not null) return Failed(at, refused);
             earlier = found;
         }
@@ -126,17 +127,22 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
             (_, { } id) => new HttpCall("PATCH",
                 $"{pullRequest.Api}/threads/{id.Thread}/comments/{id.Comment}?api-version=7.1",
                 Json(w => w.WriteString("content", body))),
-            _ => new HttpCall("POST", $"{pullRequest.Api}/threads?api-version=7.1", Json(NewThread(body)))
+            _ => new HttpCall("POST", $"{pullRequest.Api}/threads?api-version=7.1", Json(NewThread(body, corpus)))
         };
 
         var answer = send(call);
         if (!answer.Ok) return Failed(at, answer);
 
-        // An Azure Pipelines thread is closed while its corpus is clean and active while it has findings.
+        // An Azure Pipelines thread is closed while its corpus is clean and active while it has findings. The property
+        // is written again, so a thread found by its marker is found by the property from then on.
         if (pullRequest.Platform is CiPlatform.AzurePipelines && earlier is not null)
         {
             var status = send(new HttpCall("PATCH", $"{pullRequest.Api}/threads/{earlier.Thread}?api-version=7.1",
-                Json(w => w.WriteNumber("status", hasFindings ? Active : Closed))));
+                Json(w =>
+                {
+                    w.WriteNumber("status", hasFindings ? Active : Closed);
+                    Properties(w, corpus);
+                })));
             if (!status.Ok) return Failed(at, status);
         }
 
@@ -183,17 +189,21 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
     /// <summary>The Azure Pipelines thread statuses the comment moves between.</summary>
     private const int Active = 1, Closed = 4;
 
+    /// <summary>The Azure Pipelines thread property whose value is the corpus the thread reports on.</summary>
+    private const string Property = "kac.validate";
+
     private sealed record Earlier(string Thread, string Comment);
 
     /// <summary>
-    /// The comment opening on <paramref name="marker"/>, or null where none does, and the answer that refused the
-    /// listing. GitHub pages its comments 100 at a time, and on Azure Pipelines the marker opens a thread's first
-    /// comment.
+    /// The corpus's earlier comment, or null where it has none, and the answer that refused the listing. GitHub pages
+    /// its comments 100 at a time, and the comment opens on <paramref name="marker"/>. On Azure Pipelines it is the
+    /// first comment of the thread whose property names <paramref name="corpus"/>. A thread an earlier version of
+    /// <c>kac</c> posted has no property, and its first comment opens on the marker instead.
     /// </summary>
     /// <exception cref="JsonException">The listing was not JSON.</exception>
     /// <exception cref="InvalidOperationException">The listing was JSON of another shape.</exception>
     /// <exception cref="KeyNotFoundException">The listing lacked a key it always has.</exception>
-    private (Earlier? Found, HttpAnswer? Refused) Find(Func<HttpCall, HttpAnswer> api, string marker)
+    private (Earlier? Found, HttpAnswer? Refused) Find(Func<HttpCall, HttpAnswer> api, string corpus, string marker)
     {
         if (pullRequest.Platform is CiPlatform.GitHub)
         {
@@ -227,8 +237,9 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
 
             var first = comments[0];
             if (Deleted(first)) continue;
-            if (first.TryGetProperty("content", out var content) && content.GetString() is { } text
-                                                                && text.StartsWith(marker, StringComparison.Ordinal))
+            if (Names(thread, corpus) || (first.TryGetProperty("content", out var content)
+                                          && content.GetString() is { } text
+                                          && text.StartsWith(marker, StringComparison.Ordinal)))
                 return (new Earlier(thread.GetProperty("id").GetRawText(), first.GetProperty("id").GetRawText()),
                     null);
         }
@@ -237,10 +248,20 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
 
         static bool Deleted(JsonElement e) =>
             e.TryGetProperty("isDeleted", out var deleted) && deleted.ValueKind is JsonValueKind.True;
+
+        // The listing returns a property as an object holding $type and $value.
+        static bool Names(JsonElement thread, string corpus) =>
+            thread.TryGetProperty("properties", out var properties) && properties.ValueKind is JsonValueKind.Object
+            && properties.TryGetProperty(Property, out var property) && property.ValueKind is JsonValueKind.Object
+            && property.TryGetProperty("$value", out var value) && value.ValueKind is JsonValueKind.String
+            && value.GetString() == corpus;
     }
 
-    /// <summary>An active thread with one text comment, which is what the Azure Pipelines UI posts.</summary>
-    private static Action<Utf8JsonWriter> NewThread(string body) => w =>
+    /// <summary>
+    /// An active thread with one text comment, which is what the Azure Pipelines UI posts, and the property naming
+    /// <paramref name="corpus"/>.
+    /// </summary>
+    private static Action<Utf8JsonWriter> NewThread(string body, string corpus) => w =>
     {
         w.WriteStartArray("comments");
         w.WriteStartObject();
@@ -250,7 +271,19 @@ public sealed class PullRequestComment(PullRequest pullRequest, Func<HttpCall, H
         w.WriteEndObject();
         w.WriteEndArray();
         w.WriteNumber("status", Active);
+        Properties(w, corpus);
     };
+
+    /// <summary>A property is written as an object holding its type and its value.</summary>
+    private static void Properties(Utf8JsonWriter w, string corpus)
+    {
+        w.WriteStartObject("properties");
+        w.WriteStartObject(Property);
+        w.WriteString("type", "System.String");
+        w.WriteString("value", corpus);
+        w.WriteEndObject();
+        w.WriteEndObject();
+    }
 
     private static string Json(Action<Utf8JsonWriter> write)
     {
