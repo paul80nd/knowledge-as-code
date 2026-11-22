@@ -15,7 +15,6 @@ interfaces:
     contract: https://git.example.com/example-libraries/platform/blob/main/src/ApiGateways/Catalogue/contract/openapi.yaml
 depends-on:
   - svc-lending
-owner: human:robin.hale
 facets: [ internal ]
 tags: [ holdings ]
 ---
@@ -89,3 +88,4 @@ No source this catalogue was built from states it.
 [itg-identity]: ../integrations/identity.md
 [svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md
+[svc-thumbnailer]: thumbnailer.md
