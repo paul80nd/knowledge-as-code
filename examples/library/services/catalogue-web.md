@@ -72,4 +72,3 @@ No database connection is configured for this app service. It reads and writes d
 [svc-catalogue-api]: catalogue-api.md
 [svc-covers-cdn]: covers-cdn.md
 [svc-search]: search.md
-[svc-notices]: notices.md
